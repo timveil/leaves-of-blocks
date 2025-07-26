@@ -38,41 +38,23 @@ struct SimpleScoreView: View {
             Spacer()
             
             // Home and Reset Icons
-            HStack(spacing: GameTheme.Layout.smallSpacing) {
+            HStack(spacing: GameTheme.Layout.extraLargeSpacing) {
                 // Home Button
                 Button(action: onGoHome) {
                     Image(systemName: "house.fill")
-                        .font(.system(size: 32, weight: .bold))
+                        .font(.system(size: 24, weight: .bold))
                         .foregroundColor(GameTheme.Colors.accent)
-                        .frame(width: 60, height: 60)
-                        .background(
-                            RoundedRectangle(cornerRadius: 12)
-                                .fill(GameTheme.Colors.cardBackground.opacity(0.6))
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 12)
-                                        .stroke(GameTheme.Colors.accent.opacity(0.3), lineWidth: 2)
-                                )
-                        )
                 }
                 
                 // Reset Button  
                 Button(action: onReset) {
                     Image(systemName: "arrow.clockwise")
-                        .font(.system(size: 32, weight: .bold))
-                        .foregroundColor(GameTheme.Colors.warning)
-                        .frame(width: 60, height: 60)
-                        .background(
-                            RoundedRectangle(cornerRadius: 12)
-                                .fill(GameTheme.Colors.cardBackground.opacity(0.6))
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 12)
-                                        .stroke(GameTheme.Colors.warning.opacity(0.3), lineWidth: 2)
-                                )
-                        )
+                        .font(.system(size: 24, weight: .bold))
+                        .foregroundColor(GameTheme.Colors.error)
                 }
             }
         }
-        .padding(.horizontal, GameTheme.Layout.largePadding)
+        .padding(.horizontal, GameTheme.Layout.extraLargePadding)
         .padding(.vertical, GameTheme.Layout.mediumPadding)
     }
 }
@@ -453,6 +435,7 @@ struct GameHomeView: View {
             .padding(.horizontal, GameTheme.Layout.largePadding)
             .padding(.vertical, GameTheme.Layout.mediumPadding)
         }
+        .statusBarHidden() // Hide status bar for immersive gaming experience
     }
 }
 
@@ -598,6 +581,7 @@ struct GameBoardView: View {
                 }
             }
         }
+        .statusBarHidden() // Hide status bar for immersive gaming experience
     }
     
     // MARK: - Helper Methods

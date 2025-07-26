@@ -1,5 +1,6 @@
 import Foundation
 import SwiftUI
+import UIKit
 
 struct GridPosition: Equatable, Codable, Hashable {
     let row: Int
@@ -100,6 +101,10 @@ class GameState: ObservableObject {
     func placeBlock(_ block: BlockShape, at gridPosition: GridPosition) {
         guard canPlaceBlock(block, at: gridPosition) else { return }
         
+        // Haptic feedback for block placement
+        let impactFeedback = UIImpactFeedbackGenerator(style: .light)
+        impactFeedback.impactOccurred()
+        
         // Place the block
         for blockPos in block.positions {
             let finalRow = gridPosition.row + blockPos.row
@@ -177,6 +182,10 @@ class GameState: ObservableObject {
         // Add bonus points
         let totalLinesCleared = clearedRows.count + clearedCols.count
         if totalLinesCleared > 0 {
+            // Strong haptic feedback for line clearing
+            let impactFeedback = UIImpactFeedbackGenerator(style: .heavy)
+            impactFeedback.impactOccurred()
+            
             linesCleared += totalLinesCleared
             score += totalLinesCleared * 100
             if totalLinesCleared > 1 {
