@@ -1062,7 +1062,7 @@ struct GameBoardView: View {
             GameBackgroundView()
             
             
-            VStack(spacing: GameTheme.Layout.largeSpacing) {
+            VStack(spacing: GameTheme.Layout.smallSpacing) {
                 // Score Section with integrated buttons
                 SimpleScoreView(
                     gameState: gameState,
@@ -1073,7 +1073,7 @@ struct GameBoardView: View {
                         }
                     }
                 )
-                .padding(.top, GameTheme.Layout.mediumPadding) // Reduced top spacing
+                .padding(.top, GameTheme.Layout.smallPadding) // Reduced top spacing
                 
                 // Game Grid
                 GameGridView(
