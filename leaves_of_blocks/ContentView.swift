@@ -7,35 +7,66 @@
 
 import SwiftUI
 
+enum AppScreen {
+    case home
+    case game
+    case summary
+}
+
 struct ContentView: View {
     @StateObject private var gameState = GameState()
-    @State private var isShowingGame = false
+    @State private var currentScreen: AppScreen = .home
     
     var body: some View {
         NavigationView {
-            if isShowingGame {
+            switch currentScreen {
+            case .home:
+                GameHomeView(
+                    gameState: gameState,
+                    onStartGame: { difficulty in
+                        withAnimation(.easeInOut) {
+                            gameState.startGame(difficulty: difficulty)
+                            currentScreen = .game
+                        }
+                    }
+                )
+                .navigationBarHidden(true)
+                .ignoresSafeArea(.container, edges: [])
+                
+            case .game:
                 GameBoardView(
                     gameState: gameState,
                     onGoHome: {
                         withAnimation(.easeInOut) {
-                            isShowingGame = false
+                            currentScreen = .home
                         }
-                    }
-                )
-                .navigationBarHidden(true)
-                .ignoresSafeArea(.container, edges: []) // Respect all safe areas
-            } else {
-                GameHomeView(
-                    gameState: gameState,
-                    onStartGame: {
+                    },
+                    onViewSummary: {
                         withAnimation(.easeInOut) {
-                            gameState.resetGame() // Start fresh
-                            isShowingGame = true
+                            currentScreen = .summary
                         }
                     }
                 )
                 .navigationBarHidden(true)
-                .ignoresSafeArea(.container, edges: []) // Respect all safe areas
+                .ignoresSafeArea(.container, edges: [])
+                
+            case .summary:
+                GameSummaryView(
+                    gameState: gameState,
+                    onGoHome: {
+                        withAnimation(.easeInOut) {
+                            currentScreen = .home
+                        }
+                    },
+                    onNewGame: {
+                        withAnimation(.easeInOut) {
+                            gameState.resetGame() // Keep current difficulty
+                            currentScreen = .game
+                        }
+                    }
+                )
+                .navigationBarHidden(true)
+                .ignoresSafeArea(.container, edges: [])
             }
         }
         .navigationViewStyle(StackNavigationViewStyle()) // Prevents split view on iPad

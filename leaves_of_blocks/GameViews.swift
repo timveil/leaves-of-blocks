@@ -310,15 +310,29 @@ struct CurrentBlocksView: View {
 
 struct GameOverOverlayView: View {
     @ObservedObject var gameState: GameState
+    let onViewSummary: () -> Void
     
     var body: some View {
         VStack(spacing: 24) {
-            Text("The Leaves Have Fallen")
-                .font(GameTheme.Typography.headline)
-                .fontWeight(.medium)
-                .foregroundColor(GameTheme.Colors.error)
-                .tracking(1)
-                .italic()
+            // Title with new high score celebration
+            VStack(spacing: 8) {
+                if gameState.isNewHighScore {
+                    Text("🎉 NEW HIGH SCORE! 🎉")
+                        .font(GameTheme.Typography.headline)
+                        .fontWeight(.bold)
+                        .foregroundColor(GameTheme.Colors.accent)
+                        .tracking(1)
+                        .scaleEffect(1.1)
+                        .animation(.easeInOut(duration: 0.6).repeatForever(autoreverses: true), value: gameState.isNewHighScore)
+                }
+                
+                Text("The Leaves Have Fallen")
+                    .font(GameTheme.Typography.headline)
+                    .fontWeight(.medium)
+                    .foregroundColor(GameTheme.Colors.error)
+                    .tracking(1)
+                    .italic()
+            }
             
             Text("Final Score")
                 .font(GameTheme.Typography.caption)
@@ -330,28 +344,51 @@ struct GameOverOverlayView: View {
                 .font(GameTheme.Typography.largeScore)
                 .foregroundColor(GameTheme.Colors.primaryText)
             
-            Button(action: {
-                withAnimation(GameTheme.Animations.springAnimation) {
-                    gameState.resetGame()
-                }
-            }) {
-                Text("New Season")
-                    .font(GameTheme.Typography.headline)
-                    .fontWeight(.medium)
-                    .foregroundColor(GameTheme.Colors.buttonText)
-                    .tracking(0.5)
-                    .padding(.horizontal, GameTheme.Layout.largePadding)
-                    .padding(.vertical, GameTheme.Layout.mediumPadding)
-                    .background(
-                        Capsule()
-                            .fill(
-                                LinearGradient(
-                                    colors: GameTheme.Colors.buttonGradient,
-                                    startPoint: .leading,
-                                    endPoint: .trailing
+            // Action buttons
+            VStack(spacing: 16) {
+                Button(action: onViewSummary) {
+                    Text("View Summary")
+                        .font(GameTheme.Typography.headline)
+                        .fontWeight(.medium)
+                        .foregroundColor(GameTheme.Colors.buttonText)
+                        .tracking(0.5)
+                        .padding(.horizontal, GameTheme.Layout.largePadding)
+                        .padding(.vertical, GameTheme.Layout.mediumPadding)
+                        .background(
+                            Capsule()
+                                .fill(
+                                    LinearGradient(
+                                        colors: [GameTheme.Colors.accent, GameTheme.Colors.accent.opacity(0.8)],
+                                        startPoint: .leading,
+                                        endPoint: .trailing
+                                    )
                                 )
-                            )
-                    )
+                        )
+                }
+                
+                Button(action: {
+                    withAnimation(GameTheme.Animations.springAnimation) {
+                        gameState.resetGame()
+                    }
+                }) {
+                    Text("New Season")
+                        .font(GameTheme.Typography.headline)
+                        .fontWeight(.medium)
+                        .foregroundColor(GameTheme.Colors.buttonText)
+                        .tracking(0.5)
+                        .padding(.horizontal, GameTheme.Layout.largePadding)
+                        .padding(.vertical, GameTheme.Layout.mediumPadding)
+                        .background(
+                            Capsule()
+                                .fill(
+                                    LinearGradient(
+                                        colors: GameTheme.Colors.buttonGradient,
+                                        startPoint: .leading,
+                                        endPoint: .trailing
+                                    )
+                                )
+                        )
+                }
             }
             .scaleEffect(1.0)
             .gameAnimation(value: gameState.isGameOver)
@@ -378,87 +415,412 @@ struct GameOverOverlayView: View {
     }
 }
 
-// MARK: - Game Home View
+// MARK: - Game Summary View
 
-struct GameHomeView: View {
+struct GameSummaryView: View {
     @ObservedObject var gameState: GameState
-    let onStartGame: () -> Void
+    let onGoHome: () -> Void
+    let onNewGame: () -> Void
     
     var body: some View {
         ZStack {
             GameBackgroundView()
             
-            VStack(spacing: GameTheme.Layout.sectionSpacing) {
-                Spacer()
-                
-                // App Title
-                Text("🍂 Leaves of Blocks")
-                    .font(GameTheme.Typography.title)
-                    .foregroundColor(GameTheme.Colors.primaryText)
-                    .padding(.vertical, GameTheme.Layout.largePadding)
-                    .padding(.top, GameTheme.Layout.extraLargePadding) // Extra top spacing
-                
-                // High Score Display
-                VStack(spacing: GameTheme.Layout.smallSpacing) {
-                    Text("Best Score")
-                        .font(GameTheme.Typography.headline)
-                        .foregroundColor(GameTheme.Colors.accent)
-                    
-                    Text("\(gameState.highScoreManager.highScore)")
-                        .font(GameTheme.Typography.largeScore)
-                        .foregroundColor(GameTheme.Colors.accent)
+            ScrollView {
+                VStack(spacing: GameTheme.Layout.sectionSpacing) {
+                    // Header
+                    VStack(spacing: 16) {
+                        if gameState.isNewHighScore {
+                            Text("🏆 NEW HIGH SCORE! 🏆")
+                                .font(GameTheme.Typography.title)
+                                .fontWeight(.bold)
+                                .foregroundColor(GameTheme.Colors.accent)
+                                .tracking(1.5)
+                                .scaleEffect(1.1)
+                                .animation(.easeInOut(duration: 0.8).repeatForever(autoreverses: true), value: gameState.isNewHighScore)
+                        }
                         
-                    // Last played info if available
-                    if gameState.score > 0 {
-                        Text("Last Score: \(gameState.score)")
-                            .font(GameTheme.Typography.caption)
-                            .foregroundColor(GameTheme.Colors.secondaryText)
+                        Text("Game Summary")
+                            .font(GameTheme.Typography.title)
+                            .foregroundColor(GameTheme.Colors.primaryText)
+                            .tracking(1)
+                        
+                        // Difficulty indicator
+                        HStack {
+                            Image(systemName: gameState.currentDifficulty.icon)
+                                .foregroundColor(gameState.currentDifficulty.color)
+                            Text("\(gameState.currentDifficulty.rawValue) Mode")
+                                .font(GameTheme.Typography.headline)
+                                .foregroundColor(gameState.currentDifficulty.color)
+                        }
+                        
+                        Text("Final Score: \(gameState.score)")
+                            .font(GameTheme.Typography.largeScore)
+                            .foregroundColor(GameTheme.Colors.accent)
                     }
-                }
-                .padding(GameTheme.Layout.largePadding)
-                .background(
-                    RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
-                        .fill(GameTheme.Colors.cardBackground)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
-                                .stroke(GameTheme.Colors.accent.opacity(0.3), lineWidth: 2)
+                    .padding(.top, GameTheme.Layout.largePadding)
+                    
+                    // Statistics Cards
+                    LazyVGrid(columns: [
+                        GridItem(.flexible()),
+                        GridItem(.flexible())
+                    ], spacing: GameTheme.Layout.mediumSpacing) {
+                        
+                        StatisticCard(
+                            title: "Time Played",
+                            value: formatTime(gameState.gameTime),
+                            icon: "clock.fill",
+                            color: GameTheme.Colors.blockBlue
                         )
-                )
-                
-                Spacer()
-                
-                // Start Game Button
-                Button(action: onStartGame) {
-                    Text("Start New Game")
-                        .font(GameTheme.Typography.headline)
-                        .fontWeight(.medium)
-                        .foregroundColor(GameTheme.Colors.buttonText)
-                        .tracking(0.5)
-                        .padding(.horizontal, GameTheme.Layout.extraLargePadding)
-                        .padding(.vertical, GameTheme.Layout.mediumPadding)
+                        
+                        StatisticCard(
+                            title: "Blocks Placed",
+                            value: "\(gameState.blocksPlaced)",
+                            icon: "square.grid.3x3.fill",
+                            color: GameTheme.Colors.blockGreen
+                        )
+                        
+                        StatisticCard(
+                            title: "Lines Cleared",
+                            value: "\(gameState.linesCleared)",
+                            icon: "line.horizontal.3",
+                            color: GameTheme.Colors.blockRed
+                        )
+                        
+                        StatisticCard(
+                            title: "Longest Combo",
+                            value: "\(gameState.longestCombo)",
+                            icon: "flame.fill",
+                            color: GameTheme.Colors.blockOrange
+                        )
+                        
+                        StatisticCard(
+                            title: "Avg. Score/Block",
+                            value: String(format: "%.1f", gameState.averageBlockScore),
+                            icon: "chart.line.uptrend.xyaxis",
+                            color: GameTheme.Colors.blockPurple
+                        )
+                        
+                        StatisticCard(
+                            title: "Line Clear %",
+                            value: String(format: "%.1f%%", gameState.lineClearPercentage),
+                            icon: "percent",
+                            color: GameTheme.Colors.blockPink
+                        )
+                    }
+                    .padding(.horizontal, GameTheme.Layout.mediumPadding)
+                    
+                    // High Score Comparison
+                    VStack(spacing: 16) {
+                        Text("High Score History")
+                            .font(GameTheme.Typography.headline)
+                            .foregroundColor(GameTheme.Colors.primaryText)
+                        
+                        HStack {
+                            VStack {
+                                Text("Current Game")
+                                    .font(GameTheme.Typography.caption)
+                                    .foregroundColor(GameTheme.Colors.secondaryText)
+                                Text("\(gameState.score)")
+                                    .font(GameTheme.Typography.largeScore)
+                                    .foregroundColor(gameState.isNewHighScore ? GameTheme.Colors.accent : GameTheme.Colors.primaryText)
+                            }
+                            
+                            Spacer()
+                            
+                            VStack {
+                                Text("Best Ever")
+                                    .font(GameTheme.Typography.caption)
+                                    .foregroundColor(GameTheme.Colors.secondaryText)
+                                Text("\(gameState.highScoreManager.highScore)")
+                                    .font(GameTheme.Typography.largeScore)
+                                    .foregroundColor(GameTheme.Colors.accent)
+                            }
+                        }
+                        .padding(GameTheme.Layout.largePadding)
                         .background(
-                            Capsule()
-                                .fill(
-                                    LinearGradient(
-                                        colors: GameTheme.Colors.buttonGradient,
-                                        startPoint: .leading,
-                                        endPoint: .trailing
-                                    )
+                            RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
+                                .fill(GameTheme.Colors.cardBackground)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
+                                        .stroke(gameState.isNewHighScore ? GameTheme.Colors.accent.opacity(0.5) : GameTheme.Colors.cardBorderGradient[0].opacity(0.3), lineWidth: 2)
                                 )
                         )
+                    }
+                    .padding(.horizontal, GameTheme.Layout.mediumPadding)
+                    
+                    // Action Buttons
+                    VStack(spacing: 16) {
+                        Button(action: onNewGame) {
+                            Text("Start New Game")
+                                .font(GameTheme.Typography.headline)
+                                .fontWeight(.medium)
+                                .foregroundColor(GameTheme.Colors.buttonText)
+                                .tracking(0.5)
+                                .frame(maxWidth: .infinity)
+                                .padding(.vertical, GameTheme.Layout.mediumPadding)
+                                .background(
+                                    Capsule()
+                                        .fill(
+                                            LinearGradient(
+                                                colors: GameTheme.Colors.buttonGradient,
+                                                startPoint: .leading,
+                                                endPoint: .trailing
+                                            )
+                                        )
+                                )
+                        }
+                        
+                        Button(action: onGoHome) {
+                            Text("Return Home")
+                                .font(GameTheme.Typography.body)
+                                .foregroundColor(GameTheme.Colors.secondaryText)
+                                .tracking(0.3)
+                        }
+                    }
+                    .padding(.horizontal, GameTheme.Layout.largePadding)
+                    .padding(.bottom, GameTheme.Layout.largePadding)
                 }
-                .scaleEffect(1.0)
-                .gameAnimation(value: true)
+            }
+        }
+        .statusBarHidden()
+    }
+    
+    private func formatTime(_ timeInterval: TimeInterval) -> String {
+        let minutes = Int(timeInterval) / 60
+        let seconds = Int(timeInterval) % 60
+        return String(format: "%d:%02d", minutes, seconds)
+    }
+}
+
+// MARK: - Statistic Card Component
+
+struct StatisticCard: View {
+    let title: String
+    let value: String
+    let icon: String
+    let color: Color
+    
+    var body: some View {
+        VStack(spacing: 12) {
+            Image(systemName: icon)
+                .font(.system(size: 24, weight: .medium))
+                .foregroundColor(color)
+            
+            Text(value)
+                .font(GameTheme.Typography.largeScore)
+                .foregroundColor(GameTheme.Colors.primaryText)
+                .lineLimit(1)
+                .minimumScaleFactor(0.8)
+            
+            Text(title)
+                .font(GameTheme.Typography.caption)
+                .foregroundColor(GameTheme.Colors.secondaryText)
+                .multilineTextAlignment(.center)
+                .lineLimit(2)
+        }
+        .padding(GameTheme.Layout.mediumPadding)
+        .frame(maxWidth: .infinity, minHeight: 120)
+        .background(
+            RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
+                .fill(GameTheme.Colors.cardBackground)
+                .overlay(
+                    RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
+                        .stroke(color.opacity(0.3), lineWidth: 1.5)
+                )
+        )
+        .shadow(color: GameTheme.Colors.cardShadow, radius: 6, x: 0, y: 3)
+    }
+}
+
+// MARK: - Difficulty Selection Component
+
+struct DifficultySelectionView: View {
+    @Binding var selectedDifficulty: DifficultyMode
+    let onStartGame: (DifficultyMode) -> Void
+    
+    var body: some View {
+        VStack(spacing: GameTheme.Layout.mediumSpacing) {
+            Text("Select Difficulty")
+                .font(GameTheme.Typography.headline)
+                .foregroundColor(GameTheme.Colors.primaryText)
+                .tracking(0.5)
+            
+            VStack(spacing: GameTheme.Layout.smallSpacing) {
+                ForEach(DifficultyMode.allCases, id: \.self) { difficulty in
+                    DifficultyButton(
+                        difficulty: difficulty,
+                        isSelected: selectedDifficulty == difficulty,
+                        onTap: {
+                            selectedDifficulty = difficulty
+                        }
+                    )
+                }
+            }
+            
+            Button(action: {
+                onStartGame(selectedDifficulty)
+            }) {
+                HStack {
+                    Image(systemName: "play.fill")
+                        .font(.system(size: 18, weight: .bold))
+                    
+                    Text("Start Game")
+                        .font(GameTheme.Typography.headline)
+                        .fontWeight(.medium)
+                        .tracking(0.5)
+                }
+                .foregroundColor(GameTheme.Colors.buttonText)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, GameTheme.Layout.mediumPadding)
+                .background(
+                    Capsule()
+                        .fill(
+                            LinearGradient(
+                                colors: GameTheme.Colors.buttonGradient,
+                                startPoint: .leading,
+                                endPoint: .trailing
+                            )
+                        )
+                )
+            }
+            .scaleEffect(1.0)
+            .gameAnimation(value: selectedDifficulty)
+        }
+        .padding(GameTheme.Layout.largePadding)
+        .background(
+            RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
+                .fill(GameTheme.Colors.cardBackground)
+                .overlay(
+                    RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
+                        .stroke(
+                            LinearGradient(
+                                colors: GameTheme.Colors.cardBorderGradient,
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            ),
+                            lineWidth: GameTheme.Layout.strokeWidth
+                        )
+                )
+        )
+        .shadow(color: GameTheme.Colors.cardShadow, radius: GameTheme.Layout.shadowRadius, x: 0, y: GameTheme.Layout.shadowOffset)
+    }
+}
+
+struct DifficultyButton: View {
+    let difficulty: DifficultyMode
+    let isSelected: Bool
+    let onTap: () -> Void
+    
+    var body: some View {
+        Button(action: onTap) {
+            HStack(spacing: GameTheme.Layout.mediumSpacing) {
+                Image(systemName: difficulty.icon)
+                    .font(.system(size: 20, weight: .medium))
+                    .foregroundColor(difficulty.color)
+                    .frame(width: 24)
+                
+                VStack(alignment: .leading, spacing: 4) {
+                    Text(difficulty.rawValue)
+                        .font(GameTheme.Typography.headline)
+                        .fontWeight(.medium)
+                        .foregroundColor(GameTheme.Colors.primaryText)
+                    
+                    Text(difficulty.description)
+                        .font(GameTheme.Typography.caption)
+                        .foregroundColor(GameTheme.Colors.secondaryText)
+                        .lineLimit(2)
+                }
                 
                 Spacer()
                 
-                // Block Grass Artwork at bottom
-                BlockGrassView()
+                if isSelected {
+                    Image(systemName: "checkmark.circle.fill")
+                        .font(.system(size: 20, weight: .medium))
+                        .foregroundColor(GameTheme.Colors.accent)
+                }
             }
-            .padding(.horizontal, GameTheme.Layout.largePadding)
-            .padding(.vertical, GameTheme.Layout.mediumPadding)
+            .padding(GameTheme.Layout.mediumPadding)
+            .background(
+                RoundedRectangle(cornerRadius: GameTheme.Layout.buttonCornerRadius)
+                    .fill(isSelected ? difficulty.color.opacity(0.1) : GameTheme.Colors.containerBackground)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: GameTheme.Layout.buttonCornerRadius)
+                            .stroke(
+                                isSelected ? difficulty.color.opacity(0.5) : GameTheme.Colors.containerBorder,
+                                lineWidth: isSelected ? 2 : 1
+                            )
+                    )
+            )
         }
-        .statusBarHidden() // Hide status bar for immersive gaming experience
+        .scaleEffect(isSelected ? 1.02 : 1.0)
+        .animation(.easeInOut(duration: 0.2), value: isSelected)
+    }
+}
+
+// MARK: - Game Home View
+
+struct GameHomeView: View {
+    @ObservedObject var gameState: GameState
+    let onStartGame: (DifficultyMode) -> Void
+    
+    @State private var selectedDifficulty: DifficultyMode = .easy
+    
+    var body: some View {
+        ZStack {
+            GameBackgroundView()
+            
+            ScrollView {
+                VStack(spacing: GameTheme.Layout.sectionSpacing) {
+                    // App Title
+                    Text("🍂 Leaves of Blocks")
+                        .font(GameTheme.Typography.title)
+                        .foregroundColor(GameTheme.Colors.primaryText)
+                        .padding(.vertical, GameTheme.Layout.largePadding)
+                        .padding(.top, GameTheme.Layout.extraLargePadding)
+                    
+                    // High Score Display
+                    VStack(spacing: GameTheme.Layout.smallSpacing) {
+                        Text("Best Score")
+                            .font(GameTheme.Typography.headline)
+                            .foregroundColor(GameTheme.Colors.accent)
+                        
+                        Text("\(gameState.highScoreManager.highScore)")
+                            .font(GameTheme.Typography.largeScore)
+                            .foregroundColor(GameTheme.Colors.accent)
+                            
+                        // Last played info if available
+                        if gameState.score > 0 {
+                            Text("Last Score: \(gameState.score)")
+                                .font(GameTheme.Typography.caption)
+                                .foregroundColor(GameTheme.Colors.secondaryText)
+                        }
+                    }
+                    .padding(GameTheme.Layout.largePadding)
+                    .background(
+                        RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
+                            .fill(GameTheme.Colors.cardBackground)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
+                                    .stroke(GameTheme.Colors.accent.opacity(0.3), lineWidth: 2)
+                            )
+                    )
+                    
+                    // Difficulty Selection
+                    DifficultySelectionView(
+                        selectedDifficulty: $selectedDifficulty,
+                        onStartGame: onStartGame
+                    )
+                    
+                    // Block Grass Artwork at bottom
+                    BlockGrassView()
+                        .frame(height: 100)
+                }
+                .padding(.horizontal, GameTheme.Layout.largePadding)
+                .padding(.vertical, GameTheme.Layout.mediumPadding)
+            }
+        }
+        .statusBarHidden()
     }
 }
 
@@ -478,6 +840,7 @@ struct GameBoardView: View {
     
     let cellSize: CGFloat = 40
     let onGoHome: () -> Void
+    let onViewSummary: () -> Void
     
     var body: some View {
         ZStack {
@@ -568,9 +931,19 @@ struct GameBoardView: View {
             .padding(.horizontal, GameTheme.Layout.largePadding)
             .padding(.vertical, GameTheme.Layout.mediumPadding)
             
-            // Game Over Overlay
+            // Game Over Overlay - highest priority, appears above everything
             if gameState.isGameOver {
-                GameOverOverlayView(gameState: gameState)
+                ZStack {
+                    // Semi-transparent background to dim the game
+                    Color.black.opacity(0.5)
+                        .ignoresSafeArea()
+                    
+                    GameOverOverlayView(
+                        gameState: gameState,
+                        onViewSummary: onViewSummary
+                    )
+                }
+                .zIndex(2000) // Higher than dragged blocks
             }
         
         // Dragged block following finger - positioned above finger for better visibility

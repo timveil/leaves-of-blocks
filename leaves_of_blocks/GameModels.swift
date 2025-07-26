@@ -2,6 +2,45 @@ import Foundation
 import SwiftUI
 import UIKit
 
+enum DifficultyMode: String, CaseIterable, Codable {
+    case easy = "Easy"
+    case moderate = "Moderate" 
+    case hard = "Hard"
+    
+    var description: String {
+        switch self {
+        case .easy:
+            return "Lots of small blocks, perfect for beginners"
+        case .moderate:
+            return "Balanced mix of small and large blocks"
+        case .hard:
+            return "Many large blocks, a real challenge!"
+        }
+    }
+    
+    var icon: String {
+        switch self {
+        case .easy:
+            return "leaf.fill"
+        case .moderate:
+            return "square.stack.3d.up.fill"
+        case .hard:
+            return "flame.fill"
+        }
+    }
+    
+    var color: Color {
+        switch self {
+        case .easy:
+            return GameTheme.Colors.blockGreen
+        case .moderate:
+            return GameTheme.Colors.blockYellow
+        case .hard:
+            return GameTheme.Colors.blockRed
+        }
+    }
+}
+
 struct GridPosition: Equatable, Codable, Hashable {
     let row: Int
     let col: Int
@@ -62,7 +101,7 @@ struct BlockShape: Codable, Equatable, Hashable {
 }
 
 class GameState: ObservableObject {
-    static let gridSize = 8
+    static let gridSize = GameTheme.GameConfig.gridSize
     
     @Published var grid: [[GridCell]]
     @Published var currentBlocks: [BlockShape]
@@ -70,6 +109,16 @@ class GameState: ObservableObject {
     @Published var isGameOver: Bool = false
     @Published var linesCleared: Int = 0
     @Published var lastClearedCells: [ClearedCell] = []
+    
+    // Game Statistics
+    @Published var blocksPlaced: Int = 0
+    @Published var gameStartTime: Date = Date()
+    @Published var longestCombo: Int = 0
+    @Published var currentCombo: Int = 0
+    @Published var isNewHighScore: Bool = false
+    
+    // Difficulty mode
+    @Published var currentDifficulty: DifficultyMode = .easy
     
     let highScoreManager = HighScoreManager()
     
@@ -80,7 +129,8 @@ class GameState: ObservableObject {
     }
     
     func generateNewBlocks() {
-        generateWeightedBlocks()
+        currentBlocks = BlockGenerator.generateWeightedBlocks(count: 3, difficulty: currentDifficulty)
+        checkGameOver()
     }
     
     func canPlaceBlock(_ block: BlockShape, at gridPosition: GridPosition) -> Bool {
@@ -105,6 +155,10 @@ class GameState: ObservableObject {
     func placeBlock(_ block: BlockShape, at gridPosition: GridPosition) {
         guard canPlaceBlock(block, at: gridPosition) else { return }
         
+        #if DEBUG
+        print("🧩 Placing block with \(block.positions.count) cells at (\(gridPosition.row), \(gridPosition.col))")
+        #endif
+        
         // Haptic feedback for block placement
         let impactFeedback = UIImpactFeedbackGenerator(style: .light)
         impactFeedback.impactOccurred()
@@ -116,6 +170,9 @@ class GameState: ObservableObject {
             grid[finalRow][finalCol].isFilled = true
             grid[finalRow][finalCol].color = block.color
         }
+        
+        // Update statistics
+        blocksPlaced += 1
         
         // Add points for placing block
         score += block.positions.count * 10
@@ -133,6 +190,10 @@ class GameState: ObservableObject {
         if currentBlocks.isEmpty {
             generateNewBlocks()
         }
+        
+        // Always check for game over after placing a block
+        // This ensures immediate detection when no moves are available
+        checkGameOver()
     }
     
     func clearCompletedLines() -> (clearedRows: Set<Int>, clearedCols: Set<Int>, clearedCells: [ClearedCell]) {
@@ -192,27 +253,59 @@ class GameState: ObservableObject {
             
             linesCleared += totalLinesCleared
             score += totalLinesCleared * 100
+            
+            // Update combo tracking
+            currentCombo = totalLinesCleared
+            if currentCombo > longestCombo {
+                longestCombo = currentCombo
+            }
+            
             if totalLinesCleared > 1 {
                 score += (totalLinesCleared - 1) * 50 // Combo bonus
             }
+        } else {
+            currentCombo = 0
         }
         
         return (clearedRows: clearedRows, clearedCols: clearedCols, clearedCells: clearedCells)
     }
     
     func checkGameOver() {
-        for block in currentBlocks {
-            for row in 0..<GameState.gridSize {
-                for col in 0..<GameState.gridSize {
-                    if canPlaceBlock(block, at: GridPosition(row: row, col: col)) {
-                        isGameOver = false
-                        return
-                    }
-                }
+        // If no current blocks, it's not game over (waiting for new blocks)
+        guard !currentBlocks.isEmpty else {
+            isGameOver = false
+            return
+        }
+        
+        // Use the optimized game logic function
+        let gameOverState = GameRules.isGameOver(currentBlocks: currentBlocks, grid: grid)
+        
+        #if DEBUG
+        print("🎮 Game Over Check: hasBlocks=\(currentBlocks.count), gameOverState=\(gameOverState), currentGameOver=\(isGameOver)")
+        if gameOverState {
+            print("🚫 No valid moves found for current blocks:")
+            for (index, block) in currentBlocks.enumerated() {
+                print("   Block \(index): \(block.positions.count) cells")
             }
         }
-        isGameOver = true
-        highScoreManager.updateHighScore(score)
+        #endif
+        
+        if gameOverState && !isGameOver {
+            // Game just ended - handle high score
+            print("🏁 GAME OVER DETECTED! Final score: \(score)")
+            isGameOver = true
+            let oldHighScore = highScoreManager.highScore
+            highScoreManager.updateHighScore(score)
+            isNewHighScore = score > oldHighScore
+        } else if !gameOverState {
+            // Game is still active
+            isGameOver = false
+        }
+    }
+    
+    func startGame(difficulty: DifficultyMode) {
+        currentDifficulty = difficulty
+        resetGame()
     }
     
     func resetGame() {
@@ -222,6 +315,12 @@ class GameState: ObservableObject {
         isGameOver = false
         lastClearedCells = []
         
+        // Reset statistics
+        blocksPlaced = 0
+        gameStartTime = Date()
+        longestCombo = 0
+        currentCombo = 0
+        isNewHighScore = false
         
         // Randomly pre-fill the grid with shapes
         randomlyFillGrid()
@@ -293,6 +392,22 @@ class GameState: ObservableObject {
         }
         
         return false
+    }
+    
+    // MARK: - Computed Statistics
+    
+    var gameTime: TimeInterval {
+        Date().timeIntervalSince(gameStartTime)
+    }
+    
+    var averageBlockScore: Double {
+        guard blocksPlaced > 0 else { return 0.0 }
+        return Double(score) / Double(blocksPlaced)
+    }
+    
+    var lineClearPercentage: Double {
+        guard blocksPlaced > 0 else { return 0.0 }
+        return (Double(linesCleared) / Double(blocksPlaced)) * 100
     }
 }
 

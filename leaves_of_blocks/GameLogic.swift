@@ -82,49 +82,117 @@ struct GameRules {
 
 struct BlockGenerator {
     
-    // MARK: - Weighted Block Generation
+    // MARK: - Difficulty-Based Block Generation
     
-    private static let blockWeights: [BlockShape: Double] = [
-        // Single blocks - most common
-        BlockShape.allShapes[0]: 3.0,
-        
-        // 2-block shapes - common
-        BlockShape.allShapes[1]: 2.5,
-        BlockShape.allShapes[2]: 2.5,
-        
-        // 3-block shapes - moderate
-        BlockShape.allShapes[3]: 2.0,
-        BlockShape.allShapes[4]: 2.0,
-        BlockShape.allShapes[5]: 2.0,
-        BlockShape.allShapes[6]: 2.0,
-        
-        // 4-block shapes - less common
-        BlockShape.allShapes[7]: 1.5,
-        BlockShape.allShapes[8]: 1.5,
-        BlockShape.allShapes[9]: 1.5,
-        
-        // L-shapes - challenging
-        BlockShape.allShapes[10]: 1.0,
-        BlockShape.allShapes[11]: 1.0,
-        
-        // T-shapes - challenging
-        BlockShape.allShapes[12]: 1.0,
-        
-        // Plus shape - rare
-        BlockShape.allShapes[13]: 0.5
-    ]
+    private static func getBlockWeights(for difficulty: DifficultyMode) -> [BlockShape: Double] {
+        switch difficulty {
+        case .easy:
+            return [
+                // Single blocks - very common (higher weights)
+                BlockShape.allShapes[0]: 4.0,
+                
+                // 2-block shapes - very common
+                BlockShape.allShapes[1]: 3.5,
+                BlockShape.allShapes[2]: 3.5,
+                
+                // 3-block shapes - common
+                BlockShape.allShapes[3]: 3.0,
+                BlockShape.allShapes[4]: 3.0,
+                BlockShape.allShapes[5]: 2.5,
+                BlockShape.allShapes[6]: 2.5,
+                
+                // 4-block shapes - less common
+                BlockShape.allShapes[7]: 2.0,
+                BlockShape.allShapes[8]: 1.5,
+                BlockShape.allShapes[9]: 1.5,
+                
+                // L-shapes - rare
+                BlockShape.allShapes[10]: 1.0,
+                BlockShape.allShapes[11]: 1.0,
+                
+                // T-shapes - rare
+                BlockShape.allShapes[12]: 1.0,
+                
+                // 3x3 square - very rare
+                BlockShape.allShapes[13]: 0.3
+            ]
+            
+        case .moderate:
+            return [
+                // Single blocks - common
+                BlockShape.allShapes[0]: 2.5,
+                
+                // 2-block shapes - common
+                BlockShape.allShapes[1]: 2.5,
+                BlockShape.allShapes[2]: 2.5,
+                
+                // 3-block shapes - common
+                BlockShape.allShapes[3]: 2.5,
+                BlockShape.allShapes[4]: 2.5,
+                BlockShape.allShapes[5]: 2.5,
+                BlockShape.allShapes[6]: 2.5,
+                
+                // 4-block shapes - moderate
+                BlockShape.allShapes[7]: 2.0,
+                BlockShape.allShapes[8]: 2.0,
+                BlockShape.allShapes[9]: 2.0,
+                
+                // L-shapes - moderate
+                BlockShape.allShapes[10]: 1.5,
+                BlockShape.allShapes[11]: 1.5,
+                
+                // T-shapes - moderate
+                BlockShape.allShapes[12]: 1.5,
+                
+                // 3x3 square - uncommon but present
+                BlockShape.allShapes[13]: 1.0
+            ]
+            
+        case .hard:
+            return [
+                // Single blocks - less common
+                BlockShape.allShapes[0]: 1.5,
+                
+                // 2-block shapes - less common
+                BlockShape.allShapes[1]: 1.5,
+                BlockShape.allShapes[2]: 1.5,
+                
+                // 3-block shapes - moderate
+                BlockShape.allShapes[3]: 2.0,
+                BlockShape.allShapes[4]: 2.0,
+                BlockShape.allShapes[5]: 2.0,
+                BlockShape.allShapes[6]: 2.0,
+                
+                // 4-block shapes - common
+                BlockShape.allShapes[7]: 3.0,
+                BlockShape.allShapes[8]: 2.5,
+                BlockShape.allShapes[9]: 2.5,
+                
+                // L-shapes - common
+                BlockShape.allShapes[10]: 2.5,
+                BlockShape.allShapes[11]: 2.5,
+                
+                // T-shapes - common
+                BlockShape.allShapes[12]: 2.5,
+                
+                // 3x3 square - much more common!
+                BlockShape.allShapes[13]: 2.0
+            ]
+        }
+    }
     
-    static func generateWeightedBlocks(count: Int = 3) -> [BlockShape] {
+    static func generateWeightedBlocks(count: Int = 3, difficulty: DifficultyMode = .easy) -> [BlockShape] {
         var blocks: [BlockShape] = []
         
         for _ in 0..<count {
-            blocks.append(generateWeightedBlock())
+            blocks.append(generateWeightedBlock(difficulty: difficulty))
         }
         
         return blocks
     }
     
-    private static func generateWeightedBlock() -> BlockShape {
+    private static func generateWeightedBlock(difficulty: DifficultyMode) -> BlockShape {
+        let blockWeights = getBlockWeights(for: difficulty)
         let totalWeight = blockWeights.values.reduce(0, +)
         let randomValue = Double.random(in: 0...totalWeight)
         
@@ -133,12 +201,14 @@ struct BlockGenerator {
         for (block, weight) in blockWeights {
             currentWeight += weight
             if randomValue <= currentWeight {
-                return block
+                let randomColor = BlockColor.allCases.randomElement()!
+                return BlockShape(positions: block.positions, color: randomColor)
             }
         }
         
         // Fallback to first block if something goes wrong
-        return BlockShape.allShapes[0]
+        let randomColor = BlockColor.allCases.randomElement()!
+        return BlockShape(positions: BlockShape.allShapes[0].positions, color: randomColor)
     }
 }
 
