@@ -578,9 +578,9 @@ struct GameSummaryView: View {
                             }
                         }
                     }
-                    .padding(.top, GameTheme.Layout.largePadding)
+                    .padding(.top, GameTheme.Layout.mediumPadding)
                     
-                    Spacer()
+                    Spacer(minLength: GameTheme.Layout.largeSpacing)
                     
                     // Final Score - centered and prominent
                     VStack(spacing: GameTheme.Layout.smallSpacing) {
@@ -596,7 +596,7 @@ struct GameSummaryView: View {
                             .minimumScaleFactor(0.7)
                     }
                     
-                    Spacer()
+                    Spacer(minLength: GameTheme.Layout.largeSpacing)
                     
                     // Statistics Cards - 2x2 grid
                     LazyVGrid(columns: [
@@ -634,7 +634,7 @@ struct GameSummaryView: View {
                     }
                     .padding(.horizontal, GameTheme.Layout.largePadding)
                     
-                    Spacer()
+                    Spacer(minLength: GameTheme.Layout.largeSpacing)
                     
                     // High Score Comparison - compact
                     HStack(spacing: GameTheme.Layout.largePadding) {
@@ -672,7 +672,7 @@ struct GameSummaryView: View {
                     )
                     .padding(.horizontal, GameTheme.Layout.largePadding)
                     
-                    Spacer()
+                    Spacer(minLength: GameTheme.Layout.mediumSpacing)
                     
                     // Action Buttons - compact
                     VStack(spacing: GameTheme.Layout.mediumSpacing) {
@@ -735,7 +735,11 @@ struct GameSummaryView: View {
                         }
                     }
                     .padding(.horizontal, GameTheme.Layout.extraLargePadding)
-                    .padding(.bottom, GameTheme.Layout.largePadding)
+                    .padding(.bottom, GameTheme.Layout.mediumPadding)
+                    
+                    // Grass always at bottom
+                    BlockGrassView()
+                        .ignoresSafeArea(.all, edges: .bottom)
                 }
             }
         }
