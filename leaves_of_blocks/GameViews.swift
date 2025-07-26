@@ -219,7 +219,7 @@ struct CurrentBlocksView: View {
     let cellSize: CGFloat
     let draggedBlock: BlockShape?
     let isDragging: Bool
-    let onDragStart: (BlockShape, CGPoint, CGPoint) -> Void
+    let onDragStart: (BlockShape, CGPoint) -> Void
     let onDragMove: (CGPoint) -> Void
     let onDragEnd: () -> Void
     
@@ -253,7 +253,7 @@ struct CurrentBlocksView: View {
                         block: block,
                         cellSize: draggedBlock == block && isDragging ? cellSize : scaledCellSize(for: block),
                         onDragStart: { location, startLocation in
-                            onDragStart(block, location, startLocation)
+                            onDragStart(block, location)
                         },
                         onDragMove: onDragMove,
                         onDragEnd: onDragEnd
@@ -463,10 +463,12 @@ struct GameBoardView: View {
     @State private var draggedBlock: BlockShape?
     @State private var previewPosition: GridPosition?
     @State private var dragLocation: CGPoint = .zero
-    @State private var dragStartOffset: CGPoint = .zero
     @State private var isDragging: Bool = false
     @State private var gridFrame: CGRect = .zero
     @State private var fallingLeaves: [FallingLeaf] = []
+    
+    // Constants for consistent positioning
+    private let dragOffsetY: CGFloat = 80 // Distance above finger
     
     let cellSize: CGFloat = 40
     let onGoHome: () -> Void
@@ -508,28 +510,39 @@ struct GameBoardView: View {
                     cellSize: cellSize,
                     draggedBlock: draggedBlock,
                     isDragging: isDragging,
-                    onDragStart: { block, location, startLocation in
+                    onDragStart: { block, location in
                         draggedBlock = block
                         isDragging = true
                         dragLocation = location
-                        dragStartOffset = CGPoint(
-                            x: location.x - startLocation.x,
-                            y: location.y - startLocation.y
-                        )
                     },
                     onDragMove: { location in
                         dragLocation = location
-                        // Calculate where the block's center would be (60 points above finger)
-                        // Then adjust for the original grab offset to get the block's reference point
-                        let blockCenterLocation = CGPoint(
-                            x: location.x,
-                            y: location.y - 60
-                        )
-                        let blockReferenceLocation = CGPoint(
-                            x: blockCenterLocation.x - dragStartOffset.x,
-                            y: blockCenterLocation.y - dragStartOffset.y
-                        )
-                        updatePreviewPosition(for: blockReferenceLocation)
+                        // Calculate preview position based on the dragged block's position
+                        // The block appears above the finger, so we use that location for preview
+                        // But we need to offset to the block's top-left corner for grid alignment
+                        if let block = draggedBlock {
+                            let blockCenterLocation = CGPoint(
+                                x: location.x,
+                                y: location.y - dragOffsetY
+                            )
+                            
+                            // Calculate the block's dimensions and offset to top-left corner
+                            let minRow = block.positions.map(\.row).min() ?? 0
+                            let maxRow = block.positions.map(\.row).max() ?? 0
+                            let minCol = block.positions.map(\.col).min() ?? 0
+                            let maxCol = block.positions.map(\.col).max() ?? 0
+                            
+                            let blockWidth = CGFloat(maxCol - minCol + 1) * cellSize
+                            let blockHeight = CGFloat(maxRow - minRow + 1) * cellSize
+                            
+                            // Convert center position to top-left corner position
+                            let blockTopLeftLocation = CGPoint(
+                                x: blockCenterLocation.x - blockWidth/2,
+                                y: blockCenterLocation.y - blockHeight/2
+                            )
+                            
+                            updatePreviewPosition(for: blockTopLeftLocation)
+                        }
                     },
                     onDragEnd: {
                         // Try to place the block if it's over the grid
@@ -543,7 +556,6 @@ struct GameBoardView: View {
                         draggedBlock = nil
                         previewPosition = nil
                         isDragging = false
-                        dragStartOffset = .zero
                     }
                 )
                 
@@ -561,13 +573,15 @@ struct GameBoardView: View {
         
         // Dragged block following finger - positioned above finger for better visibility
         if let draggedBlock = draggedBlock, isDragging {
-            BlockView(block: draggedBlock, cellSize: cellSize * 0.8)
+            BlockView(block: draggedBlock, cellSize: cellSize)
                 .position(
                     x: dragLocation.x,
-                    y: dragLocation.y - 60  // Position block 60 points above finger
+                    y: dragLocation.y - dragOffsetY  // Position block above finger
                 )
                 .allowsHitTesting(false)
                 .zIndex(1000)
+                .scaleEffect(1.1) // Slightly larger during drag for better visibility
+                .shadow(color: .black.opacity(0.3), radius: 8, x: 0, y: 4)
         }
         
         // Falling leaves animation
@@ -589,8 +603,17 @@ struct GameBoardView: View {
     // MARK: - Helper Methods
     
     private func getGridPosition(from location: CGPoint, in size: CGSize) -> GridPosition {
-        let row = Int(location.y / (cellSize + 2))
-        let col = Int(location.x / (cellSize + 2))
+        // Account for the grid's internal padding (mediumPadding = 16)
+        let adjustedX = location.x - 16  // GameTheme.Layout.mediumPadding
+        let adjustedY = location.y - 16  // GameTheme.Layout.mediumPadding
+        
+        // Each cell is cellSize + 3 points spacing (except the last one)
+        let cellSpacing: CGFloat = 3
+        let cellWithSpacing = cellSize + cellSpacing
+        
+        let col = Int(adjustedX / cellWithSpacing)
+        let row = Int(adjustedY / cellWithSpacing)
+        
         return GridPosition(
             row: max(0, min(GameState.gridSize - 1, row)),
             col: max(0, min(GameState.gridSize - 1, col))
@@ -737,10 +760,11 @@ struct DraggableBlockView: View {
     var body: some View {
         GeometryReader { geometry in
             BlockView(block: block, cellSize: cellSize)
-                .opacity(isDragging ? 0.3 : 1.0)
+                .opacity(isDragging ? 0.4 : 1.0)
+                .scaleEffect(isDragging ? 0.95 : 1.0)
                 .gameAnimation(value: isDragging)
                 .gesture(
-                    DragGesture(minimumDistance: 0, coordinateSpace: .global)
+                    DragGesture(minimumDistance: 5, coordinateSpace: .global)
                         .onChanged { value in
                             if !isDragging {
                                 isDragging = true
