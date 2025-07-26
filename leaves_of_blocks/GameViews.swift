@@ -25,6 +25,8 @@ struct SimpleAppTitleView: View {
 
 struct SimpleScoreView: View {
     @ObservedObject var gameState: GameState
+    let onGoHome: () -> Void
+    let onReset: () -> Void
     
     var body: some View {
         HStack {
@@ -45,15 +47,39 @@ struct SimpleScoreView: View {
             
             Spacer()
             
-            // High Score
-            VStack(spacing: GameTheme.Layout.tinySpacing) {
-                Text("\(gameState.highScoreManager.highScore)")
-                    .font(GameTheme.Typography.largeScore)
-                    .foregroundColor(GameTheme.Colors.accent)
+            // Home and Reset Icons
+            HStack(spacing: GameTheme.Layout.smallSpacing) {
+                // Home Button
+                Button(action: onGoHome) {
+                    Image(systemName: "house.fill")
+                        .font(.system(size: 32, weight: .bold))
+                        .foregroundColor(GameTheme.Colors.accent)
+                        .frame(width: 60, height: 60)
+                        .background(
+                            RoundedRectangle(cornerRadius: 12)
+                                .fill(GameTheme.Colors.cardBackground.opacity(0.6))
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .stroke(GameTheme.Colors.accent.opacity(0.3), lineWidth: 2)
+                                )
+                        )
+                }
                 
-                Text("Best")
-                    .font(GameTheme.Typography.caption)
-                    .foregroundColor(GameTheme.Colors.accent.opacity(0.6))
+                // Reset Button  
+                Button(action: onReset) {
+                    Image(systemName: "arrow.clockwise")
+                        .font(.system(size: 32, weight: .bold))
+                        .foregroundColor(GameTheme.Colors.warning)
+                        .frame(width: 60, height: 60)
+                        .background(
+                            RoundedRectangle(cornerRadius: 12)
+                                .fill(GameTheme.Colors.cardBackground.opacity(0.6))
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: 12)
+                                        .stroke(GameTheme.Colors.warning.opacity(0.3), lineWidth: 2)
+                                )
+                        )
+                }
             }
         }
         .padding(.horizontal, GameTheme.Layout.largePadding)
@@ -318,6 +344,87 @@ struct GameOverOverlayView: View {
     }
 }
 
+// MARK: - Game Home View
+
+struct GameHomeView: View {
+    @ObservedObject var gameState: GameState
+    let onStartGame: () -> Void
+    
+    var body: some View {
+        ZStack {
+            GameBackgroundView()
+            
+            VStack(spacing: GameTheme.Layout.sectionSpacing) {
+                Spacer()
+                
+                // App Title
+                Text("🍂 Leaves of Blocks")
+                    .font(GameTheme.Typography.title)
+                    .foregroundColor(GameTheme.Colors.primaryText)
+                    .padding(.vertical, GameTheme.Layout.largePadding)
+                
+                // High Score Display
+                VStack(spacing: GameTheme.Layout.smallSpacing) {
+                    Text("Best Score")
+                        .font(GameTheme.Typography.headline)
+                        .foregroundColor(GameTheme.Colors.accent)
+                    
+                    Text("\(gameState.highScoreManager.highScore)")
+                        .font(GameTheme.Typography.largeScore)
+                        .foregroundColor(GameTheme.Colors.accent)
+                        
+                    // Last played info if available
+                    if gameState.score > 0 {
+                        Text("Last Score: \(gameState.score)")
+                            .font(GameTheme.Typography.caption)
+                            .foregroundColor(GameTheme.Colors.secondaryText)
+                    }
+                }
+                .padding(GameTheme.Layout.largePadding)
+                .background(
+                    RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
+                        .fill(GameTheme.Colors.cardBackground)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
+                                .stroke(GameTheme.Colors.accent.opacity(0.3), lineWidth: 2)
+                        )
+                )
+                
+                Spacer()
+                
+                // Start Game Button
+                Button(action: onStartGame) {
+                    Text("Start New Game")
+                        .font(GameTheme.Typography.headline)
+                        .fontWeight(.medium)
+                        .foregroundColor(GameTheme.Colors.buttonText)
+                        .tracking(0.5)
+                        .padding(.horizontal, GameTheme.Layout.extraLargePadding)
+                        .padding(.vertical, GameTheme.Layout.mediumPadding)
+                        .background(
+                            Capsule()
+                                .fill(
+                                    LinearGradient(
+                                        colors: GameTheme.Colors.buttonGradient,
+                                        startPoint: .leading,
+                                        endPoint: .trailing
+                                    )
+                                )
+                        )
+                }
+                .scaleEffect(1.0)
+                .gameAnimation(value: true)
+                
+                Spacer()
+                
+                // Block Grass Artwork at bottom
+                BlockGrassView()
+            }
+            .padding(.horizontal, GameTheme.Layout.mediumPadding)
+        }
+    }
+}
+
 // MARK: - Main Game Board
 
 struct GameBoardView: View {
@@ -331,14 +438,23 @@ struct GameBoardView: View {
     @State private var fallingLeaves: [FallingLeaf] = []
     
     let cellSize: CGFloat = 32
+    let onGoHome: () -> Void
     
     var body: some View {
         ZStack {
             GameBackgroundView()
             
             VStack(spacing: GameTheme.Layout.sectionSpacing) {
-                // Score Section
-                SimpleScoreView(gameState: gameState)
+                // Score Section with integrated buttons
+                SimpleScoreView(
+                    gameState: gameState,
+                    onGoHome: onGoHome,
+                    onReset: {
+                        withAnimation(GameTheme.Animations.springAnimation) {
+                            gameState.resetGame()
+                        }
+                    }
+                )
                 
                 // Game Grid
                 GameGridView(
@@ -396,6 +512,7 @@ struct GameBoardView: View {
                 BlockGrassView()
             }
             .padding(.horizontal, GameTheme.Layout.mediumPadding)
+            .padding(.top, GameTheme.Layout.smallPadding) // Extra top padding for status bar
             
             // Game Over Overlay
             if gameState.isGameOver {
