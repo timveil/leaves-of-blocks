@@ -1,4 +1,5 @@
 import Foundation
+import SwiftUI
 
 struct GridPosition: Equatable, Codable, Hashable {
     let row: Int
@@ -208,6 +209,7 @@ class GameState: ObservableObject {
         isGameOver = false
         lastClearedCells = []
         
+        
         // Randomly pre-fill the grid with shapes
         randomlyFillGrid()
         
@@ -280,3 +282,4 @@ class GameState: ObservableObject {
         return false
     }
 }
+

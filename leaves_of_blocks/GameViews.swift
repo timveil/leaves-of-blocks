@@ -475,6 +475,7 @@ struct GameBoardView: View {
         ZStack {
             GameBackgroundView()
             
+            
             VStack(spacing: GameTheme.Layout.sectionSpacing) {
                 // Score Section with integrated buttons
                 SimpleScoreView(
@@ -518,11 +519,17 @@ struct GameBoardView: View {
                     },
                     onDragMove: { location in
                         dragLocation = location
-                        let adjustedLocation = CGPoint(
-                            x: location.x - dragStartOffset.x,
-                            y: location.y - dragStartOffset.y
+                        // Calculate where the block's center would be (60 points above finger)
+                        // Then adjust for the original grab offset to get the block's reference point
+                        let blockCenterLocation = CGPoint(
+                            x: location.x,
+                            y: location.y - 60
                         )
-                        updatePreviewPosition(for: adjustedLocation)
+                        let blockReferenceLocation = CGPoint(
+                            x: blockCenterLocation.x - dragStartOffset.x,
+                            y: blockCenterLocation.y - dragStartOffset.y
+                        )
+                        updatePreviewPosition(for: blockReferenceLocation)
                     },
                     onDragEnd: {
                         // Try to place the block if it's over the grid
@@ -540,9 +547,10 @@ struct GameBoardView: View {
                     }
                 )
                 
-                // Block Grass Artwork at bottom
+                // Static grass foundation - always visible
                 BlockGrassView()
             }
+            .zIndex(10) // Game elements above grass
             .padding(.horizontal, GameTheme.Layout.largePadding)
             .padding(.vertical, GameTheme.Layout.mediumPadding)
             
@@ -551,12 +559,12 @@ struct GameBoardView: View {
                 GameOverOverlayView(gameState: gameState)
             }
         
-        // Dragged block following finger
+        // Dragged block following finger - positioned above finger for better visibility
         if let draggedBlock = draggedBlock, isDragging {
             BlockView(block: draggedBlock, cellSize: cellSize * 0.8)
                 .position(
-                    x: dragLocation.x - dragStartOffset.x,
-                    y: dragLocation.y - dragStartOffset.y
+                    x: dragLocation.x,
+                    y: dragLocation.y - 60  // Position block 60 points above finger
                 )
                 .allowsHitTesting(false)
                 .zIndex(1000)
@@ -829,63 +837,42 @@ struct FallingLeafView: View {
     }
 }
 
+
 struct BlockGrassView: View {
-    let grassBlocks: [(color: Color, height: CGFloat)] = [
-        (Color(red: 0.15, green: 0.6, blue: 0.05), 45),
-        (Color(red: 0.25, green: 0.7, blue: 0.15), 52),
-        (Color(red: 0.2, green: 0.65, blue: 0.1), 48),
-        (Color(red: 0.3, green: 0.75, blue: 0.2), 55),
-        (Color(red: 0.18, green: 0.62, blue: 0.08), 42),
-        (Color(red: 0.22, green: 0.68, blue: 0.12), 49),
-        (Color(red: 0.28, green: 0.73, blue: 0.18), 54),
-        (Color(red: 0.16, green: 0.58, blue: 0.06), 46),
-        (Color(red: 0.24, green: 0.69, blue: 0.14), 51),
-        (Color(red: 0.19, green: 0.63, blue: 0.09), 47),
-        (Color(red: 0.27, green: 0.72, blue: 0.17), 53),
-        (Color(red: 0.21, green: 0.66, blue: 0.11), 44),
-        (Color(red: 0.26, green: 0.71, blue: 0.16), 50),
-        (Color(red: 0.17, green: 0.59, blue: 0.07), 43),
-        (Color(red: 0.23, green: 0.67, blue: 0.13), 48),
-        (Color(red: 0.29, green: 0.74, blue: 0.19), 56),
-        (Color(red: 0.15, green: 0.57, blue: 0.05), 41),
-        (Color(red: 0.25, green: 0.7, blue: 0.15), 52),
-        (Color(red: 0.2, green: 0.64, blue: 0.1), 49),
-        (Color(red: 0.3, green: 0.76, blue: 0.2), 54),
-        (Color(red: 0.18, green: 0.61, blue: 0.08), 45),
-        (Color(red: 0.22, green: 0.65, blue: 0.12), 47),
-        (Color(red: 0.28, green: 0.73, blue: 0.18), 53),
-        (Color(red: 0.16, green: 0.56, blue: 0.06), 42),
-        (Color(red: 0.24, green: 0.68, blue: 0.14), 50),
-        (Color(red: 0.19, green: 0.62, blue: 0.09), 46),
-        (Color(red: 0.27, green: 0.71, blue: 0.17), 55),
-        (Color(red: 0.21, green: 0.66, blue: 0.11), 48),
-        (Color(red: 0.26, green: 0.7, blue: 0.16), 51),
-        (Color(red: 0.17, green: 0.58, blue: 0.07), 44),
+    let grassColors: [Color] = [
+        Color(red: 0.15, green: 0.6, blue: 0.05),   // Dark green
+        Color(red: 0.25, green: 0.7, blue: 0.15),   // Medium green
+        Color(red: 0.2, green: 0.65, blue: 0.1),    // Forest green
+        Color(red: 0.3, green: 0.75, blue: 0.2),    // Light green
+        Color(red: 0.18, green: 0.62, blue: 0.08),  // Deep green
+        Color(red: 0.22, green: 0.68, blue: 0.12),  // Pine green
+        Color(red: 0.28, green: 0.73, blue: 0.18),  // Spring green
     ]
+    
+    private let blockSize: CGFloat = 12
+    private let screenWidth = UIScreen.main.bounds.width
     
     var body: some View {
         VStack {
             Spacer()
             VStack(spacing: 0) {
-                // Multiple rows of grass for fuller effect
-                HStack(alignment: .bottom, spacing: 1) {
-                    ForEach(Array(grassBlocks.enumerated()), id: \.offset) { index, grass in
-                        RoundedRectangle(cornerRadius: 6)
-                            .fill(
-                                LinearGradient(
-                                    colors: [grass.color, grass.color.opacity(0.6)],
-                                    startPoint: .top,
-                                    endPoint: .bottom
+                // Create columns of varying heights
+                HStack(spacing: 1) {
+                    ForEach(0..<Int(screenWidth / (blockSize + 1)), id: \.self) { col in
+                        VStack(spacing: 1) {
+                            Spacer()
+                            // Each column has a random height between 2-5 blocks
+                            let columnHeight = getColumnHeight(for: col)
+                            ForEach(0..<columnHeight, id: \.self) { blockIndex in
+                                StaticGrassBlockView(
+                                    color: grassColors[seededRandom(col: col, blockIndex: blockIndex) % grassColors.count],
+                                    size: blockSize
                                 )
-                            )
-                            .frame(width: 12, height: grass.height)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: 6)
-                                    .stroke(grass.color.opacity(0.4), lineWidth: 1)
-                            )
-                            .shadow(color: grass.color.opacity(0.4), radius: 3, x: 0, y: 2)
+                            }
+                        }
                     }
                 }
+                .frame(height: 80) // Max height for grass area
                 
                 // Ground base
                 Rectangle()
@@ -902,7 +889,41 @@ struct BlockGrassView: View {
                     .frame(height: 20)
                     .shadow(color: Color(red: 0.1, green: 0.05, blue: 0.02).opacity(0.5), radius: 4, x: 0, y: -2)
             }
-            .padding(.horizontal, 0)
         }
+    }
+    
+    // Get deterministic column height
+    private func getColumnHeight(for col: Int) -> Int {
+        let seed = col * 7919
+        let random = ((seed * 9301 + 49297) % 233280) / 50000
+        return min(5, max(2, random + 2)) // Heights between 2-5 blocks
+    }
+    
+    // Deterministic random for consistent block colors
+    private func seededRandom(col: Int, blockIndex: Int) -> Int {
+        let seed = col * 1000 + blockIndex * 100
+        return ((seed * 9301 + 49297) % 233280) / 1000
+    }
+}
+
+struct StaticGrassBlockView: View {
+    let color: Color
+    let size: CGFloat
+    
+    var body: some View {
+        RoundedRectangle(cornerRadius: 6)
+            .fill(
+                LinearGradient(
+                    colors: [color, color.opacity(0.6)],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+            )
+            .frame(width: size, height: size)
+            .overlay(
+                RoundedRectangle(cornerRadius: 6)
+                    .stroke(color.opacity(0.4), lineWidth: 1)
+            )
+            .shadow(color: color.opacity(0.4), radius: 3, x: 0, y: 2)
     }
 }
