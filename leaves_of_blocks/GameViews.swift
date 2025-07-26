@@ -3,202 +3,61 @@ import SwiftUI
 extension BlockColor {
     var color: Color {
         switch self {
-        case .blue: return Color(red: 0.4, green: 0.6, blue: 0.8)     // Twilight blue
-        case .green: return Color(red: 0.3, green: 0.6, blue: 0.2)   // Forest green
-        case .red: return Color(red: 0.8, green: 0.2, blue: 0.1)     // Deep crimson
-        case .yellow: return Color(red: 0.9, green: 0.7, blue: 0.1)  // Golden amber
-        case .purple: return Color(red: 0.5, green: 0.3, blue: 0.4)  // Muted plum
-        case .orange: return Color(red: 0.9, green: 0.5, blue: 0.1)  // Burnt orange
-        case .pink: return Color(red: 0.8, green: 0.4, blue: 0.3)    // Rust pink
+        case .blue: return GameTheme.Colors.blockBlue
+        case .green: return GameTheme.Colors.blockGreen
+        case .red: return GameTheme.Colors.blockRed
+        case .yellow: return GameTheme.Colors.blockYellow
+        case .purple: return GameTheme.Colors.blockPurple
+        case .orange: return GameTheme.Colors.blockOrange
+        case .pink: return GameTheme.Colors.blockPink
         }
     }
 }
 
-struct AppTitleView: View {
+struct SimpleAppTitleView: View {
     var body: some View {
-        VStack(spacing: 8) {
-            Text("🍂 Leaves of Blocks 🍂")
-                .font(.system(size: 28, weight: .bold, design: .serif))
-                .foregroundStyle(
-                    LinearGradient(
-                        colors: [
-                            Color(red: 0.9, green: 0.7, blue: 0.1),
-                            Color(red: 0.9, green: 0.5, blue: 0.1),
-                            Color(red: 0.8, green: 0.4, blue: 0.1)
-                        ],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    )
-                )
-                .shadow(color: Color(red: 0.6, green: 0.3, blue: 0.1).opacity(0.6), radius: 3, x: 1, y: 2)
-                .italic()
-                .tracking(1.2)
-            
-            Text("A Whitman-inspired Puzzle")
-                .font(.system(size: 12, weight: .medium, design: .serif))
-                .foregroundColor(Color(red: 0.7, green: 0.5, blue: 0.3).opacity(0.8))
-                .tracking(2)
-                .italic()
-        }
-        .padding(.horizontal, 20)
-        .padding(.vertical, 12)
-        .background(
-            RoundedRectangle(cornerRadius: 22)
-                .fill(
-                    LinearGradient(
-                        colors: [
-                            Color(red: 0.15, green: 0.1, blue: 0.05).opacity(0.9),
-                            Color(red: 0.2, green: 0.15, blue: 0.1).opacity(0.8)
-                        ],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    )
-                )
-                .overlay(
-                    RoundedRectangle(cornerRadius: 22)
-                        .stroke(
-                            LinearGradient(
-                                colors: [
-                                    Color(red: 0.9, green: 0.7, blue: 0.1).opacity(0.7),
-                                    Color(red: 0.9, green: 0.5, blue: 0.1).opacity(0.4),
-                                    Color(red: 0.8, green: 0.4, blue: 0.1).opacity(0.6)
-                                ],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            ),
-                            lineWidth: 2.5
-                        )
-                )
-                .shadow(color: Color(red: 0.4, green: 0.25, blue: 0.1).opacity(0.4), radius: 10, x: 0, y: 5)
-        )
+        Text("🍂 Leaves of Blocks")
+            .font(GameTheme.Typography.title)
+            .foregroundColor(GameTheme.Colors.primaryText)
+            .padding(.vertical, GameTheme.Layout.smallPadding)
     }
 }
 
-struct EnhancedScoreView: View {
+struct SimpleScoreView: View {
     @ObservedObject var gameState: GameState
     
     var body: some View {
-        VStack(spacing: 16) {
-            HStack(spacing: 24) {
-                VStack(alignment: .leading, spacing: 6) {
-                    HStack(spacing: 4) {
-                        Text("🎯")
-                            .font(.caption)
-                        Text("Score")
-                            .font(.system(size: 13, weight: .semibold, design: .serif))
-                            .foregroundColor(Color(red: 0.9, green: 0.7, blue: 0.1))
-                            .tracking(1.5)
-                    }
-                    Text("\(gameState.score)")
-                        .font(.system(size: 26, weight: .bold, design: .monospaced))
-                        .foregroundStyle(
-                            LinearGradient(
-                                colors: [
-                                    Color(red: 0.95, green: 0.9, blue: 0.8),
-                                    Color(red: 0.9, green: 0.8, blue: 0.7)
-                                ],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            )
-                        )
-                        .shadow(color: Color(red: 0.8, green: 0.6, blue: 0.2).opacity(0.3), radius: 2, x: 0, y: 1)
-                }
+        HStack {
+            // Current Score
+            VStack(spacing: GameTheme.Layout.tinySpacing) {
+                Text("\(gameState.score)")
+                    .font(GameTheme.Typography.largeScore)
+                    .foregroundColor(GameTheme.Colors.primaryText)
                 
-                Spacer()
-                
-                VStack(alignment: .trailing, spacing: 6) {
-                    HStack(spacing: 4) {
-                        Text("High Score")
-                            .font(.system(size: 13, weight: .semibold, design: .serif))
-                            .foregroundColor(Color(red: 0.9, green: 0.5, blue: 0.1))
-                            .tracking(1.5)
-                        Text("🏆")
-                            .font(.caption)
-                    }
-                    Text("\(gameState.highScoreManager.highScore)")
-                        .font(.system(size: 26, weight: .bold, design: .monospaced))
-                        .foregroundStyle(
-                            LinearGradient(
-                                colors: [
-                                    Color(red: 0.95, green: 0.9, blue: 0.8),
-                                    Color(red: 0.9, green: 0.8, blue: 0.7)
-                                ],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            )
-                        )
-                        .shadow(color: Color(red: 0.8, green: 0.6, blue: 0.2).opacity(0.3), radius: 2, x: 0, y: 1)
+                if gameState.linesCleared > 0 {
+                    Text("Lines: \(gameState.linesCleared)")
+                        .font(GameTheme.Typography.caption)
+                        .foregroundColor(GameTheme.Colors.secondaryText)
+                        .transition(.opacity)
+                        .gameAnimation(value: gameState.linesCleared)
                 }
             }
             
-            if gameState.linesCleared > 0 {
-                HStack(spacing: 8) {
-                    Text("🍃")
-                        .font(.headline)
-                    Text("Leaves Cleared:")
-                        .font(.system(size: 14, weight: .semibold, design: .serif))
-                        .foregroundColor(Color(red: 0.3, green: 0.6, blue: 0.2))
-                        .tracking(1)
-                    Text("\(gameState.linesCleared)")
-                        .font(.system(size: 20, weight: .bold, design: .monospaced))
-                        .foregroundStyle(
-                            LinearGradient(
-                                colors: [
-                                    Color(red: 0.95, green: 0.9, blue: 0.8),
-                                    Color(red: 0.9, green: 0.8, blue: 0.7)
-                                ],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            )
-                        )
-                        .shadow(color: Color(red: 0.3, green: 0.6, blue: 0.2).opacity(0.4), radius: 2, x: 0, y: 1)
-                }
-                .padding(.horizontal, 16)
-                .padding(.vertical, 8)
-                .background(
-                    Capsule()
-                        .fill(Color(red: 0.25, green: 0.2, blue: 0.15).opacity(0.6))
-                        .overlay(
-                            Capsule()
-                                .stroke(Color(red: 0.3, green: 0.6, blue: 0.2).opacity(0.4), lineWidth: 1.5)
-                        )
-                )
-                .transition(.scale.combined(with: .opacity))
-                .animation(.spring(response: 0.4, dampingFraction: 0.8), value: gameState.linesCleared)
+            Spacer()
+            
+            // High Score
+            VStack(spacing: GameTheme.Layout.tinySpacing) {
+                Text("\(gameState.highScoreManager.highScore)")
+                    .font(GameTheme.Typography.largeScore)
+                    .foregroundColor(GameTheme.Colors.accent)
+                
+                Text("Best")
+                    .font(GameTheme.Typography.caption)
+                    .foregroundColor(GameTheme.Colors.accent.opacity(0.6))
             }
         }
-        .padding(.horizontal, 28)
-        .padding(.vertical, 20)
-        .background(
-            RoundedRectangle(cornerRadius: 24)
-                .fill(
-                    LinearGradient(
-                        colors: [
-                            Color(red: 0.18, green: 0.13, blue: 0.08).opacity(0.9),
-                            Color(red: 0.22, green: 0.17, blue: 0.12).opacity(0.8),
-                            Color(red: 0.16, green: 0.11, blue: 0.06).opacity(0.9)
-                        ],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    )
-                )
-                .overlay(
-                    RoundedRectangle(cornerRadius: 24)
-                        .stroke(
-                            LinearGradient(
-                                colors: [
-                                    Color(red: 0.9, green: 0.7, blue: 0.1).opacity(0.6),
-                                    Color(red: 0.9, green: 0.5, blue: 0.1).opacity(0.4),
-                                    Color(red: 0.8, green: 0.4, blue: 0.1).opacity(0.5)
-                                ],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            ),
-                            lineWidth: 2.5
-                        )
-                )
-                .shadow(color: Color(red: 0.4, green: 0.25, blue: 0.1).opacity(0.4), radius: 12, x: 0, y: 6)
-        )
+        .padding(.horizontal, GameTheme.Layout.largePadding)
+        .padding(.vertical, GameTheme.Layout.mediumPadding)
     }
 }
 
@@ -209,11 +68,7 @@ struct GameBackgroundView: View {
         ZStack {
             // Autumn forest background
             LinearGradient(
-                colors: [
-                    Color(red: 0.1, green: 0.05, blue: 0.02), // Deep brown
-                    Color(red: 0.2, green: 0.15, blue: 0.1),  // Rich earth
-                    Color(red: 0.15, green: 0.1, blue: 0.05)  // Dark bark
-                ],
+                colors: GameTheme.Colors.backgroundGradient,
                 startPoint: .topLeading,
                 endPoint: .bottomTrailing
             )
@@ -224,9 +79,9 @@ struct GameBackgroundView: View {
                 .fill(
                     RadialGradient(
                         colors: [
-                            Color(red: 0.4, green: 0.25, blue: 0.1).opacity(0.1),
+                            GameTheme.Colors.overlayPrimary,
                             Color.clear,
-                            Color(red: 0.6, green: 0.4, blue: 0.2).opacity(0.05)
+                            GameTheme.Colors.overlaySecondary
                         ],
                         center: .topTrailing,
                         startRadius: 50,
@@ -265,26 +120,22 @@ struct GameGridView: View {
                     }
                 }
             }
-            .padding(12)
+            .padding(GameTheme.Layout.mediumPadding)
             .background(
-                RoundedRectangle(cornerRadius: 24)
-                    .fill(Color(red: 0.15, green: 0.1, blue: 0.05).opacity(0.9))
+                RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
+                    .fill(GameTheme.Colors.cardBackground)
                     .overlay(
-                        RoundedRectangle(cornerRadius: 24)
+                        RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
                             .stroke(
                                 LinearGradient(
-                                    colors: [
-                                        Color(red: 0.6, green: 0.4, blue: 0.2).opacity(0.4),
-                                        Color(red: 0.4, green: 0.25, blue: 0.1).opacity(0.6),
-                                        Color(red: 0.8, green: 0.5, blue: 0.2).opacity(0.3)
-                                    ],
+                                    colors: GameTheme.Colors.cardBorderGradient,
                                     startPoint: .topLeading,
                                     endPoint: .bottomTrailing
                                 ),
-                                lineWidth: 3
+                                lineWidth: GameTheme.Layout.strokeWidth
                             )
                     )
-                    .shadow(color: Color(red: 0.3, green: 0.2, blue: 0.1).opacity(0.4), radius: 12, x: 0, y: 6)
+                    .shadow(color: GameTheme.Colors.cardShadow, radius: GameTheme.Layout.shadowRadius, x: 0, y: GameTheme.Layout.shadowOffset)
             )
             .background(
                 GeometryReader { geo in
@@ -369,28 +220,28 @@ struct CurrentBlocksView: View {
                     onDragEnd: onDragEnd
                 )
                 .background(
-                    RoundedRectangle(cornerRadius: 16)
-                        .fill(Color(red: 0.2, green: 0.15, blue: 0.1).opacity(0.6))
+                    RoundedRectangle(cornerRadius: GameTheme.Layout.buttonCornerRadius)
+                        .fill(GameTheme.Colors.blockContainerBackground)
                         .overlay(
-                            RoundedRectangle(cornerRadius: 16)
-                                .stroke(Color(red: 0.6, green: 0.4, blue: 0.2).opacity(0.3), lineWidth: 1)
+                            RoundedRectangle(cornerRadius: GameTheme.Layout.buttonCornerRadius)
+                                .stroke(GameTheme.Colors.blockContainerBorder, lineWidth: 1)
                         )
-                        .shadow(color: Color(red: 0.1, green: 0.05, blue: 0.02).opacity(0.4), radius: 6, x: 2, y: 3)
+                        .shadow(color: GameTheme.Colors.blockContainerShadow, radius: 6, x: 2, y: 3)
                 )
                 .scaleEffect(draggedBlock == block && isDragging ? 0.7 : 1.0)
-                .animation(.spring(response: 0.3, dampingFraction: 0.8), value: draggedBlock == block && isDragging)
+                .gameAnimation(value: draggedBlock == block && isDragging)
             }
         }
-        .padding(.horizontal, 24)
-        .padding(.vertical, 20)
+        .padding(.horizontal, GameTheme.Layout.largePadding)
+        .padding(.vertical, GameTheme.Layout.mediumPadding)
         .background(
-            RoundedRectangle(cornerRadius: 24)
-                .fill(Color(red: 0.12, green: 0.08, blue: 0.04).opacity(0.7))
+            RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
+                .fill(GameTheme.Colors.containerBackground)
                 .overlay(
-                    RoundedRectangle(cornerRadius: 24)
-                        .stroke(Color(red: 0.4, green: 0.25, blue: 0.1).opacity(0.2), lineWidth: 1)
+                    RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
+                        .stroke(GameTheme.Colors.containerBorder, lineWidth: 1)
                 )
-                .shadow(color: Color(red: 0.1, green: 0.05, blue: 0.02).opacity(0.3), radius: 8, x: 0, y: 4)
+                .shadow(color: GameTheme.Colors.containerShadow, radius: 8, x: 0, y: 4)
         )
     }
 }
@@ -403,42 +254,39 @@ struct GameOverOverlayView: View {
     var body: some View {
         VStack(spacing: 24) {
             Text("The Leaves Have Fallen")
-                .font(.title2)
+                .font(GameTheme.Typography.headline)
                 .fontWeight(.medium)
-                .foregroundColor(Color(red: 0.8, green: 0.2, blue: 0.1))
+                .foregroundColor(GameTheme.Colors.error)
                 .tracking(1)
                 .italic()
             
             Text("Final Score")
-                .font(.caption)
+                .font(GameTheme.Typography.caption)
                 .fontWeight(.medium)
-                .foregroundColor(Color(red: 0.9, green: 0.7, blue: 0.1))
+                .foregroundColor(GameTheme.Colors.warning)
                 .tracking(1)
             
             Text("\(gameState.score)")
-                .font(.system(size: 48, weight: .bold, design: .monospaced))
-                .foregroundColor(Color(red: 0.95, green: 0.9, blue: 0.8))
+                .font(GameTheme.Typography.largeScore)
+                .foregroundColor(GameTheme.Colors.primaryText)
             
             Button(action: {
-                withAnimation(.spring()) {
+                withAnimation(GameTheme.Animations.springAnimation) {
                     gameState.resetGame()
                 }
             }) {
                 Text("New Season")
-                    .font(.headline)
+                    .font(GameTheme.Typography.headline)
                     .fontWeight(.medium)
-                    .foregroundColor(Color(red: 0.1, green: 0.05, blue: 0.02))
+                    .foregroundColor(GameTheme.Colors.buttonText)
                     .tracking(0.5)
-                    .padding(.horizontal, 32)
-                    .padding(.vertical, 16)
+                    .padding(.horizontal, GameTheme.Layout.largePadding)
+                    .padding(.vertical, GameTheme.Layout.mediumPadding)
                     .background(
                         Capsule()
                             .fill(
                                 LinearGradient(
-                                    colors: [
-                                        Color(red: 0.9, green: 0.7, blue: 0.1),
-                                        Color(red: 0.9, green: 0.5, blue: 0.1)
-                                    ],
+                                    colors: GameTheme.Colors.buttonGradient,
                                     startPoint: .leading,
                                     endPoint: .trailing
                                 )
@@ -446,28 +294,25 @@ struct GameOverOverlayView: View {
                     )
             }
             .scaleEffect(1.0)
-            .animation(.spring(response: 0.3), value: gameState.isGameOver)
+            .gameAnimation(value: gameState.isGameOver)
         }
-        .padding(32)
+        .padding(GameTheme.Layout.largePadding)
         .background(
-            RoundedRectangle(cornerRadius: 28)
-                .fill(Color(red: 0.15, green: 0.1, blue: 0.05).opacity(0.95))
+            RoundedRectangle(cornerRadius: GameTheme.Layout.overlayCornerRadius)
+                .fill(GameTheme.Colors.overlayBackground)
                 .overlay(
-                    RoundedRectangle(cornerRadius: 28)
+                    RoundedRectangle(cornerRadius: GameTheme.Layout.overlayCornerRadius)
                         .stroke(
                             LinearGradient(
-                                colors: [
-                                    Color(red: 0.8, green: 0.2, blue: 0.1).opacity(0.6),
-                                    Color(red: 0.9, green: 0.5, blue: 0.1).opacity(0.4)
-                                ],
+                                colors: GameTheme.Colors.overlayBorderGradient,
                                 startPoint: .topLeading,
                                 endPoint: .bottomTrailing
                             ),
-                            lineWidth: 3
+                            lineWidth: GameTheme.Layout.strokeWidth
                         )
                 )
         )
-        .shadow(color: Color(red: 0.3, green: 0.1, blue: 0.05).opacity(0.6), radius: 20, x: 0, y: 8)
+        .shadow(color: GameTheme.Colors.overlayDeepShadow, radius: 20, x: 0, y: 8)
         .scaleEffect(1.05)
         .transition(.scale.combined(with: .opacity))
     }
@@ -491,12 +336,12 @@ struct GameBoardView: View {
         ZStack {
             GameBackgroundView()
             
-            VStack(spacing: 24) {
+            VStack(spacing: GameTheme.Layout.sectionSpacing) {
                 // App Title
-                AppTitleView()
+                SimpleAppTitleView()
                 
-                // Enhanced Score Section
-                EnhancedScoreView(gameState: gameState)
+                // Score Section
+                SimpleScoreView(gameState: gameState)
                 
                 // Game Grid
                 GameGridView(
@@ -553,7 +398,7 @@ struct GameBoardView: View {
                 // Block Grass Artwork at bottom
                 BlockGrassView()
             }
-            .padding(.horizontal, 16)
+            .padding(.horizontal, GameTheme.Layout.mediumPadding)
             
             // Game Over Overlay
             if gameState.isGameOver {
@@ -675,9 +520,9 @@ struct GridCellView: View {
                 x: 0, y: cell.isFilled ? 2 : 1
             )
             .scaleEffect(cell.isFilled ? 1.0 : (isPreview ? 0.92 : 0.88))
-            .animation(.spring(response: 0.4, dampingFraction: 0.7), value: isPreview)
-            .animation(.spring(response: 0.4, dampingFraction: 0.7), value: isLineComplete)
-            .animation(.spring(response: 0.5, dampingFraction: 0.8), value: cell.isFilled)
+            .gameAnimation(value: isPreview)
+            .gameAnimation(value: isLineComplete)
+            .gameAnimation(value: cell.isFilled)
     }
 }
 
@@ -739,7 +584,7 @@ struct DraggableBlockView: View {
         GeometryReader { geometry in
             BlockView(block: block, cellSize: cellSize)
                 .opacity(isDragging ? 0.3 : 1.0)
-                .animation(.spring(response: 0.1), value: isDragging)
+                .gameAnimation(value: isDragging)
                 .gesture(
                     DragGesture(minimumDistance: 0, coordinateSpace: .global)
                         .onChanged { value in
@@ -827,7 +672,7 @@ struct FallingLeafView: View {
                 y: leaf.currentPosition.y + animationOffset.height
             )
             .onAppear {
-                withAnimation(.easeIn(duration: 2.0)) {
+                withAnimation(.easeIn(duration: GameTheme.Animations.leafFallDuration)) {
                     animationOffset = CGSize(
                         width: leaf.horizontalDrift,
                         height: 600

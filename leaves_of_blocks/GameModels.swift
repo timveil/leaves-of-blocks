@@ -1,6 +1,6 @@
 import Foundation
 
-struct GridPosition: Equatable, Codable {
+struct GridPosition: Equatable, Codable, Hashable {
     let row: Int
     let col: Int
 }
@@ -10,7 +10,7 @@ struct GridCell {
     var color: BlockColor = .blue
 }
 
-enum BlockColor: CaseIterable, Codable {
+enum BlockColor: CaseIterable, Codable, Hashable {
     case blue, green, red, yellow, purple, orange, pink
 }
 
@@ -20,7 +20,7 @@ struct ClearedCell: Equatable, Codable {
     let color: BlockColor
 }
 
-struct BlockShape: Codable, Equatable {
+struct BlockShape: Codable, Equatable, Hashable {
     let positions: [GridPosition]
     let color: BlockColor
     

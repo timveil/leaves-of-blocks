@@ -32,17 +32,17 @@
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		3A692C032E3460ED00451CB3 /* leaves_of_blocks */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "leaves_of_blocks";
+			path = leaves_of_blocks;
 			sourceTree = "<group>";
 		};
 		3A692C112E3460EE00451CB3 /* leaves_of_blocksTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "leaves_of_blocksTests";
+			path = leaves_of_blocksTests;
 			sourceTree = "<group>";
 		};
 		3A692C1B2E3460EE00451CB3 /* leaves_of_blocksUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			path = "leaves_of_blocksUITests";
+			path = leaves_of_blocksUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
