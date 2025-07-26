@@ -88,95 +88,95 @@ struct BlockGenerator {
         switch difficulty {
         case .easy:
             return [
-                // Single blocks - very common (higher weights)
-                BlockShape.allShapes[0]: 4.0,
+                // Single blocks - reduced frequency
+                BlockShape.allShapes[0]: 2.0,
                 
-                // 2-block shapes - very common
-                BlockShape.allShapes[1]: 3.5,
-                BlockShape.allShapes[2]: 3.5,
+                // 2-block shapes - reduced frequency
+                BlockShape.allShapes[1]: 2.0,
+                BlockShape.allShapes[2]: 2.0,
                 
-                // 3-block shapes - common
-                BlockShape.allShapes[3]: 3.0,
-                BlockShape.allShapes[4]: 3.0,
-                BlockShape.allShapes[5]: 2.5,
-                BlockShape.allShapes[6]: 2.5,
-                
-                // 4-block shapes - less common
-                BlockShape.allShapes[7]: 2.0,
-                BlockShape.allShapes[8]: 1.5,
-                BlockShape.allShapes[9]: 1.5,
-                
-                // L-shapes - rare
-                BlockShape.allShapes[10]: 1.0,
-                BlockShape.allShapes[11]: 1.0,
-                
-                // T-shapes - rare
-                BlockShape.allShapes[12]: 1.0,
-                
-                // 3x3 square - very rare
-                BlockShape.allShapes[13]: 0.3
-            ]
-            
-        case .moderate:
-            return [
-                // Single blocks - common
-                BlockShape.allShapes[0]: 2.5,
-                
-                // 2-block shapes - common
-                BlockShape.allShapes[1]: 2.5,
-                BlockShape.allShapes[2]: 2.5,
-                
-                // 3-block shapes - common
+                // 3-block shapes - moderate frequency
                 BlockShape.allShapes[3]: 2.5,
                 BlockShape.allShapes[4]: 2.5,
                 BlockShape.allShapes[5]: 2.5,
                 BlockShape.allShapes[6]: 2.5,
                 
-                // 4-block shapes - moderate
-                BlockShape.allShapes[7]: 2.0,
-                BlockShape.allShapes[8]: 2.0,
-                BlockShape.allShapes[9]: 2.0,
+                // 4-block shapes - increased frequency
+                BlockShape.allShapes[7]: 3.0,
+                BlockShape.allShapes[8]: 2.5,
+                BlockShape.allShapes[9]: 2.5,
                 
-                // L-shapes - moderate
-                BlockShape.allShapes[10]: 1.5,
-                BlockShape.allShapes[11]: 1.5,
+                // L-shapes - increased frequency
+                BlockShape.allShapes[10]: 2.0,
+                BlockShape.allShapes[11]: 2.0,
                 
-                // T-shapes - moderate
-                BlockShape.allShapes[12]: 1.5,
+                // T-shapes - increased frequency
+                BlockShape.allShapes[12]: 2.0,
                 
-                // 3x3 square - uncommon but present
+                // 3x3 square - now more common
                 BlockShape.allShapes[13]: 1.0
             ]
             
-        case .hard:
+        case .moderate:
             return [
-                // Single blocks - less common
+                // Single blocks - reduced frequency
                 BlockShape.allShapes[0]: 1.5,
                 
-                // 2-block shapes - less common
+                // 2-block shapes - reduced frequency
                 BlockShape.allShapes[1]: 1.5,
                 BlockShape.allShapes[2]: 1.5,
                 
-                // 3-block shapes - moderate
+                // 3-block shapes - moderate frequency
                 BlockShape.allShapes[3]: 2.0,
                 BlockShape.allShapes[4]: 2.0,
                 BlockShape.allShapes[5]: 2.0,
                 BlockShape.allShapes[6]: 2.0,
                 
-                // 4-block shapes - common
-                BlockShape.allShapes[7]: 3.0,
-                BlockShape.allShapes[8]: 2.5,
-                BlockShape.allShapes[9]: 2.5,
+                // 4-block shapes - increased frequency
+                BlockShape.allShapes[7]: 3.5,
+                BlockShape.allShapes[8]: 3.0,
+                BlockShape.allShapes[9]: 3.0,
                 
-                // L-shapes - common
+                // L-shapes - increased frequency
                 BlockShape.allShapes[10]: 2.5,
                 BlockShape.allShapes[11]: 2.5,
                 
-                // T-shapes - common
+                // T-shapes - increased frequency
                 BlockShape.allShapes[12]: 2.5,
                 
-                // 3x3 square - much more common!
+                // 3x3 square - significantly more common
                 BlockShape.allShapes[13]: 2.0
+            ]
+            
+        case .hard:
+            return [
+                // Single blocks - rare
+                BlockShape.allShapes[0]: 1.0,
+                
+                // 2-block shapes - rare
+                BlockShape.allShapes[1]: 1.0,
+                BlockShape.allShapes[2]: 1.0,
+                
+                // 3-block shapes - reduced frequency
+                BlockShape.allShapes[3]: 1.5,
+                BlockShape.allShapes[4]: 1.5,
+                BlockShape.allShapes[5]: 1.5,
+                BlockShape.allShapes[6]: 1.5,
+                
+                // 4-block shapes - very common
+                BlockShape.allShapes[7]: 4.0,
+                BlockShape.allShapes[8]: 3.5,
+                BlockShape.allShapes[9]: 3.5,
+                
+                // L-shapes - very common
+                BlockShape.allShapes[10]: 3.5,
+                BlockShape.allShapes[11]: 3.5,
+                
+                // T-shapes - very common
+                BlockShape.allShapes[12]: 3.5,
+                
+                // 3x3 square - much more common!
+                BlockShape.allShapes[13]: 3.0
             ]
         }
     }
