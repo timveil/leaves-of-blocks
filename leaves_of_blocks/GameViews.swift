@@ -681,17 +681,49 @@ struct GameSummaryView: View {
                                 .font(GameTheme.Typography.headlineFont)
                                 .foregroundColor(GameTheme.Colors.buttonText)
                                 .tracking(0.5)
+                                .shadow(color: Color.black.opacity(0.2), radius: 1, x: 0, y: 1)
                                 .frame(maxWidth: .infinity)
                                 .padding(.vertical, GameTheme.Layout.mediumPadding)
                                 .background(
-                                    Capsule()
-                                        .fill(
-                                            LinearGradient(
-                                                colors: GameTheme.Colors.buttonGradient,
-                                                startPoint: .leading,
-                                                endPoint: .trailing
+                                    ZStack {
+                                        // Deep shadow layers for 3D effect
+                                        Capsule()
+                                            .fill(Color.black.opacity(0.15))
+                                            .offset(x: 0, y: 5)
+                                        
+                                        Capsule()
+                                            .fill(Color.black.opacity(0.08))
+                                            .offset(x: 0, y: 2)
+                                        
+                                        Capsule()
+                                            .fill(
+                                                LinearGradient(
+                                                    colors: [
+                                                        GameTheme.Colors.buttonGradient[0],
+                                                        GameTheme.Colors.buttonGradient[1],
+                                                        GameTheme.Colors.buttonGradient[1].opacity(0.8)
+                                                    ],
+                                                    startPoint: .topLeading,
+                                                    endPoint: .bottomTrailing
+                                                )
                                             )
-                                        )
+                                            .overlay(
+                                                Capsule()
+                                                    .stroke(
+                                                        LinearGradient(
+                                                            colors: [
+                                                                Color.white.opacity(0.3),
+                                                                Color.clear,
+                                                                Color.black.opacity(0.2)
+                                                            ],
+                                                            startPoint: .topLeading,
+                                                            endPoint: .bottomTrailing
+                                                        ),
+                                                        lineWidth: 1
+                                                    )
+                                            )
+                                            .shadow(color: GameTheme.Colors.buttonGradient[0].opacity(0.3), radius: 6, x: 0, y: 3)
+                                    }
                                 )
                         }
                         
@@ -790,23 +822,56 @@ struct DifficultySelectionView: View {
                 HStack {
                     Image(systemName: "play.fill")
                         .font(.system(size: 18, weight: .bold))
+                        .shadow(color: Color.black.opacity(0.2), radius: 1, x: 0, y: 1)
                     
                     Text("Start Game")
                         .font(GameTheme.Typography.titleFont)
                         .tracking(0.5)
+                        .shadow(color: Color.black.opacity(0.2), radius: 1, x: 0, y: 1)
                 }
                 .foregroundColor(GameTheme.Colors.buttonText)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, GameTheme.Layout.largePadding)
                 .background(
-                    Capsule()
-                        .fill(
-                            LinearGradient(
-                                colors: GameTheme.Colors.buttonGradient,
-                                startPoint: .leading,
-                                endPoint: .trailing
+                    ZStack {
+                        // Deep shadow layers for 3D effect
+                        Capsule()
+                            .fill(Color.black.opacity(0.15))
+                            .offset(x: 0, y: 6)
+                        
+                        Capsule()
+                            .fill(Color.black.opacity(0.08))
+                            .offset(x: 0, y: 3)
+                        
+                        Capsule()
+                            .fill(
+                                LinearGradient(
+                                    colors: [
+                                        GameTheme.Colors.buttonGradient[0],
+                                        GameTheme.Colors.buttonGradient[1],
+                                        GameTheme.Colors.buttonGradient[1].opacity(0.8)
+                                    ],
+                                    startPoint: .topLeading,
+                                    endPoint: .bottomTrailing
+                                )
                             )
-                        )
+                            .overlay(
+                                Capsule()
+                                    .stroke(
+                                        LinearGradient(
+                                            colors: [
+                                                Color.white.opacity(0.3),
+                                                Color.clear,
+                                                Color.black.opacity(0.2)
+                                            ],
+                                            startPoint: .topLeading,
+                                            endPoint: .bottomTrailing
+                                        ),
+                                        lineWidth: 1
+                                    )
+                            )
+                            .shadow(color: GameTheme.Colors.buttonGradient[0].opacity(0.3), radius: 8, x: 0, y: 4)
+                    }
                 )
             }
             .scaleEffect(1.0)
@@ -825,17 +890,19 @@ struct CompactDifficultyButton: View {
         Button(action: onTap) {
             VStack(spacing: GameTheme.Layout.smallSpacing) {
                 Image(systemName: difficulty.icon)
-                    .font(.system(size: 20, weight: .medium))
+                    .font(.system(size: 18, weight: .medium))
                     .foregroundColor(difficulty.color)
                 
                 Text(difficulty.rawValue)
-                    .font(GameTheme.Typography.captionFont)
+                    .font(.system(size: 12, weight: .semibold, design: .default))
                     .foregroundColor(GameTheme.Colors.primaryText)
                     .lineLimit(1)
+                    .minimumScaleFactor(0.8)
+                    .fixedSize()
             }
             .frame(maxWidth: .infinity)
             .padding(.vertical, GameTheme.Layout.largePadding)
-            .padding(.horizontal, GameTheme.Layout.mediumPadding)
+            .padding(.horizontal, GameTheme.Layout.smallPadding)
             .background(
                 RoundedRectangle(cornerRadius: GameTheme.Layout.buttonCornerRadius)
                     .fill(isSelected ? difficulty.color.opacity(0.2) : GameTheme.Colors.containerBackground)
@@ -909,7 +976,7 @@ struct GameHomeView: View {
     @ObservedObject var gameState: GameState
     let onStartGame: (DifficultyMode) -> Void
     
-    @State private var selectedDifficulty: DifficultyMode = .easy
+    @State private var selectedDifficulty: DifficultyMode = .moderate
     
     var body: some View {
         GeometryReader { geometry in
@@ -964,7 +1031,7 @@ struct GameHomeView: View {
                     
                     // Grass always at bottom
                     BlockGrassView()
-                        .frame(height: 100)
+                        .ignoresSafeArea(.all, edges: .bottom)
                 }
             }
         }
@@ -1074,10 +1141,11 @@ struct GameBoardView: View {
                 
                 // Static grass foundation - always visible
                 BlockGrassView()
+                    .ignoresSafeArea(.all, edges: .bottom)
             }
             .zIndex(10) // Game elements above grass
             .padding(.horizontal, GameTheme.Layout.largePadding)
-            .padding(.vertical, GameTheme.Layout.mediumPadding)
+            .padding(.top, GameTheme.Layout.mediumPadding)
             
             // Game Over Overlay - highest priority, appears above everything
             if gameState.isGameOver {
@@ -1482,10 +1550,9 @@ struct BlockGrassView: View {
     private let screenWidth = UIScreen.main.bounds.width
     
     var body: some View {
-        VStack {
-            Spacer()
+        GeometryReader { geometry in
             VStack(spacing: 0) {
-                // Create columns of varying heights
+                // Create columns of varying heights that fill available space
                 HStack(spacing: 1) {
                     ForEach(0..<Int(screenWidth / (blockSize + 1)), id: \.self) { col in
                         VStack(spacing: 1) {
@@ -1501,22 +1568,22 @@ struct BlockGrassView: View {
                         }
                     }
                 }
-                .frame(height: 80) // Max height for grass area
+                .frame(height: max(80, geometry.size.height - 20)) // Use available height minus ground base
                 
-                // Ground base
+                // Ground base that extends to bottom
                 Rectangle()
                     .fill(
                         LinearGradient(
                             colors: [
-                                Color(red: 0.2, green: 0.15, blue: 0.1),
-                                Color(red: 0.15, green: 0.1, blue: 0.05)
+                                Color(red: 0.12, green: 0.45, blue: 0.04),
+                                Color(red: 0.1, green: 0.4, blue: 0.03)
                             ],
                             startPoint: .top,
                             endPoint: .bottom
                         )
                     )
                     .frame(height: 20)
-                    .shadow(color: Color(red: 0.1, green: 0.05, blue: 0.02).opacity(0.5), radius: 4, x: 0, y: -2)
+                    .shadow(color: Color(red: 0.05, green: 0.2, blue: 0.02).opacity(0.5), radius: 4, x: 0, y: -2)
             }
         }
     }
@@ -1540,7 +1607,7 @@ struct StaticGrassBlockView: View {
     let size: CGFloat
     
     var body: some View {
-        RoundedRectangle(cornerRadius: 6)
+        RoundedRectangle(cornerRadius: 2)
             .fill(
                 LinearGradient(
                     colors: [color, color.opacity(0.6)],
@@ -1550,7 +1617,7 @@ struct StaticGrassBlockView: View {
             )
             .frame(width: size, height: size)
             .overlay(
-                RoundedRectangle(cornerRadius: 6)
+                RoundedRectangle(cornerRadius: 2)
                     .stroke(color.opacity(0.4), lineWidth: 1)
             )
             .shadow(color: color.opacity(0.4), radius: 3, x: 0, y: 2)
