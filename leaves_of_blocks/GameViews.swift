@@ -1052,7 +1052,6 @@ struct GameBoardView: View {
     @State private var dragLocation: CGPoint = .zero
     @State private var isDragging: Bool = false
     @State private var gridFrame: CGRect = .zero
-    @State private var fallingLeaves: [FallingLeaf] = []
     
     // Constants for consistent positioning
     private let dragOffsetY: CGFloat = 80 // Distance above finger
@@ -1178,20 +1177,6 @@ struct GameBoardView: View {
                 .scaleEffect(1.1) // Slightly larger during drag for better visibility
                 .shadow(color: .black.opacity(0.3), radius: 8, x: 0, y: 4)
         }
-        
-        // Falling leaves animation
-        ForEach(fallingLeaves.indices, id: \.self) { index in
-            FallingLeafView(leaf: fallingLeaves[index])
-                .zIndex(999)
-        }
-        }
-        .onChange(of: gameState.lastClearedCells) { _, newClearedCells in
-            if !newClearedCells.isEmpty {
-                // Minimal delay for smoother animation flow
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.02) {
-                    createFallingLeaves(from: newClearedCells)
-                }
-            }
         }
         .statusBarHidden() // Hide status bar for immersive gaming experience
     }
@@ -1292,29 +1277,6 @@ struct GameBoardView: View {
         return CGPoint(x: centerX, y: centerY)
     }
     
-    private func createFallingLeaves(from clearedCells: [ClearedCell]) {
-        var newLeaves: [FallingLeaf] = []
-        
-        for cell in clearedCells {
-            let leafPosition = CGPoint(
-                x: gridFrame.minX + CGFloat(cell.col) * (cellSize + 3) + cellSize/2 + 12,
-                y: gridFrame.minY + CGFloat(cell.row) * (cellSize + 3) + cellSize/2 + 12
-            )
-            let leaf = FallingLeaf(
-                startPosition: leafPosition,
-                color: cell.color.color,
-                size: CGFloat.random(in: 16...24)
-            )
-            newLeaves.append(leaf)
-        }
-        
-        fallingLeaves.append(contentsOf: newLeaves)
-        
-        // Remove leaves after animation completes
-        DispatchQueue.main.asyncAfter(deadline: .now() + GameTheme.Animations.leafRemovalDelay) {
-            fallingLeaves.removeAll()
-        }
-    }
 }
 
 struct GridCellView: View {
@@ -1478,63 +1440,6 @@ struct DraggableBlockView: View {
 extension BlockShape: Transferable {
     static var transferRepresentation: some TransferRepresentation {
         CodableRepresentation(contentType: .data)
-    }
-}
-
-// MARK: - Falling Leaves Animation
-
-struct FallingLeaf: Identifiable {
-    let id = UUID()
-    let startPosition: CGPoint
-    let color: Color
-    let size: CGFloat
-    var currentPosition: CGPoint
-    var rotation: Double
-    var rotationSpeed: Double
-    var fallSpeed: Double
-    var horizontalDrift: Double
-    
-    init(startPosition: CGPoint, color: Color, size: CGFloat = 20) {
-        self.startPosition = startPosition
-        self.color = color
-        self.size = size
-        self.currentPosition = startPosition
-        self.rotation = 0
-        self.rotationSpeed = Double.random(in: -180...180)
-        self.fallSpeed = Double.random(in: 100...200)
-        self.horizontalDrift = Double.random(in: -30...30)
-    }
-}
-
-struct FallingLeafView: View {
-    @State var leaf: FallingLeaf
-    @State private var animationOffset: CGSize = .zero
-    @State private var animationRotation: Double = 0
-    
-    var body: some View {
-        RoundedRectangle(cornerRadius: 6)
-            .fill(
-                LinearGradient(
-                    colors: [leaf.color, leaf.color.opacity(0.6)],
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                )
-            )
-            .frame(width: leaf.size, height: leaf.size)
-            .rotationEffect(.degrees(animationRotation))
-            .position(
-                x: leaf.currentPosition.x + animationOffset.width,
-                y: leaf.currentPosition.y + animationOffset.height
-            )
-            .onAppear {
-                withAnimation(.easeIn(duration: GameTheme.Animations.leafFallDuration)) {
-                    animationOffset = CGSize(
-                        width: leaf.horizontalDrift,
-                        height: 600
-                    )
-                    animationRotation = leaf.rotationSpeed * 4
-                }
-            }
     }
 }
 

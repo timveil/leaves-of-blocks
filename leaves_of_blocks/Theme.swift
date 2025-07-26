@@ -159,9 +159,7 @@ struct GameTheme {
         static let springResponse: Double = 0.15
         static let springDamping: Double = 0.7
         static let fallDuration: Double = 1.0
-        static let leafRemovalDelay: Double = 1.2
         static let springAnimation: Animation = .spring(response: 0.15, dampingFraction: 0.7)
-        static let leafFallDuration: Double = 1.0
         
         // Line clearing specific animations
         static let lineClearAnimation: Animation = .easeOut(duration: 0.2)
@@ -181,9 +179,6 @@ struct GameTheme {
         static let baseBlockScore: Int = 10
         static let lineScore: Int = 100
         static let comboBonus: Int = 50
-        static let leafSizeRange: ClosedRange<CGFloat> = 16...24
-        static let fallSpeedRange: ClosedRange<Double> = 100...200
-        static let rotationSpeedRange: ClosedRange<Double> = -180...180
         static let horizontalDriftRange: ClosedRange<Double> = -30...30
         
         // Animation timing

@@ -212,45 +212,6 @@ struct BlockGenerator {
     }
 }
 
-// MARK: - Animation Manager
-
-class AnimationManager: ObservableObject {
-    
-    // MARK: - Animation State
-    
-    @Published var fallingLeaves: [FallingLeaf] = []
-    
-    // MARK: - Animation Creation
-    
-    func createFallingLeaves(from clearedCells: [ClearedCell], gridFrame: CGRect, cellSize: CGFloat) {
-        var newLeaves: [FallingLeaf] = []
-        
-        for cell in clearedCells {
-            let leafPosition = CGPoint(
-                x: gridFrame.minX + CGFloat(cell.col) * (cellSize + GameTheme.Layout.gridSpacing) + cellSize/2 + GameTheme.Layout.gridPadding,
-                y: gridFrame.minY + CGFloat(cell.row) * (cellSize + GameTheme.Layout.gridSpacing) + cellSize/2 + GameTheme.Layout.gridPadding
-            )
-            
-            let leaf = FallingLeaf(
-                startPosition: leafPosition,
-                color: cell.color.color,
-                size: CGFloat.random(in: GameTheme.GameConfig.leafSizeRange)
-            )
-            newLeaves.append(leaf)
-        }
-        
-        fallingLeaves.append(contentsOf: newLeaves)
-        
-        // Remove leaves after animation completes
-        DispatchQueue.main.asyncAfter(deadline: .now() + GameTheme.Animations.leafRemovalDelay) {
-            self.fallingLeaves.removeAll()
-        }
-    }
-    
-    func clearAllAnimations() {
-        fallingLeaves.removeAll()
-    }
-}
 
 // MARK: - Game State Validator
 
