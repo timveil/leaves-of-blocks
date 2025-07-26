@@ -148,9 +148,12 @@ struct GameGridView: View {
     
     private func isPreviewCell(row: Int, col: Int) -> Bool {
         guard let previewPos = previewPosition,
-              let draggedBlock = draggedBlock,
-              gameState.canPlaceBlock(draggedBlock, at: previewPos) else { return false }
+              let draggedBlock = draggedBlock else { return false }
         
+        // Only show preview if the block can be placed at this position
+        guard gameState.canPlaceBlock(draggedBlock, at: previewPos) else { return false }
+        
+        // Check if this grid cell matches any block position
         for blockPos in draggedBlock.positions {
             let finalRow = previewPos.row + blockPos.row
             let finalCol = previewPos.col + blockPos.col
@@ -501,30 +504,26 @@ struct GameBoardView: View {
                     onDragMove: { location in
                         dragLocation = location
                         // Calculate preview position based on the dragged block's position
-                        // The block appears above the finger, so we use that location for preview
-                        // But we need to offset to the block's top-left corner for grid alignment
                         if let block = draggedBlock {
                             let blockCenterLocation = CGPoint(
                                 x: location.x,
                                 y: location.y - dragOffsetY
                             )
                             
-                            // Calculate the block's dimensions and offset to top-left corner
+                            // Calculate the block's dimensions relative to its anchor point (0,0)
                             let minRow = block.positions.map(\.row).min() ?? 0
-                            let maxRow = block.positions.map(\.row).max() ?? 0
                             let minCol = block.positions.map(\.col).min() ?? 0
-                            let maxCol = block.positions.map(\.col).max() ?? 0
                             
-                            let blockWidth = CGFloat(maxCol - minCol + 1) * cellSize
-                            let blockHeight = CGFloat(maxRow - minRow + 1) * cellSize
+                            let blockWidth = CGFloat((block.positions.map(\.col).max() ?? 0) - minCol + 1) * cellSize
+                            let blockHeight = CGFloat((block.positions.map(\.row).max() ?? 0) - minRow + 1) * cellSize
                             
-                            // Convert center position to top-left corner position
-                            let blockTopLeftLocation = CGPoint(
-                                x: blockCenterLocation.x - blockWidth/2,
-                                y: blockCenterLocation.y - blockHeight/2
+                            // Calculate where the block's anchor point (0,0) would be placed
+                            let anchorLocation = CGPoint(
+                                x: blockCenterLocation.x - blockWidth/2 + CGFloat(minCol) * cellSize,
+                                y: blockCenterLocation.y - blockHeight/2 + CGFloat(minRow) * cellSize
                             )
                             
-                            updatePreviewPosition(for: blockTopLeftLocation)
+                            updatePreviewPosition(for: anchorLocation)
                         }
                     },
                     onDragEnd: {
@@ -598,21 +597,22 @@ struct GameBoardView: View {
         let col = Int(adjustedX / cellWithSpacing)
         let row = Int(adjustedY / cellWithSpacing)
         
-        return GridPosition(
-            row: max(0, min(GameState.gridSize - 1, row)),
-            col: max(0, min(GameState.gridSize - 1, col))
-        )
+        // Don't clamp to grid bounds - allow negative/out-of-bounds positions for proper edge detection
+        return GridPosition(row: row, col: col)
     }
     
     private func updatePreviewPosition(for globalLocation: CGPoint) {
-        // Check if the drag location is over the grid
-        if gridFrame.contains(globalLocation) {
-            // Convert global coordinates to grid-relative coordinates
-            let relativeLocation = CGPoint(
-                x: globalLocation.x - gridFrame.minX,
-                y: globalLocation.y - gridFrame.minY
-            )
-            let gridPosition = getGridPosition(from: relativeLocation, in: gridFrame.size)
+        // Convert global coordinates to grid-relative coordinates regardless of bounds
+        let relativeLocation = CGPoint(
+            x: globalLocation.x - gridFrame.minX,
+            y: globalLocation.y - gridFrame.minY
+        )
+        
+        let gridPosition = getGridPosition(from: relativeLocation, in: gridFrame.size)
+        
+        // Only show preview if the block can actually be placed at this position
+        if let draggedBlock = draggedBlock,
+           gameState.canPlaceBlock(draggedBlock, at: gridPosition) {
             previewPosition = gridPosition
         } else {
             previewPosition = nil
