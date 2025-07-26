@@ -602,21 +602,81 @@ struct GameBoardView: View {
     }
     
     private func updatePreviewPosition(for globalLocation: CGPoint) {
-        // Convert global coordinates to grid-relative coordinates regardless of bounds
+        guard let draggedBlock = draggedBlock else {
+            previewPosition = nil
+            return
+        }
+        
+        // Convert global coordinates to grid-relative coordinates
         let relativeLocation = CGPoint(
             x: globalLocation.x - gridFrame.minX,
             y: globalLocation.y - gridFrame.minY
         )
         
-        let gridPosition = getGridPosition(from: relativeLocation, in: gridFrame.size)
-        
-        // Only show preview if the block can actually be placed at this position
-        if let draggedBlock = draggedBlock,
-           gameState.canPlaceBlock(draggedBlock, at: gridPosition) {
-            previewPosition = gridPosition
+        // Find the best fit position for the block
+        if let bestFit = findBestFitPosition(for: draggedBlock, near: relativeLocation) {
+            previewPosition = bestFit
         } else {
             previewPosition = nil
         }
+    }
+    
+    private func findBestFitPosition(for block: BlockShape, near targetLocation: CGPoint) -> GridPosition? {
+        var bestPosition: GridPosition?
+        var bestDistanceSquared: CGFloat = CGFloat.greatestFiniteMagnitude
+        let maxSnapDistanceSquared: CGFloat = 300 * 300 // Maximum snap distance squared for performance
+        
+        // Check all possible positions on the grid
+        for row in 0..<GameState.gridSize {
+            for col in 0..<GameState.gridSize {
+                let position = GridPosition(row: row, col: col)
+                
+                // Check if block can be placed at this position
+                if gameState.canPlaceBlock(block, at: position) {
+                    // Calculate the center point of the block if placed at this position
+                    let blockCenter = getBlockCenterInGrid(for: block, at: position)
+                    
+                    // Calculate squared distance from target location (faster than sqrt)
+                    let distanceSquared = pow(blockCenter.x - targetLocation.x, 2) + pow(blockCenter.y - targetLocation.y, 2)
+                    
+                    // Update best position if this is closer
+                    if distanceSquared < bestDistanceSquared {
+                        bestDistanceSquared = distanceSquared
+                        bestPosition = position
+                    }
+                }
+            }
+        }
+        
+        // Only return a position if we found one within a reasonable distance
+        // This prevents snapping when the user drags very far from the grid
+        if bestDistanceSquared <= maxSnapDistanceSquared {
+            return bestPosition
+        }
+        
+        return nil
+    }
+    
+    private func getBlockCenterInGrid(for block: BlockShape, at position: GridPosition) -> CGPoint {
+        // Calculate the bounding box of the block
+        let minRow = block.positions.map(\.row).min() ?? 0
+        let maxRow = block.positions.map(\.row).max() ?? 0
+        let minCol = block.positions.map(\.col).min() ?? 0
+        let maxCol = block.positions.map(\.col).max() ?? 0
+        
+        // Calculate the center of the block in grid coordinates
+        let blockCenterRow = CGFloat(position.row) + CGFloat(maxRow + minRow) / 2.0
+        let blockCenterCol = CGFloat(position.col) + CGFloat(maxCol + minCol) / 2.0
+        
+        // Convert to pixel coordinates within the grid
+        let cellSpacing: CGFloat = 3
+        let cellWithSpacing = cellSize + cellSpacing
+        let gridPadding: CGFloat = 16  // GameTheme.Layout.mediumPadding
+        
+        let centerX = blockCenterCol * cellWithSpacing + cellSize / 2.0 + gridPadding
+        let centerY = blockCenterRow * cellWithSpacing + cellSize / 2.0 + gridPadding
+        
+        return CGPoint(x: centerX, y: centerY)
     }
     
     private func createFallingLeaves(from clearedCells: [ClearedCell]) {
@@ -659,7 +719,7 @@ struct GridCellView: View {
                 (isLineComplete ? 
                     LinearGradient(colors: [Color(red: 0.9, green: 0.7, blue: 0.1), Color(red: 0.9, green: 0.5, blue: 0.1)], startPoint: .topLeading, endPoint: .bottomTrailing) :
                 (isPreview ? 
-                    LinearGradient(colors: [previewColor.opacity(0.7), previewColor.opacity(0.3)], startPoint: .topLeading, endPoint: .bottomTrailing) : 
+                    LinearGradient(colors: [previewColor.opacity(0.8), previewColor.opacity(0.4)], startPoint: .topLeading, endPoint: .bottomTrailing) : 
                     LinearGradient(colors: [Color(red: 0.25, green: 0.2, blue: 0.15).opacity(0.3), Color(red: 0.2, green: 0.15, blue: 0.1).opacity(0.2)], startPoint: .topLeading, endPoint: .bottomTrailing)
                 ))
             )
@@ -669,18 +729,28 @@ struct GridCellView: View {
                     .stroke(
                         cell.isFilled ? Color(red: 0.95, green: 0.9, blue: 0.8).opacity(0.4) :
                         (isLineComplete ? Color(red: 0.9, green: 0.7, blue: 0.1).opacity(0.8) :
-                        (isPreview ? previewColor.opacity(0.5) : Color(red: 0.4, green: 0.25, blue: 0.1).opacity(0.2))),
-                        lineWidth: cell.isFilled ? 2 : 1
+                        (isPreview ? previewColor.opacity(0.8) : Color(red: 0.4, green: 0.25, blue: 0.1).opacity(0.2))),
+                        lineWidth: cell.isFilled ? 2 : (isPreview ? 2 : 1)
                     )
+            )
+            .overlay(
+                // Add a pulsing border for snap-to preview to make it more obvious
+                isPreview ? 
+                RoundedRectangle(cornerRadius: 8)
+                    .stroke(previewColor, lineWidth: 3)
+                    .opacity(0.6)
+                    .scaleEffect(1.05)
+                    .animation(.easeInOut(duration: 0.8).repeatForever(autoreverses: true), value: isPreview)
+                : nil
             )
             .shadow(
                 color: cell.isFilled ? cell.color.color.opacity(0.4) :
                       (isLineComplete ? Color(red: 0.9, green: 0.6, blue: 0.1).opacity(0.6) :
-                      (isPreview ? previewColor.opacity(0.4) : .clear)),
-                radius: cell.isFilled ? 5 : (isLineComplete || isPreview ? 4 : 0),
+                      (isPreview ? previewColor.opacity(0.6) : .clear)),
+                radius: cell.isFilled ? 5 : (isLineComplete || isPreview ? 6 : 0),
                 x: 0, y: cell.isFilled ? 2 : 1
             )
-            .scaleEffect(cell.isFilled ? 1.0 : (isPreview ? 0.92 : 0.88))
+            .scaleEffect(cell.isFilled ? 1.0 : (isPreview ? 0.95 : 0.88))
             .fastAnimation(value: isPreview)
             .lineClearAnimation(value: isLineComplete)
             .smoothAnimation(value: cell.isFilled)
