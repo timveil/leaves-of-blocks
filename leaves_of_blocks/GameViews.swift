@@ -253,17 +253,16 @@ struct CurrentBlocksView: View {
                         )
                         .shadow(color: GameTheme.Colors.blockContainerShadow, radius: 6, x: 2, y: 3)
                     
-                    // Scaled block centered in slot - animates to full size when dragged
+                    // Scaled block centered in slot - size stays consistent
                     DraggableBlockView(
                         block: block,
-                        cellSize: draggedBlock == block && isDragging ? cellSize : scaledCellSize(for: block),
+                        cellSize: scaledCellSize(for: block),
                         onDragStart: { location, startLocation in
                             onDragStart(block, location)
                         },
                         onDragMove: onDragMove,
                         onDragEnd: onDragEnd
                     )
-                    .fastAnimation(value: draggedBlock == block && isDragging)
                 }
                 .frame(width: slotWidth, height: containerHeight)
             }
@@ -974,6 +973,8 @@ struct DifficultyButton: View {
 struct GameHomeView: View {
     @ObservedObject var gameState: GameState
     let onStartGame: (DifficultyMode) -> Void
+    let onShowAbout: () -> Void
+    let onShowHistory: () -> Void
     
     @State private var selectedDifficulty: DifficultyMode = .moderate
     
@@ -987,33 +988,40 @@ struct GameHomeView: View {
                     VStack(spacing: GameTheme.Layout.extraLargeSpacing) {
                         Spacer()
                         
-                        // High Score Display
-                        VStack(spacing: GameTheme.Layout.mediumSpacing) {
-                            Text("Best Score")
-                                .font(GameTheme.Typography.titleFont)
-                                .foregroundColor(GameTheme.Colors.accent)
-                            
-                            Text("\(gameState.highScoreManager.highScore)")
-                                .font(GameTheme.Typography.largeScore)
-                                .foregroundColor(GameTheme.Colors.accent)
+                        // High Score Display - Now tappable for history
+                        Button(action: onShowHistory) {
+                            VStack(spacing: GameTheme.Layout.mediumSpacing) {
+                                Text("Best Score")
+                                    .font(GameTheme.Typography.titleFont)
+                                    .foregroundColor(GameTheme.Colors.accent)
                                 
-                            // Last played info if available
-                            if gameState.score > 0 {
-                                Text("Last Score: \(gameState.score)")
+                                Text("\(gameState.highScoreManager.highScore)")
+                                    .font(GameTheme.Typography.largeScore)
+                                    .foregroundColor(GameTheme.Colors.accent)
+                                    
+                                // Last played info if available
+                                if gameState.score > 0 {
+                                    Text("Last Score: \(gameState.score)")
+                                        .font(GameTheme.Typography.captionFont)
+                                        .foregroundColor(GameTheme.Colors.secondaryText)
+                                }
+                                
+                                Text("Tap for History")
                                     .font(GameTheme.Typography.captionFont)
-                                    .foregroundColor(GameTheme.Colors.secondaryText)
+                                    .foregroundColor(GameTheme.Colors.accent.opacity(0.7))
                             }
+                            .padding(.horizontal, GameTheme.Layout.extraLargePadding)
+                            .padding(.vertical, GameTheme.Layout.extraLargePadding)
+                            .background(
+                                RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
+                                    .fill(GameTheme.Colors.cardBackground)
+                                    .overlay(
+                                        RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
+                                            .stroke(GameTheme.Colors.accent.opacity(0.3), lineWidth: 2)
+                                    )
+                            )
                         }
-                        .padding(.horizontal, GameTheme.Layout.extraLargePadding)
-                        .padding(.vertical, GameTheme.Layout.extraLargePadding)
-                        .background(
-                            RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
-                                .fill(GameTheme.Colors.cardBackground)
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
-                                        .stroke(GameTheme.Colors.accent.opacity(0.3), lineWidth: 2)
-                                )
-                        )
+                        .buttonStyle(PlainButtonStyle())
                         
                         Spacer()
                         
@@ -1031,6 +1039,28 @@ struct GameHomeView: View {
                     // Grass always at bottom
                     BlockGrassView()
                         .ignoresSafeArea(.all, edges: .bottom)
+                }
+                
+                // About button overlay - top right
+                VStack {
+                    HStack {
+                        Spacer()
+                        
+                        Button(action: onShowAbout) {
+                            Image(systemName: "info.circle")
+                                .font(.system(size: 28, weight: .medium))
+                                .foregroundColor(GameTheme.Colors.primaryText)
+                                .background(
+                                    Circle()
+                                        .fill(GameTheme.Colors.primaryBackground.opacity(0.7))
+                                        .frame(width: 44, height: 44)
+                                )
+                        }
+                        .padding(.trailing, GameTheme.Layout.largePadding)
+                        .padding(.top, GameTheme.Layout.mediumPadding)
+                    }
+                    
+                    Spacer()
                 }
             }
         }
@@ -1392,31 +1422,32 @@ struct DraggableBlockView: View {
     @State private var isDragging: Bool = false
     
     var body: some View {
-        GeometryReader { geometry in
+        ZStack {
+            // Original block stays in place with reduced opacity when dragging
             BlockView(block: block, cellSize: cellSize)
-                .opacity(isDragging ? 0.4 : 1.0)
-                .scaleEffect(isDragging ? 0.95 : 1.0)
+                .opacity(isDragging ? 0.3 : 1.0)
                 .fastAnimation(value: isDragging)
-                .gesture(
-                    DragGesture(minimumDistance: 5, coordinateSpace: .global)
-                        .onChanged { value in
-                            if !isDragging {
-                                isDragging = true
-                                let blockCenter = CGPoint(
-                                    x: geometry.frame(in: .global).midX,
-                                    y: geometry.frame(in: .global).midY
-                                )
-                                onDragStart(value.location, blockCenter)
-                            }
-                            onDragMove(value.location)
-                        }
-                        .onEnded { _ in
-                            isDragging = false
-                            onDragEnd()
-                        }
-                )
         }
         .frame(width: getBlockWidth(), height: getBlockHeight())
+        .contentShape(Rectangle()) // Ensure entire frame is tappable
+        .gesture(
+            DragGesture(minimumDistance: 5, coordinateSpace: .global)
+                .onChanged { value in
+                    if !isDragging {
+                        isDragging = true
+                        let blockCenter = CGPoint(
+                            x: getBlockWidth() / 2,
+                            y: getBlockHeight() / 2
+                        )
+                        onDragStart(value.location, blockCenter)
+                    }
+                    onDragMove(value.location)
+                }
+                .onEnded { _ in
+                    isDragging = false
+                    onDragEnd()
+                }
+        )
     }
     
     private func getBlockWidth() -> CGFloat {
