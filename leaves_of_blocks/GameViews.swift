@@ -318,8 +318,7 @@ struct GameOverOverlayView: View {
             VStack(spacing: 8) {
                 if gameState.isNewHighScore {
                     Text("🎉 NEW HIGH SCORE! 🎉")
-                        .font(GameTheme.Typography.headline)
-                        .fontWeight(.bold)
+                        .font(GameTheme.Typography.titleFont)
                         .foregroundColor(GameTheme.Colors.accent)
                         .tracking(1)
                         .scaleEffect(1.1)
@@ -327,16 +326,14 @@ struct GameOverOverlayView: View {
                 }
                 
                 Text("The Leaves Have Fallen")
-                    .font(GameTheme.Typography.headline)
-                    .fontWeight(.medium)
+                    .font(GameTheme.Typography.titleFont)
                     .foregroundColor(GameTheme.Colors.error)
                     .tracking(1)
                     .italic()
             }
             
             Text("Final Score")
-                .font(GameTheme.Typography.caption)
-                .fontWeight(.medium)
+                .font(GameTheme.Typography.captionFont)
                 .foregroundColor(GameTheme.Colors.warning)
                 .tracking(1)
             
@@ -348,8 +345,7 @@ struct GameOverOverlayView: View {
             VStack(spacing: 16) {
                 Button(action: onViewSummary) {
                     Text("View Summary")
-                        .font(GameTheme.Typography.headline)
-                        .fontWeight(.medium)
+                        .font(GameTheme.Typography.titleFont)
                         .foregroundColor(GameTheme.Colors.buttonText)
                         .tracking(0.5)
                         .padding(.horizontal, GameTheme.Layout.largePadding)
@@ -372,8 +368,7 @@ struct GameOverOverlayView: View {
                     }
                 }) {
                     Text("New Season")
-                        .font(GameTheme.Typography.headline)
-                        .fontWeight(.medium)
+                        .font(GameTheme.Typography.titleFont)
                         .foregroundColor(GameTheme.Colors.buttonText)
                         .tracking(0.5)
                         .padding(.horizontal, GameTheme.Layout.largePadding)
@@ -454,9 +449,19 @@ struct GameSummaryView: View {
                                 .foregroundColor(gameState.currentDifficulty.color)
                         }
                         
-                        Text("Final Score: \(gameState.score)")
-                            .font(GameTheme.Typography.largeScore)
-                            .foregroundColor(GameTheme.Colors.accent)
+                        VStack(spacing: 8) {
+                            Text("Final Score")
+                                .font(GameTheme.Typography.headline)
+                                .foregroundColor(GameTheme.Colors.warning)
+                                .tracking(1)
+                            
+                            Text("\(gameState.score)")
+                                .font(GameTheme.Typography.largeScore)
+                                .foregroundColor(GameTheme.Colors.accent)
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.7)
+                                .fixedSize()
+                        }
                     }
                     .padding(.top, GameTheme.Layout.largePadding)
                     
@@ -513,13 +518,14 @@ struct GameSummaryView: View {
                     // High Score Comparison
                     VStack(spacing: 16) {
                         Text("High Score History")
-                            .font(GameTheme.Typography.headline)
+                            .font(GameTheme.Typography.title)
                             .foregroundColor(GameTheme.Colors.primaryText)
+                            .tracking(0.5)
                         
                         HStack {
                             VStack {
                                 Text("Current Game")
-                                    .font(GameTheme.Typography.caption)
+                                    .font(GameTheme.Typography.captionFont)
                                     .foregroundColor(GameTheme.Colors.secondaryText)
                                 Text("\(gameState.score)")
                                     .font(GameTheme.Typography.largeScore)
@@ -530,7 +536,7 @@ struct GameSummaryView: View {
                             
                             VStack {
                                 Text("Best Ever")
-                                    .font(GameTheme.Typography.caption)
+                                    .font(GameTheme.Typography.captionFont)
                                     .foregroundColor(GameTheme.Colors.secondaryText)
                                 Text("\(gameState.highScoreManager.highScore)")
                                     .font(GameTheme.Typography.largeScore)
@@ -553,8 +559,7 @@ struct GameSummaryView: View {
                     VStack(spacing: 16) {
                         Button(action: onNewGame) {
                             Text("Start New Game")
-                                .font(GameTheme.Typography.headline)
-                                .fontWeight(.medium)
+                                .font(GameTheme.Typography.titleFont)
                                 .foregroundColor(GameTheme.Colors.buttonText)
                                 .tracking(0.5)
                                 .frame(maxWidth: .infinity)
@@ -573,7 +578,7 @@ struct GameSummaryView: View {
                         
                         Button(action: onGoHome) {
                             Text("Return Home")
-                                .font(GameTheme.Typography.body)
+                                .font(GameTheme.Typography.bodyFont)
                                 .foregroundColor(GameTheme.Colors.secondaryText)
                                 .tracking(0.3)
                         }
@@ -614,7 +619,7 @@ struct StatisticCard: View {
                 .minimumScaleFactor(0.8)
             
             Text(title)
-                .font(GameTheme.Typography.caption)
+                .font(GameTheme.Typography.captionFont)
                 .foregroundColor(GameTheme.Colors.secondaryText)
                 .multilineTextAlignment(.center)
                 .lineLimit(2)
@@ -640,15 +645,16 @@ struct DifficultySelectionView: View {
     let onStartGame: (DifficultyMode) -> Void
     
     var body: some View {
-        VStack(spacing: GameTheme.Layout.mediumSpacing) {
+        VStack(spacing: GameTheme.Layout.extraLargeSpacing) {
             Text("Select Difficulty")
-                .font(GameTheme.Typography.headline)
+                .font(GameTheme.Typography.titleFont)
                 .foregroundColor(GameTheme.Colors.primaryText)
                 .tracking(0.5)
             
-            VStack(spacing: GameTheme.Layout.smallSpacing) {
+            // Horizontal difficulty buttons
+            HStack(spacing: GameTheme.Layout.mediumSpacing) {
                 ForEach(DifficultyMode.allCases, id: \.self) { difficulty in
-                    DifficultyButton(
+                    CompactDifficultyButton(
                         difficulty: difficulty,
                         isSelected: selectedDifficulty == difficulty,
                         onTap: {
@@ -657,6 +663,7 @@ struct DifficultySelectionView: View {
                     )
                 }
             }
+            .padding(.horizontal, GameTheme.Layout.smallPadding)
             
             Button(action: {
                 onStartGame(selectedDifficulty)
@@ -666,13 +673,12 @@ struct DifficultySelectionView: View {
                         .font(.system(size: 18, weight: .bold))
                     
                     Text("Start Game")
-                        .font(GameTheme.Typography.headline)
-                        .fontWeight(.medium)
+                        .font(GameTheme.Typography.titleFont)
                         .tracking(0.5)
                 }
                 .foregroundColor(GameTheme.Colors.buttonText)
                 .frame(maxWidth: .infinity)
-                .padding(.vertical, GameTheme.Layout.mediumPadding)
+                .padding(.vertical, GameTheme.Layout.largePadding)
                 .background(
                     Capsule()
                         .fill(
@@ -687,23 +693,44 @@ struct DifficultySelectionView: View {
             .scaleEffect(1.0)
             .gameAnimation(value: selectedDifficulty)
         }
-        .padding(GameTheme.Layout.largePadding)
-        .background(
-            RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
-                .fill(GameTheme.Colors.cardBackground)
-                .overlay(
-                    RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
-                        .stroke(
-                            LinearGradient(
-                                colors: GameTheme.Colors.cardBorderGradient,
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            ),
-                            lineWidth: GameTheme.Layout.strokeWidth
-                        )
-                )
-        )
-        .shadow(color: GameTheme.Colors.cardShadow, radius: GameTheme.Layout.shadowRadius, x: 0, y: GameTheme.Layout.shadowOffset)
+        .padding(.horizontal, GameTheme.Layout.mediumPadding)
+    }
+}
+
+struct CompactDifficultyButton: View {
+    let difficulty: DifficultyMode
+    let isSelected: Bool
+    let onTap: () -> Void
+    
+    var body: some View {
+        Button(action: onTap) {
+            VStack(spacing: GameTheme.Layout.smallSpacing) {
+                Image(systemName: difficulty.icon)
+                    .font(.system(size: 20, weight: .medium))
+                    .foregroundColor(difficulty.color)
+                
+                Text(difficulty.rawValue)
+                    .font(GameTheme.Typography.captionFont)
+                    .foregroundColor(GameTheme.Colors.primaryText)
+                    .lineLimit(1)
+            }
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, GameTheme.Layout.largePadding)
+            .padding(.horizontal, GameTheme.Layout.mediumPadding)
+            .background(
+                RoundedRectangle(cornerRadius: GameTheme.Layout.buttonCornerRadius)
+                    .fill(isSelected ? difficulty.color.opacity(0.2) : GameTheme.Colors.containerBackground)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: GameTheme.Layout.buttonCornerRadius)
+                            .stroke(
+                                isSelected ? difficulty.color.opacity(0.6) : GameTheme.Colors.containerBorder,
+                                lineWidth: isSelected ? 2 : 1
+                            )
+                    )
+            )
+        }
+        .scaleEffect(isSelected ? 1.05 : 1.0)
+        .animation(.easeInOut(duration: 0.2), value: isSelected)
     }
 }
 
@@ -722,12 +749,11 @@ struct DifficultyButton: View {
                 
                 VStack(alignment: .leading, spacing: 4) {
                     Text(difficulty.rawValue)
-                        .font(GameTheme.Typography.headline)
-                        .fontWeight(.medium)
+                        .font(GameTheme.Typography.headlineFont)
                         .foregroundColor(GameTheme.Colors.primaryText)
                     
                     Text(difficulty.description)
-                        .font(GameTheme.Typography.caption)
+                        .font(GameTheme.Typography.captionFont)
                         .foregroundColor(GameTheme.Colors.secondaryText)
                         .lineLimit(2)
                 }
@@ -767,57 +793,60 @@ struct GameHomeView: View {
     @State private var selectedDifficulty: DifficultyMode = .easy
     
     var body: some View {
-        ZStack {
-            GameBackgroundView()
-            
-            ScrollView {
-                VStack(spacing: GameTheme.Layout.sectionSpacing) {
-                    // App Title
-                    Text("🍂 Leaves of Blocks")
-                        .font(GameTheme.Typography.title)
-                        .foregroundColor(GameTheme.Colors.primaryText)
-                        .padding(.vertical, GameTheme.Layout.largePadding)
-                        .padding(.top, GameTheme.Layout.extraLargePadding)
-                    
-                    // High Score Display
-                    VStack(spacing: GameTheme.Layout.smallSpacing) {
-                        Text("Best Score")
-                            .font(GameTheme.Typography.headline)
-                            .foregroundColor(GameTheme.Colors.accent)
+        GeometryReader { geometry in
+            ZStack {
+                GameBackgroundView()
+                
+                VStack(spacing: 0) {
+                    // Main content area
+                    VStack(spacing: GameTheme.Layout.extraLargeSpacing) {
+                        Spacer()
                         
-                        Text("\(gameState.highScoreManager.highScore)")
-                            .font(GameTheme.Typography.largeScore)
-                            .foregroundColor(GameTheme.Colors.accent)
+                        // High Score Display
+                        VStack(spacing: GameTheme.Layout.mediumSpacing) {
+                            Text("Best Score")
+                                .font(GameTheme.Typography.titleFont)
+                                .foregroundColor(GameTheme.Colors.accent)
                             
-                        // Last played info if available
-                        if gameState.score > 0 {
-                            Text("Last Score: \(gameState.score)")
-                                .font(GameTheme.Typography.caption)
-                                .foregroundColor(GameTheme.Colors.secondaryText)
+                            Text("\(gameState.highScoreManager.highScore)")
+                                .font(GameTheme.Typography.largeScore)
+                                .foregroundColor(GameTheme.Colors.accent)
+                                
+                            // Last played info if available
+                            if gameState.score > 0 {
+                                Text("Last Score: \(gameState.score)")
+                                    .font(GameTheme.Typography.captionFont)
+                                    .foregroundColor(GameTheme.Colors.secondaryText)
+                            }
                         }
+                        .padding(.horizontal, GameTheme.Layout.extraLargePadding)
+                        .padding(.vertical, GameTheme.Layout.extraLargePadding)
+                        .background(
+                            RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
+                                .fill(GameTheme.Colors.cardBackground)
+                                .overlay(
+                                    RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
+                                        .stroke(GameTheme.Colors.accent.opacity(0.3), lineWidth: 2)
+                                )
+                        )
+                        
+                        Spacer()
+                        
+                        // Difficulty Selection
+                        DifficultySelectionView(
+                            selectedDifficulty: $selectedDifficulty,
+                            onStartGame: onStartGame
+                        )
+                        
+                        Spacer()
                     }
-                    .padding(GameTheme.Layout.largePadding)
-                    .background(
-                        RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
-                            .fill(GameTheme.Colors.cardBackground)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
-                                    .stroke(GameTheme.Colors.accent.opacity(0.3), lineWidth: 2)
-                            )
-                    )
+                    .padding(.horizontal, GameTheme.Layout.extraLargePadding)
+                    .padding(.top, GameTheme.Layout.extraLargePadding)
                     
-                    // Difficulty Selection
-                    DifficultySelectionView(
-                        selectedDifficulty: $selectedDifficulty,
-                        onStartGame: onStartGame
-                    )
-                    
-                    // Block Grass Artwork at bottom
+                    // Grass always at bottom
                     BlockGrassView()
                         .frame(height: 100)
                 }
-                .padding(.horizontal, GameTheme.Layout.largePadding)
-                .padding(.vertical, GameTheme.Layout.mediumPadding)
             }
         }
         .statusBarHidden()
