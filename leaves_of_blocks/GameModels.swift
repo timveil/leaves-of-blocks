@@ -52,8 +52,12 @@ struct BlockShape: Codable, Equatable, Hashable {
         // T-shapes
         BlockShape(positions: [GridPosition(row: 0, col: 1), GridPosition(row: 1, col: 0), GridPosition(row: 1, col: 1), GridPosition(row: 1, col: 2)], color: .blue),
         
-        // 5-block plus
-        BlockShape(positions: [GridPosition(row: 1, col: 1), GridPosition(row: 0, col: 1), GridPosition(row: 2, col: 1), GridPosition(row: 1, col: 0), GridPosition(row: 1, col: 2)], color: .green)
+        // 3x3 square (9 blocks)
+        BlockShape(positions: [
+            GridPosition(row: 0, col: 0), GridPosition(row: 0, col: 1), GridPosition(row: 0, col: 2),
+            GridPosition(row: 1, col: 0), GridPosition(row: 1, col: 1), GridPosition(row: 1, col: 2),
+            GridPosition(row: 2, col: 0), GridPosition(row: 2, col: 1), GridPosition(row: 2, col: 2)
+        ], color: .green)
     ]
 }
 

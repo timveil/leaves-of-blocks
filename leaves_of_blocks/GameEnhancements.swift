@@ -145,8 +145,12 @@ extension BlockShape {
         BlockShape(positions: [GridPosition(row: 0, col: 1), GridPosition(row: 1, col: 0), GridPosition(row: 1, col: 1), GridPosition(row: 1, col: 2)], color: .blue),
         BlockShape(positions: [GridPosition(row: 0, col: 0), GridPosition(row: 1, col: 0), GridPosition(row: 2, col: 0), GridPosition(row: 1, col: 1)], color: .blue),
         
-        // 5-block plus (rare)
-        BlockShape(positions: [GridPosition(row: 1, col: 1), GridPosition(row: 0, col: 1), GridPosition(row: 2, col: 1), GridPosition(row: 1, col: 0), GridPosition(row: 1, col: 2)], color: .green),
+        // 3x3 square (9 blocks - rare)
+        BlockShape(positions: [
+            GridPosition(row: 0, col: 0), GridPosition(row: 0, col: 1), GridPosition(row: 0, col: 2),
+            GridPosition(row: 1, col: 0), GridPosition(row: 1, col: 1), GridPosition(row: 1, col: 2),
+            GridPosition(row: 2, col: 0), GridPosition(row: 2, col: 1), GridPosition(row: 2, col: 2)
+        ], color: .green),
         
         // 5-block long line (rare)
         BlockShape(positions: [GridPosition(row: 0, col: 0), GridPosition(row: 0, col: 1), GridPosition(row: 0, col: 2), GridPosition(row: 0, col: 3), GridPosition(row: 0, col: 4)], color: .red),
