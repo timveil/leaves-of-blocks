@@ -233,19 +233,23 @@ struct CurrentBlocksView: View {
     let onDragMove: (CGPoint) -> Void
     let onDragEnd: () -> Void
     
+    // Fixed dimensions to prevent layout shifts
+    private let containerHeight: CGFloat = 120 // Fixed height for tallest blocks
+    private var gridWidth: CGFloat {
+        // Match the game grid width: (8 cells * 40px) + (7 spacings * 4px) + (2 * 12px padding)
+        return (8 * cellSize) + (7 * 4) + (2 * 12)
+    }
+    private var slotWidth: CGFloat {
+        // Divide available width by 3 blocks, accounting for spacing
+        return (gridWidth - (2 * GameTheme.Layout.largePadding) - (2 * GameTheme.Layout.mediumSpacing)) / 3
+    }
+    
     var body: some View {
-        HStack(spacing: 40) {
+        HStack(spacing: GameTheme.Layout.mediumSpacing) {
             ForEach(Array(gameState.currentBlocks.enumerated()), id: \.offset) { index, block in
-                DraggableBlockView(
-                    block: block,
-                    cellSize: cellSize * 0.8,
-                    onDragStart: { location, startLocation in
-                        onDragStart(block, location, startLocation)
-                    },
-                    onDragMove: onDragMove,
-                    onDragEnd: onDragEnd
-                )
-                .background(
+                // Fixed-size slot for each block
+                ZStack {
+                    // Background for the slot
                     RoundedRectangle(cornerRadius: GameTheme.Layout.buttonCornerRadius)
                         .fill(GameTheme.Colors.blockContainerBackground)
                         .overlay(
@@ -253,11 +257,23 @@ struct CurrentBlocksView: View {
                                 .stroke(GameTheme.Colors.blockContainerBorder, lineWidth: 1)
                         )
                         .shadow(color: GameTheme.Colors.blockContainerShadow, radius: 6, x: 2, y: 3)
-                )
-                .scaleEffect(draggedBlock == block && isDragging ? 0.7 : 1.0)
-                .gameAnimation(value: draggedBlock == block && isDragging)
+                    
+                    // Scaled block centered in slot - animates to full size when dragged
+                    DraggableBlockView(
+                        block: block,
+                        cellSize: draggedBlock == block && isDragging ? cellSize : scaledCellSize(for: block),
+                        onDragStart: { location, startLocation in
+                            onDragStart(block, location, startLocation)
+                        },
+                        onDragMove: onDragMove,
+                        onDragEnd: onDragEnd
+                    )
+                    .gameAnimation(value: draggedBlock == block && isDragging)
+                }
+                .frame(width: slotWidth, height: containerHeight)
             }
         }
+        .frame(width: gridWidth, height: containerHeight + (2 * GameTheme.Layout.mediumPadding))
         .padding(.horizontal, GameTheme.Layout.largePadding)
         .padding(.vertical, GameTheme.Layout.mediumPadding)
         .background(
@@ -269,6 +285,29 @@ struct CurrentBlocksView: View {
                 )
                 .shadow(color: GameTheme.Colors.containerShadow, radius: 8, x: 0, y: 4)
         )
+    }
+    
+    // Calculate optimal cell size for each block to fit in its slot
+    private func scaledCellSize(for block: BlockShape) -> CGFloat {
+        let minRow = block.positions.map(\.row).min() ?? 0
+        let maxRow = block.positions.map(\.row).max() ?? 0
+        let minCol = block.positions.map(\.col).min() ?? 0
+        let maxCol = block.positions.map(\.col).max() ?? 0
+        
+        let blockWidth = CGFloat(maxCol - minCol + 1)
+        let blockHeight = CGFloat(maxRow - minRow + 1)
+        
+        // Calculate scale to fit within slot, leaving some padding
+        let availableWidth = slotWidth * 0.8 // 80% of slot width for padding
+        let availableHeight = containerHeight * 0.8 // 80% of slot height for padding
+        
+        let scaleForWidth = availableWidth / (blockWidth * cellSize)
+        let scaleForHeight = availableHeight / (blockHeight * cellSize)
+        
+        // Use the smaller scale to ensure block fits in both dimensions
+        let scale = min(scaleForWidth, scaleForHeight, 1.0) // Don't scale up, only down
+        
+        return cellSize * scale
     }
 }
 
