@@ -31,19 +31,9 @@ struct SimpleScoreView: View {
     var body: some View {
         HStack {
             // Current Score
-            VStack(spacing: GameTheme.Layout.tinySpacing) {
-                Text("\(gameState.score)")
-                    .font(GameTheme.Typography.largeScore)
-                    .foregroundColor(GameTheme.Colors.primaryText)
-                
-                if gameState.linesCleared > 0 {
-                    Text("Lines: \(gameState.linesCleared)")
-                        .font(GameTheme.Typography.caption)
-                        .foregroundColor(GameTheme.Colors.secondaryText)
-                        .transition(.opacity)
-                        .gameAnimation(value: gameState.linesCleared)
-                }
-            }
+            Text("\(gameState.score)")
+                .font(GameTheme.Typography.largeScore)
+                .foregroundColor(GameTheme.Colors.primaryText)
             
             Spacer()
             
