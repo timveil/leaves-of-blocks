@@ -35,7 +35,7 @@ struct LineCleaningEffect: View {
         }
         .opacity(opacity)
         .onAppear {
-            withAnimation(.easeOut(duration: 0.5)) {
+            withAnimation(GameTheme.Animations.lineClearAnimation) {
                 opacity = 0.0
             }
         }
@@ -59,7 +59,7 @@ struct ScorePopup: View {
             .offset(offset)
             .position(position)
             .onAppear {
-                withAnimation(.easeOut(duration: 1.0)) {
+                withAnimation(GameTheme.Animations.mediumSpring) {
                     offset = CGSize(width: 0, height: -50)
                     opacity = 0.0
                     scale = 1.5
@@ -90,13 +90,13 @@ extension GameState {
             currentBlocks.remove(at: index)
         }
         
-        // Delay line clearing for visual effect
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
+        // Faster line clearing with minimal delay
+        DispatchQueue.main.asyncAfter(deadline: .now() + GameTheme.GameConfig.lineClearDelay) {
             let _ = self.clearCompletedLines()
             
             // Generate new blocks if all are used
             if self.currentBlocks.isEmpty {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
                     self.generateNewBlocks()
                     completion()
                 }

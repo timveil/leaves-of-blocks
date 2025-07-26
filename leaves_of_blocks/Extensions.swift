@@ -59,19 +59,28 @@ extension View {
     
     /// Applies a spring animation with consistent timing
     func gameAnimation<V: Equatable>(value: V) -> some View {
-        self.animation(
-            .spring(
-                response: GameTheme.Animations.springResponse,
-                dampingFraction: GameTheme.Animations.springDamping
-            ),
-            value: value
-        )
+        self.animation(GameTheme.Animations.mediumSpring, value: value)
+    }
+    
+    /// Fast animation for immediate feedback
+    func fastAnimation<V: Equatable>(value: V) -> some View {
+        self.animation(GameTheme.Animations.fastSpring, value: value)
+    }
+    
+    /// Smooth animation for transitions
+    func smoothAnimation<V: Equatable>(value: V) -> some View {
+        self.animation(GameTheme.Animations.smoothEase, value: value)
+    }
+    
+    /// Line clearing animation
+    func lineClearAnimation<V: Equatable>(value: V) -> some View {
+        self.animation(GameTheme.Animations.lineClearAnimation, value: value)
     }
     
     /// Applies a bounce effect when a value changes
     func bounceEffect<V: Equatable>(value: V, scale: CGFloat = 1.1) -> some View {
         self.scaleEffect(1.0)
-            .animation(.spring(response: 0.3, dampingFraction: 0.5), value: value)
+            .animation(GameTheme.Animations.fastSpring, value: value)
     }
 }
 

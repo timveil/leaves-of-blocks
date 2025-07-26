@@ -243,7 +243,7 @@ struct CurrentBlocksView: View {
                         onDragMove: onDragMove,
                         onDragEnd: onDragEnd
                     )
-                    .gameAnimation(value: draggedBlock == block && isDragging)
+                    .fastAnimation(value: draggedBlock == block && isDragging)
                 }
                 .frame(width: slotWidth, height: containerHeight)
             }
@@ -574,8 +574,8 @@ struct GameBoardView: View {
         }
         .onChange(of: gameState.lastClearedCells) { _, newClearedCells in
             if !newClearedCells.isEmpty {
-                // Slight delay to let the clearing animation finish
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                // Minimal delay for smoother animation flow
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.02) {
                     createFallingLeaves(from: newClearedCells)
                 }
             }
@@ -638,7 +638,7 @@ struct GameBoardView: View {
         fallingLeaves.append(contentsOf: newLeaves)
         
         // Remove leaves after animation completes
-        DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + GameTheme.Animations.leafRemovalDelay) {
             fallingLeaves.removeAll()
         }
     }
@@ -681,9 +681,9 @@ struct GridCellView: View {
                 x: 0, y: cell.isFilled ? 2 : 1
             )
             .scaleEffect(cell.isFilled ? 1.0 : (isPreview ? 0.92 : 0.88))
-            .gameAnimation(value: isPreview)
-            .gameAnimation(value: isLineComplete)
-            .gameAnimation(value: cell.isFilled)
+            .fastAnimation(value: isPreview)
+            .lineClearAnimation(value: isLineComplete)
+            .smoothAnimation(value: cell.isFilled)
     }
 }
 
@@ -746,7 +746,7 @@ struct DraggableBlockView: View {
             BlockView(block: block, cellSize: cellSize)
                 .opacity(isDragging ? 0.4 : 1.0)
                 .scaleEffect(isDragging ? 0.95 : 1.0)
-                .gameAnimation(value: isDragging)
+                .fastAnimation(value: isDragging)
                 .gesture(
                     DragGesture(minimumDistance: 5, coordinateSpace: .global)
                         .onChanged { value in
