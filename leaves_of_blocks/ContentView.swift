@@ -23,7 +23,7 @@ struct ContentView: View {
                     }
                 )
                 .navigationBarHidden(true)
-                .edgesIgnoringSafeArea([]) // Respect safe areas
+                .ignoresSafeArea(.container, edges: []) // Respect all safe areas
             } else {
                 GameHomeView(
                     gameState: gameState,
@@ -35,7 +35,7 @@ struct ContentView: View {
                     }
                 )
                 .navigationBarHidden(true)
-                .edgesIgnoringSafeArea([]) // Respect safe areas
+                .ignoresSafeArea(.container, edges: []) // Respect all safe areas
             }
         }
         .navigationViewStyle(StackNavigationViewStyle()) // Prevents split view on iPad

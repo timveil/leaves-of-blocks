@@ -391,6 +391,7 @@ struct GameHomeView: View {
                     .font(GameTheme.Typography.title)
                     .foregroundColor(GameTheme.Colors.primaryText)
                     .padding(.vertical, GameTheme.Layout.largePadding)
+                    .padding(.top, GameTheme.Layout.extraLargePadding) // Extra top spacing
                 
                 // High Score Display
                 VStack(spacing: GameTheme.Layout.smallSpacing) {
@@ -449,7 +450,8 @@ struct GameHomeView: View {
                 // Block Grass Artwork at bottom
                 BlockGrassView()
             }
-            .padding(.horizontal, GameTheme.Layout.mediumPadding)
+            .padding(.horizontal, GameTheme.Layout.largePadding)
+            .padding(.vertical, GameTheme.Layout.mediumPadding)
         }
     }
 }
@@ -484,6 +486,7 @@ struct GameBoardView: View {
                         }
                     }
                 )
+                .padding(.top, GameTheme.Layout.extraLargePadding) // Extra top spacing
                 
                 // Game Grid
                 GameGridView(
@@ -540,8 +543,8 @@ struct GameBoardView: View {
                 // Block Grass Artwork at bottom
                 BlockGrassView()
             }
-            .padding(.horizontal, GameTheme.Layout.mediumPadding)
-            .padding(.top, GameTheme.Layout.smallPadding) // Extra top padding for status bar
+            .padding(.horizontal, GameTheme.Layout.largePadding)
+            .padding(.vertical, GameTheme.Layout.mediumPadding)
             
             // Game Over Overlay
             if gameState.isGameOver {

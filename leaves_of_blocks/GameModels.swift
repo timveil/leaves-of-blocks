@@ -207,6 +207,76 @@ class GameState: ObservableObject {
         linesCleared = 0
         isGameOver = false
         lastClearedCells = []
+        
+        // Randomly pre-fill the grid with shapes
+        randomlyFillGrid()
+        
         generateNewBlocks()
+    }
+    
+    private func randomlyFillGrid() {
+        let totalCells = GameState.gridSize * GameState.gridSize // 64 cells for 8x8
+        let maxFillCells = Int(Double(totalCells) * 0.4) // Up to 40% filled (25-26 cells)
+        let targetFillCells = Int.random(in: 0...maxFillCells)
+        
+        var cellsPlaced = 0
+        var attemptCount = 0
+        let maxAttempts = targetFillCells * 10 // Prevent infinite loops
+        
+        while cellsPlaced < targetFillCells && attemptCount < maxAttempts {
+            attemptCount += 1
+            
+            // Pick a random shape
+            guard let randomShape = BlockShape.allShapes.randomElement() else { continue }
+            
+            // Pick a random position
+            let randomRow = Int.random(in: 0..<GameState.gridSize)
+            let randomCol = Int.random(in: 0..<GameState.gridSize)
+            let position = GridPosition(row: randomRow, col: randomCol)
+            
+            // Try to place the shape
+            if canPlaceBlock(randomShape, at: position) {
+                // Temporarily place the block to check for complete lines
+                var tempGrid = grid
+                for blockPos in randomShape.positions {
+                    let finalRow = position.row + blockPos.row
+                    let finalCol = position.col + blockPos.col
+                    tempGrid[finalRow][finalCol].isFilled = true
+                    tempGrid[finalRow][finalCol].color = randomShape.color
+                }
+                
+                // Check if this placement would create any complete lines
+                let wouldCreateLines = wouldCreateCompleteLines(in: tempGrid)
+                
+                if !wouldCreateLines {
+                    // Place the block for real
+                    for blockPos in randomShape.positions {
+                        let finalRow = position.row + blockPos.row
+                        let finalCol = position.col + blockPos.col
+                        grid[finalRow][finalCol].isFilled = true
+                        grid[finalRow][finalCol].color = randomShape.color
+                        cellsPlaced += 1
+                    }
+                }
+            }
+        }
+    }
+    
+    private func wouldCreateCompleteLines(in testGrid: [[GridCell]]) -> Bool {
+        // Check rows for completion
+        for row in 0..<GameState.gridSize {
+            if testGrid[row].allSatisfy({ $0.isFilled }) {
+                return true
+            }
+        }
+        
+        // Check columns for completion
+        for col in 0..<GameState.gridSize {
+            if (0..<GameState.gridSize).allSatisfy({ testGrid[$0][col].isFilled }) {
+                return true
+            }
+        }
+        
+        return false
     }
 }
