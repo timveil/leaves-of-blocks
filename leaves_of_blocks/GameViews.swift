@@ -224,7 +224,7 @@ struct CurrentBlocksView: View {
     let onDragEnd: () -> Void
     
     // Fixed dimensions to prevent layout shifts
-    private let containerHeight: CGFloat = 120 // Fixed height for tallest blocks
+    private let containerHeight: CGFloat = 90 // Reduced height for more compact layout
     private var gridWidth: CGFloat {
         // Match the game grid width: (8 cells * 40px) + (7 spacings * 4px) + (2 * 12px padding)
         return (8 * cellSize) + (7 * 4) + (2 * 12)
@@ -263,9 +263,9 @@ struct CurrentBlocksView: View {
                 .frame(width: slotWidth, height: containerHeight)
             }
         }
-        .frame(width: gridWidth, height: containerHeight + (2 * GameTheme.Layout.mediumPadding))
+        .frame(width: gridWidth, height: containerHeight + (2 * GameTheme.Layout.smallPadding))
         .padding(.horizontal, GameTheme.Layout.largePadding)
-        .padding(.vertical, GameTheme.Layout.mediumPadding)
+        .padding(.vertical, GameTheme.Layout.smallPadding)
         .background(
             RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
                 .fill(GameTheme.Colors.containerBackground)
@@ -478,7 +478,7 @@ struct GameBoardView: View {
             GameBackgroundView()
             
             
-            VStack(spacing: GameTheme.Layout.sectionSpacing) {
+            VStack(spacing: GameTheme.Layout.largeSpacing) {
                 // Score Section with integrated buttons
                 SimpleScoreView(
                     gameState: gameState,
@@ -489,7 +489,7 @@ struct GameBoardView: View {
                         }
                     }
                 )
-                .padding(.top, GameTheme.Layout.extraLargePadding) // Extra top spacing
+                .padding(.top, GameTheme.Layout.mediumPadding) // Reduced top spacing
                 
                 // Game Grid
                 GameGridView(
