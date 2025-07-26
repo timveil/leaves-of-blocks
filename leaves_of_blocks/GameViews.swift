@@ -437,7 +437,7 @@ struct GameBoardView: View {
     @State private var gridFrame: CGRect = .zero
     @State private var fallingLeaves: [FallingLeaf] = []
     
-    let cellSize: CGFloat = 32
+    let cellSize: CGFloat = 40
     let onGoHome: () -> Void
     
     var body: some View {

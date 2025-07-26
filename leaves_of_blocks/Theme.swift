@@ -112,8 +112,8 @@ struct GameTheme {
     // MARK: - Spacing & Layout
     
     struct Layout {
-        static let cellSize: CGFloat = 32
-        static let gridSpacing: CGFloat = 3
+        static let cellSize: CGFloat = 40
+        static let gridSpacing: CGFloat = 4
         static let gridPadding: CGFloat = 12
         static let sectionSpacing: CGFloat = 24
         static let componentSpacing: CGFloat = 16
@@ -165,7 +165,7 @@ struct GameTheme {
     // MARK: - Game Configuration
     
     struct GameConfig {
-        static let gridSize: Int = 10
+        static let gridSize: Int = 8
         static let baseBlockScore: Int = 10
         static let lineScore: Int = 100
         static let comboBonus: Int = 50

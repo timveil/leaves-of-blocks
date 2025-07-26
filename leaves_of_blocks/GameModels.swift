@@ -56,7 +56,7 @@ struct BlockShape: Codable, Equatable, Hashable {
 }
 
 class GameState: ObservableObject {
-    static let gridSize = 10
+    static let gridSize = 8
     
     @Published var grid: [[GridCell]]
     @Published var currentBlocks: [BlockShape]
