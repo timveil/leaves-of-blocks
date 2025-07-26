@@ -92,7 +92,7 @@ extension GameState {
         
         // Delay line clearing for visual effect
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-            self.clearCompletedLines()
+            let _ = self.clearCompletedLines()
             
             // Generate new blocks if all are used
             if self.currentBlocks.isEmpty {

@@ -14,7 +14,9 @@ struct ContentView: View {
         NavigationView {
             GameBoardView(gameState: gameState)
                 .navigationTitle("Leaves of Blocks")
+                #if os(iOS)
                 .navigationBarTitleDisplayMode(.inline)
+                #endif
         }
     }
 }

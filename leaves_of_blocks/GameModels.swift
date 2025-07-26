@@ -14,6 +14,12 @@ enum BlockColor: CaseIterable, Codable {
     case blue, green, red, yellow, purple, orange, pink
 }
 
+struct ClearedCell: Equatable, Codable {
+    let row: Int
+    let col: Int
+    let color: BlockColor
+}
+
 struct BlockShape: Codable, Equatable {
     let positions: [GridPosition]
     let color: BlockColor
@@ -57,6 +63,7 @@ class GameState: ObservableObject {
     @Published var score: Int = 0
     @Published var isGameOver: Bool = false
     @Published var linesCleared: Int = 0
+    @Published var lastClearedCells: [ClearedCell] = []
     
     let highScoreManager = HighScoreManager()
     
@@ -109,7 +116,8 @@ class GameState: ObservableObject {
         }
         
         // Clear completed lines
-        clearCompletedLines()
+        let clearResult = clearCompletedLines()
+        lastClearedCells = clearResult.clearedCells
         
         // Generate new blocks if all are used
         if currentBlocks.isEmpty {
@@ -117,9 +125,10 @@ class GameState: ObservableObject {
         }
     }
     
-    func clearCompletedLines() {
+    func clearCompletedLines() -> (clearedRows: Set<Int>, clearedCols: Set<Int>, clearedCells: [ClearedCell]) {
         var clearedRows: Set<Int> = []
         var clearedCols: Set<Int> = []
+        var clearedCells: [ClearedCell] = []
         
         // Check rows
         for row in 0..<GameState.gridSize {
@@ -132,6 +141,21 @@ class GameState: ObservableObject {
         for col in 0..<GameState.gridSize {
             if (0..<GameState.gridSize).allSatisfy({ grid[$0][col].isFilled }) {
                 clearedCols.insert(col)
+            }
+        }
+        
+        // Collect cell information before clearing
+        for row in clearedRows {
+            for col in 0..<GameState.gridSize {
+                clearedCells.append(ClearedCell(row: row, col: col, color: grid[row][col].color))
+            }
+        }
+        
+        for col in clearedCols {
+            for row in 0..<GameState.gridSize {
+                if !clearedRows.contains(row) { // Avoid duplicates
+                    clearedCells.append(ClearedCell(row: row, col: col, color: grid[row][col].color))
+                }
             }
         }
         
@@ -158,6 +182,8 @@ class GameState: ObservableObject {
                 score += (totalLinesCleared - 1) * 50 // Combo bonus
             }
         }
+        
+        return (clearedRows: clearedRows, clearedCols: clearedCols, clearedCells: clearedCells)
     }
     
     func checkGameOver() {
@@ -180,6 +206,7 @@ class GameState: ObservableObject {
         score = 0
         linesCleared = 0
         isGameOver = false
+        lastClearedCells = []
         generateNewBlocks()
     }
 }
