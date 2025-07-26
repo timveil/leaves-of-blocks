@@ -337,9 +337,6 @@ struct GameBoardView: View {
             GameBackgroundView()
             
             VStack(spacing: GameTheme.Layout.sectionSpacing) {
-                // App Title
-                SimpleAppTitleView()
-                
                 // Score Section
                 SimpleScoreView(gameState: gameState)
                 
