@@ -57,12 +57,6 @@ struct ContentView: View {
                         withAnimation(.easeInOut) {
                             currentScreen = .home
                         }
-                    },
-                    onNewGame: {
-                        withAnimation(.easeInOut) {
-                            gameState.resetGame() // Keep current difficulty
-                            currentScreen = .game
-                        }
                     }
                 )
                 .navigationBarHidden(true)

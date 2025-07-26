@@ -543,7 +543,6 @@ struct GameOverOverlayView: View {
 struct GameSummaryView: View {
     @ObservedObject var gameState: GameState
     let onGoHome: () -> Void
-    let onNewGame: () -> Void
     
     var body: some View {
         GeometryReader { geometry in
@@ -672,70 +671,66 @@ struct GameSummaryView: View {
                     )
                     .padding(.horizontal, GameTheme.Layout.largePadding)
                     
-                    Spacer(minLength: GameTheme.Layout.mediumSpacing)
+                    Spacer(minLength: GameTheme.Layout.extraLargeSpacing)
                     
-                    // Action Buttons - compact
-                    VStack(spacing: GameTheme.Layout.mediumSpacing) {
-                        Button(action: onNewGame) {
-                            Text("Start New Game")
+                    // Return Home Button
+                    Button(action: onGoHome) {
+                        HStack(spacing: GameTheme.Layout.mediumSpacing) {
+                            Image(systemName: "house.fill")
+                                .font(.system(size: 20, weight: .bold))
+                            Text("Return Home")
                                 .font(GameTheme.Typography.headlineFont)
-                                .foregroundColor(GameTheme.Colors.buttonText)
                                 .tracking(0.5)
-                                .shadow(color: Color.black.opacity(0.2), radius: 1, x: 0, y: 1)
-                                .frame(maxWidth: .infinity)
-                                .padding(.vertical, GameTheme.Layout.mediumPadding)
-                                .background(
-                                    ZStack {
-                                        // Deep shadow layers for 3D effect
+                        }
+                        .foregroundColor(GameTheme.Colors.buttonText)
+                        .shadow(color: Color.black.opacity(0.2), radius: 1, x: 0, y: 1)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, GameTheme.Layout.mediumPadding)
+                        .background(
+                            ZStack {
+                                // Deep shadow layers for 3D effect
+                                Capsule()
+                                    .fill(Color.black.opacity(0.15))
+                                    .offset(x: 0, y: 5)
+                                
+                                Capsule()
+                                    .fill(Color.black.opacity(0.08))
+                                    .offset(x: 0, y: 2)
+                                
+                                Capsule()
+                                    .fill(
+                                        LinearGradient(
+                                            colors: [
+                                                GameTheme.Colors.buttonGradient[0],
+                                                GameTheme.Colors.buttonGradient[1],
+                                                GameTheme.Colors.buttonGradient[1].opacity(0.8)
+                                            ],
+                                            startPoint: .topLeading,
+                                            endPoint: .bottomTrailing
+                                        )
+                                    )
+                                    .overlay(
                                         Capsule()
-                                            .fill(Color.black.opacity(0.15))
-                                            .offset(x: 0, y: 5)
-                                        
-                                        Capsule()
-                                            .fill(Color.black.opacity(0.08))
-                                            .offset(x: 0, y: 2)
-                                        
-                                        Capsule()
-                                            .fill(
+                                            .stroke(
                                                 LinearGradient(
                                                     colors: [
-                                                        GameTheme.Colors.buttonGradient[0],
-                                                        GameTheme.Colors.buttonGradient[1],
-                                                        GameTheme.Colors.buttonGradient[1].opacity(0.8)
+                                                        Color.white.opacity(0.3),
+                                                        Color.clear,
+                                                        Color.black.opacity(0.2)
                                                     ],
                                                     startPoint: .topLeading,
                                                     endPoint: .bottomTrailing
-                                                )
+                                                ),
+                                                lineWidth: 1
                                             )
-                                            .overlay(
-                                                Capsule()
-                                                    .stroke(
-                                                        LinearGradient(
-                                                            colors: [
-                                                                Color.white.opacity(0.3),
-                                                                Color.clear,
-                                                                Color.black.opacity(0.2)
-                                                            ],
-                                                            startPoint: .topLeading,
-                                                            endPoint: .bottomTrailing
-                                                        ),
-                                                        lineWidth: 1
-                                                    )
-                                            )
-                                            .shadow(color: GameTheme.Colors.buttonGradient[0].opacity(0.3), radius: 6, x: 0, y: 3)
-                                    }
-                                )
-                        }
-                        
-                        Button(action: onGoHome) {
-                            Text("Return Home")
-                                .font(GameTheme.Typography.captionFont)
-                                .foregroundColor(GameTheme.Colors.secondaryText)
-                                .tracking(0.3)
-                        }
+                                    )
+                                    .shadow(color: GameTheme.Colors.buttonGradient[0].opacity(0.3), radius: 6, x: 0, y: 3)
+                            }
+                        )
                     }
                     .padding(.horizontal, GameTheme.Layout.extraLargePadding)
-                    .padding(.bottom, GameTheme.Layout.mediumPadding)
+                    
+                    Spacer(minLength: GameTheme.Layout.extraLargeSpacing)
                     
                     // Grass always at bottom
                     BlockGrassView()
