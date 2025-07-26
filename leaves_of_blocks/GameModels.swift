@@ -14,7 +14,7 @@ enum BlockColor: CaseIterable, Codable {
     case blue, green, red, yellow, purple, orange, pink
 }
 
-struct BlockShape: Codable {
+struct BlockShape: Codable, Equatable {
     let positions: [GridPosition]
     let color: BlockColor
     
