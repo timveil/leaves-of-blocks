@@ -165,25 +165,25 @@ extension GameState {
         currentBlocks = (0..<3).map { _ in
             // Define weights: smaller blocks are more common
             let weights: [(BlockShape, Int)] = [
-                // Single blocks - very common (weight 10)
-                (BlockShape.enhancedShapes[0], 10),
+                // Single blocks - less common (weight 3)
+                (BlockShape.enhancedShapes[0], 3),
                 
-                // 2-block shapes - common (weight 8)
-                (BlockShape.enhancedShapes[1], 8),
-                (BlockShape.enhancedShapes[2], 8),
+                // 2-block shapes - less common (weight 4)
+                (BlockShape.enhancedShapes[1], 4),
+                (BlockShape.enhancedShapes[2], 4),
                 
-                // 3-block shapes - medium (weight 6)
-                (BlockShape.enhancedShapes[3], 6),
-                (BlockShape.enhancedShapes[4], 6),
-                (BlockShape.enhancedShapes[5], 5),
-                (BlockShape.enhancedShapes[6], 5),
-                (BlockShape.enhancedShapes[7], 5),
-                (BlockShape.enhancedShapes[8], 5),
+                // 3-block shapes - most common (weight 8)
+                (BlockShape.enhancedShapes[3], 8),
+                (BlockShape.enhancedShapes[4], 8),
+                (BlockShape.enhancedShapes[5], 7),
+                (BlockShape.enhancedShapes[6], 7),
+                (BlockShape.enhancedShapes[7], 7),
+                (BlockShape.enhancedShapes[8], 7),
                 
-                // 4-block shapes - less common (weight 3)
-                (BlockShape.enhancedShapes[9], 4),
-                (BlockShape.enhancedShapes[10], 3),
-                (BlockShape.enhancedShapes[11], 3),
+                // 4-block shapes - medium (weight 5-6)
+                (BlockShape.enhancedShapes[9], 6),
+                (BlockShape.enhancedShapes[10], 5),
+                (BlockShape.enhancedShapes[11], 5),
                 
                 // Complex shapes - uncommon (weight 2)
                 (BlockShape.enhancedShapes[12], 2),
