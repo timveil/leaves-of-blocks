@@ -8,7 +8,7 @@
 import SwiftUI
 
 @main
-struct Leaves_of_BlocksApp: App {
+struct LeavesOfBlocksApp: App {
     @State private var showLaunchScreen = true
     
     var body: some Scene {

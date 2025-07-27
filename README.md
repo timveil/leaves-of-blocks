@@ -12,7 +12,7 @@ A SwiftUI iOS puzzle game inspired by Block Blast, featuring autumn-themed visua
 - 📊 Progressive difficulty system (Easy, Moderate, Hard)
 - 🏆 High score tracking with persistent storage
 - 🎯 Combo scoring system for clearing multiple lines
-- 📱 Optimized for iPhone and iPad (iOS 18.5+)
+- 📱 Optimized for iPhone (iOS 18.5+)
 
 ## Requirements
 
@@ -23,7 +23,7 @@ A SwiftUI iOS puzzle game inspired by Block Blast, featuring autumn-themed visua
 ## Build Instructions
 
 ### Using Xcode GUI
-1. Open `Leaves of Blocks.xcodeproj` in Xcode
+1. Open `LeavesOfBlocks.xcodeproj` in Xcode
 2. Select your target device/simulator
 3. Press ⌘+R to build and run
 
@@ -31,16 +31,10 @@ A SwiftUI iOS puzzle game inspired by Block Blast, featuring autumn-themed visua
 
 ```bash
 # Build the project
-xcodebuild -project "Leaves of Blocks.xcodeproj" -scheme "Leaves of Blocks" build
+xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "Leaves of Blocks" build
 
 # Clean build
-xcodebuild -project "Leaves of Blocks.xcodeproj" -scheme "Leaves of Blocks" clean build
-
-# Build and run on iPhone 15 simulator
-xcodebuild -project "Leaves of Blocks.xcodeproj" -scheme "Leaves of Blocks" -destination 'platform=iOS Simulator,name=iPhone 15' build && \
-xcrun simctl boot "iPhone 15" && \
-xcrun simctl install booted .build/Debug-iphonesimulator/Leaves\ of\ Blocks.app && \
-xcrun simctl launch booted timothy.veil.Leaves-of-Blocks
+xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "Leaves of Blocks" clean build
 ```
 
 ## Testing
@@ -49,12 +43,17 @@ The project includes both unit tests (Swift Testing framework) and UI tests (XCT
 
 ### Run All Tests
 ```bash
-xcodebuild -project "Leaves of Blocks.xcodeproj" -scheme "Leaves of Blocks" test -destination 'platform=iOS Simulator,name=iPhone 15'
+xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "Leaves of Blocks" test -destination 'platform=iOS Simulator,name=iPhone 15'
+```
+
+### Run Unit Tests Only
+```bash
+xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "Leaves of Blocks" test -destination 'platform=iOS Simulator,name=iPhone 15' -only-testing:"LeavesOfBlocksTests"
 ```
 
 ### Run UI Tests Only
 ```bash
-xcodebuild -project "Leaves of Blocks.xcodeproj" -scheme "Leaves of Blocks" test -destination 'platform=iOS Simulator,name=iPhone 15' -only-testing:"Leaves of BlocksUITests"
+xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "Leaves of Blocks" test -destination 'platform=iOS Simulator,name=iPhone 15' -only-testing:"LeavesOfBlocksUITests"
 ```
 
 ## Deployment
@@ -78,24 +77,26 @@ The project includes GitHub Actions workflows for automated builds and tests:
 ## Project Structure
 
 ```
-Leaves of Blocks/
-├── Core Game Logic/
-│   ├── GameModels.swift      # Data models and game state
-│   ├── GameLogic.swift       # Game mechanics and rules
-│   ├── GameViews.swift       # Game UI components
-│   └── GameEnhancements.swift # Visual effects and animations
-├── Supporting Files/
-│   ├── Theme.swift           # Autumn theme and styling
-│   ├── Configuration.swift   # App configuration and feature flags
-│   ├── HighScoreManager.swift # Score persistence
-│   ├── UIComponents.swift    # Reusable UI components
-│   └── Extensions.swift      # Swift extensions
-├── Navigation/
-│   ├── Leaves_of_BlocksApp.swift # App entry point
-│   └── ContentView.swift     # Navigation hub
-└── Tests/
-    ├── LeavesOfBlocksTests/  # Unit tests
-    └── LeavesOfBlocksUITests/ # UI automation tests
+LeavesOfBlocks.xcodeproj      # Xcode project file
+LeavesOfBlocks/               # Main source directory
+├── GameModels.swift          # Data models and game state
+├── GameLogic.swift           # Game mechanics and rules
+├── GameViews.swift           # Game UI components
+├── GameEnhancements.swift    # Visual effects and animations
+├── Theme.swift               # Autumn theme and styling
+├── Configuration.swift       # App configuration and feature flags
+├── HighScoreManager.swift    # Score persistence
+├── UIComponents.swift        # Reusable UI components
+├── Extensions.swift          # Swift extensions
+├── Leaves_of_BlocksApp.swift # App entry point
+├── ContentView.swift         # Navigation hub
+├── AboutView.swift           # About screen
+├── GameHistoryView.swift     # Game history screen
+├── LaunchScreen.swift        # Custom launch screen
+├── TestHelpers.swift         # Testing utilities
+└── Assets.xcassets/          # App icons and assets
+LeavesOfBlocksTests/          # Unit tests (Swift Testing)
+LeavesOfBlocksUITests/        # UI automation tests (XCTest)
 ```
 
 ## Game Mechanics
