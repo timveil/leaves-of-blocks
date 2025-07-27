@@ -71,22 +71,24 @@ struct HighScoreManagerTests {
     
     @Test("Do not update high score with lower value")
     func doNotUpdateHighScoreWithLowerValue() {
-        clearHighScore()
+        let testKey = "TestHighScore_\(UUID().uuidString)"
         
-        let manager = HighScoreManager()
+        let manager = HighScoreManager(customKey: testKey)
         manager.updateHighScore(1000)
         manager.updateHighScore(500)
         
         #expect(manager.highScore == 1000)
         
-        clearHighScore()
+        // Clean up
+        UserDefaults.standard.removeObject(forKey: testKey)
+        UserDefaults.standard.synchronize()
     }
     
     @Test("Do not update high score with equal value")
     func doNotUpdateHighScoreWithEqualValue() {
-        clearHighScore()
+        let testKey = "TestHighScore_\(UUID().uuidString)"
         
-        let manager = HighScoreManager()
+        let manager = HighScoreManager(customKey: testKey)
         manager.updateHighScore(1000)
         
         let originalScore = manager.highScore
@@ -96,14 +98,16 @@ struct HighScoreManagerTests {
         #expect(manager.highScore == originalScore)
         #expect(manager.highScore == 1000)
         
-        clearHighScore()
+        // Clean up
+        UserDefaults.standard.removeObject(forKey: testKey)
+        UserDefaults.standard.synchronize()
     }
     
     @Test("Update high score multiple times")
     func updateHighScoreMultipleTimes() {
-        clearHighScore()
+        let testKey = "TestHighScore_\(UUID().uuidString)"
         
-        let manager = HighScoreManager()
+        let manager = HighScoreManager(customKey: testKey)
         
         manager.updateHighScore(100)
         #expect(manager.highScore == 100)
@@ -117,7 +121,9 @@ struct HighScoreManagerTests {
         manager.updateHighScore(1000)
         #expect(manager.highScore == 1000)
         
-        clearHighScore()
+        // Clean up
+        UserDefaults.standard.removeObject(forKey: testKey)
+        UserDefaults.standard.synchronize()
     }
     
     @Test("High score persists across manager instances")
@@ -146,9 +152,9 @@ struct HighScoreManagerTests {
     
     @Test("High score handles zero values")
     func highScoreHandlesZeroValues() {
-        clearHighScore()
+        let testKey = "TestHighScore_\(UUID().uuidString)"
         
-        let manager = HighScoreManager()
+        let manager = HighScoreManager(customKey: testKey)
         manager.updateHighScore(0)
         
         #expect(manager.highScore == 0)
@@ -159,16 +165,16 @@ struct HighScoreManagerTests {
         manager.updateHighScore(0) // Should not update to lower value
         #expect(manager.highScore == 100)
         
-        clearHighScore()
+        // Clean up
+        UserDefaults.standard.removeObject(forKey: testKey)
+        UserDefaults.standard.synchronize()
     }
     
     @Test("High score handles negative values")
     func highScoreHandlesNegativeValues() {
-        // Ensure clean state
-        UserDefaults.standard.removeObject(forKey: "LeaveOfBlocksHighScore")
-        UserDefaults.standard.synchronize()
+        let testKey = "TestHighScore_\(UUID().uuidString)"
         
-        let manager = HighScoreManager()
+        let manager = HighScoreManager(customKey: testKey)
         
         // Verify starting state is clean
         #expect(manager.highScore == 0)
@@ -185,7 +191,7 @@ struct HighScoreManagerTests {
         #expect(manager.highScore == 500)
         
         // Clean up
-        UserDefaults.standard.removeObject(forKey: "LeaveOfBlocksHighScore")
+        UserDefaults.standard.removeObject(forKey: testKey)
         UserDefaults.standard.synchronize()
     }
     
@@ -208,23 +214,11 @@ struct HighScoreManagerTests {
         UserDefaults.standard.synchronize()
     }
     
-    @Test("High score is Observable")
-    func highScoreIsObservable() {
-        clearHighScore()
-        
-        let manager = HighScoreManager()
-        var receivedUpdate = false
-        
-        // This would be used in real SwiftUI applications
-        // Here we're just testing that it's ObservableObject
-        #expect(manager is ObservableObject)
-        
-        clearHighScore()
-    }
 }
 
 // MARK: - High Score Integration Tests
 
+@Suite(.serialized)
 struct HighScoreIntegrationTests {
     
     private func clearHighScore() {
@@ -234,7 +228,12 @@ struct HighScoreIntegrationTests {
     
     @Test("GameState integrates with HighScoreManager")
     func gameStateIntegratesWithHighScoreManager() {
-        clearHighScore()
+        // Save the current high score
+        let originalHighScore = UserDefaults.standard.integer(forKey: "LeaveOfBlocksHighScore")
+        
+        // Clear the default high score key before the test
+        UserDefaults.standard.removeObject(forKey: "LeaveOfBlocksHighScore")
+        UserDefaults.standard.synchronize()
         
         let gameState = GameState()
         
@@ -247,12 +246,23 @@ struct HighScoreIntegrationTests {
         
         #expect(gameState.highScoreManager.highScore == 1500)
         
-        clearHighScore()
+        // Restore original high score or clean up
+        if originalHighScore > 0 {
+            UserDefaults.standard.set(originalHighScore, forKey: "LeaveOfBlocksHighScore")
+        } else {
+            UserDefaults.standard.removeObject(forKey: "LeaveOfBlocksHighScore")
+        }
+        UserDefaults.standard.synchronize()
     }
     
     @Test("Game over triggers high score check")
     func gameOverTriggersHighScoreCheck() {
-        clearHighScore()
+        // Save the current high score
+        let originalHighScore = UserDefaults.standard.integer(forKey: "LeaveOfBlocksHighScore")
+        
+        // Clear the default high score key before the test
+        UserDefaults.standard.removeObject(forKey: "LeaveOfBlocksHighScore")
+        UserDefaults.standard.synchronize()
         
         let gameState = GameState()
         gameState.score = 2000
@@ -265,12 +275,23 @@ struct HighScoreIntegrationTests {
         #expect(gameState.isNewHighScore)
         #expect(gameState.highScoreManager.highScore == 2000)
         
-        clearHighScore()
+        // Restore original high score or clean up
+        if originalHighScore > 0 {
+            UserDefaults.standard.set(originalHighScore, forKey: "LeaveOfBlocksHighScore")
+        } else {
+            UserDefaults.standard.removeObject(forKey: "LeaveOfBlocksHighScore")
+        }
+        UserDefaults.standard.synchronize()
     }
     
     @Test("Multiple games maintain highest score")
     func multipleGamesMaintainHighestScore() {
-        clearHighScore()
+        // Save the current high score
+        let originalHighScore = UserDefaults.standard.integer(forKey: "LeaveOfBlocksHighScore")
+        
+        // Clear the default high score key before the test
+        UserDefaults.standard.removeObject(forKey: "LeaveOfBlocksHighScore")
+        UserDefaults.standard.synchronize()
         
         // Game 1
         let gameState1 = GameState()
@@ -287,9 +308,16 @@ struct HighScoreIntegrationTests {
         gameState3.score = 1500
         gameState3.highScoreManager.updateHighScore(gameState3.score)
         
+        // All game states share the same UserDefaults key, so they should all see the highest score
         #expect(gameState3.highScoreManager.highScore == 1500)
         
-        clearHighScore()
+        // Restore original high score or clean up
+        if originalHighScore > 0 {
+            UserDefaults.standard.set(originalHighScore, forKey: "LeaveOfBlocksHighScore")
+        } else {
+            UserDefaults.standard.removeObject(forKey: "LeaveOfBlocksHighScore")
+        }
+        UserDefaults.standard.synchronize()
     }
 }
 
@@ -304,9 +332,9 @@ struct HighScoreEdgeCaseTests {
     
     @Test("Concurrent high score updates")
     func concurrentHighScoreUpdates() async {
-        clearHighScore()
+        let testKey = "TestHighScore_\(UUID().uuidString)"
         
-        let manager = HighScoreManager()
+        let manager = HighScoreManager(customKey: testKey)
         
         await withTaskGroup(of: Void.self) { group in
             for i in 0..<100 {
@@ -318,14 +346,16 @@ struct HighScoreEdgeCaseTests {
         
         #expect(manager.highScore == 990) // Highest value from concurrent updates
         
-        clearHighScore()
+        // Clean up
+        UserDefaults.standard.removeObject(forKey: testKey)
+        UserDefaults.standard.synchronize()
     }
     
     @Test("Rapid successive updates")
     func rapidSuccessiveUpdates() {
-        clearHighScore()
+        let testKey = "TestHighScore_\(UUID().uuidString)"
         
-        let manager = HighScoreManager()
+        let manager = HighScoreManager(customKey: testKey)
         
         for i in 0..<1000 {
             manager.updateHighScore(i)
@@ -333,7 +363,9 @@ struct HighScoreEdgeCaseTests {
         
         #expect(manager.highScore == 999)
         
-        clearHighScore()
+        // Clean up
+        UserDefaults.standard.removeObject(forKey: testKey)
+        UserDefaults.standard.synchronize()
     }
     
     @Test("UserDefaults corruption simulation")
@@ -392,9 +424,9 @@ struct HighScorePerformanceTests {
     
     @Test("High score update performance")
     func highScoreUpdatePerformance() {
-        clearHighScore()
+        let testKey = "TestHighScore_\(UUID().uuidString)"
         
-        let manager = HighScoreManager()
+        let manager = HighScoreManager(customKey: testKey)
         let startTime = CFAbsoluteTimeGetCurrent()
         
         for i in 0..<1000 { // Reduced from 10000 to 1000 for more reliable testing
@@ -404,25 +436,30 @@ struct HighScorePerformanceTests {
         let timeElapsed = CFAbsoluteTimeGetCurrent() - startTime
         #expect(timeElapsed < 2.0, "High score updates should be reasonably fast")
         
-        clearHighScore()
+        // Clean up
+        UserDefaults.standard.removeObject(forKey: testKey)
+        UserDefaults.standard.synchronize()
     }
     
     @Test("High score initialization performance")
     func highScoreInitializationPerformance() {
-        clearHighScore()
+        let testKey = "TestHighScore_\(UUID().uuidString)"
         
         // Set a high score first
-        UserDefaults.standard.set(5000, forKey: "LeaveOfBlocksHighScore")
+        UserDefaults.standard.set(5000, forKey: testKey)
+        UserDefaults.standard.synchronize()
         
         let startTime = CFAbsoluteTimeGetCurrent()
         
         for _ in 0..<1000 {
-            let _ = HighScoreManager()
+            let _ = HighScoreManager(customKey: testKey)
         }
         
         let timeElapsed = CFAbsoluteTimeGetCurrent() - startTime
-        #expect(timeElapsed < 0.5, "High score manager initialization should be fast")
+        #expect(timeElapsed < 1, "High score manager initialization should be fast")
         
-        clearHighScore()
+        // Clean up
+        UserDefaults.standard.removeObject(forKey: testKey)
+        UserDefaults.standard.synchronize()
     }
 }

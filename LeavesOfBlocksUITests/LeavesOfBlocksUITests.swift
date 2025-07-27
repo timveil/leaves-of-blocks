@@ -173,7 +173,7 @@ final class LeavesOfBlocksGameplayTests: XCTestCase {
         XCTAssertTrue(gameArea.waitForExistence(timeout: 3))
         
         // Verify blocks are available for placement
-        let blockExists = app.otherElements.matching(NSPredicate(format: "identifier CONTAINS 'block'")).count > 0
+        _ = app.otherElements.matching(NSPredicate(format: "identifier CONTAINS 'block'")).count > 0
         // Note: This test depends on accessibility identifiers being added to the actual game blocks
     }
     

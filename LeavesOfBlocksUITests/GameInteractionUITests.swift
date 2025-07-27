@@ -145,7 +145,7 @@ final class GameInteractionUITests: XCTestCase {
     @MainActor
     func testGameStateConsistency() throws {
         // Test that game state remains consistent during interaction
-        let initialScore = app.staticTexts.matching(NSPredicate(format: "label MATCHES %@", "\\d+")).firstMatch.label
+        _ = app.staticTexts.matching(NSPredicate(format: "label MATCHES %@", "\\d+")).firstMatch.label
         
         // Perform various interactions
         let gameArea = app.otherElements.firstMatch

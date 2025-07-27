@@ -277,7 +277,7 @@ struct GameStateTests {
     @Test("Game time calculation")
     func gameTimeCalculation() throws {
         let gameState = GameState()
-        let startTime = gameState.gameStartTime
+        _ = gameState.gameStartTime
         
         Thread.sleep(forTimeInterval: 0.1)
         
