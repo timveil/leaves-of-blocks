@@ -3,14 +3,16 @@ import SwiftUI
 struct GameHistoryView: View {
     @ObservedObject var gameState: GameState
     let onDismiss: () -> Void
+    @State private var gameHistory: [GameSession] = []
+    @State private var statistics = GameStatistics(totalGames: 0, totalScore: 0, averageScore: 0, totalBlocksPlaced: 0, highScore: 0)
     
-    // Sample history data - in a real app this would come from persistent storage
-    private var gameHistory: [GameSession] {
-        // For now, we'll show some sample data along with current session if available
+    private func loadGameHistory() {
+        let records = CoreDataManager.shared.fetchGameHistory()
+        
         var sessions: [GameSession] = []
         
-        // Add current session if there's a score
-        if gameState.score > 0 {
+        // Add current session if there's a score and game is not over
+        if gameState.score > 0 && !gameState.isGameOver {
             sessions.append(GameSession(
                 date: Date(),
                 score: gameState.score,
@@ -21,44 +23,24 @@ struct GameHistoryView: View {
             ))
         }
         
-        // Add some sample historical sessions
-        let sampleSessions = [
-            GameSession(
-                date: Calendar.current.date(byAdding: .day, value: -1, to: Date()) ?? Date(),
-                score: 2850,
-                blocksPlaced: 47,
-                linesCleared: 12,
-                difficulty: .moderate,
-                gameTime: 420
-            ),
-            GameSession(
-                date: Calendar.current.date(byAdding: .day, value: -2, to: Date()) ?? Date(),
-                score: 1920,
-                blocksPlaced: 32,
-                linesCleared: 8,
-                difficulty: .easy,
-                gameTime: 280
-            ),
-            GameSession(
-                date: Calendar.current.date(byAdding: .day, value: -3, to: Date()) ?? Date(),
-                score: 4120,
-                blocksPlaced: 68,
-                linesCleared: 18,
-                difficulty: .hard,
-                gameTime: 580
-            ),
-            GameSession(
-                date: Calendar.current.date(byAdding: .day, value: -5, to: Date()) ?? Date(),
-                score: 1650,
-                blocksPlaced: 28,
-                linesCleared: 6,
-                difficulty: .moderate,
-                gameTime: 210
-            )
-        ]
+        // Add Core Data records
+        for record in records {
+            if let date = record.date,
+               let difficultyString = record.difficulty,
+               let difficulty = DifficultyMode(rawValue: difficultyString) {
+                sessions.append(GameSession(
+                    date: date,
+                    score: Int(record.score),
+                    blocksPlaced: Int(record.blocksPlaced),
+                    linesCleared: Int(record.linesCleared),
+                    difficulty: difficulty,
+                    gameTime: record.gameTime
+                ))
+            }
+        }
         
-        sessions.append(contentsOf: sampleSessions)
-        return sessions.sorted { $0.date > $1.date }
+        gameHistory = sessions.sorted { $0.date > $1.date }
+        statistics = CoreDataManager.shared.calculateStatistics()
     }
     
     var body: some View {
@@ -85,7 +67,7 @@ struct GameHistoryView: View {
                 .padding(.top, GameTheme.Layout.largePadding)
                 
                 // Statistics Summary
-                StatsSummaryView(gameHistory: gameHistory, highScore: gameState.highScoreManager.highScore)
+                StatsSummaryView(gameHistory: gameHistory, highScore: statistics.highScore)
                 
                 // History List
                 ScrollView {
@@ -93,7 +75,7 @@ struct GameHistoryView: View {
                         ForEach(gameHistory.indices, id: \.self) { index in
                             GameSessionRow(
                                 session: gameHistory[index],
-                                isHighScore: gameHistory[index].score == gameState.highScoreManager.highScore
+                                isHighScore: gameHistory[index].score == statistics.highScore
                             )
                         }
                     }
@@ -103,6 +85,12 @@ struct GameHistoryView: View {
             }
         }
         .ignoresSafeArea(edges: .bottom)
+        .onAppear {
+            loadGameHistory()
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .NSManagedObjectContextObjectsDidChange)) { _ in
+            loadGameHistory()
+        }
     }
 }
 
@@ -150,66 +138,131 @@ struct StatsSummaryView: View {
     }
     
     var body: some View {
-        VStack(spacing: GameTheme.Layout.mediumSpacing) {
-            Text("Statistics")
-                .font(GameTheme.Typography.headlineFont)
-                .foregroundColor(GameTheme.Colors.primaryText)
+        VStack(spacing: 0) {
+            // Header with gradient background
+            HStack {
+                Image(systemName: "chart.bar.fill")
+                    .font(.system(size: 18, weight: .semibold))
+                    .foregroundColor(.white)
+                
+                Text("Game Statistics")
+                    .font(.system(size: 20, weight: .bold))
+                    .foregroundColor(.white)
+                
+                Spacer()
+            }
+            .padding(.horizontal, GameTheme.Layout.largePadding)
+            .padding(.vertical, GameTheme.Layout.mediumPadding)
+            .background(
+                LinearGradient(
+                    colors: [GameTheme.Colors.accent, GameTheme.Colors.accent.opacity(0.8)],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+            )
             
-            // Two rows of stats for better iPhone layout
-            VStack(spacing: GameTheme.Layout.smallSpacing) {
-                HStack(spacing: GameTheme.Layout.mediumSpacing) {
-                    StatItemView(title: "High Score", value: "\(highScore)", color: GameTheme.Colors.accent)
-                    StatItemView(title: "Games Played", value: "\(totalGames)", color: GameTheme.Colors.blockBlue)
+            // Stats Grid
+            VStack(spacing: 0) {
+                // Top row
+                HStack(spacing: 0) {
+                    StatItemView(
+                        icon: "crown.fill",
+                        title: "High Score",
+                        value: "\(highScore)",
+                        color: GameTheme.Colors.accent,
+                        alignment: .center
+                    )
+                    
+                    Divider()
+                        .frame(height: 60)
+                        .overlay(GameTheme.Colors.gridBorder.opacity(0.3))
+                    
+                    StatItemView(
+                        icon: "gamecontroller.fill",
+                        title: "Games Played",
+                        value: "\(totalGames)",
+                        color: GameTheme.Colors.blockBlue,
+                        alignment: .center
+                    )
                 }
                 
-                HStack(spacing: GameTheme.Layout.mediumSpacing) {
-                    StatItemView(title: "Avg Score", value: "\(averageScore)", color: GameTheme.Colors.blockGreen)
-                    StatItemView(title: "Total Blocks", value: "\(totalBlocksPlaced)", color: GameTheme.Colors.blockOrange)
+                Divider()
+                    .overlay(GameTheme.Colors.gridBorder.opacity(0.3))
+                
+                // Bottom row
+                HStack(spacing: 0) {
+                    StatItemView(
+                        icon: "chart.line.uptrend.xyaxis",
+                        title: "Average Score",
+                        value: "\(averageScore)",
+                        color: GameTheme.Colors.blockGreen,
+                        alignment: .center
+                    )
+                    
+                    Divider()
+                        .frame(height: 60)
+                        .overlay(GameTheme.Colors.gridBorder.opacity(0.3))
+                    
+                    StatItemView(
+                        icon: "square.stack.3d.up.fill",
+                        title: "Total Blocks",
+                        value: "\(totalBlocksPlaced)",
+                        color: GameTheme.Colors.blockOrange,
+                        alignment: .center
+                    )
                 }
             }
+            .background(GameTheme.Colors.cardBackground)
         }
-        .padding(GameTheme.Layout.largePadding)
-        .background(
+        .clipShape(RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius))
+        .overlay(
             RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
-                .fill(GameTheme.Colors.cardBackground)
-                .overlay(
-                    RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
-                        .stroke(
-                            LinearGradient(
-                                colors: GameTheme.Colors.cardBorderGradient,
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            ),
-                            lineWidth: 2
-                        )
-                )
-                .shadow(
-                    color: GameTheme.Colors.cardShadow,
-                    radius: GameTheme.Layout.shadowRadius,
-                    x: 0,
-                    y: GameTheme.Layout.shadowOffset
+                .stroke(
+                    LinearGradient(
+                        colors: [GameTheme.Colors.accent.opacity(0.3), GameTheme.Colors.accent.opacity(0.1)],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    ),
+                    lineWidth: 1
                 )
         )
+        .shadow(
+            color: GameTheme.Colors.cardShadow.opacity(0.15),
+            radius: 12,
+            x: 0,
+            y: 6
+        )
         .padding(.horizontal, GameTheme.Layout.largePadding)
+        .padding(.vertical, GameTheme.Layout.mediumPadding)
     }
 }
 
 struct StatItemView: View {
+    let icon: String
     let title: String
     let value: String
     let color: Color
+    let alignment: HorizontalAlignment
     
     var body: some View {
-        VStack(spacing: GameTheme.Layout.smallSpacing) {
-            Text(value)
-                .font(GameTheme.Typography.scoreFont)
-                .foregroundColor(color)
+        VStack(alignment: alignment, spacing: 8) {
+            HStack(spacing: 6) {
+                Image(systemName: icon)
+                    .font(.system(size: 16, weight: .semibold))
+                    .foregroundColor(color)
+                
+                Text(value)
+                    .font(.system(size: 24, weight: .bold, design: .rounded))
+                    .foregroundColor(GameTheme.Colors.primaryText)
+            }
             
             Text(title)
-                .font(GameTheme.Typography.captionFont)
+                .font(.system(size: 12, weight: .medium))
                 .foregroundColor(GameTheme.Colors.secondaryText)
                 .multilineTextAlignment(.center)
         }
+        .frame(maxWidth: .infinity)
+        .padding(.vertical, GameTheme.Layout.largePadding)
     }
 }
 

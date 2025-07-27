@@ -10,6 +10,7 @@ import SwiftUI
 @main
 struct LeavesOfBlocksApp: App {
     @State private var showLaunchScreen = true
+    let coreDataManager = CoreDataManager.shared
     
     var body: some Scene {
         WindowGroup {
@@ -20,6 +21,7 @@ struct LeavesOfBlocksApp: App {
                 } else {
                     ContentView()
                         .transition(.opacity)
+                        .environment(\.managedObjectContext, coreDataManager.viewContext)
                 }
             }
             .animation(.easeInOut(duration: 0.5), value: showLaunchScreen)

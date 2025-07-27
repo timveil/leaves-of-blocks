@@ -336,6 +336,16 @@ class GameState: ObservableObject {
             let oldHighScore = highScoreManager.highScore
             highScoreManager.updateHighScore(score)
             isNewHighScore = score > oldHighScore
+            
+            // Save game to Core Data
+            CoreDataManager.shared.saveGameRecord(
+                score: score,
+                difficulty: currentDifficulty,
+                blocksPlaced: blocksPlaced,
+                linesCleared: linesCleared,
+                longestCombo: longestCombo,
+                gameTime: gameTime
+            )
         } else if !gameOverState {
             // Game is still active
             isGameOver = false
