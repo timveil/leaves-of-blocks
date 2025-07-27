@@ -24,9 +24,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		3A692C012E3460ED00451CB3 /* Leaves of Blocks.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Leaves of Blocks.app"; sourceTree = BUILT_PRODUCTS_DIR; };
-		3A692C0E2E3460EE00451CB3 /* Leaves of BlocksTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Leaves of BlocksTests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
-		3A692C182E3460EE00451CB3 /* Leaves of BlocksUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Leaves of BlocksUITests.xctest"; sourceTree = BUILT_PRODUCTS_DIR; };
+		3A692C012E3460ED00451CB3 /* LeavesOfBlocks.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LeavesOfBlocks.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		3A692C0E2E3460EE00451CB3 /* LeavesOfBlocksTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LeavesOfBlocksTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		3A692C182E3460EE00451CB3 /* LeavesOfBlocksUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LeavesOfBlocksUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -85,9 +85,9 @@
 		3A692C022E3460ED00451CB3 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				3A692C012E3460ED00451CB3 /* Leaves of Blocks.app */,
-				3A692C0E2E3460EE00451CB3 /* Leaves of BlocksTests.xctest */,
-				3A692C182E3460EE00451CB3 /* Leaves of BlocksUITests.xctest */,
+				3A692C012E3460ED00451CB3 /* LeavesOfBlocks.app */,
+				3A692C0E2E3460EE00451CB3 /* LeavesOfBlocksTests.xctest */,
+				3A692C182E3460EE00451CB3 /* LeavesOfBlocksUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -95,9 +95,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		3A692C002E3460ED00451CB3 /* Leaves of Blocks */ = {
+		3A692C002E3460ED00451CB3 /* LeavesOfBlocks */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 3A692C222E3460EE00451CB3 /* Build configuration list for PBXNativeTarget "Leaves of Blocks" */;
+			buildConfigurationList = 3A692C222E3460EE00451CB3 /* Build configuration list for PBXNativeTarget "LeavesOfBlocks" */;
 			buildPhases = (
 				3A692BFD2E3460ED00451CB3 /* Sources */,
 				3A692BFE2E3460ED00451CB3 /* Frameworks */,
@@ -110,16 +110,16 @@
 			fileSystemSynchronizedGroups = (
 				3A692C032E3460ED00451CB3 /* LeavesOfBlocks */,
 			);
-			name = "Leaves of Blocks";
+			name = LeavesOfBlocks;
 			packageProductDependencies = (
 			);
 			productName = "Leaves of Blocks";
-			productReference = 3A692C012E3460ED00451CB3 /* Leaves of Blocks.app */;
+			productReference = 3A692C012E3460ED00451CB3 /* LeavesOfBlocks.app */;
 			productType = "com.apple.product-type.application";
 		};
-		3A692C0D2E3460EE00451CB3 /* Leaves of BlocksTests */ = {
+		3A692C0D2E3460EE00451CB3 /* LeavesOfBlocksTests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 3A692C252E3460EE00451CB3 /* Build configuration list for PBXNativeTarget "Leaves of BlocksTests" */;
+			buildConfigurationList = 3A692C252E3460EE00451CB3 /* Build configuration list for PBXNativeTarget "LeavesOfBlocksTests" */;
 			buildPhases = (
 				3A692C0A2E3460EE00451CB3 /* Sources */,
 				3A692C0B2E3460EE00451CB3 /* Frameworks */,
@@ -133,16 +133,16 @@
 			fileSystemSynchronizedGroups = (
 				3A692C112E3460EE00451CB3 /* LeavesOfBlocksTests */,
 			);
-			name = "Leaves of BlocksTests";
+			name = LeavesOfBlocksTests;
 			packageProductDependencies = (
 			);
 			productName = "Leaves of BlocksTests";
-			productReference = 3A692C0E2E3460EE00451CB3 /* Leaves of BlocksTests.xctest */;
+			productReference = 3A692C0E2E3460EE00451CB3 /* LeavesOfBlocksTests.xctest */;
 			productType = "com.apple.product-type.bundle.unit-test";
 		};
-		3A692C172E3460EE00451CB3 /* Leaves of BlocksUITests */ = {
+		3A692C172E3460EE00451CB3 /* LeavesOfBlocksUITests */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 3A692C282E3460EE00451CB3 /* Build configuration list for PBXNativeTarget "Leaves of BlocksUITests" */;
+			buildConfigurationList = 3A692C282E3460EE00451CB3 /* Build configuration list for PBXNativeTarget "LeavesOfBlocksUITests" */;
 			buildPhases = (
 				3A692C142E3460EE00451CB3 /* Sources */,
 				3A692C152E3460EE00451CB3 /* Frameworks */,
@@ -156,11 +156,11 @@
 			fileSystemSynchronizedGroups = (
 				3A692C1B2E3460EE00451CB3 /* LeavesOfBlocksUITests */,
 			);
-			name = "Leaves of BlocksUITests";
+			name = LeavesOfBlocksUITests;
 			packageProductDependencies = (
 			);
 			productName = "Leaves of BlocksUITests";
-			productReference = 3A692C182E3460EE00451CB3 /* Leaves of BlocksUITests.xctest */;
+			productReference = 3A692C182E3460EE00451CB3 /* LeavesOfBlocksUITests.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
 		};
 /* End PBXNativeTarget section */
@@ -186,7 +186,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 3A692BFC2E3460ED00451CB3 /* Build configuration list for PBXProject "Leaves of Blocks" */;
+			buildConfigurationList = 3A692BFC2E3460ED00451CB3 /* Build configuration list for PBXProject "LeavesOfBlocks" */;
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -200,9 +200,9 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				3A692C002E3460ED00451CB3 /* Leaves of Blocks */,
-				3A692C0D2E3460EE00451CB3 /* Leaves of BlocksTests */,
-				3A692C172E3460EE00451CB3 /* Leaves of BlocksUITests */,
+				3A692C002E3460ED00451CB3 /* LeavesOfBlocks */,
+				3A692C0D2E3460EE00451CB3 /* LeavesOfBlocksTests */,
+				3A692C172E3460EE00451CB3 /* LeavesOfBlocksUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -258,12 +258,12 @@
 /* Begin PBXTargetDependency section */
 		3A692C102E3460EE00451CB3 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 3A692C002E3460ED00451CB3 /* Leaves of Blocks */;
+			target = 3A692C002E3460ED00451CB3 /* LeavesOfBlocks */;
 			targetProxy = 3A692C0F2E3460EE00451CB3 /* PBXContainerItemProxy */;
 		};
 		3A692C1A2E3460EE00451CB3 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = 3A692C002E3460ED00451CB3 /* Leaves of Blocks */;
+			target = 3A692C002E3460ED00451CB3 /* LeavesOfBlocks */;
 			targetProxy = 3A692C192E3460EE00451CB3 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -475,7 +475,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Leaves of Blocks.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Leaves of Blocks";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LeavesOfBlocks.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/LeavesOfBlocks";
 			};
 			name = Debug;
 		};
@@ -498,7 +498,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Leaves of Blocks.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Leaves of Blocks";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LeavesOfBlocks.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/LeavesOfBlocks";
 			};
 			name = Release;
 		};
@@ -547,7 +547,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		3A692BFC2E3460ED00451CB3 /* Build configuration list for PBXProject "Leaves of Blocks" */ = {
+		3A692BFC2E3460ED00451CB3 /* Build configuration list for PBXProject "LeavesOfBlocks" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				3A692C202E3460EE00451CB3 /* Debug */,
@@ -556,7 +556,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		3A692C222E3460EE00451CB3 /* Build configuration list for PBXNativeTarget "Leaves of Blocks" */ = {
+		3A692C222E3460EE00451CB3 /* Build configuration list for PBXNativeTarget "LeavesOfBlocks" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				3A692C232E3460EE00451CB3 /* Debug */,
@@ -565,7 +565,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		3A692C252E3460EE00451CB3 /* Build configuration list for PBXNativeTarget "Leaves of BlocksTests" */ = {
+		3A692C252E3460EE00451CB3 /* Build configuration list for PBXNativeTarget "LeavesOfBlocksTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				3A692C262E3460EE00451CB3 /* Debug */,
@@ -574,7 +574,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		3A692C282E3460EE00451CB3 /* Build configuration list for PBXNativeTarget "Leaves of BlocksUITests" */ = {
+		3A692C282E3460EE00451CB3 /* Build configuration list for PBXNativeTarget "LeavesOfBlocksUITests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				3A692C292E3460EE00451CB3 /* Debug */,
