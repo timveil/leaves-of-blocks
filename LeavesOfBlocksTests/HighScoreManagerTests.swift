@@ -21,37 +21,37 @@ struct HighScoreManagerTests {
     
     @Test("HighScoreManager initializes with zero score")
     func highScoreManagerInitializesWithZeroScore() {
-        clearHighScore()
+        let testKey = "TestHighScore_\(UUID().uuidString)"
         
-        let manager = HighScoreManager()
+        let manager = HighScoreManager(customKey: testKey)
         #expect(manager.highScore == 0)
+        
+        // Clean up
+        UserDefaults.standard.removeObject(forKey: testKey)
+        UserDefaults.standard.synchronize()
     }
     
     @Test("HighScoreManager loads existing high score")
     func highScoreManagerLoadsExistingHighScore() {
-        // Ensure completely clean state
-        UserDefaults.standard.removeObject(forKey: "LeaveOfBlocksHighScore")
-        UserDefaults.standard.synchronize()
+        let testKey = "TestHighScore_\(UUID().uuidString)"
         
         // Set a high score manually
-        UserDefaults.standard.set(1500, forKey: "LeaveOfBlocksHighScore")
+        UserDefaults.standard.set(1500, forKey: testKey)
         UserDefaults.standard.synchronize()
         
-        let manager = HighScoreManager()
+        let manager = HighScoreManager(customKey: testKey)
         #expect(manager.highScore == 1500)
         
         // Clean up
-        UserDefaults.standard.removeObject(forKey: "LeaveOfBlocksHighScore")
+        UserDefaults.standard.removeObject(forKey: testKey)
         UserDefaults.standard.synchronize()
     }
     
     @Test("Update high score with higher value")
     func updateHighScoreWithHigherValue() {
-        // Ensure clean state
-        UserDefaults.standard.removeObject(forKey: "LeaveOfBlocksHighScore")
-        UserDefaults.standard.synchronize()
+        let testKey = "TestHighScore_\(UUID().uuidString)"
         
-        let manager = HighScoreManager()
+        let manager = HighScoreManager(customKey: testKey)
         
         // Verify starting state is clean
         #expect(manager.highScore == 0)
@@ -61,11 +61,11 @@ struct HighScoreManagerTests {
         #expect(manager.highScore == 1000)
         
         // Verify it's saved to UserDefaults
-        let savedScore = UserDefaults.standard.integer(forKey: "LeaveOfBlocksHighScore")
+        let savedScore = UserDefaults.standard.integer(forKey: testKey)
         #expect(savedScore == 1000)
         
         // Clean up
-        UserDefaults.standard.removeObject(forKey: "LeaveOfBlocksHighScore")
+        UserDefaults.standard.removeObject(forKey: testKey)
         UserDefaults.standard.synchronize()
     }
     
@@ -122,11 +122,9 @@ struct HighScoreManagerTests {
     
     @Test("High score persists across manager instances")
     func highScorePersistsAcrossManagerInstances() {
-        // Ensure completely clean state
-        UserDefaults.standard.removeObject(forKey: "LeaveOfBlocksHighScore")
-        UserDefaults.standard.synchronize()
+        let testKey = "TestHighScore_\(UUID().uuidString)"
         
-        let manager1 = HighScoreManager()
+        let manager1 = HighScoreManager(customKey: testKey)
         
         // Verify starting state is clean
         #expect(manager1.highScore == 0)
@@ -135,14 +133,14 @@ struct HighScoreManagerTests {
         #expect(manager1.highScore == 2000)
         
         // Verify persistence in UserDefaults
-        let savedScore = UserDefaults.standard.integer(forKey: "LeaveOfBlocksHighScore")
+        let savedScore = UserDefaults.standard.integer(forKey: testKey)
         #expect(savedScore == 2000)
         
-        let manager2 = HighScoreManager()
+        let manager2 = HighScoreManager(customKey: testKey)
         #expect(manager2.highScore == 2000)
         
         // Clean up
-        UserDefaults.standard.removeObject(forKey: "LeaveOfBlocksHighScore")
+        UserDefaults.standard.removeObject(forKey: testKey)
         UserDefaults.standard.synchronize()
     }
     
@@ -193,19 +191,21 @@ struct HighScoreManagerTests {
     
     @Test("High score handles very large values")
     func highScoreHandlesVeryLargeValues() {
-        clearHighScore()
+        let testKey = "TestHighScore_\(UUID().uuidString)"
         
-        let manager = HighScoreManager()
+        let manager = HighScoreManager(customKey: testKey)
         let largeScore = 999_999_999 // Use a large but reasonable value
         
         manager.updateHighScore(largeScore)
         #expect(manager.highScore == largeScore)
         
         // Verify persistence
-        let manager2 = HighScoreManager()
+        let manager2 = HighScoreManager(customKey: testKey)
         #expect(manager2.highScore == largeScore)
         
-        clearHighScore()
+        // Clean up
+        UserDefaults.standard.removeObject(forKey: testKey)
+        UserDefaults.standard.synchronize()
     }
     
     @Test("High score is Observable")
@@ -338,28 +338,31 @@ struct HighScoreEdgeCaseTests {
     
     @Test("UserDefaults corruption simulation")
     func userDefaultsCorruptionSimulation() {
-        clearHighScore()
+        let testKey = "TestHighScore_\(UUID().uuidString)"
         
         // Simulate corrupted data by setting a string instead of integer
-        UserDefaults.standard.set("corrupted", forKey: "LeaveOfBlocksHighScore")
+        UserDefaults.standard.set("corrupted", forKey: testKey)
+        UserDefaults.standard.synchronize()
         
-        let manager = HighScoreManager()
+        let manager = HighScoreManager(customKey: testKey)
         
         // Should handle corruption gracefully and default to 0
         #expect(manager.highScore == 0)
         
-        clearHighScore()
+        // Clean up
+        UserDefaults.standard.removeObject(forKey: testKey)
+        UserDefaults.standard.synchronize()
     }
     
     @Test("Memory pressure scenarios")
     func memoryPressureScenarios() {
-        clearHighScore()
+        let testKey = "TestHighScore_\(UUID().uuidString)"
         
         // Test creating many managers sequentially and updating scores
         var expectedHighScore = 0
         
         for i in 0..<10 {
-            let manager = HighScoreManager()
+            let manager = HighScoreManager(customKey: testKey)
             let score = i * 100
             manager.updateHighScore(score)
             expectedHighScore = max(expectedHighScore, score)
@@ -369,10 +372,12 @@ struct HighScoreEdgeCaseTests {
         }
         
         // Create a final manager to verify persistence
-        let finalManager = HighScoreManager()
+        let finalManager = HighScoreManager(customKey: testKey)
         #expect(finalManager.highScore == expectedHighScore)
         
-        clearHighScore()
+        // Clean up
+        UserDefaults.standard.removeObject(forKey: testKey)
+        UserDefaults.standard.synchronize()
     }
 }
 

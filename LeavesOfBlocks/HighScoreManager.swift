@@ -3,9 +3,10 @@ import Foundation
 class HighScoreManager: ObservableObject {
     @Published var highScore: Int = 0
     
-    private let highScoreKey = "LeaveOfBlocksHighScore"
+    private let highScoreKey: String
     
-    init() {
+    init(customKey: String? = nil) {
+        self.highScoreKey = customKey ?? "LeaveOfBlocksHighScore"
         loadHighScore()
     }
     
