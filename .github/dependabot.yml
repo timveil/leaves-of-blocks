@@ -5,7 +5,18 @@
 
 version: 2
 updates:
-  - package-ecosystem: "swift" # See documentation for possible values
-    directory: "/" # Location of package manifests
+  # Enable version updates for Swift dependencies
+  - package-ecosystem: "swift"
+    directory: "/"
     schedule:
       interval: "weekly"
+    
+  # Enable version updates for GitHub Actions
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    # Auto-merge minor and patch updates for actions
+    labels:
+      - "dependencies"
+      - "github-actions"

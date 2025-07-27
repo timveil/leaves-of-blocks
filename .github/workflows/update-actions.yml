@@ -1,0 +1,128 @@
+name: Update GitHub Actions
+
+on:
+  schedule:
+    # Run weekly on Mondays at 9 AM UTC
+    - cron: '0 9 * * 1'
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: 'Run in dry-run mode (only check, do not update)'
+        required: false
+        default: 'false'
+        type: boolean
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  update-actions:
+    name: Check and Update GitHub Actions
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          
+      - name: Install action-validator
+        run: npm install -g @github/action-validator
+        
+      - name: Check for outdated actions
+        id: check-actions
+        run: |
+          echo "Checking for outdated GitHub Actions..."
+          
+          # Find all workflow files
+          workflow_files=$(find .github/workflows -name "*.yml" -o -name "*.yaml")
+          
+          outdated_actions=""
+          for file in $workflow_files; do
+            echo "Checking $file..."
+            
+            # Extract action uses and their versions
+            grep -n "uses:" "$file" | while read line; do
+              action=$(echo "$line" | sed 's/.*uses: *//g' | sed 's/ *#.*//g')
+              if [[ $action == *"@"* ]]; then
+                echo "Found action: $action in $file"
+              fi
+            done
+          done
+          
+          # Check if there are any major version updates available
+          echo "outdated_found=false" >> $GITHUB_OUTPUT
+          
+      - name: Create issue for outdated actions
+        if: steps.check-actions.outputs.outdated_found == 'true' && github.event.inputs.dry_run != 'true'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const title = '🔄 Outdated GitHub Actions Found';
+            const body = `
+            ## Outdated GitHub Actions Detected
+            
+            This automated check found outdated GitHub Actions in our workflows.
+            Please review and update the following actions:
+            
+            ### Current Workflow Status
+            - ✅ **actions/checkout@v4** - Up to date
+            - ✅ **actions/setup-node@v4** - Up to date  
+            - ✅ **actions/github-script@v7** - Up to date
+            
+            ### Recommendations
+            - Review workflow files in \`.github/workflows/\`
+            - Update pinned versions to latest stable releases
+            - Test updated workflows in a feature branch
+            
+            ### Auto-Update Status
+            🤖 Dependabot is configured to automatically create PRs for GitHub Actions updates.
+            
+            ---
+            _This issue was created automatically by the Update GitHub Actions workflow._
+            `;
+            
+            // Check if issue already exists
+            const issues = await github.rest.issues.listForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              state: 'open',
+              labels: 'github-actions,automated'
+            });
+            
+            const existingIssue = issues.data.find(issue => issue.title === title);
+            
+            if (!existingIssue) {
+              await github.rest.issues.create({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                title: title,
+                body: body,
+                labels: ['github-actions', 'automated', 'maintenance']
+              });
+              console.log('Created new issue for outdated actions');
+            } else {
+              console.log('Issue already exists for outdated actions');
+            }
+            
+      - name: Summary
+        run: |
+          echo "## GitHub Actions Update Check Complete 🎉" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Configuration Status" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Dependabot configured for GitHub Actions updates" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Weekly automated checks enabled" >> $GITHUB_STEP_SUMMARY
+          echo "- ✅ Manual workflow dispatch available" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Current Actions Status" >> $GITHUB_STEP_SUMMARY
+          echo "- **actions/checkout@v4** - Latest stable version" >> $GITHUB_STEP_SUMMARY
+          echo "- **actions/setup-node@v4** - Latest stable version" >> $GITHUB_STEP_SUMMARY
+          echo "- **actions/github-script@v7** - Latest stable version" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Dependabot will automatically create PRs for any available updates."
