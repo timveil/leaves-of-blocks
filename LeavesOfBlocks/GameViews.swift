@@ -1552,6 +1552,7 @@ struct DraggableBlockView: View {
     let onDragEnd: () -> Void
     
     @State private var isDragging: Bool = false
+    @State private var lastUpdateTime: Date = Date()
     
     var body: some View {
         ZStack {
@@ -1565,15 +1566,19 @@ struct DraggableBlockView: View {
         .gesture(
             DragGesture(minimumDistance: 5, coordinateSpace: .global)
                 .onChanged { value in
+                    let now = Date()
                     if !isDragging {
                         isDragging = true
+                        lastUpdateTime = now
                         let blockCenter = CGPoint(
                             x: getBlockWidth() / 2,
                             y: getBlockHeight() / 2
                         )
                         onDragStart(value.location, blockCenter)
+                    } else if now.timeIntervalSince(lastUpdateTime) >= 0.016 { // ~60fps limit
+                        lastUpdateTime = now
+                        onDragMove(value.location)
                     }
-                    onDragMove(value.location)
                 }
                 .onEnded { _ in
                     isDragging = false
