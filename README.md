@@ -43,17 +43,17 @@ The project includes both unit tests (Swift Testing framework) and UI tests (XCT
 
 ### Run All Tests
 ```bash
-xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "LeavesOfBlocks" test -destination 'platform=iOS Simulator,name=iPhone 15'
+xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "LeavesOfBlocks" test -destination 'platform=iOS Simulator,name=iPhone 16 Pro'
 ```
 
 ### Run Unit Tests Only
 ```bash
-xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "LeavesOfBlocks" test -destination 'platform=iOS Simulator,name=iPhone 15' -only-testing:"LeavesOfBlocksTests"
+xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "LeavesOfBlocks" test -destination 'platform=iOS Simulator,name=iPhone 16 Pro' -only-testing:"LeavesOfBlocksTests"
 ```
 
 ### Run UI Tests Only
 ```bash
-xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "LeavesOfBlocks" test -destination 'platform=iOS Simulator,name=iPhone 15' -only-testing:"LeavesOfBlocksUITests"
+xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "LeavesOfBlocks" test -destination 'platform=iOS Simulator,name=iPhone 16 Pro' -only-testing:"LeavesOfBlocksUITests"
 ```
 
 ## Deployment
@@ -61,7 +61,7 @@ xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "LeavesOfBlocks" test -de
 ### CI/CD
 The project includes GitHub Actions workflows for automated builds and tests:
 - Uses Xcode 16.2 on macOS latest runner
-- Automatically creates iPhone 15 simulator for testing
+- Automatically creates iPhone 16 Pro simulator for testing
 - Runs on push and pull requests
 
 ### Manual Deployment

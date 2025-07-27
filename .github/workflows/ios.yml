@@ -31,8 +31,8 @@ jobs:
             echo "No iOS runtime found, will try to proceed anyway"
           else
             echo "Using runtime: $RUNTIME"
-            # Create iPhone 15 simulator
-            xcrun simctl create "iPhone 15 CI" "iPhone 15" "$RUNTIME" || true
+            # Create iPhone 16 Pro simulator
+            xcrun simctl create "iPhone 16 Pro CI" "iPhone 16 Pro" "$RUNTIME" || true
           fi
       - name: Set Default Scheme
         run: |
@@ -50,4 +50,4 @@ jobs:
           # Build without testing first
           xcodebuild build -scheme "$scheme" -"$filetype_parameter" "$file_to_build" -destination "generic/platform=iOS Simulator"
           # Then run tests if any exist
-          xcodebuild test -scheme "$scheme" -"$filetype_parameter" "$file_to_build" -destination "platform=iOS Simulator,name=iPhone 15 CI" -skip-testing-configuration-validation || echo "Tests completed or no tests found"
+          xcodebuild test -scheme "$scheme" -"$filetype_parameter" "$file_to_build" -destination "platform=iOS Simulator,name=iPhone 16 Pro CI" -skip-testing-configuration-validation || echo "Tests completed or no tests found"
