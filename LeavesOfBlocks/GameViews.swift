@@ -224,7 +224,9 @@ struct CurrentBlocksView: View {
     let cellSize: CGFloat
     let draggedBlock: BlockShape?
     let isDragging: Bool
-    let onDragStart: (BlockShape, CGPoint) -> Void
+    let draggedBlockIndex: Int?
+    let isHoveringOverOrigin: Bool
+    let onDragStart: (BlockShape, Int, CGPoint) -> Void  // Added index parameter
     let onDragMove: (CGPoint) -> Void
     let onDragEnd: () -> Void
     
@@ -244,21 +246,39 @@ struct CurrentBlocksView: View {
             ForEach(Array(gameState.currentBlocks.enumerated()), id: \.offset) { index, block in
                 // Fixed-size slot for each block
                 ZStack {
-                    // Background for the slot
+                    // Background for the slot - highlight if hovering over origin
                     RoundedRectangle(cornerRadius: GameTheme.Layout.buttonCornerRadius)
-                        .fill(GameTheme.Colors.blockContainerBackground)
+                        .fill(
+                            (isHoveringOverOrigin && draggedBlockIndex == index) ?
+                            GameTheme.Colors.accent.opacity(0.3) :
+                            GameTheme.Colors.blockContainerBackground
+                        )
                         .overlay(
                             RoundedRectangle(cornerRadius: GameTheme.Layout.buttonCornerRadius)
-                                .stroke(GameTheme.Colors.blockContainerBorder, lineWidth: 1)
+                                .stroke(
+                                    (isHoveringOverOrigin && draggedBlockIndex == index) ?
+                                    GameTheme.Colors.accent :
+                                    GameTheme.Colors.blockContainerBorder,
+                                    lineWidth: (isHoveringOverOrigin && draggedBlockIndex == index) ? 2 : 1
+                                )
                         )
-                        .shadow(color: GameTheme.Colors.blockContainerShadow, radius: 6, x: 2, y: 3)
+                        .shadow(
+                            color: (isHoveringOverOrigin && draggedBlockIndex == index) ?
+                                GameTheme.Colors.accent.opacity(0.4) :
+                                GameTheme.Colors.blockContainerShadow,
+                            radius: (isHoveringOverOrigin && draggedBlockIndex == index) ? 8 : 6,
+                            x: 2,
+                            y: 3
+                        )
+                        .scaleEffect((isHoveringOverOrigin && draggedBlockIndex == index) ? 1.05 : 1.0)
+                        .animation(.easeInOut(duration: 0.2), value: isHoveringOverOrigin && draggedBlockIndex == index)
                     
                     // Scaled block centered in slot - size stays consistent
                     DraggableBlockView(
                         block: block,
                         cellSize: scaledCellSize(for: block),
                         onDragStart: { location, startLocation in
-                            onDragStart(block, location)
+                            onDragStart(block, index, location)  // Pass index
                         },
                         onDragMove: onDragMove,
                         onDragEnd: onDragEnd
@@ -1073,10 +1093,13 @@ struct GameHomeView: View {
 struct GameBoardView: View {
     @ObservedObject var gameState: GameState
     @State private var draggedBlock: BlockShape?
+    @State private var draggedBlockIndex: Int?  // Track which slot the block came from
     @State private var previewPosition: GridPosition?
     @State private var dragLocation: CGPoint = .zero
     @State private var isDragging: Bool = false
     @State private var gridFrame: CGRect = .zero
+    @State private var blockSlotsFrame: CGRect = .zero  // Track the holding area frame
+    @State private var isHoveringOverOrigin: Bool = false  // Track if hovering over original slot
     
     // Constants for consistent positioning
     private let dragOffsetY: CGFloat = 80 // Distance above finger
@@ -1122,13 +1145,22 @@ struct GameBoardView: View {
                     cellSize: cellSize,
                     draggedBlock: draggedBlock,
                     isDragging: isDragging,
-                    onDragStart: { block, location in
+                    draggedBlockIndex: draggedBlockIndex,
+                    isHoveringOverOrigin: isHoveringOverOrigin,
+                    onDragStart: { block, index, location in
                         draggedBlock = block
+                        draggedBlockIndex = index  // Remember which slot it came from
                         isDragging = true
                         dragLocation = location
                     },
                     onDragMove: { location in
                         dragLocation = location
+                        
+                        // Check if hovering over the original slot
+                        if let index = draggedBlockIndex {
+                            isHoveringOverOrigin = isBlockOverOriginalSlot(location: location, slotIndex: index)
+                        }
+                        
                         // Calculate preview position based on the dragged block's position
                         if let block = draggedBlock {
                             let blockCenterLocation = CGPoint(
@@ -1149,21 +1181,48 @@ struct GameBoardView: View {
                                 y: blockCenterLocation.y - blockHeight/2 + CGFloat(minRow) * cellSize
                             )
                             
-                            updatePreviewPosition(for: anchorLocation)
+                            // Only update preview position if not hovering over origin
+                            if !isHoveringOverOrigin {
+                                updatePreviewPosition(for: anchorLocation)
+                            } else {
+                                previewPosition = nil  // Clear preview when hovering over origin
+                            }
                         }
                     },
                     onDragEnd: {
-                        // Try to place the block if it's over the grid
-                        if let block = draggedBlock,
-                           let previewPos = previewPosition,
-                           gameState.canPlaceBlock(block, at: previewPos) {
-                            
+                        // Check if we're dropping back to the original slot
+                        if isHoveringOverOrigin {
+                            // Just cancel the drag - block stays in its original position
+                            draggedBlock = nil
+                            draggedBlockIndex = nil
+                            previewPosition = nil
+                            isDragging = false
+                            isHoveringOverOrigin = false
+                        } else if let block = draggedBlock,
+                                  let previewPos = previewPosition,
+                                  gameState.canPlaceBlock(block, at: previewPos) {
+                            // Try to place the block on the grid
                             gameState.placeBlock(block, at: previewPos)
+                            draggedBlock = nil
+                            draggedBlockIndex = nil
+                            previewPosition = nil
+                            isDragging = false
+                            isHoveringOverOrigin = false
+                        } else {
+                            // Invalid placement - cancel the drag
+                            draggedBlock = nil
+                            draggedBlockIndex = nil
+                            previewPosition = nil
+                            isDragging = false
+                            isHoveringOverOrigin = false
                         }
-                        
-                        draggedBlock = nil
-                        previewPosition = nil
-                        isDragging = false
+                    }
+                )
+                .background(
+                    GeometryReader { geo in
+                        Color.clear.onAppear {
+                            blockSlotsFrame = geo.frame(in: .global)
+                        }
                     }
                 )
                 
@@ -1207,6 +1266,28 @@ struct GameBoardView: View {
     }
     
     // MARK: - Helper Methods
+    
+    private func isBlockOverOriginalSlot(location: CGPoint, slotIndex: Int) -> Bool {
+        // Check if the current drag location is within the bounds of the original slot
+        guard slotIndex >= 0 && slotIndex < 3 else { return false }
+        
+        // Calculate slot dimensions based on the CurrentBlocksView layout
+        let containerHeight: CGFloat = 90
+        let gridWidth = (8 * cellSize) + (7 * 4) + (2 * 12)
+        let slotWidth = (gridWidth - (2 * GameTheme.Layout.largePadding) - (2 * GameTheme.Layout.mediumSpacing)) / 3
+        
+        // Calculate the x position of the slot
+        let slotX = blockSlotsFrame.minX + GameTheme.Layout.largePadding + CGFloat(slotIndex) * (slotWidth + GameTheme.Layout.mediumSpacing)
+        let slotY = blockSlotsFrame.minY
+        
+        // Check if the drag location (adjusted for finger offset) is within the slot bounds
+        let adjustedLocation = CGPoint(x: location.x, y: location.y - dragOffsetY)
+        
+        return adjustedLocation.x >= slotX &&
+               adjustedLocation.x <= slotX + slotWidth &&
+               adjustedLocation.y >= slotY &&
+               adjustedLocation.y <= slotY + containerHeight
+    }
     
     private func getGridPosition(from location: CGPoint, in size: CGSize) -> GridPosition {
         // Account for the grid's internal padding (mediumPadding = 16)
