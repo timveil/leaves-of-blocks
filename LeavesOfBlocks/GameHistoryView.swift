@@ -3,6 +3,7 @@ import SwiftUI
 struct GameHistoryView: View {
     @ObservedObject var gameState: GameState
     let onDismiss: () -> Void
+    let onSelectSession: (GameSession) -> Void
     @State private var gameHistory: [GameSession] = []
     @State private var statistics = GameStatistics(totalGames: 0, totalScore: 0, averageScore: 0, totalBlocksPlaced: 0, highScore: 0)
     
@@ -73,10 +74,15 @@ struct GameHistoryView: View {
                 ScrollView {
                     LazyVStack(spacing: GameTheme.Layout.mediumSpacing) {
                         ForEach(gameHistory.indices, id: \.self) { index in
-                            GameSessionRow(
-                                session: gameHistory[index],
-                                isHighScore: gameHistory[index].score == statistics.highScore
-                            )
+                            Button(action: {
+                                onSelectSession(gameHistory[index])
+                            }) {
+                                GameSessionRow(
+                                    session: gameHistory[index],
+                                    isHighScore: gameHistory[index].score == statistics.highScore
+                                )
+                            }
+                            .buttonStyle(PlainButtonStyle())
                         }
                     }
                     .padding(.horizontal, GameTheme.Layout.largePadding)
@@ -367,6 +373,7 @@ struct StatChip: View {
 #Preview {
     GameHistoryView(
         gameState: GameState(),
-        onDismiss: {}
+        onDismiss: {},
+        onSelectSession: { _ in }
     )
 }

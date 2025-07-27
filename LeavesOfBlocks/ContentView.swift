@@ -10,7 +10,7 @@ import SwiftUI
 enum AppScreen {
     case home
     case game
-    case summary
+    case summary(GameSession?)
     case about
     case history
 }
@@ -55,16 +55,17 @@ struct ContentView: View {
                     },
                     onViewSummary: {
                         withAnimation(.easeInOut) {
-                            currentScreen = .summary
+                            currentScreen = .summary(nil)
                         }
                     }
                 )
                 .navigationBarHidden(true)
                 .ignoresSafeArea(.container, edges: [])
                 
-            case .summary:
+            case .summary(let session):
                 GameSummaryView(
                     gameState: gameState,
+                    historicalSession: session,
                     onGoHome: {
                         withAnimation(.easeInOut) {
                             currentScreen = .home
@@ -91,6 +92,11 @@ struct ContentView: View {
                     onDismiss: {
                         withAnimation(.easeInOut) {
                             currentScreen = .home
+                        }
+                    },
+                    onSelectSession: { session in
+                        withAnimation(.easeInOut) {
+                            currentScreen = .summary(session)
                         }
                     }
                 )

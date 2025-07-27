@@ -569,8 +569,42 @@ struct GameOverOverlayView: View {
 
 struct GameSummaryView: View {
     @ObservedObject var gameState: GameState
+    let historicalSession: GameSession?
     let onGoHome: () -> Void
     @State private var highScoreScale: CGFloat = 1.0
+    
+    // Computed properties to use either current game or historical session
+    private var score: Int {
+        historicalSession?.score ?? gameState.score
+    }
+    
+    private var blocksPlaced: Int {
+        historicalSession?.blocksPlaced ?? gameState.blocksPlaced
+    }
+    
+    private var linesCleared: Int {
+        historicalSession?.linesCleared ?? gameState.linesCleared
+    }
+    
+    private var gameTime: TimeInterval {
+        historicalSession?.gameTime ?? gameState.gameTime
+    }
+    
+    private var difficulty: DifficultyMode {
+        historicalSession?.difficulty ?? gameState.currentDifficulty
+    }
+    
+    private var isNewHighScore: Bool {
+        if historicalSession != nil {
+            return false // Historical sessions don't show new high score
+        }
+        return gameState.isNewHighScore
+    }
+    
+    private var longestCombo: Int {
+        // For historical sessions, we don't have combo data, so use 0
+        historicalSession != nil ? 0 : gameState.longestCombo
+    }
     
     var body: some View {
         GeometryReader { geometry in
@@ -580,7 +614,7 @@ struct GameSummaryView: View {
                 VStack(spacing: 0) {
                     // Header section
                     VStack(spacing: GameTheme.Layout.mediumSpacing) {
-                        if gameState.isNewHighScore {
+                        if isNewHighScore {
                             Text("🏆 NEW HIGH SCORE! 🏆")
                                 .font(GameTheme.Typography.titleFont)
                                 .foregroundColor(GameTheme.Colors.accent)
@@ -597,18 +631,25 @@ struct GameSummaryView: View {
                         }
                         
                         VStack(spacing: GameTheme.Layout.smallSpacing) {
-                            Text("Game Summary")
+                            Text(historicalSession != nil ? "Past Game Summary" : "Game Summary")
                                 .font(GameTheme.Typography.title)
                                 .foregroundColor(GameTheme.Colors.primaryText)
                                 .tracking(1)
                             
+                            // Show date for historical sessions
+                            if let session = historicalSession {
+                                Text(session.formattedDate)
+                                    .font(GameTheme.Typography.captionFont)
+                                    .foregroundColor(GameTheme.Colors.secondaryText)
+                            }
+                            
                             // Difficulty indicator
                             HStack(spacing: GameTheme.Layout.smallSpacing) {
-                                Image(systemName: gameState.currentDifficulty.icon)
-                                    .foregroundColor(gameState.currentDifficulty.color)
-                                Text("\(gameState.currentDifficulty.rawValue) Mode")
+                                Image(systemName: difficulty.icon)
+                                    .foregroundColor(difficulty.color)
+                                Text("\(difficulty.rawValue) Mode")
                                     .font(GameTheme.Typography.headlineFont)
-                                    .foregroundColor(gameState.currentDifficulty.color)
+                                    .foregroundColor(difficulty.color)
                             }
                         }
                     }
@@ -623,7 +664,7 @@ struct GameSummaryView: View {
                             .foregroundColor(GameTheme.Colors.secondaryText)
                             .tracking(1)
                         
-                        Text("\(gameState.score)")
+                        Text("\(score)")
                             .font(GameTheme.Typography.largeScore)
                             .foregroundColor(GameTheme.Colors.accent)
                             .lineLimit(1)
@@ -640,28 +681,28 @@ struct GameSummaryView: View {
                         
                         StatisticCard(
                             title: "Time Played",
-                            value: formatTime(gameState.gameTime),
+                            value: formatTime(gameTime),
                             icon: "clock.fill",
                             color: GameTheme.Colors.blockBlue
                         )
                         
                         StatisticCard(
                             title: "Blocks Placed",
-                            value: "\(gameState.blocksPlaced)",
+                            value: "\(blocksPlaced)",
                             icon: "square.grid.3x3.fill",
                             color: GameTheme.Colors.blockGreen
                         )
                         
                         StatisticCard(
                             title: "Lines Cleared",
-                            value: "\(gameState.linesCleared)",
+                            value: "\(linesCleared)",
                             icon: "line.horizontal.3",
                             color: GameTheme.Colors.blockRed
                         )
                         
                         StatisticCard(
                             title: "Longest Combo",
-                            value: "\(gameState.longestCombo)",
+                            value: "\(longestCombo)",
                             icon: "flame.fill",
                             color: GameTheme.Colors.blockOrange
                         )
@@ -676,9 +717,9 @@ struct GameSummaryView: View {
                             Text("Current")
                                 .font(GameTheme.Typography.captionFont)
                                 .foregroundColor(GameTheme.Colors.secondaryText)
-                            Text("\(gameState.score)")
+                            Text("\(score)")
                                 .font(GameTheme.Typography.headlineFont)
-                                .foregroundColor(gameState.isNewHighScore ? GameTheme.Colors.accent : GameTheme.Colors.primaryText)
+                                .foregroundColor(isNewHighScore ? GameTheme.Colors.accent : GameTheme.Colors.primaryText)
                                 .lineLimit(1)
                                 .minimumScaleFactor(0.8)
                         }
@@ -701,7 +742,7 @@ struct GameSummaryView: View {
                             .fill(GameTheme.Colors.cardBackground.opacity(0.5))
                             .overlay(
                                 RoundedRectangle(cornerRadius: GameTheme.Layout.buttonCornerRadius)
-                                    .stroke(gameState.isNewHighScore ? GameTheme.Colors.accent.opacity(0.4) : GameTheme.Colors.cardBorderGradient[0].opacity(0.2), lineWidth: 1)
+                                    .stroke(isNewHighScore ? GameTheme.Colors.accent.opacity(0.4) : GameTheme.Colors.cardBorderGradient[0].opacity(0.2), lineWidth: 1)
                             )
                     )
                     .padding(.horizontal, GameTheme.Layout.largePadding)
