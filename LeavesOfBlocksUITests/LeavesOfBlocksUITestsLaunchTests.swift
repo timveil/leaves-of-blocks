@@ -7,7 +7,7 @@
 
 import XCTest
 
-final class Leaves_of_BlocksUITestsLaunchTests: XCTestCase {
+final class LeavesOfBlocksUITestsLaunchTests: XCTestCase {
 
     override class var runsForEachTargetApplicationUIConfiguration: Bool {
         true

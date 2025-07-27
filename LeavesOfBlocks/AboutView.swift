@@ -114,12 +114,9 @@ struct AboutView: View {
                         AboutSectionView(
                             title: "Technical Details",
                             content: """
-                            • Built with SwiftUI and Swift
-                            • Supports iPhone and iPad
-                            • Requires iOS 18.5 or later
-                            • No ads, no in-app purchases
-                            • Offline gameplay
-                            • High score persistence
+                            Built with pure SwiftUI and Swift for a native iOS experience. This game supports both iPhone and iPad devices running iOS 18.5 or later.
+                            
+                            Enjoy ad-free gameplay with no in-app purchases. Play offline anytime, and your high scores are automatically saved for friendly competition with yourself.
                             """
                         )
                     }

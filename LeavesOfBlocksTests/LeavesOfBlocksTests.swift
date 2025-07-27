@@ -6,9 +6,9 @@
 //
 
 import Testing
-@testable import Leaves_of_Blocks
+@testable import LeavesOfBlocks
 
-struct Leaves_of_BlocksTests {
+struct LeavesOfBlocksTests {
 
     @Test func example() async throws {
         // Write your test here and use APIs like `#expect(...)` to check expected conditions.

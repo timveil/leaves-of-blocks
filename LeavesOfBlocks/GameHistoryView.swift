@@ -155,11 +155,17 @@ struct StatsSummaryView: View {
                 .font(GameTheme.Typography.headlineFont)
                 .foregroundColor(GameTheme.Colors.primaryText)
             
-            HStack(spacing: GameTheme.Layout.largeSpacing) {
-                StatItemView(title: "High Score", value: "\(highScore)", color: GameTheme.Colors.accent)
-                StatItemView(title: "Games Played", value: "\(totalGames)", color: GameTheme.Colors.blockBlue)
-                StatItemView(title: "Avg Score", value: "\(averageScore)", color: GameTheme.Colors.blockGreen)
-                StatItemView(title: "Total Blocks", value: "\(totalBlocksPlaced)", color: GameTheme.Colors.blockOrange)
+            // Two rows of stats for better iPhone layout
+            VStack(spacing: GameTheme.Layout.smallSpacing) {
+                HStack(spacing: GameTheme.Layout.mediumSpacing) {
+                    StatItemView(title: "High Score", value: "\(highScore)", color: GameTheme.Colors.accent)
+                    StatItemView(title: "Games Played", value: "\(totalGames)", color: GameTheme.Colors.blockBlue)
+                }
+                
+                HStack(spacing: GameTheme.Layout.mediumSpacing) {
+                    StatItemView(title: "Avg Score", value: "\(averageScore)", color: GameTheme.Colors.blockGreen)
+                    StatItemView(title: "Total Blocks", value: "\(totalBlocksPlaced)", color: GameTheme.Colors.blockOrange)
+                }
             }
         }
         .padding(GameTheme.Layout.largePadding)
@@ -212,63 +218,59 @@ struct GameSessionRow: View {
     let isHighScore: Bool
     
     var body: some View {
-        HStack(spacing: GameTheme.Layout.mediumSpacing) {
-            // Date and time
-            VStack(alignment: .leading, spacing: GameTheme.Layout.smallSpacing) {
-                Text(session.formattedDate)
-                    .font(GameTheme.Typography.bodyFont)
-                    .foregroundColor(GameTheme.Colors.primaryText)
-                
-                Text(session.formattedGameTime)
-                    .font(GameTheme.Typography.captionFont)
-                    .foregroundColor(GameTheme.Colors.secondaryText)
-            }
-            
-            Spacer()
-            
-            // Game stats
-            HStack(spacing: GameTheme.Layout.largeSpacing) {
-                VStack {
-                    Text("\(session.score)")
-                        .font(GameTheme.Typography.scoreFont)
-                        .foregroundColor(isHighScore ? GameTheme.Colors.accent : GameTheme.Colors.primaryText)
+        VStack(spacing: GameTheme.Layout.smallSpacing) {
+            // Header row - Date and Score
+            HStack {
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(session.formattedDate)
+                        .font(GameTheme.Typography.bodyFont)
+                        .foregroundColor(GameTheme.Colors.primaryText)
                     
-                    Text("Score")
+                    Text(session.formattedGameTime)
                         .font(GameTheme.Typography.captionFont)
                         .foregroundColor(GameTheme.Colors.secondaryText)
                 }
                 
-                VStack {
-                    Text("\(session.blocksPlaced)")
-                        .font(GameTheme.Typography.bodyFont)
-                        .foregroundColor(GameTheme.Colors.primaryText)
-                    
-                    Text("Blocks")
-                        .font(GameTheme.Typography.captionFont)
-                        .foregroundColor(GameTheme.Colors.secondaryText)
-                }
+                Spacer()
                 
-                VStack {
-                    Text("\(session.linesCleared)")
-                        .font(GameTheme.Typography.bodyFont)
-                        .foregroundColor(GameTheme.Colors.primaryText)
+                VStack(alignment: .trailing, spacing: 2) {
+                    HStack(spacing: 4) {
+                        if isHighScore {
+                            Image(systemName: "crown.fill")
+                                .foregroundColor(GameTheme.Colors.accent)
+                                .font(.system(size: 12))
+                        }
+                        Text("\(session.score)")
+                            .font(GameTheme.Typography.scoreFont)
+                            .foregroundColor(isHighScore ? GameTheme.Colors.accent : GameTheme.Colors.primaryText)
+                    }
                     
-                    Text("Lines")
-                        .font(GameTheme.Typography.captionFont)
+                    Text("SCORE")
+                        .font(.system(size: 10, weight: .medium))
                         .foregroundColor(GameTheme.Colors.secondaryText)
                 }
             }
             
-            // Difficulty badge
-            Text(session.difficulty.rawValue)
-                .font(GameTheme.Typography.captionFont)
-                .foregroundColor(GameTheme.Colors.primaryBackground)
-                .padding(.horizontal, GameTheme.Layout.mediumSpacing)
-                .padding(.vertical, GameTheme.Layout.smallSpacing)
-                .background(
-                    Capsule()
-                        .fill(session.difficulty.color)
-                )
+            // Stats row - more compact
+            HStack {
+                HStack(spacing: GameTheme.Layout.mediumSpacing) {
+                    StatChip(label: "Blocks", value: "\(session.blocksPlaced)", color: GameTheme.Colors.blockBlue)
+                    StatChip(label: "Lines", value: "\(session.linesCleared)", color: GameTheme.Colors.blockGreen)
+                }
+                
+                Spacer()
+                
+                // Difficulty badge
+                Text(session.difficulty.rawValue.uppercased())
+                    .font(.system(size: 10, weight: .bold))
+                    .foregroundColor(GameTheme.Colors.primaryBackground)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 4)
+                    .background(
+                        Capsule()
+                            .fill(session.difficulty.color)
+                    )
+            }
         }
         .padding(GameTheme.Layout.mediumPadding)
         .background(
@@ -282,22 +284,29 @@ struct GameSessionRow: View {
                         )
                 )
         )
-        .overlay(
-            // High score crown
-            Group {
-                if isHighScore {
-                    VStack {
-                        HStack {
-                            Spacer()
-                            Image(systemName: "crown.fill")
-                                .foregroundColor(GameTheme.Colors.accent)
-                                .font(.system(size: 16))
-                                .offset(x: -8, y: 8)
-                        }
-                        Spacer()
-                    }
-                }
-            }
+    }
+}
+
+struct StatChip: View {
+    let label: String
+    let value: String
+    let color: Color
+    
+    var body: some View {
+        HStack(spacing: 4) {
+            Text(value)
+                .font(.system(size: 14, weight: .semibold))
+                .foregroundColor(color)
+            
+            Text(label)
+                .font(.system(size: 10, weight: .medium))
+                .foregroundColor(GameTheme.Colors.secondaryText)
+        }
+        .padding(.horizontal, 8)
+        .padding(.vertical, 4)
+        .background(
+            RoundedRectangle(cornerRadius: 6)
+                .fill(color.opacity(0.1))
         )
     }
 }

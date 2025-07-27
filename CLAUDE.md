@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-This is a SwiftUI iOS game called "Leaves of Blocks" - a Block Blast-style puzzle game created with Xcode 16.4. Players drag and drop randomly generated block shapes onto a 10x10 grid to clear horizontal and vertical lines. The game features no ads, progressive difficulty through weighted block generation, scoring system, and high score persistence.
+This is a SwiftUI iOS game called "Leaves of Blocks" - a Block Blast-style puzzle game created with Xcode 16.4. Players drag and drop randomly generated block shapes onto an 8x8 grid to clear horizontal and vertical lines. The game features autumn-themed visuals, progressive difficulty through weighted block generation, scoring system with combo bonuses, and high score persistence.
 
 ## Build Commands
 
@@ -13,40 +13,61 @@ This project uses Xcode's build system. Common commands:
 - **Build**: `xcodebuild -project "Leaves of Blocks.xcodeproj" -scheme "Leaves of Blocks" build`
 - **Test**: `xcodebuild -project "Leaves of Blocks.xcodeproj" -scheme "Leaves of Blocks" test -destination 'platform=iOS Simulator,name=iPhone 15'`
 - **UI Tests**: `xcodebuild -project "Leaves of Blocks.xcodeproj" -scheme "Leaves of Blocks" test -destination 'platform=iOS Simulator,name=iPhone 15' -only-testing:"Leaves of BlocksUITests"`
+- **Clean Build**: `xcodebuild -project "Leaves of Blocks.xcodeproj" -scheme "Leaves of Blocks" clean build`
 
 ## Architecture
 
-- **App Entry Point**: `Leaves_of_BlocksApp.swift` - Main app struct with `@main` attribute
-- **Main View**: `ContentView.swift` - Primary SwiftUI view showing the app content
+### Navigation Flow
+- **App Entry**: `Leaves_of_BlocksApp.swift` - Main app with custom launch screen (2.5s)
+- **Navigation Hub**: `ContentView.swift` - Enum-based screen management (Home, Game, Summary, About, History)
 - **Testing**: Uses both Swift Testing framework (unit tests) and XCTest (UI tests)
 - **Target Deployment**: iOS 18.5+, supports iPhone and iPad
-- **Bundle ID**: `nineforty.one.Leaves-of-Blocks`
+- **Bundle ID**: `timothy.veil.Leaves-of-Blocks`
 
-## Key Files
+### Key Components
 
-- `Leaves of Blocks/Leaves_of_BlocksApp.swift` - App entry point
-- `Leaves of Blocks/ContentView.swift` - Main view that hosts the game
-- `Leaves of Blocks/GameModels.swift` - Core game data models (GameState, BlockShape, GridCell)
-- `Leaves of Blocks/GameViews.swift` - SwiftUI views for game board, blocks, and drag/drop
-- `Leaves of Blocks/GameEnhancements.swift` - Visual effects, animations, and weighted block generation
-- `Leaves of Blocks/HighScoreManager.swift` - High score persistence using UserDefaults
-- `Leaves of BlocksTests/Leaves_of_BlocksTests.swift` - Unit tests using Swift Testing
-- `Leaves of BlocksUITests/Leaves_of_BlocksUITests.swift` - UI tests using XCTest
+#### Core Game Files
+- `GameModels.swift` - Data models: DifficultyMode, GridPosition, GridCell, BlockShape, GameState
+- `GameLogic.swift` - Game mechanics: block placement, line clearing, game over detection
+- `GameViews.swift` - Game UI components: grid display, block rendering, drag/drop
+- `GameEnhancements.swift` - Visual effects, animations, weighted block generation
 
-## Game Architecture
+#### Supporting Systems
+- `Theme.swift` - Comprehensive theming: autumn colors, typography, layout constants, animations
+- `Configuration.swift` - App configuration: environment detection, feature flags, preferences
+- `HighScoreManager.swift` - High score persistence using UserDefaults
+- `UIComponents.swift` - Reusable UI components across the app
 
-- **GameState**: ObservableObject managing 10x10 grid, current blocks, scoring, and game state
-- **BlockShape**: Represents different block configurations with positions and colors
-- **Drag & Drop**: Custom SwiftUI implementation with visual feedback and preview positioning
-- **Scoring**: Points for block placement (10 per cell) + line clearing bonuses (100 per line + combo multipliers)
-- **Block Generation**: Weighted random system favoring smaller blocks, with 21 different shapes
-- **Line Clearing**: Detects and clears complete horizontal/vertical lines simultaneously
+## Game Architecture Details
+
+### GameState (ObservableObject)
+- Manages 8x8 grid with GridCell objects
+- Tracks current blocks (up to 3), score, high score, difficulty
+- Handles block placement validation and line clearing logic
+- Publishes updates for reactive UI
+
+### Block System
+- 21 predefined BlockShape configurations (1-9 cells each)
+- Weighted random generation based on difficulty
+- Drag/drop implementation with visual preview
+- Color-coded blocks with autumn theme
+
+### Scoring System
+- Block placement: 10 points per cell
+- Line clearing: 100 points per line
+- Combo bonuses: 50 extra points per additional line cleared simultaneously
+- High score persistence across sessions
+
+### Difficulty Modes
+- **Easy**: Favors smaller blocks, more forgiving generation
+- **Moderate**: Balanced block distribution
+- **Hard**: Increases chance of larger, complex blocks
 
 ## Development Notes
 
-- Uses SwiftUI with drag/drop gestures and animations
-- Swift version 5.0, iOS 18.5+ deployment target
-- ObservableObject pattern for reactive UI updates
-- UserDefaults for high score persistence
-- No external dependencies - pure SwiftUI implementation
-- Supports both iPhone and iPad orientations
+- Pure SwiftUI implementation with no external dependencies
+- Uses NavigationView with StackNavigationViewStyle for consistent iPad behavior
+- ObservableObject/Published pattern for state management
+- Custom drag gesture implementation with visual feedback
+- Comprehensive configuration system for feature flags and testing
+- Swift version 5.0, modern iOS 18.5+ deployment target
