@@ -10,11 +10,11 @@ This is a SwiftUI iOS game called "Leaves of Blocks" - a Block Blast-style puzzl
 
 This project uses Xcode's build system. Common commands:
 
-- **Build**: `xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "Leaves of Blocks" build`
-- **Test All**: `xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "Leaves of Blocks" test -destination 'platform=iOS Simulator,name=iPhone 15'`
-- **Unit Tests Only**: `xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "Leaves of Blocks" test -destination 'platform=iOS Simulator,name=iPhone 15' -only-testing:"LeavesOfBlocksTests"`
-- **UI Tests Only**: `xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "Leaves of Blocks" test -destination 'platform=iOS Simulator,name=iPhone 15' -only-testing:"LeavesOfBlocksUITests"`
-- **Clean Build**: `xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "Leaves of Blocks" clean build`
+- **Build**: `xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "LeavesOfBlocks" build`
+- **Test All**: `xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "LeavesOfBlocks" test -destination 'platform=iOS Simulator,name=iPhone 15'`
+- **Unit Tests Only**: `xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "LeavesOfBlocks" test -destination 'platform=iOS Simulator,name=iPhone 15' -only-testing:"LeavesOfBlocksTests"`
+- **UI Tests Only**: `xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "LeavesOfBlocks" test -destination 'platform=iOS Simulator,name=iPhone 15' -only-testing:"LeavesOfBlocksUITests"`
+- **Clean Build**: `xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "LeavesOfBlocks" clean build`
 
 ### CI/CD
 - GitHub Actions workflows configured for automated builds and tests
@@ -24,11 +24,11 @@ This project uses Xcode's build system. Common commands:
 ## Architecture
 
 ### Navigation Flow
-- **App Entry**: `Leaves_of_BlocksApp.swift` - Main app with custom launch screen (2.5s)
+- **App Entry**: `LeavesOfBlocksApp.swift` - Main app with custom launch screen (2.5s)
 - **Navigation Hub**: `ContentView.swift` - Enum-based screen management (Home, Game, Summary, About, History)
 - **Testing**: Uses both Swift Testing framework (unit tests) and XCTest (UI tests)
 - **Target Deployment**: iOS 18.5+, supports iPhone only (TARGETED_DEVICE_FAMILY = 1)
-- **Bundle ID**: `timothy.veil.Leaves-of-Blocks`
+- **Bundle ID**: `timothy.veil.LeavesOfBlocks`
 
 ### Key Components
 
@@ -42,6 +42,10 @@ This project uses Xcode's build system. Common commands:
 - `Theme.swift` - Comprehensive theming: autumn colors, typography, layout constants, animations
 - `Configuration.swift` - App configuration: environment detection, feature flags, preferences
 - `HighScoreManager.swift` - High score persistence using UserDefaults
+- `CoreDataManager.swift` - Core Data stack management for game history persistence
+- `GameRecord+CoreDataClass.swift` - Core Data entity class for game records
+- `GameRecord+CoreDataProperties.swift` - Core Data entity properties
+- `LeavesOfBlocks.xcdatamodeld` - Core Data model definition
 - `UIComponents.swift` - Reusable UI components across the app
 - `Extensions.swift` - Swift extensions for common functionality
 - `TestHelpers.swift` - Testing utilities and mock implementations
@@ -80,7 +84,7 @@ This project uses Xcode's build system. Common commands:
 
 ## Development Notes
 
-- Pure SwiftUI implementation with no external dependencies
+- Pure SwiftUI implementation with Core Data for persistence (no external dependencies)
 - Uses NavigationView with StackNavigationViewStyle for consistent iPad behavior
 - ObservableObject/Published pattern for state management
 - Custom drag gesture implementation with visual feedback
@@ -101,13 +105,14 @@ This project uses Xcode's build system. Common commands:
 
 ### Project File Structure
 - Actual Xcode project: `LeavesOfBlocks.xcodeproj` (no spaces)
-- App scheme: "Leaves of Blocks" (with spaces)
-- Main app bundle: `timothy.veil.Leaves-of-Blocks`
+- App scheme: "LeavesOfBlocks" (no spaces)
+- Main app bundle: `timothy.veil.LeavesOfBlocks`
 - Source files in: `LeavesOfBlocks/` directory
 
 ### Configuration Details
-- Pure SwiftUI implementation with no external dependencies
+- Pure SwiftUI implementation with Core Data for persistence (no external dependencies)
 - Uses NavigationView with StackNavigationViewStyle for consistent behavior
 - Custom drag gesture implementation with visual feedback  
 - Configuration system via `Configuration.swift` for feature flags and environment detection
 - High score persistence through `HighScoreManager.swift` using UserDefaults
+- Game history persistence through Core Data (`CoreDataManager.swift`)

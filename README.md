@@ -31,10 +31,10 @@ A SwiftUI iOS puzzle game inspired by Block Blast, featuring autumn-themed visua
 
 ```bash
 # Build the project
-xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "Leaves of Blocks" build
+xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "LeavesOfBlocks" build
 
 # Clean build
-xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "Leaves of Blocks" clean build
+xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "LeavesOfBlocks" clean build
 ```
 
 ## Testing
@@ -43,17 +43,17 @@ The project includes both unit tests (Swift Testing framework) and UI tests (XCT
 
 ### Run All Tests
 ```bash
-xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "Leaves of Blocks" test -destination 'platform=iOS Simulator,name=iPhone 15'
+xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "LeavesOfBlocks" test -destination 'platform=iOS Simulator,name=iPhone 15'
 ```
 
 ### Run Unit Tests Only
 ```bash
-xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "Leaves of Blocks" test -destination 'platform=iOS Simulator,name=iPhone 15' -only-testing:"LeavesOfBlocksTests"
+xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "LeavesOfBlocks" test -destination 'platform=iOS Simulator,name=iPhone 15' -only-testing:"LeavesOfBlocksTests"
 ```
 
 ### Run UI Tests Only
 ```bash
-xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "Leaves of Blocks" test -destination 'platform=iOS Simulator,name=iPhone 15' -only-testing:"LeavesOfBlocksUITests"
+xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "LeavesOfBlocks" test -destination 'platform=iOS Simulator,name=iPhone 15' -only-testing:"LeavesOfBlocksUITests"
 ```
 
 ## Deployment
@@ -86,7 +86,7 @@ TestFlight allows you to distribute beta versions of your app to internal and ex
 
 ```bash
 # Ensure your project builds successfully
-xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "Leaves of Blocks" clean build -configuration Release
+xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "LeavesOfBlocks" clean build -configuration Release
 ```
 
 **In Xcode:**
@@ -108,7 +108,7 @@ xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "Leaves of Blocks" clean 
 ```bash
 # Archive the app for distribution
 xcodebuild -project "LeavesOfBlocks.xcodeproj" \
-  -scheme "Leaves of Blocks" \
+  -scheme "LeavesOfBlocks" \
   -destination "generic/platform=iOS" \
   -archivePath "./build/LeavesOfBlocks.xcarchive" \
   archive
@@ -224,8 +224,8 @@ xcrun altool --upload-app \
 
 ```bash
 # Quick TestFlight deployment workflow
-xcodebuild clean -project "LeavesOfBlocks.xcodeproj" -scheme "Leaves of Blocks"
-xcodebuild archive -project "LeavesOfBlocks.xcodeproj" -scheme "Leaves of Blocks" -destination "generic/platform=iOS" -archivePath "./LeavesOfBlocks.xcarchive"
+xcodebuild clean -project "LeavesOfBlocks.xcodeproj" -scheme "LeavesOfBlocks"
+xcodebuild archive -project "LeavesOfBlocks.xcodeproj" -scheme "LeavesOfBlocks" -destination "generic/platform=iOS" -archivePath "./LeavesOfBlocks.xcarchive"
 # Then use Xcode Organizer to upload
 ```
 
