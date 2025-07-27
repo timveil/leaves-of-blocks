@@ -331,6 +331,7 @@ struct GameOverOverlayView: View {
     @ObservedObject var gameState: GameState
     let onViewSummary: () -> Void
     @State private var buttonPressed = false
+    @State private var trophyScale: CGFloat = 1.0
     
     var body: some View {
         VStack(spacing: GameTheme.Layout.largePadding) {
@@ -340,9 +341,16 @@ struct GameOverOverlayView: View {
                     VStack(spacing: GameTheme.Layout.smallSpacing) {
                         Text("🏆")
                             .font(.system(size: 40))
-                            .scaleEffect(1.1)
-                            .animation(.easeInOut(duration: 1.0).repeatForever(autoreverses: true), value: gameState.isNewHighScore)
+                            .scaleEffect(trophyScale)
                             .shadow(color: GameTheme.Colors.accent.opacity(0.6), radius: 8, x: 0, y: 4)
+                            .onAppear {
+                                withAnimation(.easeInOut(duration: 1.0).repeatForever(autoreverses: true)) {
+                                    trophyScale = 1.2
+                                }
+                            }
+                            .onDisappear {
+                                trophyScale = 1.0
+                            }
                         
                         Text("NEW HIGH SCORE!")
                             .font(GameTheme.Typography.titleFont)
@@ -562,6 +570,7 @@ struct GameOverOverlayView: View {
 struct GameSummaryView: View {
     @ObservedObject var gameState: GameState
     let onGoHome: () -> Void
+    @State private var highScoreScale: CGFloat = 1.0
     
     var body: some View {
         GeometryReader { geometry in
@@ -576,8 +585,15 @@ struct GameSummaryView: View {
                                 .font(GameTheme.Typography.titleFont)
                                 .foregroundColor(GameTheme.Colors.accent)
                                 .tracking(1.5)
-                                .scaleEffect(1.05)
-                                .animation(.easeInOut(duration: 0.8).repeatForever(autoreverses: true), value: gameState.isNewHighScore)
+                                .scaleEffect(highScoreScale)
+                                .onAppear {
+                                    withAnimation(.easeInOut(duration: 0.8).repeatForever(autoreverses: true)) {
+                                        highScoreScale = 1.1
+                                    }
+                                }
+                                .onDisappear {
+                                    highScoreScale = 1.0
+                                }
                         }
                         
                         VStack(spacing: GameTheme.Layout.smallSpacing) {
@@ -1419,18 +1435,10 @@ struct GridCellView: View {
                 Group {
                     if isLineComplete {
                         // Pulsing golden glow for line clearing
-                        RoundedRectangle(cornerRadius: 8)
-                            .stroke(Color(red: 1.0, green: 0.9, blue: 0.2), lineWidth: 4)
-                            .opacity(0.8)
-                            .scaleEffect(1.1)
-                            .animation(.easeInOut(duration: 0.6).repeatForever(autoreverses: true), value: isLineComplete)
+                        LineCompletePulseView()
                     } else if isPreview {
                         // Pulsing border for snap-to preview
-                        RoundedRectangle(cornerRadius: 8)
-                            .stroke(previewColor, lineWidth: 3)
-                            .opacity(0.6)
-                            .scaleEffect(1.05)
-                            .animation(.easeInOut(duration: 0.8).repeatForever(autoreverses: true), value: isPreview)
+                        PreviewPulseView(previewColor: previewColor)
                     }
                 }
             )
@@ -1637,5 +1645,44 @@ struct StaticGrassBlockView: View {
                     .stroke(color.opacity(0.4), lineWidth: 1)
             )
             .shadow(color: color.opacity(0.4), radius: 3, x: 0, y: 2)
+    }
+}
+
+// MARK: - Animation Helper Views
+
+struct LineCompletePulseView: View {
+    @State private var scale: CGFloat = 1.0
+    @State private var opacity: CGFloat = 0.8
+    
+    var body: some View {
+        RoundedRectangle(cornerRadius: 8)
+            .stroke(Color(red: 1.0, green: 0.9, blue: 0.2), lineWidth: 4)
+            .opacity(opacity)
+            .scaleEffect(scale)
+            .onAppear {
+                withAnimation(.easeInOut(duration: 0.6).repeatForever(autoreverses: true)) {
+                    scale = 1.1
+                    opacity = 0.6
+                }
+            }
+    }
+}
+
+struct PreviewPulseView: View {
+    let previewColor: Color
+    @State private var scale: CGFloat = 1.0
+    @State private var opacity: CGFloat = 0.6
+    
+    var body: some View {
+        RoundedRectangle(cornerRadius: 8)
+            .stroke(previewColor, lineWidth: 3)
+            .opacity(opacity)
+            .scaleEffect(scale)
+            .onAppear {
+                withAnimation(.easeInOut(duration: 0.8).repeatForever(autoreverses: true)) {
+                    scale = 1.05
+                    opacity = 0.4
+                }
+            }
     }
 }
