@@ -349,7 +349,9 @@ struct GameOverOverlayView: View {
                                 }
                             }
                             .onDisappear {
-                                trophyScale = 1.0
+                                withAnimation(.easeInOut(duration: 0.2)) {
+                                    trophyScale = 1.0
+                                }
                             }
                         
                         Text("NEW HIGH SCORE!")
