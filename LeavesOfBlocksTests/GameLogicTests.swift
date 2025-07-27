@@ -387,12 +387,14 @@ struct PerformanceMonitorTests {
             case testError
         }
         
-        let (_, time) = try PerformanceMonitor.measureExecutionTime {
-            Thread.sleep(forTimeInterval: 0.05)
-            throw TestError.testError
+        #expect(throws: TestError.testError) {
+            let (_, time) = try PerformanceMonitor.measureExecutionTime {
+                Thread.sleep(forTimeInterval: 0.05)
+                throw TestError.testError
+            }
+            
+            #expect(time > 0.04)
         }
-        
-        #expect(time > 0.04)
     }
 }
 
@@ -451,20 +453,33 @@ struct GameLogicIntegrationTests {
     func gameOverDetectionAfterBlockPlacement() {
         let gameState = GameState()
         
-        // Fill grid except one cell
+        // Create a scenario where no blocks can be placed
+        // Fill the grid in a pattern that doesn't create complete lines
+        // but leaves no space for any current blocks
+        
+        // Fill most cells, leaving only scattered single cells
         for row in 0..<GameState.gridSize {
             for col in 0..<GameState.gridSize {
-                if !(row == 0 && col == 0) {
+                // Leave only positions (0,0), (1,2), (3,5) empty
+                if !((row == 0 && col == 0) || (row == 1 && col == 2) || (row == 3 && col == 5)) {
                     gameState.grid[row][col].isFilled = true
                 }
             }
         }
         
-        // Place a block that fills the last cell
-        let singleBlock = BlockShape(positions: [GridPosition(row: 0, col: 0)], color: .blue)
-        let position = GridPosition(row: 0, col: 0)
+        // Replace current blocks with ones that don't fit in the remaining spaces
+        // Use a 2x2 block that can't fit in any of the single-cell gaps
+        let largeBlock = BlockShape(positions: [
+            GridPosition(row: 0, col: 0),
+            GridPosition(row: 0, col: 1),
+            GridPosition(row: 1, col: 0),
+            GridPosition(row: 1, col: 1)
+        ], color: .red)
         
-        gameState.placeBlock(singleBlock, at: position)
+        gameState.currentBlocks = [largeBlock, largeBlock, largeBlock]
+        
+        // Manually trigger game over check
+        gameState.checkGameOver()
         
         #expect(gameState.isGameOver)
     }

@@ -65,6 +65,11 @@ struct GameRules {
     // MARK: - Game Over Detection
     
     static func isGameOver(currentBlocks: [BlockShape], grid: [[GridCell]]) -> Bool {
+        // If there are no blocks, it's not game over (game should generate new blocks)
+        guard !currentBlocks.isEmpty else {
+            return false
+        }
+        
         for block in currentBlocks {
             for row in 0..<GameTheme.GameConfig.gridSize {
                 for col in 0..<GameTheme.GameConfig.gridSize {

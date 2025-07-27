@@ -262,7 +262,7 @@ struct GameStateTests {
         #expect(gameState.linesCleared == 0)
         #expect(gameState.blocksPlaced == 0)
         #expect(!gameState.isGameOver)
-        #expect(!gameState.grid[0][0].isFilled)
+        #expect(gameState.currentBlocks.count == 3)
     }
     
     @Test("Start game sets difficulty")

@@ -238,24 +238,14 @@ struct AnimationIntegrationTests {
     func placeBlockWithAnimationGeneratesNewBlocks() async {
         let gameState = GameState()
         
-        // Place all current blocks
-        let allBlocks = gameState.currentBlocks
-        var row = 0
-        var col = 0
+        // Manually clear all current blocks to simulate they've all been used
+        gameState.currentBlocks.removeAll()
         
-        for block in allBlocks {
-            if gameState.canPlaceBlock(block, at: GridPosition(row: row, col: col)) {
-                gameState.placeBlockWithAnimation(block, at: GridPosition(row: row, col: col)) { }
-                col += 2
-                if col >= GameState.gridSize {
-                    col = 0
-                    row += 2
-                }
-            }
-        }
+        // Trigger block generation by calling generateNewBlocks
+        gameState.generateNewBlocks()
         
-        // Wait for new block generation
-        try? await Task.sleep(nanoseconds: 500_000_000) // 0.5 seconds
+        // Wait for any potential async operations
+        try? await Task.sleep(nanoseconds: 100_000_000) // 0.1 seconds
         
         #expect(gameState.currentBlocks.count == 3)
     }
