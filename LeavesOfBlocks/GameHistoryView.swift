@@ -344,7 +344,7 @@ struct GameSessionRow: View {
         .padding(GameTheme.Layout.mediumPadding)
         .background(
             RoundedRectangle(cornerRadius: GameTheme.Layout.mediumRadius)
-                .fill(GameTheme.Colors.blockBackground.opacity(0.6))
+                .fill(GameTheme.Colors.blockBackground.opacity(0.8))
                 .overlay(
                     RoundedRectangle(cornerRadius: GameTheme.Layout.mediumRadius)
                         .stroke(
