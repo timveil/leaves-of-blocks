@@ -2,8 +2,7 @@ import SwiftUI
 
 struct LaunchScreen: View {
     @State private var isAnimated = false
-    @State private var showBlocks = false
-    @State private var rotateLeaves = false
+    @State private var showIcon = false
     
     var body: some View {
         ZStack {
@@ -35,90 +34,22 @@ struct LaunchScreen: View {
             VStack(spacing: 40) {
                 Spacer()
                 
-                // Logo area with blocks and leaves
+                // Logo area with app icon
                 VStack(spacing: 24) {
-                    // Blocks arrangement (similar to icon)
-                    HStack(spacing: 12) {
-                        // Orange block
-                        RoundedRectangle(cornerRadius: 12)
-                            .fill(GameTheme.Colors.blockOrange)
-                            .frame(width: 60, height: 60)
-                            .scaleEffect(showBlocks ? 1.0 : 0.1)
-                            .animation(
-                                .spring(response: 0.6, dampingFraction: 0.6)
-                                .delay(0.1),
-                                value: showBlocks
-                            )
-                        
-                        VStack(spacing: 8) {
-                            // Teal block
-                            RoundedRectangle(cornerRadius: 12)
-                                .fill(Color(red: 0.3, green: 0.7, blue: 0.6))
-                                .frame(width: 60, height: 60)
-                                .scaleEffect(showBlocks ? 1.0 : 0.1)
-                                .animation(
-                                    .spring(response: 0.6, dampingFraction: 0.6)
-                                    .delay(0.2),
-                                    value: showBlocks
-                                )
-                            
-                            // Yellow block
-                            RoundedRectangle(cornerRadius: 12)
-                                .fill(GameTheme.Colors.blockYellow)
-                                .frame(width: 60, height: 60)
-                                .scaleEffect(showBlocks ? 1.0 : 0.1)
-                                .animation(
-                                    .spring(response: 0.6, dampingFraction: 0.6)
-                                    .delay(0.0),
-                                    value: showBlocks
-                                )
-                        }
-                        
-                        // Green block with leaves
-                        ZStack {
-                            RoundedRectangle(cornerRadius: 12)
-                                .fill(GameTheme.Colors.blockGreen)
-                                .frame(width: 60, height: 60)
-                                .scaleEffect(showBlocks ? 1.0 : 0.1)
-                                .animation(
-                                    .spring(response: 0.6, dampingFraction: 0.6)
-                                    .delay(0.3),
-                                    value: showBlocks
-                                )
-                            
-                            // Stylized leaves
-                            VStack(spacing: -8) {
-                                HStack(spacing: -4) {
-                                    LeafShape()
-                                        .fill(GameTheme.Colors.grassSecondary)
-                                        .frame(width: 16, height: 24)
-                                        .rotationEffect(.degrees(rotateLeaves ? 15 : -15))
-                                    
-                                    LeafShape()
-                                        .fill(GameTheme.Colors.grassPrimary)
-                                        .frame(width: 18, height: 26)
-                                        .rotationEffect(.degrees(rotateLeaves ? -10 : 10))
-                                }
-                                
-                                LeafShape()
-                                    .fill(GameTheme.Colors.grassTertiary)
-                                    .frame(width: 14, height: 20)
-                                    .rotationEffect(.degrees(rotateLeaves ? 5 : -5))
-                            }
-                            .scaleEffect(showBlocks ? 1.0 : 0.1)
-                            .animation(
-                                .spring(response: 0.8, dampingFraction: 0.5)
-                                .delay(0.5),
-                                value: showBlocks
-                            )
-                            .animation(
-                                .easeInOut(duration: 2.0)
-                                .repeatForever(autoreverses: true),
-                                value: rotateLeaves
-                            )
-                        }
-                    }
-                    .padding(.horizontal, 20)
+                    // App Icon
+                    Image("LaunchIcon")
+                        .resizable()
+                        .aspectRatio(contentMode: .fit)
+                        .frame(width: 180, height: 180)
+                        .cornerRadius(40)
+                        .shadow(color: GameTheme.Colors.cardShadow, radius: 20, x: 0, y: 10)
+                        .scaleEffect(showIcon ? 1.0 : 0.5)
+                        .opacity(showIcon ? 1.0 : 0.0)
+                        .animation(
+                            .spring(response: 0.8, dampingFraction: 0.6)
+                            .delay(0.3),
+                            value: showIcon
+                        )
                     
                     // App title
                     VStack(spacing: 8) {
@@ -179,36 +110,8 @@ struct LaunchScreen: View {
         }
         .onAppear {
             isAnimated = true
-            showBlocks = true
-            rotateLeaves = true
+            showIcon = true
         }
-    }
-}
-
-// Custom leaf shape
-struct LeafShape: Shape {
-    func path(in rect: CGRect) -> Path {
-        var path = Path()
-        
-        let width = rect.width
-        let height = rect.height
-        
-        // Start at bottom center (stem)
-        path.move(to: CGPoint(x: width * 0.5, y: height))
-        
-        // Left curve to top
-        path.addQuadCurve(
-            to: CGPoint(x: width * 0.5, y: height * 0.1),
-            control: CGPoint(x: width * 0.1, y: height * 0.6)
-        )
-        
-        // Right curve back to bottom
-        path.addQuadCurve(
-            to: CGPoint(x: width * 0.5, y: height),
-            control: CGPoint(x: width * 0.9, y: height * 0.6)
-        )
-        
-        return path
     }
 }
 
