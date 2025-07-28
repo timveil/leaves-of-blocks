@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Main gradient -->
+    <linearGradient id="blockGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#E6B31A"/>
+      <stop offset="100%" stop-color="#E6801A"/>
+    </linearGradient>
+    
+    <!-- Grid background -->
+    <linearGradient id="gridBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#26190D"/>
+      <stop offset="100%" stop-color="#1A1008"/>
+    </linearGradient>
+    
+    <!-- Drop shadow -->
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="8" flood-color="#000000" flood-opacity="0.3" stdDeviation="8"/>
+    </filter>
+  </defs>
+  
+  <!-- Background transparent for dark mode support -->
+  <rect width="512" height="512" fill="transparent"/>
+  
+  <!-- Letter "L" made of blocks - positioned to fit snugly against B -->
+  <g filter="url(#shadow)">
+    <!-- Vertical part of L -->
+    <rect x="210" y="140" width="60" height="60" rx="10" fill="url(#blockGrad)" stroke="#F2E6CC" stroke-width="2"/>
+    <rect x="210" y="210" width="60" height="60" rx="10" fill="url(#blockGrad)" stroke="#F2E6CC" stroke-width="2"/>
+    <rect x="210" y="280" width="60" height="60" rx="10" fill="url(#blockGrad)" stroke="#F2E6CC" stroke-width="2"/>
+    <!-- Horizontal part of L -->
+    <rect x="280" y="280" width="60" height="60" rx="10" fill="url(#blockGrad)" stroke="#F2E6CC" stroke-width="2"/>
+  </g>
+  
+  <!-- Letter "B" made of blocks - bottom-left positioned just above L's bottom-right -->
+  <g filter="url(#shadow)">
+    <!-- Vertical spine of B -->
+    <rect x="280" y="210" width="60" height="60" rx="10" fill="#CC331A" stroke="#F2E6CC" stroke-width="2"/>
+    <rect x="280" y="140" width="60" height="60" rx="10" fill="#CC331A" stroke="#F2E6CC" stroke-width="2"/>
+    <rect x="280" y="70" width="60" height="60" rx="10" fill="#CC331A" stroke="#F2E6CC" stroke-width="2"/>
+    <!-- Top horizontal of B -->
+    <rect x="350" y="70" width="60" height="60" rx="10" fill="#CC331A" stroke="#F2E6CC" stroke-width="2"/>
+    <!-- Middle horizontal of B -->
+    <rect x="350" y="140" width="60" height="60" rx="10" fill="#CC331A" stroke="#F2E6CC" stroke-width="2"/>
+    <!-- Bottom horizontal of B -->
+    <rect x="350" y="210" width="60" height="60" rx="10" fill="#CC331A" stroke="#F2E6CC" stroke-width="2"/>
+  </g>
+</svg>
