@@ -49,6 +49,15 @@ struct GameHistoryView: View {
             // Background
             GameBackgroundView()
             
+            // Grass at bottom (lowest z-index)
+            VStack {
+                Spacer()
+                BlockGrassView()
+                    .ignoresSafeArea(.all, edges: .bottom)
+            }
+            .zIndex(0)
+            
+            // Content layer
             VStack(spacing: GameTheme.Layout.mediumSpacing) {
                 // Header
                 HStack {
@@ -89,6 +98,7 @@ struct GameHistoryView: View {
                     .padding(.bottom, GameTheme.Layout.extraLargePadding)
                 }
             }
+            .zIndex(1)
         }
         .ignoresSafeArea(edges: .bottom)
         .onAppear {

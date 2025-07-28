@@ -31,6 +31,15 @@ struct LaunchScreen: View {
                 }
             }
             
+            // Grass at bottom (lowest z-index)
+            VStack {
+                Spacer()
+                BlockGrassView()
+                    .ignoresSafeArea(.all, edges: .bottom)
+            }
+            .zIndex(0)
+            
+            // Content layer
             VStack(spacing: 40) {
                 Spacer()
                 
@@ -105,8 +114,9 @@ struct LaunchScreen: View {
                             value: isAnimated
                         )
                 }
-                .padding(.bottom, 50)
+                .padding(.bottom, 120)
             }
+            .zIndex(1)
         }
         .onAppear {
             isAnimated = true

@@ -17,6 +17,15 @@ struct AboutView: View {
             // Background
             GameBackgroundView()
             
+            // Grass at bottom (lowest z-index)
+            VStack {
+                Spacer()
+                BlockGrassView()
+                    .ignoresSafeArea(.all, edges: .bottom)
+            }
+            .zIndex(0)
+            
+            // Content layer
             ScrollView {
                 VStack(spacing: GameTheme.Layout.largePadding) {
                     // Header
@@ -145,8 +154,9 @@ struct AboutView: View {
                 }
                 .padding(.horizontal, GameTheme.Layout.largePadding)
             }
+            .zIndex(1)
             
-            // Close button
+            // Close button (highest z-index)
             VStack {
                 HStack {
                     Spacer()
@@ -167,6 +177,7 @@ struct AboutView: View {
                 
                 Spacer()
             }
+            .zIndex(2)
         }
         .ignoresSafeArea(edges: .bottom)
     }
