@@ -21,55 +21,10 @@ struct AboutView: View {
                 VStack(spacing: GameTheme.Layout.largePadding) {
                     // Header
                     VStack(spacing: GameTheme.Layout.mediumSpacing) {
-                        // App Icon or Logo representation
-                        VStack(spacing: GameTheme.Layout.smallSpacing) {
-                            HStack(spacing: 8) {
-                                // Represent the app icon with blocks
-                                RoundedRectangle(cornerRadius: 8)
-                                    .fill(GameTheme.Colors.blockOrange)
-                                    .frame(width: 40, height: 40)
-                                
-                                VStack(spacing: 4) {
-                                    RoundedRectangle(cornerRadius: 8)
-                                        .fill(Color(red: 0.3, green: 0.7, blue: 0.6))
-                                        .frame(width: 40, height: 40)
-                                    
-                                    RoundedRectangle(cornerRadius: 8)
-                                        .fill(GameTheme.Colors.blockYellow)
-                                        .frame(width: 40, height: 40)
-                                }
-                                
-                                ZStack {
-                                    RoundedRectangle(cornerRadius: 8)
-                                        .fill(GameTheme.Colors.blockGreen)
-                                        .frame(width: 40, height: 40)
-                                    
-                                    // Simple leaf representation
-                                    VStack(spacing: -4) {
-                                        HStack(spacing: -2) {
-                                            Ellipse()
-                                                .fill(GameTheme.Colors.grassSecondary)
-                                                .frame(width: 10, height: 16)
-                                                .rotationEffect(.degrees(-15))
-                                            
-                                            Ellipse()
-                                                .fill(GameTheme.Colors.grassPrimary)
-                                                .frame(width: 12, height: 18)
-                                                .rotationEffect(.degrees(10))
-                                        }
-                                        
-                                        Ellipse()
-                                            .fill(GameTheme.Colors.grassTertiary)
-                                            .frame(width: 8, height: 14)
-                                    }
-                                }
-                            }
-                        }
-                        .padding(.top, GameTheme.Layout.largePadding)
-                        
                         Text("Leaves of Blocks")
                             .font(GameTheme.Typography.title)
                             .foregroundStyle(GameTheme.Gradients.text)
+                            .padding(.top, GameTheme.Layout.largePadding)
                         
                         Text(appVersion)
                             .font(GameTheme.Typography.captionFont)
@@ -99,6 +54,7 @@ struct AboutView: View {
                                     .font(GameTheme.Typography.bodyFont)
                                     .foregroundColor(GameTheme.Colors.secondaryText)
                                     .lineSpacing(4)
+                                    .padding(.bottom, GameTheme.Layout.mediumSpacing)
                                 
                                 // Styled quote
                                 VStack(alignment: .leading, spacing: GameTheme.Layout.smallSpacing) {
@@ -148,6 +104,7 @@ struct AboutView: View {
                                 )
                             }
                         }
+                        .frame(maxWidth: .infinity, alignment: .leading)
                         .padding(GameTheme.Layout.largePadding)
                         .background(
                             RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
@@ -231,6 +188,7 @@ struct AboutSectionView: View {
                 .lineSpacing(4)
                 .fixedSize(horizontal: false, vertical: true)
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
         .padding(GameTheme.Layout.largePadding)
         .background(
             RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)

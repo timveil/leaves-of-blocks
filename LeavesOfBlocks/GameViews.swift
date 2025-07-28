@@ -1066,7 +1066,7 @@ struct GameHomeView: View {
                 VStack(spacing: 0) {
                     // Main content area
                     VStack(spacing: GameTheme.Layout.extraLargeSpacing) {
-                        Spacer()
+                        Spacer(minLength: 60)
                         
                         // High Score Display - Now tappable for history
                         Button(action: onShowHistory) {
@@ -1103,7 +1103,7 @@ struct GameHomeView: View {
                         }
                         .buttonStyle(PlainButtonStyle())
                         
-                        Spacer()
+                        Spacer(minLength: 20)
                         
                         // Difficulty Selection
                         DifficultySelectionView(
@@ -1111,7 +1111,7 @@ struct GameHomeView: View {
                             onStartGame: onStartGame
                         )
                         
-                        Spacer()
+                        Spacer(minLength: 20)
                     }
                     .padding(.horizontal, GameTheme.Layout.extraLargePadding)
                     .padding(.top, GameTheme.Layout.extraLargePadding)
