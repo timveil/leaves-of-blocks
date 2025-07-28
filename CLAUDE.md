@@ -131,7 +131,7 @@ The project includes a fully integrated App Clip target:
 The project hosts documentation at the repository's GitHub Pages URL:
 
 ### Site Content
-- **Privacy Policy**: `docs/index.md` - Comprehensive privacy policy for App Store submission
+- **Privacy Policy**: `docs/index.html` - Styled HTML privacy policy with autumn theme matching the app
 - **CNAME Files**: Domain configuration in both `docs/CNAME` and root `CNAME`
 
 ### Privacy Policy Highlights
@@ -139,6 +139,12 @@ The project hosts documentation at the repository's GitHub Pages URL:
 - Local-only storage (UserDefaults and Core Data)
 - COPPA compliant
 - Ready for App Store privacy labels
+
+### Site Styling Guidelines
+- Uses autumn-themed colors from `Theme.swift` (deep browns, golden ambers, burnt oranges)
+- Professional, clean design without decorative emojis
+- Responsive layout optimized for all devices
+- Card-based design with rounded corners and gradients
 
 ## Project File Structure
 
