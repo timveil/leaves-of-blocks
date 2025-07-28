@@ -104,7 +104,7 @@ struct AboutView: View {
                         AboutSectionView(
                             title: "Creator",
                             content: """
-                            Developed with passion by Timothy Veil, a software engineer who believes in creating beautiful, accessible games that bring moments of joy to everyday life.
+                            Developed with passion by Tim Veil, a software engineer and dad who believes in creating beautiful, accessible games that bring moments of joy to everyday life.
                             
                             Built entirely with SwiftUI, this game represents a commitment to crafting polished experiences that feel natural on iOS devices.
                             """
