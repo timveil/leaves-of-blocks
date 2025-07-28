@@ -10,16 +10,24 @@ This is a SwiftUI iOS game called "Leaves of Blocks" - a Block Blast-style puzzl
 
 ### Main App Commands
 - **Build**: `xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "LeavesOfBlocks" build`
-- **Test All**: `xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "LeavesOfBlocks" test -destination 'platform=iOS Simulator,name=iPhone 16 Pro'`
-- **Unit Tests Only**: `xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "LeavesOfBlocks" test -destination 'platform=iOS Simulator,name=iPhone 16 Pro' -only-testing:"LeavesOfBlocksTests"`
-- **UI Tests Only**: `xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "LeavesOfBlocks" test -destination 'platform=iOS Simulator,name=iPhone 16 Pro' -only-testing:"LeavesOfBlocksUITests"`
+- **Build for Simulator**: `xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "LeavesOfBlocks" build -destination 'platform=iOS Simulator,name=iPhone 16'`
+- **Test All**: `xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "LeavesOfBlocks" test -destination 'platform=iOS Simulator,name=iPhone 16'`
+- **Unit Tests Only**: `xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "LeavesOfBlocks" test -destination 'platform=iOS Simulator,name=iPhone 16' -only-testing:"LeavesOfBlocksTests"`
+- **UI Tests Only**: `xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "LeavesOfBlocks" test -destination 'platform=iOS Simulator,name=iPhone 16' -only-testing:"LeavesOfBlocksUITests"`
 - **Clean Build**: `xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "LeavesOfBlocks" clean build`
 - **Archive for Release**: `xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "LeavesOfBlocks" -destination "generic/platform=iOS" archive`
-- **Run Single Test**: `xcodebuild test -project "LeavesOfBlocks.xcodeproj" -scheme "LeavesOfBlocks" -destination 'platform=iOS Simulator,name=iPhone 16 Pro' -only-testing:"LeavesOfBlocksTests/GameLogicTests/testBlockPlacement"`
+- **Run Single Test**: `xcodebuild test -project "LeavesOfBlocks.xcodeproj" -scheme "LeavesOfBlocks" -destination 'platform=iOS Simulator,name=iPhone 16' -only-testing:"LeavesOfBlocksTests/GameLogicTests/testBlockPlacement"`
 
 ### App Clip Commands
 - **Build App Clip**: `xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "LeavesOfBlocksAppClip" build`
-- **Test App Clip**: `xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "LeavesOfBlocksAppClip" test -destination 'platform=iOS Simulator,name=iPhone 16 Pro'`
+- **Test App Clip**: `xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "LeavesOfBlocksAppClip" test -destination 'platform=iOS Simulator,name=iPhone 16'`
+
+### Build Troubleshooting
+- **Available Simulators**: Current system has iPhone 16, iPhone 16 Plus, iPhone 16 Pro Max, iPhone 16e, and various iPad simulators
+- **Simulator Issues**: If "iPhone 16 Pro" is not found, use "iPhone 16" instead
+- **Build Errors**: Always check for missing Typography properties (e.g., `buttonFont` doesn't exist, use `bodyFont` instead)
+- **Quick Error Check**: Use `xcodebuild ... 2>&1 | grep -A 5 -B 5 "error:"` to isolate compilation errors
+- **Success Verification**: Build output should end with "** BUILD SUCCEEDED **"
 
 ### CI/CD
 - GitHub Actions workflows in `.github/workflows/`

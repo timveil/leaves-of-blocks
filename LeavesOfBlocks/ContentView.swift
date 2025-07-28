@@ -13,6 +13,7 @@ enum AppScreen {
     case summary(GameSession?)
     case about
     case history
+    case howToPlay
 }
 
 struct ContentView: View {
@@ -39,6 +40,11 @@ struct ContentView: View {
                     onShowHistory: {
                         withAnimation(.easeInOut) {
                             currentScreen = .history
+                        }
+                    },
+                    onShowHowToPlay: {
+                        withAnimation(.easeInOut) {
+                            currentScreen = .howToPlay
                         }
                     }
                 )
@@ -97,6 +103,17 @@ struct ContentView: View {
                     onSelectSession: { session in
                         withAnimation(.easeInOut) {
                             currentScreen = .summary(session)
+                        }
+                    }
+                )
+                .navigationBarHidden(true)
+                .ignoresSafeArea(.container, edges: [])
+                
+            case .howToPlay:
+                HowToPlayView(
+                    onDismiss: {
+                        withAnimation(.easeInOut) {
+                            currentScreen = .home
                         }
                     }
                 )

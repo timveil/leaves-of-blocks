@@ -1054,6 +1054,7 @@ struct GameHomeView: View {
     let onStartGame: (DifficultyMode) -> Void
     let onShowAbout: () -> Void
     let onShowHistory: () -> Void
+    let onShowHowToPlay: () -> Void
     
     @State private var selectedDifficulty: DifficultyMode = .moderate
     
@@ -1120,11 +1121,24 @@ struct GameHomeView: View {
                         .ignoresSafeArea(.all, edges: .bottom)
                 }
                 
-                // About button overlay - top right
+                // Help and About button overlay - top right
                 VStack {
-                    HStack {
+                    HStack(spacing: GameTheme.Layout.mediumPadding) {
                         Spacer()
                         
+                        // Help button
+                        Button(action: onShowHowToPlay) {
+                            Image(systemName: "questionmark.circle")
+                                .font(.system(size: 28, weight: .medium))
+                                .foregroundColor(GameTheme.Colors.primaryText)
+                                .background(
+                                    Circle()
+                                        .fill(GameTheme.Colors.primaryBackground.opacity(0.7))
+                                        .frame(width: 44, height: 44)
+                                )
+                        }
+                        
+                        // About button
                         Button(action: onShowAbout) {
                             Image(systemName: "info.circle")
                                 .font(.system(size: 28, weight: .medium))
@@ -1135,9 +1149,9 @@ struct GameHomeView: View {
                                         .frame(width: 44, height: 44)
                                 )
                         }
-                        .padding(.trailing, GameTheme.Layout.largePadding)
-                        .padding(.top, GameTheme.Layout.mediumPadding)
                     }
+                    .padding(.trailing, GameTheme.Layout.largePadding)
+                    .padding(.top, GameTheme.Layout.mediumPadding)
                     
                     Spacer()
                 }

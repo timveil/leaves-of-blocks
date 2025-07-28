@@ -1,3 +1,4 @@
+
 [![iOS Build and Test](https://github.com/timveil/leaves-of-blocks/actions/workflows/ios.yml/badge.svg)](https://github.com/timveil/leaves-of-blocks/actions/workflows/ios.yml)
 [![Xcode - Build and Analyze](https://github.com/timveil/leaves-of-blocks/actions/workflows/objective-c-xcode.yml/badge.svg)](https://github.com/timveil/leaves-of-blocks/actions/workflows/objective-c-xcode.yml)
 
@@ -12,6 +13,7 @@ A SwiftUI iOS puzzle game inspired by Block Blast, featuring autumn-themed visua
 - 📊 Progressive difficulty system (Easy, Moderate, Hard)
 - 🏆 High score tracking with persistent storage
 - 🎯 Combo scoring system for clearing multiple lines
+- 📖 Interactive "How to Play" guide with game instructions
 - 📱 Optimized for iPhone (iOS 18.5+)
 
 ## Requirements
@@ -43,26 +45,28 @@ The project includes both unit tests (Swift Testing framework) and UI tests (XCT
 
 ### Run All Tests
 ```bash
-xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "LeavesOfBlocks" test -destination 'platform=iOS Simulator,name=iPhone 16 Pro'
+xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "LeavesOfBlocks" test -destination 'platform=iOS Simulator,name=iPhone 16'
 ```
 
 ### Run Unit Tests Only
 ```bash
-xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "LeavesOfBlocks" test -destination 'platform=iOS Simulator,name=iPhone 16 Pro' -only-testing:"LeavesOfBlocksTests"
+xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "LeavesOfBlocks" test -destination 'platform=iOS Simulator,name=iPhone 16' -only-testing:"LeavesOfBlocksTests"
 ```
 
 ### Run UI Tests Only
 ```bash
-xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "LeavesOfBlocks" test -destination 'platform=iOS Simulator,name=iPhone 16 Pro' -only-testing:"LeavesOfBlocksUITests"
+xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "LeavesOfBlocks" test -destination 'platform=iOS Simulator,name=iPhone 16' -only-testing:"LeavesOfBlocksUITests"
 ```
 
 ## Deployment
 
 ### CI/CD
 The project includes GitHub Actions workflows for automated builds and tests:
+- **iOS Build and Test** (`ios.yml`): Builds and tests using iOS Simulator  
+- **Xcode Build and Analyze** (`objective-c-xcode.yml`): Clean build with static analysis
 - Uses Xcode 16.2 on macOS latest runner
-- Automatically creates iPhone 16 Pro simulator for testing
-- Runs on push and pull requests
+- Automatically creates iPhone 16 simulator for testing
+- Runs on push to main and pull requests
 
 ### Manual Deployment
 1. Archive the app in Xcode: Product → Archive
@@ -93,7 +97,7 @@ xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "LeavesOfBlocks" clean bu
 1. Select your project in the navigator
 2. Go to **Signing & Capabilities** tab
 3. Set **Team** to your Apple Developer Team
-4. Ensure **Bundle Identifier** matches your App Store Connect app: `timothy.veil.Leaves-of-Blocks`
+4. Ensure **Bundle Identifier** matches your App Store Connect app: `timothy.veil.LeavesOfBlocks`
 5. Set **Signing** to "Automatically manage signing"
 
 ##### 2. Archive Your App
@@ -241,20 +245,35 @@ LeavesOfBlocks/               # Main source directory
 ├── Theme.swift               # Autumn theme and styling
 ├── Configuration.swift       # App configuration and feature flags
 ├── HighScoreManager.swift    # Score persistence
+├── CoreDataManager.swift     # Core Data stack management
 ├── UIComponents.swift        # Reusable UI components
 ├── Extensions.swift          # Swift extensions
-├── Leaves_of_BlocksApp.swift # App entry point
+├── LeavesOfBlocksApp.swift   # App entry point
 ├── ContentView.swift         # Navigation hub
 ├── AboutView.swift           # About screen
+├── HowToPlayView.swift       # How to play instructions
 ├── GameHistoryView.swift     # Game history screen
 ├── LaunchScreen.swift        # Custom launch screen
 ├── TestHelpers.swift         # Testing utilities
+├── GameRecord+CoreDataClass.swift      # Core Data entity class
+├── GameRecord+CoreDataProperties.swift # Core Data entity properties
+├── LeavesOfBlocks.xcdatamodeld/         # Core Data model
 └── Assets.xcassets/          # App icons and assets
 LeavesOfBlocksTests/          # Unit tests (Swift Testing)
 LeavesOfBlocksUITests/        # UI automation tests (XCTest)
+LeavesOfBlocksAppClip/        # App Clip target
+LeavesOfBlocksAppClipTests/   # App Clip unit tests
+LeavesOfBlocksAppClipUITests/ # App Clip UI tests
 ```
 
 ## Game Mechanics
+
+### Navigation
+- **Home Screen**: Select difficulty and start game, access how-to-play guide, view high scores, and game history
+- **Game Screen**: Main gameplay with 8x8 grid and drag-and-drop blocks
+- **How to Play**: Interactive guide explaining game rules, scoring, and pro tips
+- **About Screen**: App information and credits
+- **Game History**: View past game sessions and detailed statistics
 
 ### Gameplay
 - Drag blocks from the bottom container to the 8x8 grid
@@ -277,7 +296,7 @@ LeavesOfBlocksUITests/        # UI automation tests (XCTest)
 - **Architecture**: ObservableObject/Published pattern for state management
 - **Minimum iOS**: 18.5
 - **Swift Version**: 5.0
-- **Bundle ID**: `timothy.veil.Leaves-of-Blocks`
+- **Bundle ID**: `timothy.veil.LeavesOfBlocks`
 
 ## License
 
