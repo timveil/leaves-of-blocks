@@ -615,7 +615,7 @@ struct GameSummaryView: View {
                 
                 VStack(spacing: 0) {
                     // Header section
-                    VStack(spacing: GameTheme.Layout.mediumSpacing) {
+                    VStack(spacing: GameTheme.Layout.largeSpacing) {
                         if isNewHighScore {
                             Text("🏆 NEW HIGH SCORE! 🏆")
                                 .font(GameTheme.Typography.titleFont)
@@ -632,7 +632,7 @@ struct GameSummaryView: View {
                                 }
                         }
                         
-                        VStack(spacing: GameTheme.Layout.smallSpacing) {
+                        VStack(spacing: GameTheme.Layout.mediumSpacing) {
                             Text(historicalSession != nil ? "Past Game Summary" : "Game Summary")
                                 .font(GameTheme.Typography.title)
                                 .foregroundColor(GameTheme.Colors.primaryText)
@@ -655,9 +655,9 @@ struct GameSummaryView: View {
                             }
                         }
                     }
-                    .padding(.top, GameTheme.Layout.mediumPadding)
+                    .padding(.top, GameTheme.Layout.extraLargePadding)
                     
-                    Spacer(minLength: GameTheme.Layout.largeSpacing)
+                    Spacer(minLength: GameTheme.Layout.extraLargeSpacing)
                     
                     // Final Score - centered and prominent
                     VStack(spacing: GameTheme.Layout.smallSpacing) {
@@ -673,7 +673,7 @@ struct GameSummaryView: View {
                             .minimumScaleFactor(0.7)
                     }
                     
-                    Spacer(minLength: GameTheme.Layout.largeSpacing)
+                    Spacer(minLength: GameTheme.Layout.extraLargeSpacing)
                     
                     // Statistics Cards - 2x2 grid
                     LazyVGrid(columns: [
