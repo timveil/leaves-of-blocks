@@ -8,139 +8,133 @@ struct HowToPlayView: View {
             GameBackgroundView()
             
             ScrollView {
-                VStack(spacing: GameTheme.Layout.extraLargeSpacing) {
+                VStack(spacing: GameTheme.Layout.largePadding) {
                     // Header
                     VStack(spacing: GameTheme.Layout.mediumSpacing) {
                         Text("How to Play")
                             .font(GameTheme.Typography.title)
-                            .foregroundColor(GameTheme.Colors.primaryText)
+                            .foregroundStyle(GameTheme.Gradients.text)
+                            .padding(.top, GameTheme.Layout.largePadding)
                         
                         Text("Master the art of block placement!")
-                            .font(GameTheme.Typography.bodyFont)
+                            .font(GameTheme.Typography.captionFont)
                             .foregroundColor(GameTheme.Colors.secondaryText)
                             .multilineTextAlignment(.center)
                     }
-                    .padding(.top, GameTheme.Layout.extraLargePadding)
                     
-                    // Game Rules
-                    InstructionCard(
-                        icon: "square.grid.3x3",
-                        title: "The Grid",
-                        content: "You have an 8×8 grid where you'll place block shapes. Fill complete rows or columns to clear them and earn points."
-                    )
-                    
-                    InstructionCard(
-                        icon: "hand.draw",
-                        title: "Drag & Drop",
-                        content: "Drag block shapes from the bottom area onto the grid. Blocks must fit completely within the grid boundaries."
-                    )
-                    
-                    InstructionCard(
-                        icon: "line.horizontal.3",
-                        title: "Clear Lines",
-                        content: "Complete horizontal rows or vertical columns disappear, earning you 100 points per line. Clear multiple lines at once for combo bonuses!"
-                    )
-                    
-                    // Scoring Card with Bold Points
-                    HStack(alignment: .top, spacing: GameTheme.Layout.largePadding) {
-                        // Icon
-                        Image(systemName: "trophy")
-                            .font(.system(size: 24, weight: .medium))
-                            .foregroundColor(GameTheme.Colors.accent)
-                            .frame(width: 32, height: 32)
+                    // Content sections
+                    VStack(spacing: GameTheme.Layout.sectionSpacing) {
+                        // Game Rules
+                        InstructionSection(
+                            title: "The Grid",
+                            content: "You have an 8×8 grid where you'll place block shapes. Fill complete rows or columns to clear them and earn points."
+                        )
                         
-                        // Content
+                        InstructionSection(
+                            title: "Drag & Drop",
+                            content: "Drag block shapes from the bottom area onto the grid. Blocks must fit completely within the grid boundaries."
+                        )
+                        
+                        InstructionSection(
+                            title: "Clear Lines",
+                            content: "Complete horizontal rows or vertical columns disappear, earning you 100 points per line. Clear multiple lines at once for combo bonuses!"
+                        )
+                    
+                    // Scoring Section
+                    VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
+                        Text("Scoring")
+                            .font(GameTheme.Typography.headlineFont)
+                            .foregroundColor(GameTheme.Colors.primaryText)
+                        
                         VStack(alignment: .leading, spacing: GameTheme.Layout.smallSpacing) {
-                            Text("Scoring")
-                                .font(GameTheme.Typography.titleFont)
-                                .foregroundColor(GameTheme.Colors.primaryText)
+                            HStack(alignment: .top, spacing: 4) {
+                                Text("•")
+                                    .font(GameTheme.Typography.bodyFont)
+                                    .foregroundColor(GameTheme.Colors.secondaryText)
+                                Text("Placing blocks: ")
+                                    .font(GameTheme.Typography.bodyFont)
+                                    .foregroundColor(GameTheme.Colors.secondaryText) +
+                                Text("10 points")
+                                    .font(GameTheme.Typography.bodyFont)
+                                    .fontWeight(.bold)
+                                    .foregroundColor(GameTheme.Colors.accent) +
+                                Text(" per cell")
+                                    .font(GameTheme.Typography.bodyFont)
+                                    .foregroundColor(GameTheme.Colors.secondaryText)
+                            }
                             
-                            VStack(alignment: .leading, spacing: GameTheme.Layout.smallSpacing) {
-                                HStack(alignment: .top, spacing: 4) {
-                                    Text("•")
-                                        .font(GameTheme.Typography.bodyFont)
-                                        .foregroundColor(GameTheme.Colors.secondaryText)
-                                    Text("Placing blocks: ")
-                                        .font(GameTheme.Typography.bodyFont)
-                                        .foregroundColor(GameTheme.Colors.secondaryText) +
-                                    Text("10 points")
-                                        .font(GameTheme.Typography.bodyFont)
-                                        .fontWeight(.bold)
-                                        .foregroundColor(GameTheme.Colors.accent) +
-                                    Text(" per cell")
-                                        .font(GameTheme.Typography.bodyFont)
-                                        .foregroundColor(GameTheme.Colors.secondaryText)
-                                }
-                                
-                                HStack(alignment: .top, spacing: 4) {
-                                    Text("•")
-                                        .font(GameTheme.Typography.bodyFont)
-                                        .foregroundColor(GameTheme.Colors.secondaryText)
-                                    Text("Clearing lines: ")
-                                        .font(GameTheme.Typography.bodyFont)
-                                        .foregroundColor(GameTheme.Colors.secondaryText) +
-                                    Text("100 points")
-                                        .font(GameTheme.Typography.bodyFont)
-                                        .fontWeight(.bold)
-                                        .foregroundColor(GameTheme.Colors.accent) +
-                                    Text(" per line")
-                                        .font(GameTheme.Typography.bodyFont)
-                                        .foregroundColor(GameTheme.Colors.secondaryText)
-                                }
-                                
-                                HStack(alignment: .top, spacing: 4) {
-                                    Text("•")
-                                        .font(GameTheme.Typography.bodyFont)
-                                        .foregroundColor(GameTheme.Colors.secondaryText)
-                                    Text("Combo bonus: ")
-                                        .font(GameTheme.Typography.bodyFont)
-                                        .foregroundColor(GameTheme.Colors.secondaryText) +
-                                    Text("+50 points")
-                                        .font(GameTheme.Typography.bodyFont)
-                                        .fontWeight(.bold)
-                                        .foregroundColor(GameTheme.Colors.accent) +
-                                    Text(" for each additional line cleared simultaneously")
-                                        .font(GameTheme.Typography.bodyFont)
-                                        .foregroundColor(GameTheme.Colors.secondaryText)
-                                }
+                            HStack(alignment: .top, spacing: 4) {
+                                Text("•")
+                                    .font(GameTheme.Typography.bodyFont)
+                                    .foregroundColor(GameTheme.Colors.secondaryText)
+                                Text("Clearing lines: ")
+                                    .font(GameTheme.Typography.bodyFont)
+                                    .foregroundColor(GameTheme.Colors.secondaryText) +
+                                Text("100 points")
+                                    .font(GameTheme.Typography.bodyFont)
+                                    .fontWeight(.bold)
+                                    .foregroundColor(GameTheme.Colors.accent) +
+                                Text(" per line")
+                                    .font(GameTheme.Typography.bodyFont)
+                                    .foregroundColor(GameTheme.Colors.secondaryText)
+                            }
+                            
+                            HStack(alignment: .top, spacing: 4) {
+                                Text("•")
+                                    .font(GameTheme.Typography.bodyFont)
+                                    .foregroundColor(GameTheme.Colors.secondaryText)
+                                Text("Combo bonus: ")
+                                    .font(GameTheme.Typography.bodyFont)
+                                    .foregroundColor(GameTheme.Colors.secondaryText) +
+                                Text("+50 points")
+                                    .font(GameTheme.Typography.bodyFont)
+                                    .fontWeight(.bold)
+                                    .foregroundColor(GameTheme.Colors.accent) +
+                                Text(" for each additional line cleared simultaneously")
+                                    .font(GameTheme.Typography.bodyFont)
+                                    .foregroundColor(GameTheme.Colors.secondaryText)
                             }
                         }
-                        
-                        Spacer()
                     }
-                    .padding(GameTheme.Layout.extraLargePadding)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(GameTheme.Layout.largePadding)
                     .background(
                         RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
                             .fill(GameTheme.Colors.cardBackground)
                             .overlay(
                                 RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
-                                    .stroke(GameTheme.Colors.gridBorder.opacity(0.3), lineWidth: 1)
+                                    .stroke(
+                                        LinearGradient(
+                                            colors: GameTheme.Colors.cardBorderGradient,
+                                            startPoint: .topLeading,
+                                            endPoint: .bottomTrailing
+                                        ),
+                                        lineWidth: 2
+                                    )
+                            )
+                            .shadow(
+                                color: GameTheme.Colors.cardShadow,
+                                radius: GameTheme.Layout.shadowRadius,
+                                x: 0,
+                                y: GameTheme.Layout.shadowOffset
                             )
                     )
-                    .shadow(
-                        color: GameTheme.Colors.cardShadow,
-                        radius: 4,
-                        x: 0,
-                        y: 2
-                    )
                     
-                    InstructionCard(
-                        icon: "gamecontroller",
-                        title: "Game Over",
-                        content: "The game ends when none of your current blocks can be placed on the grid. Plan ahead to keep playing longer!"
-                    )
-                    
-                    InstructionCard(
-                        icon: "slider.horizontal.3",
-                        title: "Difficulty Modes",
-                        content: "• Easy: Smaller blocks appear more often\n• Moderate: Balanced block distribution\n• Hard: Larger, complex blocks are more common"
-                    )
-                    
-                    // Tips Section
-                    VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
-                        Text("💡 Pro Tips")
-                            .font(GameTheme.Typography.titleFont)
-                            .foregroundColor(GameTheme.Colors.accent)
+                        InstructionSection(
+                            title: "Game Over",
+                            content: "The game ends when none of your current blocks can be placed on the grid. Plan ahead to keep playing longer!"
+                        )
+                        
+                        InstructionSection(
+                            title: "Difficulty Modes",
+                            content: "• Easy: Smaller blocks appear more often\n• Moderate: Balanced block distribution\n• Hard: Larger, complex blocks are more common"
+                        )
+                        
+                        // Tips Section
+                        VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
+                        Text("Pro Tips")
+                            .font(GameTheme.Typography.headlineFont)
+                            .foregroundColor(GameTheme.Colors.primaryText)
                         
                         VStack(alignment: .leading, spacing: GameTheme.Layout.smallSpacing) {
                             TipRow(text: "Try to keep the grid as empty as possible")
@@ -150,15 +144,30 @@ struct HowToPlayView: View {
                             TipRow(text: "Plan ahead by considering all three available blocks")
                         }
                     }
-                    .padding(GameTheme.Layout.extraLargePadding)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .padding(GameTheme.Layout.largePadding)
                     .background(
                         RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
                             .fill(GameTheme.Colors.cardBackground)
                             .overlay(
                                 RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
-                                    .stroke(GameTheme.Colors.accent.opacity(0.3), lineWidth: 2)
+                                    .stroke(
+                                        LinearGradient(
+                                            colors: GameTheme.Colors.cardBorderGradient,
+                                            startPoint: .topLeading,
+                                            endPoint: .bottomTrailing
+                                        ),
+                                        lineWidth: 2
+                                    )
+                            )
+                            .shadow(
+                                color: GameTheme.Colors.cardShadow,
+                                radius: GameTheme.Layout.shadowRadius,
+                                x: 0,
+                                y: GameTheme.Layout.shadowOffset
                             )
                     )
+                    }
                     
                     // Ready to Play Button
                     Button(action: onDismiss) {
@@ -188,8 +197,10 @@ struct HowToPlayView: View {
                         )
                     }
                     .padding(.bottom, GameTheme.Layout.extraLargePadding)
+                    
+                    Spacer(minLength: GameTheme.Layout.extraLargePadding)
                 }
-                .padding(.horizontal, GameTheme.Layout.extraLargePadding)
+                .padding(.horizontal, GameTheme.Layout.largePadding)
             }
             
             // Close button overlay - top right
@@ -199,11 +210,11 @@ struct HowToPlayView: View {
                     
                     Button(action: onDismiss) {
                         Image(systemName: "xmark.circle.fill")
-                            .font(.system(size: 28, weight: .medium))
+                            .font(.system(size: 32, weight: .medium))
                             .foregroundColor(GameTheme.Colors.primaryText)
                             .background(
                                 Circle()
-                                    .fill(GameTheme.Colors.primaryBackground.opacity(0.7))
+                                    .fill(GameTheme.Colors.primaryBackground.opacity(0.8))
                                     .frame(width: 44, height: 44)
                             )
                     }
@@ -214,52 +225,48 @@ struct HowToPlayView: View {
                 Spacer()
             }
         }
-        .navigationBarHidden(true)
-        .ignoresSafeArea(.container, edges: [])
+        .ignoresSafeArea(edges: .bottom)
     }
 }
 
-struct InstructionCard: View {
-    let icon: String
+struct InstructionSection: View {
     let title: String
     let content: String
     
     var body: some View {
-        HStack(alignment: .top, spacing: GameTheme.Layout.largePadding) {
-            // Icon
-            Image(systemName: icon)
-                .font(.system(size: 24, weight: .medium))
-                .foregroundColor(GameTheme.Colors.accent)
-                .frame(width: 32, height: 32)
+        VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
+            Text(title)
+                .font(GameTheme.Typography.headlineFont)
+                .foregroundColor(GameTheme.Colors.primaryText)
             
-            // Content
-            VStack(alignment: .leading, spacing: GameTheme.Layout.smallSpacing) {
-                Text(title)
-                    .font(GameTheme.Typography.titleFont)
-                    .foregroundColor(GameTheme.Colors.primaryText)
-                
-                Text(content)
-                    .font(GameTheme.Typography.bodyFont)
-                    .foregroundColor(GameTheme.Colors.secondaryText)
-                    .fixedSize(horizontal: false, vertical: true)
-            }
-            
-            Spacer()
+            Text(content)
+                .font(GameTheme.Typography.bodyFont)
+                .foregroundColor(GameTheme.Colors.secondaryText)
+                .lineSpacing(4)
+                .fixedSize(horizontal: false, vertical: true)
         }
-        .padding(GameTheme.Layout.extraLargePadding)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding(GameTheme.Layout.largePadding)
         .background(
             RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
                 .fill(GameTheme.Colors.cardBackground)
                 .overlay(
                     RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
-                        .stroke(GameTheme.Colors.gridBorder.opacity(0.3), lineWidth: 1)
+                        .stroke(
+                            LinearGradient(
+                                colors: GameTheme.Colors.cardBorderGradient,
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            ),
+                            lineWidth: 2
+                        )
                 )
-        )
-        .shadow(
-            color: GameTheme.Colors.cardShadow,
-            radius: 4,
-            x: 0,
-            y: 2
+                .shadow(
+                    color: GameTheme.Colors.cardShadow,
+                    radius: GameTheme.Layout.shadowRadius,
+                    x: 0,
+                    y: GameTheme.Layout.shadowOffset
+                )
         )
     }
 }
