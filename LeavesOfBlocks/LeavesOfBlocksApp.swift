@@ -15,6 +15,10 @@ struct LeavesOfBlocksApp: App {
     var body: some Scene {
         WindowGroup {
             ZStack {
+                // Consistent background to prevent white flash
+                GameTheme.Gradients.background
+                    .ignoresSafeArea()
+                
                 if showLaunchScreen {
                     LaunchScreen()
                         .transition(.opacity)
@@ -24,7 +28,7 @@ struct LeavesOfBlocksApp: App {
                         .environment(\.managedObjectContext, coreDataManager.viewContext)
                 }
             }
-            .animation(.easeInOut(duration: 0.5), value: showLaunchScreen)
+            .animation(.easeInOut(duration: 0.8), value: showLaunchScreen)
             .onAppear {
                 // Show launch screen for 2.5 seconds
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
