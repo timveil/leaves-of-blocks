@@ -16,13 +16,11 @@ struct LoadingStateView: View {
                 .foregroundColor(GameTheme.Colors.secondaryText)
         }
         .padding(32)
-        .background(
-            RoundedRectangle(cornerRadius: GameTheme.Layout.mediumRadius)
-                .fill(GameTheme.Colors.blockBackground.opacity(0.9))
-                .overlay(
-                    RoundedRectangle(cornerRadius: GameTheme.Layout.mediumRadius)
-                        .stroke(GameTheme.Colors.gridBorder.opacity(0.3), lineWidth: 1)
-                )
+        .gameContainerStyle(
+            backgroundColor: GameTheme.Colors.blockBackground.opacity(0.9),
+            cornerRadius: GameTheme.Layout.mediumRadius,
+            borderColor: GameTheme.Colors.gridBorder.opacity(0.3),
+            borderWidth: 1
         )
     }
 }

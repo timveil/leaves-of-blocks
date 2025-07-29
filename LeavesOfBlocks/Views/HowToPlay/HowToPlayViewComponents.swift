@@ -20,27 +20,7 @@ struct InstructionSection: View {
         }
         .frame(maxWidth: .infinity, alignment: .leading)
         .padding(GameTheme.Layout.largePadding)
-        .background(
-            RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
-                .fill(GameTheme.Colors.cardBackground)
-                .overlay(
-                    RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
-                        .stroke(
-                            LinearGradient(
-                                colors: GameTheme.Colors.cardBorderGradient,
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            ),
-                            lineWidth: 2
-                        )
-                )
-                .shadow(
-                    color: GameTheme.Colors.cardShadow,
-                    radius: GameTheme.Layout.shadowRadius,
-                    x: 0,
-                    y: GameTheme.Layout.shadowOffset
-                )
-        )
+        .gameGradientCardStyle()
     }
 }
 
@@ -115,19 +95,7 @@ struct ScoringTableHeaderView: View {
         }
         .padding(.horizontal, GameTheme.Layout.largePadding)
         .padding(.vertical, GameTheme.Layout.mediumPadding)
-        .background(
-            UnevenRoundedRectangle(
-                topLeadingRadius: GameTheme.Layout.cardCornerRadius,
-                topTrailingRadius: GameTheme.Layout.cardCornerRadius
-            )
-            .fill(GameTheme.Colors.accent.opacity(0.15))
-        )
-        .overlay(
-            Rectangle()
-                .frame(height: 1)
-                .foregroundColor(GameTheme.Colors.gridBorder.opacity(0.3)),
-            alignment: .bottom
-        )
+        .gameTableHeaderStyle()
     }
 }
 
@@ -150,19 +118,7 @@ struct DifficultyTableHeaderView: View {
         }
         .padding(.horizontal, GameTheme.Layout.largePadding)
         .padding(.vertical, GameTheme.Layout.mediumPadding)
-        .background(
-            UnevenRoundedRectangle(
-                topLeadingRadius: GameTheme.Layout.cardCornerRadius,
-                topTrailingRadius: GameTheme.Layout.cardCornerRadius
-            )
-            .fill(GameTheme.Colors.accent.opacity(0.15))
-        )
-        .overlay(
-            Rectangle()
-                .frame(height: 1)
-                .foregroundColor(GameTheme.Colors.gridBorder.opacity(0.3)),
-            alignment: .bottom
-        )
+        .gameTableHeaderStyle()
     }
 }
 

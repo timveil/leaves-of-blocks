@@ -27,13 +27,11 @@ struct ErrorStateView: View {
             }
         }
         .padding(32)
-        .background(
-            RoundedRectangle(cornerRadius: GameTheme.Layout.mediumRadius)
-                .fill(GameTheme.Colors.blockBackground.opacity(0.9))
-                .overlay(
-                    RoundedRectangle(cornerRadius: GameTheme.Layout.mediumRadius)
-                        .stroke(GameTheme.Colors.error.opacity(0.3), lineWidth: 2)
-                )
+        .gameContainerStyle(
+            backgroundColor: GameTheme.Colors.blockBackground.opacity(0.9),
+            cornerRadius: GameTheme.Layout.mediumRadius,
+            borderColor: GameTheme.Colors.error.opacity(0.3),
+            borderWidth: 2
         )
     }
 }

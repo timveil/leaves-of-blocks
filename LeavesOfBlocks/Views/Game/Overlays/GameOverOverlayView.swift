@@ -38,27 +38,9 @@ struct GameOverOverlayView: View {
                     }
                     .padding(.vertical, GameTheme.Layout.mediumPadding)
                     .frame(maxWidth: .infinity)
-                    .background(
-                        ZStack {
-                            // 3D depth background layers
-                            RoundedRectangle(cornerRadius: GameTheme.Layout.buttonCornerRadius)
-                                .fill(GameTheme.Colors.accent.opacity(0.15))
-                                .offset(x: 2, y: 2)
-                            
-                            RoundedRectangle(cornerRadius: GameTheme.Layout.buttonCornerRadius)
-                                .fill(GameTheme.Colors.accent.opacity(0.08))
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: GameTheme.Layout.buttonCornerRadius)
-                                        .stroke(
-                                            LinearGradient(
-                                                colors: [GameTheme.Colors.accent.opacity(0.4), GameTheme.Colors.accent.opacity(0.1)],
-                                                startPoint: .topLeading,
-                                                endPoint: .bottomTrailing
-                                            ),
-                                            lineWidth: 2
-                                        )
-                                )
-                        }
+                    .game3DCardStyle(
+                        cornerRadius: GameTheme.Layout.buttonCornerRadius,
+                        elevation: 6
                     )
                 }
                 
@@ -87,44 +69,9 @@ struct GameOverOverlayView: View {
             .padding(.vertical, GameTheme.Layout.largePadding)
             .padding(.horizontal, GameTheme.Layout.largePadding)
             .frame(maxWidth: .infinity)
-            .background(
-                ZStack {
-                    // Multiple shadow layers for deep 3D effect
-                    RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
-                        .fill(Color.black.opacity(0.1))
-                        .offset(x: 4, y: 6)
-                    
-                    RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
-                        .fill(Color.black.opacity(0.05))
-                        .offset(x: 2, y: 3)
-                    
-                    RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
-                        .fill(
-                            LinearGradient(
-                                colors: [
-                                    GameTheme.Colors.cardBackground.opacity(0.9),
-                                    GameTheme.Colors.cardBackground.opacity(0.6)
-                                ],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            )
-                        )
-                        .overlay(
-                            RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
-                                .stroke(
-                                    LinearGradient(
-                                        colors: [
-                                            Color.white.opacity(0.2),
-                                            Color.clear,
-                                            Color.black.opacity(0.1)
-                                        ],
-                                        startPoint: .topLeading,
-                                        endPoint: .bottomTrailing
-                                    ),
-                                    lineWidth: 1
-                                )
-                        )
-                }
+            .game3DCardStyle(
+                cornerRadius: GameTheme.Layout.cardCornerRadius,
+                elevation: 8
             )
             
             // Enhanced 3D button
@@ -144,45 +91,20 @@ struct GameOverOverlayView: View {
                 .padding(.horizontal, GameTheme.Layout.largePadding)
                 .padding(.vertical, GameTheme.Layout.mediumPadding)
                 .background(
-                    ZStack {
-                        // Deep shadow layers for 3D effect
-                        Capsule()
-                            .fill(Color.black.opacity(0.2))
-                            .offset(x: 0, y: 6)
-                        
-                        Capsule()
-                            .fill(Color.black.opacity(0.1))
-                            .offset(x: 0, y: 3)
-                        
-                        Capsule()
-                            .fill(
-                                LinearGradient(
-                                    colors: [
-                                        GameTheme.Colors.accent,
-                                        GameTheme.Colors.accent.opacity(0.8),
-                                        GameTheme.Colors.accent.opacity(0.6)
-                                    ],
-                                    startPoint: .topLeading,
-                                    endPoint: .bottomTrailing
-                                )
+                    Capsule()
+                        .fill(
+                            LinearGradient(
+                                colors: [
+                                    GameTheme.Colors.accent,
+                                    GameTheme.Colors.accent.opacity(0.8)
+                                ],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
                             )
-                            .overlay(
-                                Capsule()
-                                    .stroke(
-                                        LinearGradient(
-                                            colors: [
-                                                Color.white.opacity(0.3),
-                                                Color.clear,
-                                                Color.black.opacity(0.2)
-                                            ],
-                                            startPoint: .topLeading,
-                                            endPoint: .bottomTrailing
-                                        ),
-                                        lineWidth: 1
-                                    )
-                            )
-                            .shadow(color: GameTheme.Colors.accent.opacity(0.3), radius: 8, x: 0, y: 4)
-                    }
+                        )
+                        .shadow(color: .black.opacity(0.2), radius: 6, x: 0, y: 6)
+                        .shadow(color: .black.opacity(0.1), radius: 3, x: 0, y: 3)
+                        .shadow(color: GameTheme.Colors.accent.opacity(0.3), radius: 8, x: 0, y: 4)
                 )
             }
             .scaleEffect(buttonPressed ? 0.95 : 1.0)
@@ -196,45 +118,9 @@ struct GameOverOverlayView: View {
         .padding(.horizontal, GameTheme.Layout.largePadding)
         .padding(.vertical, GameTheme.Layout.extraLargePadding)
         .frame(maxWidth: 280) // Narrower width for iPhone visibility
-        .background(
-            ZStack {
-                // Multiple shadow layers for deep dialog 3D effect
-                RoundedRectangle(cornerRadius: GameTheme.Layout.overlayCornerRadius)
-                    .fill(Color.black.opacity(0.15))
-                    .offset(x: 0, y: 8)
-                
-                RoundedRectangle(cornerRadius: GameTheme.Layout.overlayCornerRadius)
-                    .fill(Color.black.opacity(0.08))
-                    .offset(x: 0, y: 4)
-                
-                RoundedRectangle(cornerRadius: GameTheme.Layout.overlayCornerRadius)
-                    .fill(
-                        LinearGradient(
-                            colors: [
-                                GameTheme.Colors.overlayBackground,
-                                GameTheme.Colors.overlayBackground.opacity(0.95)
-                            ],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    )
-                    .overlay(
-                        RoundedRectangle(cornerRadius: GameTheme.Layout.overlayCornerRadius)
-                            .stroke(
-                                LinearGradient(
-                                    colors: [
-                                        Color.white.opacity(0.2),
-                                        GameTheme.Colors.overlayBorderGradient[0],
-                                        GameTheme.Colors.overlayBorderGradient[1],
-                                        Color.black.opacity(0.1)
-                                    ],
-                                    startPoint: .topLeading,
-                                    endPoint: .bottomTrailing
-                                ),
-                                lineWidth: GameTheme.Layout.strokeWidth
-                            )
-                    )
-            }
+        .game3DCardStyle(
+            cornerRadius: GameTheme.Layout.overlayCornerRadius,
+            elevation: 12
         )
         .padding(.horizontal, 40) // Ensure borders are visible on iPhone
         .scaleEffect(1.0)

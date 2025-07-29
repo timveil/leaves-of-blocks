@@ -193,59 +193,32 @@ struct GameSessionRow: View {
             // Stats row - more compact
             HStack {
                 HStack(spacing: GameTheme.Layout.mediumSpacing) {
-                    StatChip(label: "Blocks", value: "\(session.blocksPlaced)", color: GameTheme.Colors.blockBlue)
-                    StatChip(label: "Lines", value: "\(session.linesCleared)", color: GameTheme.Colors.blockGreen)
+                    GameStatChip(title: "Blocks", value: "\(session.blocksPlaced)", icon: "cube.fill", color: GameTheme.Colors.blockBlue, style: .compact)
+                    GameStatChip(title: "Lines", value: "\(session.linesCleared)", icon: "square.grid.3x3.fill", color: GameTheme.Colors.blockGreen, style: .compact)
                 }
                 
                 Spacer()
                 
-                // Difficulty badge
+                // Difficulty badge using new badge style
                 Text(session.difficulty.rawValue.uppercased())
                     .font(.system(size: 10, weight: .bold))
                     .foregroundColor(GameTheme.Colors.primaryBackground)
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 4)
-                    .background(
-                        Capsule()
-                            .fill(session.difficulty.color)
+                    .gameBadgeStyle(
+                        backgroundColor: session.difficulty.color,
+                        borderColor: session.difficulty.color,
+                        borderWidth: 0
                     )
             }
         }
         .padding(GameTheme.Layout.mediumPadding)
-        .background(
-            RoundedRectangle(cornerRadius: GameTheme.Layout.mediumRadius)
-                .fill(GameTheme.Colors.blockBackground.opacity(0.8))
-                .overlay(
-                    RoundedRectangle(cornerRadius: GameTheme.Layout.mediumRadius)
-                        .stroke(
-                            isHighScore ? GameTheme.Colors.accent.opacity(0.5) : GameTheme.Colors.gridBorder.opacity(0.3),
-                            lineWidth: isHighScore ? 2 : 1
-                        )
-                )
+        .gameContainerStyle(
+            backgroundColor: GameTheme.Colors.blockBackground.opacity(0.8),
+            cornerRadius: GameTheme.Layout.mediumRadius,
+            borderColor: isHighScore ? GameTheme.Colors.accent.opacity(0.5) : GameTheme.Colors.gridBorder.opacity(0.3),
+            borderWidth: isHighScore ? 2 : 1
         )
     }
 }
 
-struct StatChip: View {
-    let label: String
-    let value: String
-    let color: Color
-    
-    var body: some View {
-        HStack(spacing: 4) {
-            Text(value)
-                .font(.system(size: 14, weight: .semibold))
-                .foregroundColor(color)
-            
-            Text(label)
-                .font(.system(size: 10, weight: .medium))
-                .foregroundColor(GameTheme.Colors.secondaryText)
-        }
-        .padding(.horizontal, 8)
-        .padding(.vertical, 4)
-        .background(
-            RoundedRectangle(cornerRadius: 6)
-                .fill(color.opacity(0.1))
-        )
-    }
-}
+// Note: StatChip has been replaced by the unified GameStatChip component 
+// in Views/Components/Displays/StatisticalDisplays.swift
