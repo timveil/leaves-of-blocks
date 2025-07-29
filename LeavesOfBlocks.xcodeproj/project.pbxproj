@@ -87,32 +87,12 @@
 			path = LeavesOfBlocks;
 			sourceTree = "<group>";
 		};
-		3A692C112E3460EE00451CB3 /* LeavesOfBlocksTests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = LeavesOfBlocksTests;
-			sourceTree = "<group>";
-		};
-		3A692C1B2E3460EE00451CB3 /* LeavesOfBlocksUITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = LeavesOfBlocksUITests;
-			sourceTree = "<group>";
-		};
 		3A893D122E370BBA00872181 /* LeavesOfBlocksAppClip */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				3A893D3B2E370BBB00872181 /* Exceptions for "LeavesOfBlocksAppClip" folder in "LeavesOfBlocksAppClip" target */,
 			);
 			path = LeavesOfBlocksAppClip;
-			sourceTree = "<group>";
-		};
-		3A893D222E370BBB00872181 /* LeavesOfBlocksAppClipTests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = LeavesOfBlocksAppClipTests;
-			sourceTree = "<group>";
-		};
-		3A893D2C2E370BBB00872181 /* LeavesOfBlocksAppClipUITests */ = {
-			isa = PBXFileSystemSynchronizedRootGroup;
-			path = LeavesOfBlocksAppClipUITests;
 			sourceTree = "<group>";
 		};
 /* End PBXFileSystemSynchronizedRootGroup section */
@@ -167,11 +147,7 @@
 			isa = PBXGroup;
 			children = (
 				3A692C032E3460ED00451CB3 /* LeavesOfBlocks */,
-				3A692C112E3460EE00451CB3 /* LeavesOfBlocksTests */,
-				3A692C1B2E3460EE00451CB3 /* LeavesOfBlocksUITests */,
 				3A893D122E370BBA00872181 /* LeavesOfBlocksAppClip */,
-				3A893D222E370BBB00872181 /* LeavesOfBlocksAppClipTests */,
-				3A893D2C2E370BBB00872181 /* LeavesOfBlocksAppClipUITests */,
 				3A692C022E3460ED00451CB3 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -229,9 +205,6 @@
 			dependencies = (
 				3A692C102E3460EE00451CB3 /* PBXTargetDependency */,
 			);
-			fileSystemSynchronizedGroups = (
-				3A692C112E3460EE00451CB3 /* LeavesOfBlocksTests */,
-			);
 			name = LeavesOfBlocksTests;
 			packageProductDependencies = (
 			);
@@ -251,9 +224,6 @@
 			);
 			dependencies = (
 				3A692C1A2E3460EE00451CB3 /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				3A692C1B2E3460EE00451CB3 /* LeavesOfBlocksUITests */,
 			);
 			name = LeavesOfBlocksUITests;
 			packageProductDependencies = (
@@ -297,9 +267,6 @@
 			dependencies = (
 				3A893D212E370BBB00872181 /* PBXTargetDependency */,
 			);
-			fileSystemSynchronizedGroups = (
-				3A893D222E370BBB00872181 /* LeavesOfBlocksAppClipTests */,
-			);
 			name = LeavesOfBlocksAppClipTests;
 			packageProductDependencies = (
 			);
@@ -319,9 +286,6 @@
 			);
 			dependencies = (
 				3A893D2B2E370BBB00872181 /* PBXTargetDependency */,
-			);
-			fileSystemSynchronizedGroups = (
-				3A893D2C2E370BBB00872181 /* LeavesOfBlocksAppClipUITests */,
 			);
 			name = LeavesOfBlocksAppClipUITests;
 			packageProductDependencies = (
