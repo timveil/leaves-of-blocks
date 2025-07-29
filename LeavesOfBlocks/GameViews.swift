@@ -633,17 +633,6 @@ struct GameSummaryView: View {
                                         .font(GameTheme.Typography.captionFont)
                                         .foregroundColor(GameTheme.Colors.secondaryText)
                                 }
-                                
-                                // Difficulty indicator - badge style
-                                Text(difficulty.rawValue.uppercased())
-                                    .font(.system(size: 12, weight: .bold))
-                                    .foregroundColor(GameTheme.Colors.primaryBackground)
-                                    .padding(.horizontal, 12)
-                                    .padding(.vertical, 6)
-                                    .background(
-                                        Capsule()
-                                            .fill(difficulty.color)
-                                    )
                             }
                         }
                     }
@@ -667,7 +656,7 @@ struct GameSummaryView: View {
                     
                     Spacer(minLength: GameTheme.Layout.extraLargeSpacing)
                     
-                    // Statistics Cards - 2x2 grid
+                    // Statistics Cards - 2x3 grid
                     LazyVGrid(columns: [
                         GridItem(.flexible()),
                         GridItem(.flexible())
@@ -700,46 +689,23 @@ struct GameSummaryView: View {
                             icon: "flame.fill",
                             color: GameTheme.Colors.blockOrange
                         )
-                    }
-                    .padding(.horizontal, GameTheme.Layout.largePadding)
-                    
-                    Spacer(minLength: GameTheme.Layout.largeSpacing)
-                    
-                    // High Score Comparison - compact
-                    HStack(spacing: GameTheme.Layout.largePadding) {
-                        VStack(spacing: GameTheme.Layout.smallSpacing) {
-                            Text("Current")
-                                .font(GameTheme.Typography.captionFont)
-                                .foregroundColor(GameTheme.Colors.secondaryText)
-                            Text("\(score)")
-                                .font(GameTheme.Typography.headlineFont)
-                                .foregroundColor(GameTheme.Colors.primaryText)
-                                .lineLimit(1)
-                                .minimumScaleFactor(0.8)
-                        }
                         
-                        VStack(spacing: GameTheme.Layout.smallSpacing) {
-                            Text("Best Ever")
-                                .font(GameTheme.Typography.captionFont)
-                                .foregroundColor(GameTheme.Colors.secondaryText)
-                            Text("\(gameState.highScoreManager.highScore)")
-                                .font(GameTheme.Typography.headlineFont)
-                                .foregroundColor(GameTheme.Colors.primaryText)
-                                .lineLimit(1)
-                                .minimumScaleFactor(0.8)
-                        }
+                        StatisticCard(
+                            title: "Difficulty",
+                            value: difficulty.rawValue.capitalized,
+                            icon: "target",
+                            color: difficulty.color
+                        )
+                        
+                        StatisticCard(
+                            title: "Best Ever",
+                            value: "\(gameState.highScoreManager.highScore)",
+                            icon: "crown.fill",
+                            color: GameTheme.Colors.accent
+                        )
                     }
-                    .padding(.horizontal, GameTheme.Layout.extraLargePadding)
-                    .padding(.vertical, GameTheme.Layout.mediumPadding)
-                    .background(
-                        RoundedRectangle(cornerRadius: GameTheme.Layout.buttonCornerRadius)
-                            .fill(GameTheme.Colors.cardBackground.opacity(0.5))
-                            .overlay(
-                                RoundedRectangle(cornerRadius: GameTheme.Layout.buttonCornerRadius)
-                                    .stroke(isNewHighScore ? GameTheme.Colors.accent.opacity(0.4) : GameTheme.Colors.cardBorderGradient[0].opacity(0.2), lineWidth: 1)
-                            )
-                    )
                     .padding(.horizontal, GameTheme.Layout.largePadding)
+                    
                     
                     Spacer(minLength: GameTheme.Layout.extraLargeSpacing)
                     

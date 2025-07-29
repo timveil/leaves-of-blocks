@@ -61,7 +61,7 @@ struct GameHistoryView: View {
                 // Header
                 Text("Game History")
                     .font(GameTheme.Typography.title)
-                    .foregroundStyle(GameTheme.Gradients.text)
+                    .foregroundColor(GameTheme.Colors.primaryText)
                     .padding(.top, GameTheme.Layout.mediumPadding)
                 
                 // Statistics Summary
