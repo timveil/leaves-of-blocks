@@ -15,7 +15,7 @@ extension GameTheme {
         
         // Text Colors
         static let primaryText = Color(red: 0.95, green: 0.9, blue: 0.8)       // Cream
-        static let secondaryText = Color(red: 0.9, green: 0.8, blue: 0.7).opacity(0.7)      // Light brown
+        static let secondaryText = Color(red: 0.9, green: 0.8, blue: 0.7)    // Light brown
         static let tertiaryText = Color(red: 0.7, green: 0.5, blue: 0.3)       // Medium brown
         
         // Game Elements
