@@ -156,7 +156,6 @@ class GameState: ObservableObject {
             isGameOver = true
             gameService.endGameSession()
             
-            let oldHighScore = gameService.getHighScore()
             isNewHighScore = gameService.updateHighScore(score)
             
             if isNewHighScore {

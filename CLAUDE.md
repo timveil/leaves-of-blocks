@@ -48,49 +48,63 @@ This is a SwiftUI iOS game called "Leaves of Blocks" - a Block Blast-style puzzl
 ### Key Components
 
 #### Core Game Files
-- `Models/Game/GameState.swift` - Main game state management (ObservableObject)
+- `Models/Game/GameState.swift` - Core game state management (ObservableObject, now focused and streamlined)
 - `Models/Game/BlockModels.swift` - Block shapes, positions, and color definitions
 - `Models/Game/GridModels.swift` - Grid cell and position data structures  
 - `Models/Game/DifficultyMode.swift` - Difficulty settings and configurations
-- `Logic/Game/GameRules.swift` - Game mechanics: block placement, line clearing, validation
+- `Models/Game/GameStatistics.swift` - Advanced game session statistics, achievements, and performance metrics
+- `Logic/Game/GameLogic.swift` - Pure game logic functions: block placement, line clearing, validation (separated from state)
+- `Logic/Game/GameRules.swift` - Legacy game mechanics (consider migrating to GameLogic)
 - `Logic/Game/BlockGenerator.swift` - Weighted random block generation system
+- `Services/Game/GameService.swift` - Game services: timing, haptic feedback, high score persistence, session management
 - `Logic/Enhancements/GameEnhancements.swift` - Visual effects, animations, performance optimizations
 
 #### UI Architecture (Modular Component System)
 - `Views/BaseScreenView.swift` - Foundation layout container for all screens
-- `Views/ViewModifiers/ScreenModifiers.swift` - Unified styling system with 10+ reusable modifiers
+- `Views/ViewModifiers/ScreenModifiers.swift` - Unified styling system with 13+ reusable modifiers (consolidated from Theme.swift)
 - `Views/Components/` - Reusable UI components organized by function:
-  - `Buttons/GameButtons.swift` - Unified button components (GameDifficultyButton, StartGameButton)
-  - `Displays/StatisticalDisplays.swift` - Score and statistics display components (GameStatChip) 
-  - `Tables/GameTables.swift` - Table formatting and display components
+  - `Buttons/Buttons.swift` - Unified button components (GameDifficultyButton, StartGameButton, GameActionButton)
+  - `Cards/CardView.swift` - Card-based display components
+  - `Displays/StatisticalDisplays.swift` - Score and statistics display components (GameStatChip)
+  - `Displays/ScoreDisplayView.swift` - Dedicated score display components
+  - `Effects/AnimatedBadgeView.swift` - Animated UI effect components
+  - `Effects/GrassBlockView.swift` - Decorative grass visual effects
+  - `States/ErrorStateView.swift` - Error state UI components
+  - `States/LoadingStateView.swift` - Loading state UI components
+  - `Tables/Tables.swift` - Table formatting and display components
 - `Views/Game/Components/` - Game-specific UI components:
-  - `GameBlockViews.swift` - Block rendering and drag/drop implementation
-  - `GameGridViews.swift` - 8x8 game grid display and interaction
-  - `GameHeaderViews.swift` - Score display and game status UI
-  - `GameBackgroundViews.swift` - Themed background and visual effects
+  - `BlockViews.swift` - Block rendering and drag/drop implementation
+  - `GridViews.swift` - 8x8 game grid display and interaction
+  - `HeaderViews.swift` - Score display and game status UI
+  - `BackgroundViews.swift` - Themed background and visual effects
 
 #### Supporting Systems  
 - `Resources/Theming/` - Comprehensive theming system:
-  - `Theme.swift` - Main theme orchestration
+  - `Theme.swift` - Main theme orchestration and gradients (view styling moved to ScreenModifiers)
   - `Colors.swift` - Autumn color palette and semantic color definitions
   - `Typography.swift` - Font scales and text styling
   - `Layout.swift` - Layout constants, spacing, and sizing
   - `Animations.swift` - Animation timing and easing definitions
-- `Services/Configuration/AppConfiguration.swift` - Environment detection, feature flags, preferences
-- `Services/Data/HighScoreManager.swift` - High score persistence using UserDefaults
-- `Services/Data/CoreDataManager.swift` - Core Data stack management for game history
+- `Services/` - Service layer architecture:
+  - `Configuration/AppConfiguration.swift` - Environment detection, feature flags, preferences
+  - `Configuration/UserPreferences.swift` - User preference management and logging utilities
+  - `Data/HighScoreManager.swift` - High score persistence using UserDefaults
+  - `Data/CoreDataManager.swift` - Core Data stack management for game history
+  - `Game/GameService.swift` - Centralized game services (timing, haptics, persistence)
 - `Models/Data/GameRecord+CoreDataClass.swift` - Core Data entity class for game records
 - `Models/Data/GameRecord+CoreDataProperties.swift` - Core Data entity properties
-- `Extensions/` - Swift extensions organized by framework (Foundation, SwiftUI, UIKit)
+- `Extensions/` - Swift extensions organized by framework (Foundation, SwiftUI, UIKit):
+  - `SwiftUI/BlockModels+Extensions.swift` - Block model extensions (moved from Testing)
 - `Testing/Helpers/` - Testing utilities, mocks, and test data generators
 
 ## Game Architecture Details
 
-### GameState (ObservableObject)
-- Manages 8x8 grid with GridCell objects
-- Tracks current blocks (up to 3), score, high score, difficulty
-- Handles block placement validation and line clearing logic
-- Publishes updates for reactive UI
+### GameState (ObservableObject) - Refactored Architecture
+- **Primary Role**: Pure state management with @Published properties for reactive UI
+- **Core Responsibilities**: Manages 8x8 grid, current blocks (up to 3), score, difficulty, game statistics
+- **Delegation Pattern**: Delegates business logic to GameLogic service and infrastructure concerns to GameService
+- **Streamlined Design**: Reduced from 361 lines to ~80 lines through service extraction
+- **Service Integration**: Uses GameService for timing, haptics, persistence; GameLogic for game rules
 
 ### Block System
 - 21 predefined BlockShape configurations (1-9 cells each)
@@ -104,17 +118,47 @@ This is a SwiftUI iOS game called "Leaves of Blocks" - a Block Blast-style puzzl
 - Combo bonuses: 50 extra points per additional line cleared simultaneously
 - High score persistence across sessions
 
-### Game Logic Flow
+### Game Logic Flow - Service-Based Architecture
 1. **Block Generation**: BlockGenerator creates weighted random blocks based on difficulty
-2. **Placement Validation**: GameRules validates block placement against grid bounds and existing blocks
-3. **Line Detection**: Checks for complete horizontal/vertical lines after placement
-4. **Score Calculation**: Updates score based on placement and cleared lines
-5. **Game Over Check**: Validates if any remaining blocks can be placed
+2. **Placement Validation**: GameLogic.canPlaceBlock() validates placement against grid bounds and existing blocks
+3. **Block Placement**: GameLogic.placeBlock() handles grid updates with GameService providing haptic feedback
+4. **Line Detection**: GameLogic.clearCompletedLines() detects and clears complete horizontal/vertical lines
+5. **Score Calculation**: GameLogic.calculateBlockScore() and calculateLineScore() handle scoring logic
+6. **Game Over Check**: GameLogic.isGameOver() validates if any remaining blocks can be placed
+7. **Session Management**: GameService handles timing, high score updates, and game record persistence
 
 ### Difficulty Modes
 - **Easy**: Favors smaller blocks, more forgiving generation
 - **Moderate**: Balanced block distribution
 - **Hard**: Increases chance of larger, complex blocks
+
+### Service Layer Architecture - New Design Pattern
+The codebase now follows a clean service-oriented architecture:
+
+#### GameLogic (Static Methods)
+- **Pure Functions**: Stateless game logic functions for easy testing
+- **Core Operations**: Block placement validation, line clearing algorithms, score calculations
+- **Grid Utilities**: Grid manipulation and game state validation
+- **Separation**: Business logic completely separated from UI state management
+
+#### GameService (ObservableObject)
+- **Infrastructure Concerns**: Timer management, haptic feedback, persistence
+- **Session Management**: Game session lifecycle, high score tracking
+- **External Integrations**: UserDefaults, Core Data, UIKit feedback systems
+- **Service Coordination**: Centralized access point for game-related services
+
+#### GameSessionStatistics (Value Type)
+- **Analytics**: Advanced statistics calculation and performance metrics
+- **Achievements**: Achievement detection and comparison systems
+- **Metrics**: Efficiency ratings, performance grades, session comparisons
+- **Computed Properties**: Derived statistics from raw game data
+
+#### Benefits of Refactored Architecture
+- **Maintainability**: Single responsibility principle with clear separation of concerns
+- **Testability**: Pure functions in GameLogic are easily unit testable
+- **Reusability**: Services can be used independently across different parts of the app
+- **Performance**: Reduced coupling and more efficient state management
+- **Extensibility**: Easy to add new features to appropriate service layers
 
 ## UI Architecture & Styling System
 
@@ -141,12 +185,26 @@ The app follows a modular component architecture with extensive code deduplicati
 - **Shared components** - Common UI elements in Views/Components/ for cross-screen usage
 - **Atomic design principles** - Small, composable components that build into larger interfaces
 
-### Code Deduplication Results
-Recent refactoring eliminated ~300+ lines of duplicated styling code by:
-- Consolidating button variations into unified components
-- Replacing complex ZStack shadow patterns with reusable modifiers
-- Standardizing card, container, and badge styling across all screens
-- Unifying typography and spacing through centralized theme system
+### Code Deduplication & Refactoring Results
+Recent comprehensive refactoring achieved major architectural improvements:
+
+#### Code Reduction & Organization
+- **GameState.swift**: Reduced from 361 lines to ~80 lines (78% reduction) through service extraction
+- **Style Consolidation**: Eliminated duplicate `gameCardStyle()` implementations and redundant button components
+- **Component Unification**: Removed `ButtonView.swift` and consolidated button styling into unified `Buttons.swift`
+- **Extension Organization**: Moved `BlockModels+Extensions.swift` from Testing to proper Extensions directory
+
+#### Service Architecture Implementation
+- **Created GameLogic.swift** (154 lines): Pure game logic functions separated from state management
+- **Created GameService.swift** (126 lines): Centralized timing, haptics, and persistence services  
+- **Created GameSessionStatistics.swift** (171 lines): Advanced analytics and achievement system
+- **Style System Consolidation**: Moved all view modifiers to `ScreenModifiers.swift` (13+ modifiers)
+
+#### Architectural Benefits Achieved
+- **Separation of Concerns**: Clear boundaries between state, logic, and services
+- **Testability**: Pure functions in GameLogic enable comprehensive unit testing
+- **Maintainability**: Single responsibility principle with focused, smaller files
+- **Extensibility**: Service layer architecture supports future feature additions
 
 ## Development Notes
 
