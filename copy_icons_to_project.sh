@@ -19,6 +19,8 @@ cp icons/AppIcon-40.png "$ASSETS_DIR/AppIcon-40.png"            # iPad Spotlight
 cp icons/AppIcon-29@3x.png "$ASSETS_DIR/AppIcon-29@3x.png"      # iPhone Settings 87x87
 cp icons/AppIcon-29@2x.png "$ASSETS_DIR/AppIcon-29@2x.png"      # iPhone/iPad Settings 58x58
 cp icons/AppIcon-29.png "$ASSETS_DIR/AppIcon-29.png"            # iPad Settings 29x29
+cp icons/AppIcon-20@3x.png "$ASSETS_DIR/AppIcon-20@3x.png"      # iPhone Notifications 60x60
+cp icons/AppIcon-20@2x.png "$ASSETS_DIR/AppIcon-20@2x.png"      # iPhone Notifications 40x40
 
 # iPad specific icons
 cp icons/AppIcon-83.5@2x.png "$ASSETS_DIR/AppIcon-83.5@2x.png"  # iPad Pro 167x167
@@ -86,6 +88,18 @@ EOF
 cat > "$ASSETS_DIR/Contents.json" << 'EOF'
 {
   "images" : [
+    {
+      "filename" : "AppIcon-20@2x.png",
+      "idiom" : "iphone",
+      "scale" : "2x",
+      "size" : "20x20"
+    },
+    {
+      "filename" : "AppIcon-20@3x.png",
+      "idiom" : "iphone",
+      "scale" : "3x",
+      "size" : "20x20"
+    },
     {
       "filename" : "AppIcon-40.png",
       "idiom" : "ipad",

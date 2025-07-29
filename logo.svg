@@ -15,8 +15,8 @@
     
   </defs>
   
-  <!-- Transparent background -->
-  <rect width="512" height="512" fill="transparent"/>
+  <!-- White background for app icons -->
+  <rect width="512" height="512" fill="white"/>
   
   <!-- Letter "L" made of blocks - green theme (maximized and perfectly centered) -->
   <g>
