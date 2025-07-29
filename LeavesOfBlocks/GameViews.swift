@@ -1110,45 +1110,45 @@ struct GameBoardView: View {
                 // Game Stats Row
                 HStack {
                     Spacer()
-                    HStack(alignment: .center, spacing: GameTheme.Layout.smallSpacing) {
-                        // Blocks Placed Counter (Left)
-                        VStack(alignment: .leading, spacing: 4) {
-                            HStack(spacing: 6) {
-                                Image(systemName: "cube.fill")
-                                    .font(.system(size: 16, weight: .semibold))
-                                    .foregroundColor(GameTheme.Colors.blockYellow)
-                                Text("\(gameState.blocksPlaced)")
-                                    .font(GameTheme.Typography.captionFont)
-                                    .foregroundColor(GameTheme.Colors.secondaryText)
-                            }
+                    HStack(alignment: .center, spacing: GameTheme.Layout.mediumSpacing) {
+                        // Blocks Placed Counter
+                        HStack(spacing: 6) {
+                            Image(systemName: "cube.fill")
+                                .font(.system(size: 16, weight: .semibold))
+                                .foregroundColor(GameTheme.Colors.blockYellow)
+                            Text("\(gameState.blocksPlaced)")
+                                .font(GameTheme.Typography.captionFont)
+                                .foregroundColor(GameTheme.Colors.secondaryText)
                         }
                         
-                        Spacer()
+                        // Separator
+                        Text("•")
+                            .font(.system(size: 12, weight: .bold))
+                            .foregroundColor(GameTheme.Colors.gridBorder.opacity(0.6))
                         
-                        // Timer (Center)
-                        VStack(alignment: .center, spacing: 4) {
-                            HStack(spacing: 6) {
-                                Image(systemName: "clock.fill")
-                                    .font(.system(size: 16, weight: .semibold))
-                                    .foregroundColor(GameTheme.Colors.blockBlue)
-                                Text(formatGameTime(gameState.gameTime))
-                                    .font(GameTheme.Typography.captionFont)
-                                    .foregroundColor(GameTheme.Colors.secondaryText)
-                            }
+                        // Timer
+                        HStack(spacing: 6) {
+                            Image(systemName: "clock.fill")
+                                .font(.system(size: 16, weight: .semibold))
+                                .foregroundColor(GameTheme.Colors.blockBlue)
+                            Text(formatGameTime(gameState.gameTime))
+                                .font(GameTheme.Typography.captionFont)
+                                .foregroundColor(GameTheme.Colors.secondaryText)
                         }
                         
-                        Spacer()
+                        // Separator
+                        Text("•")
+                            .font(.system(size: 12, weight: .bold))
+                            .foregroundColor(GameTheme.Colors.gridBorder.opacity(0.6))
                         
-                        // Difficulty Level (Right)
-                        VStack(alignment: .trailing, spacing: 4) {
-                            HStack(spacing: 6) {
-                                Image(systemName: gameState.currentDifficulty.icon)
-                                    .font(.system(size: 16, weight: .semibold))
-                                    .foregroundColor(gameState.currentDifficulty.color)
-                                Text(gameState.currentDifficulty.rawValue)
-                                    .font(GameTheme.Typography.captionFont)
-                                    .foregroundColor(GameTheme.Colors.secondaryText)
-                            }
+                        // Difficulty Level
+                        HStack(spacing: 6) {
+                            Image(systemName: gameState.currentDifficulty.icon)
+                                .font(.system(size: 16, weight: .semibold))
+                                .foregroundColor(gameState.currentDifficulty.color)
+                            Text(gameState.currentDifficulty.rawValue)
+                                .font(GameTheme.Typography.captionFont)
+                                .foregroundColor(GameTheme.Colors.secondaryText)
                         }
                     }
                     .frame(width: gameWidth)
