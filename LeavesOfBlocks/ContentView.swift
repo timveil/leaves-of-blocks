@@ -40,6 +40,18 @@ struct ContentView: View {
                         withAnimation(.easeInOut) {
                             currentScreen = .howToPlay
                         }
+                    },
+                    onNewGame: {
+                        withAnimation(GameTheme.Animations.springAnimation) {
+                            if currentScreen != .game {
+                                // If not on game screen, start a new game and navigate to game screen
+                                gameState.startGame(difficulty: .moderate)
+                                currentScreen = .game
+                            } else {
+                                // If on game screen, reset the current game
+                                gameState.resetGame()
+                            }
+                        }
                     }
                 )
                 
@@ -116,6 +128,7 @@ struct AppToolbarView: View {
     let onGoHome: () -> Void
     let onShowAbout: () -> Void
     let onShowHowToPlay: () -> Void
+    let onNewGame: () -> Void
     
     var body: some View {
         HStack {
@@ -131,6 +144,13 @@ struct AppToolbarView: View {
             
             // Right side icons with proper spacing
             HStack(spacing: GameTheme.Layout.largePadding) {
+                // New Game button (always visible)
+                Button(action: onNewGame) {
+                    Image(systemName: "play.fill")
+                        .font(.system(size: 28, weight: .semibold))
+                        .foregroundColor(GameTheme.Colors.accent)
+                }
+                
                 // Info icon (About) - using gear for better visual balance
                 Button(action: onShowAbout) {
                     Image(systemName: "gear")
