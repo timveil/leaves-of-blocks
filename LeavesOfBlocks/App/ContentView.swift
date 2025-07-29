@@ -76,7 +76,7 @@ struct ContentView: View {
                 .ignoresSafeArea(.container, edges: [])
                 
             case .game:
-                GameBoardView(
+                BoardView(
                     gameState: gameState,
                     onViewSummary: {
                         withAnimation(GameTheme.Animations.springAnimation) {
@@ -88,7 +88,7 @@ struct ContentView: View {
                 .ignoresSafeArea(.container, edges: [])
                 
             case .summary(let session):
-                GameSummaryView(
+                SummaryView(
                     gameState: gameState,
                     historicalSession: session
                 )

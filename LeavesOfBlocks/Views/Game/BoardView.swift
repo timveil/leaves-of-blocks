@@ -2,7 +2,7 @@ import SwiftUI
 
 // MARK: - Main Game Board
 
-struct GameBoardView: View {
+struct BoardView: View {
     @ObservedObject var gameState: GameState
     @State private var draggedBlock: BlockShape?
     @State private var draggedBlockIndex: Int?  // Track which slot the block came from

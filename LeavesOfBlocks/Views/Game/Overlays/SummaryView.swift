@@ -2,7 +2,7 @@ import SwiftUI
 
 // MARK: - Game Summary View
 
-struct GameSummaryView: View {
+struct SummaryView: View {
     @ObservedObject var gameState: GameState
     let historicalSession: GameSession?
     @State private var highScoreScale: CGFloat = 1.0
@@ -205,8 +205,6 @@ struct StatisticCard: View {
 #Preview {
     SummaryView(
         gameState: GameState(),
-        onNewGame: {},
-        onViewHistory: {},
-        onBackToHome: {}
+        historicalSession: nil
     )
 }

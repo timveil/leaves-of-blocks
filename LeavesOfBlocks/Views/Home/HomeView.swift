@@ -61,3 +61,11 @@ struct HomeView: View {
         }
     }
 }
+
+#Preview {
+    HomeView(
+        gameState: GameState(),
+        onStartGame: { _ in },
+        onShowHistory: { }
+    )
+}
