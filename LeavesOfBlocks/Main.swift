@@ -8,7 +8,7 @@
 import SwiftUI
 
 @main
-struct LeavesOfBlocksApp: App {
+struct Main: App {
     @State private var showLaunchScreen = true
     let coreDataManager = CoreDataManager.shared
     
