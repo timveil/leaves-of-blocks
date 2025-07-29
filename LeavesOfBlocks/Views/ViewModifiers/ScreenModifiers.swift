@@ -277,34 +277,12 @@ extension View {
     
     // MARK: - Interaction Modifiers
     
-    /// Applies tap feedback with scale animation
-    func gameTapFeedback() -> some View {
-        self
-            .scaleEffect(1.0)
-            .onTapGesture {}
-            .scaleEffect(1.0)
-            .animation(.easeInOut(duration: 0.1), value: UUID())
-    }
-    
     /// Applies disabled state styling
     func gameDisabledStyle(_ isDisabled: Bool) -> some View {
         self
             .opacity(isDisabled ? 0.5 : 1.0)
             .disabled(isDisabled)
             .animation(.easeInOut(duration: 0.2), value: isDisabled)
-    }
-    
-    /// Applies standard game button styling
-    func gameButtonStyle() -> some View {
-        self
-            .background(
-                Capsule()
-                    .fill(GameTheme.Gradients.button)
-            )
-            .foregroundColor(GameTheme.Colors.primaryBackground)
-            .font(GameTheme.Typography.bodyFont)
-            .padding(.horizontal, 32)
-            .padding(.vertical, 16)
     }
 }
 

@@ -2,11 +2,6 @@ import Foundation
 
 extension Array where Element == GridCell {
     
-    /// Returns true if all cells in the array are filled
-    var allFilled: Bool {
-        return allSatisfy { $0.isFilled }
-    }
-    
     /// Returns the number of filled cells
     var filledCount: Int {
         return filter { $0.isFilled }.count
@@ -54,10 +49,5 @@ extension Array where Element == BlockShape {
     /// Returns blocks sorted by size (smallest first)
     var sortedBySize: [BlockShape] {
         return sorted { $0.positions.count < $1.positions.count }
-    }
-    
-    /// Returns blocks of a specific color
-    func blocks(ofColor color: BlockColor) -> [BlockShape] {
-        return filter { $0.color == color }
     }
 }
