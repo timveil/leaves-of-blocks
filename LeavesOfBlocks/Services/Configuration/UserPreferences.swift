@@ -190,13 +190,3 @@ struct BuildConfiguration {
         print("[\(timestamp)] [\(level.description)] [\(filename):\(line)] \(function): \(message)")
     }
 }
-
-// MARK: - Extensions
-
-extension DateFormatter {
-    static let logTimestamp: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "HH:mm:ss.SSS"
-        return formatter
-    }()
-}

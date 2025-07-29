@@ -19,3 +19,11 @@ extension Date {
         return Calendar.current.isDate(self, equalTo: Date(), toGranularity: .weekOfYear)
     }
 }
+
+extension DateFormatter {
+    static let logTimestamp: DateFormatter = {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "HH:mm:ss.SSS"
+        return formatter
+    }()
+}

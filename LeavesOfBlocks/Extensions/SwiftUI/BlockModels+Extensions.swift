@@ -1,6 +1,6 @@
 import SwiftUI
 
-// MARK: - Extensions
+// MARK: - Block Model Extensions
 
 extension BlockColor {
     var color: Color {
