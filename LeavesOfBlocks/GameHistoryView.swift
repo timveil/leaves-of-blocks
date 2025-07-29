@@ -19,7 +19,7 @@ struct GameHistoryView: View {
                 blocksPlaced: gameState.blocksPlaced,
                 linesCleared: gameState.linesCleared,
                 difficulty: gameState.currentDifficulty,
-                gameTime: gameState.gameTime
+                gameTime: gameState.currentGameTime
             ))
         }
         

@@ -591,7 +591,7 @@ struct GameSummaryView: View {
     }
     
     private var gameTime: TimeInterval {
-        historicalSession?.gameTime ?? gameState.gameTime
+        historicalSession?.gameTime ?? gameState.currentGameTime
     }
     
     private var difficulty: DifficultyMode {
@@ -1131,7 +1131,7 @@ struct GameBoardView: View {
                             Image(systemName: "clock.fill")
                                 .font(.system(size: 16, weight: .semibold))
                                 .foregroundColor(GameTheme.Colors.blockBlue)
-                            Text(formatGameTime(gameState.gameTime))
+                            Text(formatGameTime(gameState.currentGameTime))
                                 .font(GameTheme.Typography.captionFont)
                                 .foregroundColor(GameTheme.Colors.secondaryText)
                         }

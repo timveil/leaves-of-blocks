@@ -156,6 +156,10 @@ class GameState: ObservableObject {
     @Published var currentCombo: Int = 0
     @Published var isNewHighScore: Bool = false
     
+    // Timer for continuous updates
+    @Published var currentGameTime: TimeInterval = 0
+    private var gameTimer: Timer?
+    
     // Difficulty mode
     @Published var currentDifficulty: DifficultyMode = .easy
     
@@ -165,6 +169,7 @@ class GameState: ObservableObject {
         grid = Array(repeating: Array(repeating: GridCell(), count: GameState.gridSize), count: GameState.gridSize)
         currentBlocks = []
         generateNewBlocks()
+        startGameTimer()
     }
     
     func generateNewBlocks() {
@@ -333,6 +338,7 @@ class GameState: ObservableObject {
             // Game just ended - handle high score
             print("🏁 GAME OVER DETECTED! Final score: \(score)")
             isGameOver = true
+            stopGameTimer() // Stop the timer when game ends
             let oldHighScore = highScoreManager.highScore
             highScoreManager.updateHighScore(score)
             isNewHighScore = score > oldHighScore
@@ -358,6 +364,9 @@ class GameState: ObservableObject {
     }
     
     func resetGame() {
+        // Stop existing timer
+        stopGameTimer()
+        
         grid = Array(repeating: Array(repeating: GridCell(), count: GameState.gridSize), count: GameState.gridSize)
         score = 0
         linesCleared = 0
@@ -367,6 +376,7 @@ class GameState: ObservableObject {
         // Reset statistics
         blocksPlaced = 0
         gameStartTime = Date()
+        currentGameTime = 0
         longestCombo = 0
         currentCombo = 0
         isNewHighScore = false
@@ -375,6 +385,9 @@ class GameState: ObservableObject {
         randomlyFillGrid()
         
         generateNewBlocks()
+        
+        // Start the timer for continuous updates
+        startGameTimer()
     }
     
     private func randomlyFillGrid() {
@@ -446,7 +459,13 @@ class GameState: ObservableObject {
     // MARK: - Computed Statistics
     
     var gameTime: TimeInterval {
-        Date().timeIntervalSince(gameStartTime)
+        // Return the continuously updated time for active games, 
+        // or calculate on-demand for inactive games
+        if gameTimer != nil {
+            return currentGameTime
+        } else {
+            return Date().timeIntervalSince(gameStartTime)
+        }
     }
     
     var averageBlockScore: Double {
@@ -457,6 +476,25 @@ class GameState: ObservableObject {
     var lineClearPercentage: Double {
         guard blocksPlaced > 0 else { return 0.0 }
         return (Double(linesCleared) / Double(blocksPlaced)) * 100
+    }
+    
+    // MARK: - Timer Management
+    
+    private func startGameTimer() {
+        gameTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
+            DispatchQueue.main.async {
+                self.currentGameTime = Date().timeIntervalSince(self.gameStartTime)
+            }
+        }
+    }
+    
+    private func stopGameTimer() {
+        gameTimer?.invalidate()
+        gameTimer = nil
+    }
+    
+    deinit {
+        stopGameTimer()
     }
 }
 
