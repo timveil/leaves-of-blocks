@@ -46,7 +46,7 @@ struct HomeView: View {
                 }
                 .buttonStyle(PlainButtonStyle())
                 
-                Spacer(minLength: 10)
+                Spacer(minLength: 5)
                 
                 // Difficulty Selection
                 DifficultySelectionView(
@@ -54,7 +54,7 @@ struct HomeView: View {
                     onStartGame: onStartGame
                 )
                 
-                Spacer(minLength: 120)
+                Spacer(minLength: 150)
             }
             .padding(.horizontal, GameTheme.Layout.extraLargePadding)
             .padding(.bottom, GameTheme.Layout.extraLargePadding)
