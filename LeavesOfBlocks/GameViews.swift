@@ -25,22 +25,31 @@ struct SimpleAppTitleView: View {
 
 struct SimpleScoreView: View {
     @ObservedObject var gameState: GameState
-    let onReset: () -> Void
     
     var body: some View {
-        HStack {
-            // Current Score
-            Text("\(gameState.score)")
-                .font(GameTheme.Typography.largeScore)
-                .foregroundColor(GameTheme.Colors.primaryText)
-            
-            Spacer()
-            
-            // Reset Button  
-            Button(action: onReset) {
-                Image(systemName: "arrow.clockwise")
-                    .font(.system(size: 24, weight: .bold))
-                    .foregroundColor(GameTheme.Colors.error)
+        VStack(spacing: GameTheme.Layout.smallSpacing) {
+            HStack {
+                // Current Score
+                VStack(alignment: .leading, spacing: 4) {
+                    Text("\(gameState.score)")
+                        .font(GameTheme.Typography.largeScore)
+                        .foregroundColor(GameTheme.Colors.primaryText)
+                    Text("Score")
+                        .font(GameTheme.Typography.captionFont)
+                        .foregroundColor(GameTheme.Colors.secondaryText)
+                }
+                
+                Spacer()
+                
+                // Lines Cleared Counter
+                VStack(alignment: .trailing, spacing: 4) {
+                    Text("\(gameState.linesCleared)")
+                        .font(GameTheme.Typography.largeScore)
+                        .foregroundColor(GameTheme.Colors.accent)
+                    Text("Lines")
+                        .font(GameTheme.Typography.captionFont)
+                        .foregroundColor(GameTheme.Colors.secondaryText)
+                }
             }
         }
         .padding(.horizontal, GameTheme.Layout.extraLargePadding)
@@ -854,7 +863,7 @@ struct DifficultySelectionView: View {
                 )
             }
             .scaleEffect(1.0)
-            .gameAnimation(value: selectedDifficulty)
+            .animation(.easeInOut(duration: 0.3), value: selectedDifficulty)
         }
         .padding(.horizontal, GameTheme.Layout.mediumPadding)
     }
@@ -946,6 +955,50 @@ struct DifficultyButton: View {
         }
         .scaleEffect(isSelected ? 1.02 : 1.0)
         .animation(.easeInOut(duration: 0.2), value: isSelected)
+    }
+}
+
+// MARK: - Game Toolbar Component
+
+struct GameToolbarView: View {
+    let onReset: () -> Void
+    
+    var body: some View {
+        HStack {
+            Spacer()
+            
+            // Reset Button
+            Button(action: onReset) {
+                HStack(spacing: GameTheme.Layout.smallSpacing) {
+                    Image(systemName: "arrow.clockwise")
+                        .font(.system(size: 18, weight: .bold))
+                    Text("New Game")
+                        .font(GameTheme.Typography.bodyFont)
+                        .fontWeight(.semibold)
+                }
+                .foregroundColor(GameTheme.Colors.buttonText)
+                .padding(.horizontal, GameTheme.Layout.largePadding)
+                .padding(.vertical, GameTheme.Layout.mediumPadding)
+                .background(
+                    Capsule()
+                        .fill(
+                            LinearGradient(
+                                colors: [
+                                    GameTheme.Colors.error,
+                                    GameTheme.Colors.error.opacity(0.8)
+                                ],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        )
+                        .shadow(color: GameTheme.Colors.error.opacity(0.3), radius: 4, x: 0, y: 2)
+                )
+            }
+            
+            Spacer()
+        }
+        .padding(.horizontal, GameTheme.Layout.largePadding)
+        .padding(.vertical, GameTheme.Layout.smallPadding)
     }
 }
 
@@ -1052,16 +1105,8 @@ struct GameBoardView: View {
             
             
             VStack(spacing: GameTheme.Layout.smallSpacing) {
-                // Score Section with integrated buttons
-                SimpleScoreView(
-                    gameState: gameState,
-                    onReset: {
-                        withAnimation(GameTheme.Animations.springAnimation) {
-                            gameState.resetGame()
-                        }
-                    }
-                )
-                .padding(.top, GameTheme.Layout.smallPadding) // Reduced top spacing
+                // Score Section
+                SimpleScoreView(gameState: gameState)
                 
                 // Game Grid
                 GameGridView(
@@ -1163,13 +1208,21 @@ struct GameBoardView: View {
                     }
                 )
                 
+                // Game Toolbar below the shape holding area
+                GameToolbarView(
+                    onReset: {
+                        withAnimation(GameTheme.Animations.springAnimation) {
+                            gameState.resetGame()
+                        }
+                    }
+                )
+                
                 // Static grass foundation - always visible
                 BlockGrassView()
                     .ignoresSafeArea(.all, edges: .bottom)
             }
             .zIndex(10) // Game elements above grass
             .padding(.horizontal, GameTheme.Layout.largePadding)
-            .padding(.top, GameTheme.Layout.mediumPadding)
             
             // Game Over Overlay - highest priority, appears above everything
             if gameState.isGameOver {
@@ -1352,14 +1405,14 @@ struct GridCellView: View {
                     )
             )
             .overlay(
-                // Add special effects for previews and line clearing
+                // Add special effects for line clearing only (avoid preview pulse during drag)
                 Group {
                     if isLineComplete {
-                        // Pulsing golden glow for line clearing
-                        LineCompletePulseView()
-                    } else if isPreview {
-                        // Pulsing border for snap-to preview
-                        PreviewPulseView(previewColor: previewColor)
+                        // Static golden glow for line clearing (no pulsing to avoid conflicts)
+                        RoundedRectangle(cornerRadius: 8)
+                            .stroke(Color(red: 1.0, green: 0.9, blue: 0.2), lineWidth: 3)
+                            .opacity(0.8)
+                            .scaleEffect(1.02)
                     }
                 }
             )
@@ -1371,9 +1424,8 @@ struct GridCellView: View {
                 x: 0, y: cell.isFilled ? 2 : 1
             )
             .scaleEffect(cell.isFilled ? 1.0 : (isLineComplete ? 0.98 : (isPreview ? 0.95 : 0.88)))
-            .fastAnimation(value: isPreview)
-            .lineClearAnimation(value: isLineComplete)
-            .smoothAnimation(value: cell.isFilled)
+            .animation(.easeInOut(duration: 0.2), value: cell.isFilled)
+            .animation(.easeOut(duration: 0.15), value: isLineComplete)
     }
 }
 
@@ -1437,7 +1489,7 @@ struct DraggableBlockView: View {
             // Original block stays in place with reduced opacity when dragging
             BlockView(block: block, cellSize: cellSize)
                 .opacity(isDragging ? 0.3 : 1.0)
-                .fastAnimation(value: isDragging)
+                .animation(.easeInOut(duration: 0.25), value: isDragging)
         }
         .frame(width: getBlockWidth(), height: getBlockHeight())
         .contentShape(Rectangle()) // Ensure entire frame is tappable
@@ -1577,18 +1629,16 @@ struct StaticGrassBlockView: View {
 // MARK: - Animation Helper Views
 
 struct LineCompletePulseView: View {
-    @State private var scale: CGFloat = 1.0
-    @State private var opacity: CGFloat = 0.8
+    @State private var isAnimating: Bool = false
     
     var body: some View {
         RoundedRectangle(cornerRadius: 8)
             .stroke(Color(red: 1.0, green: 0.9, blue: 0.2), lineWidth: 4)
-            .opacity(opacity)
-            .scaleEffect(scale)
+            .opacity(isAnimating ? 0.8 : 0.4)
+            .scaleEffect(isAnimating ? 1.05 : 1.0)
             .onAppear {
-                withAnimation(.easeInOut(duration: 0.6).repeatForever(autoreverses: true)) {
-                    scale = 1.1
-                    opacity = 0.6
+                withAnimation(.easeInOut(duration: 0.6)) {
+                    isAnimating = true
                 }
             }
     }
@@ -1596,18 +1646,16 @@ struct LineCompletePulseView: View {
 
 struct PreviewPulseView: View {
     let previewColor: Color
-    @State private var scale: CGFloat = 1.0
-    @State private var opacity: CGFloat = 0.6
+    @State private var isAnimating: Bool = false
     
     var body: some View {
         RoundedRectangle(cornerRadius: 8)
             .stroke(previewColor, lineWidth: 3)
-            .opacity(opacity)
-            .scaleEffect(scale)
+            .opacity(isAnimating ? 0.6 : 0.3)
+            .scaleEffect(isAnimating ? 1.02 : 1.0)
             .onAppear {
-                withAnimation(.easeInOut(duration: 0.8).repeatForever(autoreverses: true)) {
-                    scale = 1.05
-                    opacity = 0.4
+                withAnimation(.easeInOut(duration: 0.4)) {
+                    isAnimating = true
                 }
             }
     }
