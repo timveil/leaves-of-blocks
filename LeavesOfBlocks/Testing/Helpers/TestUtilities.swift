@@ -21,7 +21,7 @@ struct UITestHelper {
         gameState.score = score
         gameState.linesCleared = linesCleared
         gameState.isGameOver = isGameOver
-        gameState.highScoreManager.updateHighScore(highScore)
+        // Note: highScoreManager is now part of GameService
         return gameState
     }
     

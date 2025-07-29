@@ -1,9 +1,9 @@
 import Foundation
 import SwiftUI
-import UIKit
 
 class GameState: ObservableObject {
-    static let gridSize = GameTheme.GameConfig.gridSize
+    
+    // MARK: - Published Properties
     
     @Published var grid: [[GridCell]]
     @Published var currentBlocks: [BlockShape]
@@ -19,21 +19,44 @@ class GameState: ObservableObject {
     @Published var currentCombo: Int = 0
     @Published var isNewHighScore: Bool = false
     
-    // Timer for continuous updates
-    @Published var currentGameTime: TimeInterval = 0
-    private var gameTimer: Timer?
-    
     // Difficulty mode
     @Published var currentDifficulty: DifficultyMode = .easy
     
-    let highScoreManager = HighScoreManager()
+    // MARK: - Services
+    
+    private let gameService = GameService()
+    
+    // MARK: - Computed Properties
+    
+    var currentGameTime: TimeInterval {
+        return gameService.currentGameTime
+    }
+    
+    var highScore: Int {
+        return gameService.getHighScore()
+    }
+    
+    var statistics: GameSessionStatistics {
+        return GameSessionStatistics(
+            score: score,
+            blocksPlaced: blocksPlaced,
+            linesCleared: linesCleared,
+            gameTime: currentGameTime,
+            longestCombo: longestCombo,
+            currentCombo: currentCombo,
+            difficulty: currentDifficulty
+        )
+    }
+    
+    // MARK: - Initialization
     
     init() {
-        grid = Array(repeating: Array(repeating: GridCell(), count: GameState.gridSize), count: GameState.gridSize)
+        grid = GameLogic.createEmptyGrid()
         currentBlocks = []
         generateNewBlocks()
-        startGameTimer()
     }
+    
+    // MARK: - Game Actions
     
     func generateNewBlocks() {
         currentBlocks = BlockGenerator.generateWeightedBlocks(count: 3, difficulty: currentDifficulty)
@@ -41,22 +64,7 @@ class GameState: ObservableObject {
     }
     
     func canPlaceBlock(_ block: BlockShape, at gridPosition: GridPosition) -> Bool {
-        for blockPos in block.positions {
-            let finalRow = gridPosition.row + blockPos.row
-            let finalCol = gridPosition.col + blockPos.col
-            
-            // Check bounds
-            if finalRow < 0 || finalRow >= GameState.gridSize || 
-               finalCol < 0 || finalCol >= GameState.gridSize {
-                return false
-            }
-            
-            // Check if cell is already filled
-            if grid[finalRow][finalCol].isFilled {
-                return false
-            }
-        }
-        return true
+        return GameLogic.canPlaceBlock(block, at: gridPosition, in: grid)
     }
     
     func placeBlock(_ block: BlockShape, at gridPosition: GridPosition) {
@@ -67,22 +75,16 @@ class GameState: ObservableObject {
         #endif
         
         // Haptic feedback for block placement
-        let impactFeedback = UIImpactFeedbackGenerator(style: .light)
-        impactFeedback.impactOccurred()
+        gameService.blockPlacementFeedback()
         
-        // Place the block
-        for blockPos in block.positions {
-            let finalRow = gridPosition.row + blockPos.row
-            let finalCol = gridPosition.col + blockPos.col
-            grid[finalRow][finalCol].isFilled = true
-            grid[finalRow][finalCol].color = block.color
-        }
+        // Place the block using GameLogic
+        GameLogic.placeBlock(block, at: gridPosition, in: &grid)
         
         // Update statistics
         blocksPlaced += 1
         
         // Add points for placing block
-        score += block.positions.count * 10
+        score += GameLogic.calculateBlockScore(blockSize: block.positions.count)
         
         // Remove the placed block from current blocks
         if let index = currentBlocks.firstIndex(where: { $0.positions == block.positions && $0.color == block.color }) {
@@ -104,77 +106,28 @@ class GameState: ObservableObject {
     }
     
     func clearCompletedLines() -> (clearedRows: Set<Int>, clearedCols: Set<Int>, clearedCells: [ClearedCell]) {
-        var clearedRows: Set<Int> = []
-        var clearedCols: Set<Int> = []
-        var clearedCells: [ClearedCell] = []
-        
-        // Check rows
-        for row in 0..<GameState.gridSize {
-            if grid[row].allSatisfy({ $0.isFilled }) {
-                clearedRows.insert(row)
-            }
-        }
-        
-        // Check columns
-        for col in 0..<GameState.gridSize {
-            if (0..<GameState.gridSize).allSatisfy({ grid[$0][col].isFilled }) {
-                clearedCols.insert(col)
-            }
-        }
-        
-        // Collect cell information before clearing
-        for row in clearedRows {
-            for col in 0..<GameState.gridSize {
-                clearedCells.append(ClearedCell(row: row, col: col, color: grid[row][col].color))
-            }
-        }
-        
-        for col in clearedCols {
-            for row in 0..<GameState.gridSize {
-                if !clearedRows.contains(row) { // Avoid duplicates
-                    clearedCells.append(ClearedCell(row: row, col: col, color: grid[row][col].color))
-                }
-            }
-        }
-        
-        // Clear rows
-        for row in clearedRows {
-            for col in 0..<GameState.gridSize {
-                grid[row][col] = GridCell()
-            }
-        }
-        
-        // Clear columns
-        for col in clearedCols {
-            for row in 0..<GameState.gridSize {
-                grid[row][col] = GridCell()
-            }
-        }
+        // Use GameLogic to clear completed lines
+        let clearResult = GameLogic.clearCompletedLines(in: &grid)
         
         // Add bonus points
-        let totalLinesCleared = clearedRows.count + clearedCols.count
+        let totalLinesCleared = clearResult.clearedRows.count + clearResult.clearedCols.count
         if totalLinesCleared > 0 {
-            // Strong haptic feedback for line clearing
-            let impactFeedback = UIImpactFeedbackGenerator(style: .heavy)
-            impactFeedback.impactOccurred()
+            // Haptic feedback for line clearing
+            gameService.lineClearFeedback()
             
             linesCleared += totalLinesCleared
-            score += totalLinesCleared * 100
+            score += GameLogic.calculateLineScore(clearedRows: clearResult.clearedRows.count, clearedCols: clearResult.clearedCols.count)
             
             // Update combo tracking
             currentCombo = totalLinesCleared
             if currentCombo > longestCombo {
                 longestCombo = currentCombo
             }
-            
-            if totalLinesCleared > 1 {
-                score += (totalLinesCleared - 1) * 50 // Combo bonus
-            }
         } else {
             currentCombo = 0
         }
         
-        return (clearedRows: clearedRows, clearedCols: clearedCols, clearedCells: clearedCells)
+        return clearResult
     }
     
     func checkGameOver() {
@@ -184,8 +137,8 @@ class GameState: ObservableObject {
             return
         }
         
-        // Use the optimized game logic function
-        let gameOverState = GameRules.isGameOver(currentBlocks: currentBlocks, grid: grid)
+        // Use GameLogic to check game over state
+        let gameOverState = GameLogic.isGameOver(currentBlocks: currentBlocks, grid: grid)
         
         #if DEBUG
         print("🎮 Game Over Check: hasBlocks=\(currentBlocks.count), gameOverState=\(gameOverState), currentGameOver=\(isGameOver)")
@@ -201,19 +154,25 @@ class GameState: ObservableObject {
             // Game just ended - handle high score
             print("🏁 GAME OVER DETECTED! Final score: \(score)")
             isGameOver = true
-            stopGameTimer() // Stop the timer when game ends
-            let oldHighScore = highScoreManager.highScore
-            highScoreManager.updateHighScore(score)
-            isNewHighScore = score > oldHighScore
+            gameService.endGameSession()
             
-            // Save game to Core Data
-            CoreDataManager.shared.saveGameRecord(
+            let oldHighScore = gameService.getHighScore()
+            isNewHighScore = gameService.updateHighScore(score)
+            
+            if isNewHighScore {
+                gameService.newHighScoreFeedback()
+            } else {
+                gameService.gameOverFeedback()
+            }
+            
+            // Save game record
+            gameService.saveGameRecord(
                 score: score,
-                difficulty: currentDifficulty,
-                blocksPlaced: blocksPlaced,
                 linesCleared: linesCleared,
-                longestCombo: longestCombo,
-                gameTime: gameTime
+                blocksPlaced: blocksPlaced,
+                gameTime: currentGameTime,
+                difficulty: currentDifficulty,
+                longestCombo: longestCombo
             )
         } else if !gameOverState {
             // Game is still active
@@ -227,10 +186,10 @@ class GameState: ObservableObject {
     }
     
     func resetGame() {
-        // Stop existing timer
-        stopGameTimer()
+        // Reset grid using GameLogic
+        grid = GameLogic.createEmptyGrid()
         
-        grid = Array(repeating: Array(repeating: GridCell(), count: GameState.gridSize), count: GameState.gridSize)
+        // Reset game state
         score = 0
         linesCleared = 0
         isGameOver = false
@@ -239,124 +198,16 @@ class GameState: ObservableObject {
         // Reset statistics
         blocksPlaced = 0
         gameStartTime = Date()
-        currentGameTime = 0
         longestCombo = 0
         currentCombo = 0
         isNewHighScore = false
         
         // Randomly pre-fill the grid with shapes
-        randomlyFillGrid()
+        GameLogic.randomlyFillGrid(&grid)
         
         generateNewBlocks()
         
-        // Start the timer for continuous updates
-        startGameTimer()
-    }
-    
-    private func randomlyFillGrid() {
-        let totalCells = GameState.gridSize * GameState.gridSize // 64 cells for 8x8
-        let maxFillCells = Int(Double(totalCells) * 0.4) // Up to 40% filled (25-26 cells)
-        let targetFillCells = Int.random(in: 0...maxFillCells)
-        
-        var cellsPlaced = 0
-        var attemptCount = 0
-        let maxAttempts = targetFillCells * 10 // Prevent infinite loops
-        
-        while cellsPlaced < targetFillCells && attemptCount < maxAttempts {
-            attemptCount += 1
-            
-            // Pick a random shape
-            guard let randomShape = BlockShape.allShapes.randomElement() else { continue }
-            
-            // Pick a random position
-            let randomRow = Int.random(in: 0..<GameState.gridSize)
-            let randomCol = Int.random(in: 0..<GameState.gridSize)
-            let position = GridPosition(row: randomRow, col: randomCol)
-            
-            // Try to place the shape
-            if canPlaceBlock(randomShape, at: position) {
-                // Temporarily place the block to check for complete lines
-                var tempGrid = grid
-                for blockPos in randomShape.positions {
-                    let finalRow = position.row + blockPos.row
-                    let finalCol = position.col + blockPos.col
-                    tempGrid[finalRow][finalCol].isFilled = true
-                    tempGrid[finalRow][finalCol].color = randomShape.color
-                }
-                
-                // Check if this placement would create any complete lines
-                let wouldCreateLines = wouldCreateCompleteLines(in: tempGrid)
-                
-                if !wouldCreateLines {
-                    // Place the block for real
-                    for blockPos in randomShape.positions {
-                        let finalRow = position.row + blockPos.row
-                        let finalCol = position.col + blockPos.col
-                        grid[finalRow][finalCol].isFilled = true
-                        grid[finalRow][finalCol].color = randomShape.color
-                        cellsPlaced += 1
-                    }
-                }
-            }
-        }
-    }
-    
-    private func wouldCreateCompleteLines(in testGrid: [[GridCell]]) -> Bool {
-        // Check rows for completion
-        for row in 0..<GameState.gridSize {
-            if testGrid[row].allSatisfy({ $0.isFilled }) {
-                return true
-            }
-        }
-        
-        // Check columns for completion
-        for col in 0..<GameState.gridSize {
-            if (0..<GameState.gridSize).allSatisfy({ testGrid[$0][col].isFilled }) {
-                return true
-            }
-        }
-        
-        return false
-    }
-    
-    // MARK: - Computed Statistics
-    
-    var gameTime: TimeInterval {
-        // Return the continuously updated time for active games, 
-        // or calculate on-demand for inactive games
-        if gameTimer != nil {
-            return currentGameTime
-        } else {
-            return Date().timeIntervalSince(gameStartTime)
-        }
-    }
-    
-    var averageBlockScore: Double {
-        guard blocksPlaced > 0 else { return 0.0 }
-        return Double(score) / Double(blocksPlaced)
-    }
-    
-    var lineClearPercentage: Double {
-        guard blocksPlaced > 0 else { return 0.0 }
-        return (Double(linesCleared) / Double(blocksPlaced)) * 100
-    }
-    
-    // MARK: - Timer Management
-    
-    private func startGameTimer() {
-        gameTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
-            DispatchQueue.main.async {
-                self.currentGameTime = Date().timeIntervalSince(self.gameStartTime)
-            }
-        }
-    }
-    
-    private func stopGameTimer() {
-        gameTimer?.invalidate()
-        gameTimer = nil
-    }
-    
-    deinit {
-        stopGameTimer()
+        // Start game session with service
+        gameService.startGameSession(difficulty: currentDifficulty)
     }
 }

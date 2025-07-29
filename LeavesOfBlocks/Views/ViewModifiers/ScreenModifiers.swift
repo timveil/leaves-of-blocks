@@ -293,6 +293,19 @@ extension View {
             .disabled(isDisabled)
             .animation(.easeInOut(duration: 0.2), value: isDisabled)
     }
+    
+    /// Applies standard game button styling
+    func gameButtonStyle() -> some View {
+        self
+            .background(
+                Capsule()
+                    .fill(GameTheme.Gradients.button)
+            )
+            .foregroundColor(GameTheme.Colors.primaryBackground)
+            .font(GameTheme.Typography.bodyFont)
+            .padding(.horizontal, 32)
+            .padding(.vertical, 16)
+    }
 }
 
 // MARK: - Preview Provider

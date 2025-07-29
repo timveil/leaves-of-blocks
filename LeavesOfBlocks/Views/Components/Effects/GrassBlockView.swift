@@ -45,7 +45,8 @@ struct UIComponents_Previews: PreviewProvider {
                 isVisible: true
             )
             
-            GameButtonView(title: "New Game") { }
+            Button("New Game") { }
+                .gameButtonStyle()
             
             ErrorStateView(
                 title: "Oops!",

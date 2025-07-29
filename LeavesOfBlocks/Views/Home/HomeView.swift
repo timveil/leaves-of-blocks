@@ -20,7 +20,7 @@ struct HomeView: View {
                         Text("Best Score")
                             .gameTitleStyle(color: GameTheme.Colors.accent)
                         
-                        Text("\(gameState.highScoreManager.highScore)")
+                        Text("\(gameState.highScore)")
                             .font(GameTheme.Typography.largeScore)
                             .foregroundColor(GameTheme.Colors.primaryText)
                             

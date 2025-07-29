@@ -334,8 +334,8 @@ struct GameBoardView: View {
         let maxSnapDistanceSquared: CGFloat = 300 * 300 // Maximum snap distance squared for performance
         
         // Check all possible positions on the grid
-        for row in 0..<GameState.gridSize {
-            for col in 0..<GameState.gridSize {
+        for row in 0..<GameTheme.GameConfig.gridSize {
+            for col in 0..<GameTheme.GameConfig.gridSize {
                 let position = GridPosition(row: row, col: col)
                 
                 // Check if block can be placed at this position

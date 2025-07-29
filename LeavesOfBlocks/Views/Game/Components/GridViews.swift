@@ -11,9 +11,9 @@ struct GameGridView: View {
     
     var body: some View {
         VStack(spacing: 3) {
-                ForEach(0..<GameState.gridSize, id: \.self) { row in
+                ForEach(0..<GameTheme.GameConfig.gridSize, id: \.self) { row in
                     HStack(spacing: 3) {
-                        ForEach(0..<GameState.gridSize, id: \.self) { col in
+                        ForEach(0..<GameTheme.GameConfig.gridSize, id: \.self) { col in
                             GridCellView(
                                 cell: gameState.grid[row][col],
                                 size: cellSize,
@@ -95,8 +95,8 @@ struct GameGridView: View {
         for blockPos in draggedBlock.positions {
             let finalRow = previewPos.row + blockPos.row
             let finalCol = previewPos.col + blockPos.col
-            if finalRow >= 0 && finalRow < GameState.gridSize && 
-               finalCol >= 0 && finalCol < GameState.gridSize {
+            if finalRow >= 0 && finalRow < GameTheme.GameConfig.gridSize && 
+               finalCol >= 0 && finalCol < GameTheme.GameConfig.gridSize {
                 tempGrid[finalRow][finalCol].isFilled = true
             }
         }
@@ -105,15 +105,15 @@ struct GameGridView: View {
         var completedCols: Set<Int> = []
         
         // Check all rows for completion
-        for row in 0..<GameState.gridSize {
+        for row in 0..<GameTheme.GameConfig.gridSize {
             if tempGrid[row].allSatisfy({ $0.isFilled }) {
                 completedRows.insert(row)
             }
         }
         
         // Check all columns for completion
-        for col in 0..<GameState.gridSize {
-            if (0..<GameState.gridSize).allSatisfy({ tempGrid[$0][col].isFilled }) {
+        for col in 0..<GameTheme.GameConfig.gridSize {
+            if (0..<GameTheme.GameConfig.gridSize).allSatisfy({ tempGrid[$0][col].isFilled }) {
                 completedCols.insert(col)
             }
         }

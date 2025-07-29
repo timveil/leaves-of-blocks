@@ -61,36 +61,3 @@ extension GameTheme {
     }
 }
 
-// MARK: - View Style Extensions
-
-extension View {
-    func gameCardStyle() -> some View {
-        self
-            .background(
-                RoundedRectangle(cornerRadius: GameTheme.Layout.largeRadius)
-                    .fill(GameTheme.Colors.blockBackground.opacity(0.8))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: GameTheme.Layout.largeRadius)
-                            .stroke(GameTheme.Gradients.accent, lineWidth: 2.5)
-                    )
-                    .shadow(
-                        color: GameTheme.Colors.gridBorder.opacity(0.4),
-                        radius: GameTheme.Layout.shadowRadius,
-                        x: 0,
-                        y: GameTheme.Layout.shadowOffset
-                    )
-            )
-    }
-    
-    func gameButtonStyle() -> some View {
-        self
-            .background(
-                Capsule()
-                    .fill(GameTheme.Gradients.button)
-            )
-            .foregroundColor(GameTheme.Colors.primaryBackground)
-            .font(GameTheme.Typography.bodyFont)
-            .padding(.horizontal, 32)
-            .padding(.vertical, 16)
-    }
-}

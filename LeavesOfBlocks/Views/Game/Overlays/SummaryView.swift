@@ -142,7 +142,7 @@ struct GameSummaryView: View {
                         
                         StatisticCard(
                             title: "Best Ever",
-                            value: "\(gameState.highScoreManager.highScore)",
+                            value: "\(gameState.highScore)",
                             icon: "crown.fill",
                             color: GameTheme.Colors.accent
                         )

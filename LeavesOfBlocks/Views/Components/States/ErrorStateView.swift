@@ -23,7 +23,8 @@ struct ErrorStateView: View {
                 .multilineTextAlignment(.center)
             
             if let retryAction = retryAction {
-                GameButtonView(title: "Try Again", action: retryAction)
+                Button("Try Again", action: retryAction)
+                    .gameButtonStyle()
             }
         }
         .padding(32)
