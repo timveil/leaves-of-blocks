@@ -16,7 +16,7 @@ extension BlockColor {
 
 struct SimpleAppTitleView: View {
     var body: some View {
-        Text("🍂 Leaves of Blocks")
+        Text("Leaves of Blocks")
             .font(GameTheme.Typography.title)
             .foregroundColor(GameTheme.Colors.primaryText)
             .padding(.vertical, GameTheme.Layout.smallPadding)
@@ -52,7 +52,6 @@ struct SimpleScoreView: View {
                 }
             }
         }
-        .padding(.horizontal, GameTheme.Layout.extraLargePadding)
         .padding(.vertical, GameTheme.Layout.mediumPadding)
     }
 }
@@ -1061,10 +1060,24 @@ struct GameBoardView: View {
     let cellSize: CGFloat = 40
     let onViewSummary: () -> Void
     
+    // Helper function to format game time
+    private func formatGameTime(_ timeInterval: TimeInterval) -> String {
+        let minutes = Int(timeInterval) / 60
+        let seconds = Int(timeInterval) % 60
+        return String(format: "%d:%02d", minutes, seconds)
+    }
+    
     var body: some View {
         ZStack {
             GameBackgroundView()
             
+            // Grass at bottom (lowest z-index)
+            VStack {
+                Spacer()
+                BlockGrassView()
+                    .ignoresSafeArea(.all, edges: .bottom)
+            }
+            .zIndex(0)
             
             // Calculate consistent width for all three rows
             let gameWidth = (8 * cellSize) + (7 * 3) + (2 * GameTheme.Layout.mediumPadding)
@@ -1093,6 +1106,55 @@ struct GameBoardView: View {
                     .frame(width: gameWidth)
                     Spacer()
                 }
+                
+                // Game Stats Row
+                HStack {
+                    Spacer()
+                    HStack(alignment: .center, spacing: GameTheme.Layout.smallSpacing) {
+                        // Blocks Placed Counter (Left)
+                        VStack(alignment: .leading, spacing: 4) {
+                            HStack(spacing: 6) {
+                                Image(systemName: "cube.fill")
+                                    .font(.system(size: 16, weight: .semibold))
+                                    .foregroundColor(GameTheme.Colors.blockYellow)
+                                Text("\(gameState.blocksPlaced)")
+                                    .font(GameTheme.Typography.captionFont)
+                                    .foregroundColor(GameTheme.Colors.secondaryText)
+                            }
+                        }
+                        
+                        Spacer()
+                        
+                        // Timer (Center)
+                        VStack(alignment: .center, spacing: 4) {
+                            HStack(spacing: 6) {
+                                Image(systemName: "clock.fill")
+                                    .font(.system(size: 16, weight: .semibold))
+                                    .foregroundColor(GameTheme.Colors.blockBlue)
+                                Text(formatGameTime(gameState.gameTime))
+                                    .font(GameTheme.Typography.captionFont)
+                                    .foregroundColor(GameTheme.Colors.secondaryText)
+                            }
+                        }
+                        
+                        Spacer()
+                        
+                        // Difficulty Level (Right)
+                        VStack(alignment: .trailing, spacing: 4) {
+                            HStack(spacing: 6) {
+                                Image(systemName: gameState.currentDifficulty.icon)
+                                    .font(.system(size: 16, weight: .semibold))
+                                    .foregroundColor(gameState.currentDifficulty.color)
+                                Text(gameState.currentDifficulty.rawValue)
+                                    .font(GameTheme.Typography.captionFont)
+                                    .foregroundColor(GameTheme.Colors.secondaryText)
+                            }
+                        }
+                    }
+                    .frame(width: gameWidth)
+                    Spacer()
+                }
+                .padding(.vertical, GameTheme.Layout.smallPadding)
                 
                 Spacer()
                 
@@ -1192,9 +1254,7 @@ struct GameBoardView: View {
                     Spacer()
                 }
                 
-                // Static grass foundation - always visible
-                BlockGrassView()
-                    .ignoresSafeArea(.all, edges: .bottom)
+                Spacer(minLength: 100) // Leave space for grass
             }
             .zIndex(10) // Game elements above grass
             .padding(.horizontal, GameTheme.Layout.largePadding)

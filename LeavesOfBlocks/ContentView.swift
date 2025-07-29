@@ -27,17 +27,17 @@ struct ContentView: View {
                 AppToolbarView(
                     currentScreen: currentScreen,
                     onGoHome: {
-                        withAnimation(.easeInOut) {
+                        withAnimation(GameTheme.Animations.springAnimation) {
                             currentScreen = .home
                         }
                     },
                     onShowAbout: {
-                        withAnimation(.easeInOut) {
+                        withAnimation(GameTheme.Animations.springAnimation) {
                             currentScreen = .about
                         }
                     },
                     onShowHowToPlay: {
-                        withAnimation(.easeInOut) {
+                        withAnimation(GameTheme.Animations.springAnimation) {
                             currentScreen = .howToPlay
                         }
                     },
@@ -61,13 +61,13 @@ struct ContentView: View {
                 GameHomeView(
                     gameState: gameState,
                     onStartGame: { difficulty in
-                        withAnimation(.easeInOut) {
+                        withAnimation(GameTheme.Animations.springAnimation) {
                             gameState.startGame(difficulty: difficulty)
                             currentScreen = .game
                         }
                     },
                     onShowHistory: {
-                        withAnimation(.easeInOut) {
+                        withAnimation(GameTheme.Animations.springAnimation) {
                             currentScreen = .history
                         }
                     }
@@ -79,7 +79,7 @@ struct ContentView: View {
                 GameBoardView(
                     gameState: gameState,
                     onViewSummary: {
-                        withAnimation(.easeInOut) {
+                        withAnimation(GameTheme.Animations.springAnimation) {
                             currentScreen = .summary(nil)
                         }
                     }
@@ -104,7 +104,7 @@ struct ContentView: View {
                 GameHistoryView(
                     gameState: gameState,
                     onSelectSession: { session in
-                        withAnimation(.easeInOut) {
+                        withAnimation(GameTheme.Animations.springAnimation) {
                             currentScreen = .summary(session)
                         }
                     }
@@ -136,7 +136,7 @@ struct AppToolbarView: View {
             Button(action: currentScreen == .home ? {} : onGoHome) {
                 Image(systemName: "house.fill")
                     .font(.system(size: 28, weight: .semibold))
-                    .foregroundColor(currentScreen == .home ? GameTheme.Colors.accent.opacity(0.4) : GameTheme.Colors.accent)
+                    .foregroundColor(currentScreen == .home ? GameTheme.Colors.blockBlue.opacity(0.4) : GameTheme.Colors.blockBlue)
             }
             .disabled(currentScreen == .home)
             
@@ -155,7 +155,7 @@ struct AppToolbarView: View {
                 Button(action: onShowAbout) {
                     Image(systemName: "gear")
                         .font(.system(size: 28, weight: .semibold))
-                        .foregroundColor(GameTheme.Colors.blockBlue)
+                        .foregroundColor(Color(red: 0.7, green: 0.7, blue: 0.7))
                 }
                 
                 // Help icon (How to Play)
