@@ -8,13 +8,27 @@ A SwiftUI iOS puzzle game inspired by Block Blast, featuring autumn-themed visua
 
 ## Features
 
-- 🍂 Beautiful autumn-themed design with custom animations
-- 🎮 Drag-and-drop gameplay with visual feedback
-- 📊 Progressive difficulty system (Easy, Moderate, Hard)
-- 🏆 High score tracking with persistent storage
-- 🎯 Combo scoring system for clearing multiple lines
-- 📖 Interactive "How to Play" guide with game instructions
-- 📱 Optimized for iPhone (iOS 18.5+)
+### Gameplay
+- 🍂 Beautiful autumn-themed design with custom animations and effects
+- 🎮 Intuitive drag-and-drop block placement with visual feedback
+- 📊 Progressive difficulty system (Easy, Moderate, Hard) with weighted block generation
+- 🏆 High score tracking with persistent storage across game sessions
+- 🎯 Advanced scoring system with combo bonuses for clearing multiple lines
+- 📱 Optimized for iPhone with responsive layout and smooth 60fps animations
+
+### User Experience  
+- 📖 Interactive "How to Play" guide with detailed game instructions and pro tips
+- 📈 Comprehensive game history with detailed statistics per session
+- 🎨 Consistent, polished UI with unified styling system
+- ♿ Accessibility features built into all interactive components
+- 🚀 Fast app startup with custom launch screen (2.5s)
+
+### Technical Excellence
+- 🏗️ Modular component architecture with extensive code deduplication
+- 🎨 Unified styling system with 10+ reusable view modifiers
+- 📦 Pure SwiftUI implementation (no external dependencies)
+- 🔧 App Clip support for instant app experiences
+- 🤖 Automated CI/CD with GitHub Actions for quality assurance
 
 ## Requirements
 
@@ -236,34 +250,96 @@ xcodebuild archive -project "LeavesOfBlocks.xcodeproj" -scheme "LeavesOfBlocks" 
 ## Project Structure
 
 ```
-LeavesOfBlocks.xcodeproj      # Xcode project file
-LeavesOfBlocks/               # Main source directory
-├── GameModels.swift          # Data models and game state
-├── GameLogic.swift           # Game mechanics and rules
-├── GameViews.swift           # Game UI components
-├── GameEnhancements.swift    # Visual effects and animations
-├── Theme.swift               # Autumn theme and styling
-├── Configuration.swift       # App configuration and feature flags
-├── HighScoreManager.swift    # Score persistence
-├── CoreDataManager.swift     # Core Data stack management
-├── UIComponents.swift        # Reusable UI components
-├── Extensions.swift          # Swift extensions
-├── LeavesOfBlocksApp.swift   # App entry point
-├── ContentView.swift         # Navigation hub
-├── AboutView.swift           # About screen
-├── HowToPlayView.swift       # How to play instructions
-├── GameHistoryView.swift     # Game history screen
-├── LaunchScreen.swift        # Custom launch screen
-├── TestHelpers.swift         # Testing utilities
-├── GameRecord+CoreDataClass.swift      # Core Data entity class
-├── GameRecord+CoreDataProperties.swift # Core Data entity properties
-├── LeavesOfBlocks.xcdatamodeld/         # Core Data model
-└── Assets.xcassets/          # App icons and assets
-LeavesOfBlocksTests/          # Unit tests (Swift Testing)
-LeavesOfBlocksUITests/        # UI automation tests (XCTest)
-LeavesOfBlocksAppClip/        # App Clip target
-LeavesOfBlocksAppClipTests/   # App Clip unit tests
-LeavesOfBlocksAppClipUITests/ # App Clip UI tests
+LeavesOfBlocks.xcodeproj/           # Xcode project file
+├── LeavesOfBlocks/                 # Main application source
+│   ├── App/                        # Application entry and navigation
+│   │   ├── LeavesOfBlocksApp.swift # App entry point with launch screen
+│   │   ├── ContentView.swift       # Navigation hub with enum-based routing
+│   │   └── LaunchScreen.swift      # Custom startup screen (2.5s)
+│   ├── Views/                      # Modular UI architecture
+│   │   ├── BaseScreenView.swift    # Foundation layout container
+│   │   ├── ViewModifiers/
+│   │   │   └── ScreenModifiers.swift # Unified styling system (10+ modifiers)
+│   │   ├── Components/             # Reusable UI components
+│   │   │   ├── Buttons/
+│   │   │   │   └── GameButtons.swift # Unified button components
+│   │   │   ├── Displays/
+│   │   │   │   └── StatisticalDisplays.swift # Score/stats components
+│   │   │   ├── Tables/
+│   │   │   │   └── GameTables.swift # Table formatting components
+│   │   │   ├── ErrorStateView.swift
+│   │   │   ├── LoadingStateView.swift
+│   │   │   └── [Other shared components]
+│   │   ├── Home/                   # Home screen components
+│   │   │   ├── HomeView.swift
+│   │   │   └── HomeViewComponents.swift
+│   │   ├── Game/                   # Game screen components
+│   │   │   ├── GameViews.swift     # Main game board
+│   │   │   ├── Components/
+│   │   │   │   ├── GameBlockViews.swift # Block rendering & drag/drop
+│   │   │   │   ├── GameGridViews.swift  # 8x8 grid display
+│   │   │   │   ├── GameHeaderViews.swift # Score & status UI
+│   │   │   │   └── GameBackgroundViews.swift # Themed backgrounds
+│   │   │   └── Overlays/
+│   │   │       ├── GameOverOverlayView.swift # Game over dialog
+│   │   │       └── GameSummaryView.swift # Post-game summary
+│   │   ├── History/                # Game history components
+│   │   │   ├── HistoryView.swift
+│   │   │   └── HistoryViewComponents.swift
+│   │   ├── HowToPlay/              # Tutorial components
+│   │   │   ├── HowToPlayView.swift
+│   │   │   └── HowToPlayViewComponents.swift
+│   │   └── About/
+│   │       └── AboutView.swift
+│   ├── Models/                     # Data models
+│   │   ├── Game/
+│   │   │   ├── GameState.swift     # Main game state (ObservableObject)
+│   │   │   ├── BlockModels.swift   # Block shapes and definitions
+│   │   │   ├── GridModels.swift    # Grid and position models
+│   │   │   └── DifficultyMode.swift # Difficulty configurations
+│   │   └── Data/                   # Core Data models
+│   │       ├── GameRecord+CoreDataClass.swift
+│   │       ├── GameRecord+CoreDataProperties.swift
+│   │       └── LeavesOfBlocks.xcdatamodeld/
+│   ├── Logic/                      # Game logic and rules
+│   │   ├── Game/
+│   │   │   ├── GameRules.swift     # Placement validation, line clearing
+│   │   │   ├── BlockGenerator.swift # Weighted random block generation
+│   │   │   ├── GamePerformance.swift # Performance optimization
+│   │   │   └── GameStateValidator.swift # State validation
+│   │   └── Enhancements/
+│   │       └── GameEnhancements.swift # Visual effects and animations
+│   ├── Services/                   # App services
+│   │   ├── Configuration/
+│   │   │   ├── AppConfiguration.swift # Environment & feature flags
+│   │   │   └── UserPreferences.swift  # User settings
+│   │   └── Data/
+│   │       ├── HighScoreManager.swift # Score persistence
+│   │       └── CoreDataManager.swift  # Core Data stack
+│   ├── Resources/                  # App resources
+│   │   ├── Theming/                # Comprehensive theme system
+│   │   │   ├── Theme.swift         # Main theme orchestration
+│   │   │   ├── Colors.swift        # Autumn color palette
+│   │   │   ├── Typography.swift    # Font scales and text styles
+│   │   │   ├── Layout.swift        # Layout constants and spacing
+│   │   │   └── Animations.swift    # Animation timing and easing
+│   │   └── Assets.xcassets/        # App icons and visual assets
+│   ├── Extensions/                 # Swift extensions
+│   │   ├── Foundation/             # Foundation framework extensions
+│   │   ├── SwiftUI/               # SwiftUI framework extensions
+│   │   └── UIKit/                 # UIKit framework extensions
+│   └── Testing/                   # Testing utilities
+│       └── Helpers/               # Test mocks and data generators
+├── LeavesOfBlocksTests/           # Unit tests (Swift Testing framework)
+├── LeavesOfBlocksUITests/         # UI automation tests (XCTest)
+├── LeavesOfBlocksAppClip/         # App Clip target
+├── LeavesOfBlocksAppClipTests/    # App Clip unit tests
+├── LeavesOfBlocksAppClipUITests/  # App Clip UI tests
+├── docs/                          # GitHub Pages documentation
+│   └── index.html                 # Privacy policy
+└── .github/workflows/             # CI/CD automation
+    ├── ios.yml                    # iOS build and test
+    └── objective-c-xcode.yml      # Static analysis
 ```
 
 ## Game Mechanics
@@ -292,11 +368,28 @@ LeavesOfBlocksAppClipUITests/ # App Clip UI tests
 
 ## Technical Details
 
+### Architecture
 - **Framework**: Pure SwiftUI (no external dependencies)
-- **Architecture**: ObservableObject/Published pattern for state management
+- **State Management**: ObservableObject/Published pattern with centralized GameState
+- **UI Architecture**: Modular component system with extensive code deduplication
+- **Navigation**: Enum-based screen routing with centralized ContentView hub
+- **Styling System**: Unified view modifiers for consistent theming (10+ reusable modifiers)
+- **Component Organization**: Feature-based directories with shared component library
+
+### Code Quality
+- **Recent Refactoring**: Eliminated 300+ lines of duplicated code through component unification
+- **Reusable Components**: GameDifficultyButton, StartGameButton, GameStatChip, BaseScreenView
+- **Consistent Styling**: gameContainerStyle(), game3DCardStyle(), gameGradientCardStyle() modifiers
+- **Atomic Design**: Small, composable components building into complex interfaces
+- **Type Safety**: Comprehensive Swift 5.0 type system with minimal optionals
+
+### Platform Details
 - **Minimum iOS**: 18.5
 - **Swift Version**: 5.0
+- **Target Devices**: iPhone only (TARGETED_DEVICE_FAMILY = 1)
 - **Bundle ID**: `timothy.veil.LeavesOfBlocks`
+- **App Clip Bundle ID**: `timothy.veil.LeavesOfBlocks.Clip`
+- **Deployment**: TestFlight and App Store ready with CI/CD automation
 
 ## License
 

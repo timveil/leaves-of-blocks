@@ -48,22 +48,41 @@ This is a SwiftUI iOS game called "Leaves of Blocks" - a Block Blast-style puzzl
 ### Key Components
 
 #### Core Game Files
-- `GameModels.swift` - Data models: DifficultyMode, GridPosition, GridCell, BlockShape, GameState
-- `GameLogic.swift` - Game mechanics: block placement, line clearing, game over detection
-- `GameViews.swift` - Game UI components: grid display, block rendering, drag/drop
-- `GameEnhancements.swift` - Visual effects, animations, weighted block generation
+- `Models/Game/GameState.swift` - Main game state management (ObservableObject)
+- `Models/Game/BlockModels.swift` - Block shapes, positions, and color definitions
+- `Models/Game/GridModels.swift` - Grid cell and position data structures  
+- `Models/Game/DifficultyMode.swift` - Difficulty settings and configurations
+- `Logic/Game/GameRules.swift` - Game mechanics: block placement, line clearing, validation
+- `Logic/Game/BlockGenerator.swift` - Weighted random block generation system
+- `Logic/Enhancements/GameEnhancements.swift` - Visual effects, animations, performance optimizations
 
-#### Supporting Systems
-- `Theme.swift` - Comprehensive theming: autumn colors, typography, layout constants, animations
-- `Configuration.swift` - App configuration: environment detection, feature flags, preferences
-- `HighScoreManager.swift` - High score persistence using UserDefaults
-- `CoreDataManager.swift` - Core Data stack management for game history persistence
-- `GameRecord+CoreDataClass.swift` - Core Data entity class for game records
-- `GameRecord+CoreDataProperties.swift` - Core Data entity properties
-- `LeavesOfBlocks.xcdatamodeld` - Core Data model definition
-- `UIComponents.swift` - Reusable UI components across the app
-- `Extensions.swift` - Swift extensions for common functionality
-- `TestHelpers.swift` - Testing utilities and mock implementations
+#### UI Architecture (Modular Component System)
+- `Views/BaseScreenView.swift` - Foundation layout container for all screens
+- `Views/ViewModifiers/ScreenModifiers.swift` - Unified styling system with 10+ reusable modifiers
+- `Views/Components/` - Reusable UI components organized by function:
+  - `Buttons/GameButtons.swift` - Unified button components (GameDifficultyButton, StartGameButton)
+  - `Displays/StatisticalDisplays.swift` - Score and statistics display components (GameStatChip) 
+  - `Tables/GameTables.swift` - Table formatting and display components
+- `Views/Game/Components/` - Game-specific UI components:
+  - `GameBlockViews.swift` - Block rendering and drag/drop implementation
+  - `GameGridViews.swift` - 8x8 game grid display and interaction
+  - `GameHeaderViews.swift` - Score display and game status UI
+  - `GameBackgroundViews.swift` - Themed background and visual effects
+
+#### Supporting Systems  
+- `Resources/Theming/` - Comprehensive theming system:
+  - `Theme.swift` - Main theme orchestration
+  - `Colors.swift` - Autumn color palette and semantic color definitions
+  - `Typography.swift` - Font scales and text styling
+  - `Layout.swift` - Layout constants, spacing, and sizing
+  - `Animations.swift` - Animation timing and easing definitions
+- `Services/Configuration/AppConfiguration.swift` - Environment detection, feature flags, preferences
+- `Services/Data/HighScoreManager.swift` - High score persistence using UserDefaults
+- `Services/Data/CoreDataManager.swift` - Core Data stack management for game history
+- `Models/Data/GameRecord+CoreDataClass.swift` - Core Data entity class for game records
+- `Models/Data/GameRecord+CoreDataProperties.swift` - Core Data entity properties
+- `Extensions/` - Swift extensions organized by framework (Foundation, SwiftUI, UIKit)
+- `Testing/Helpers/` - Testing utilities, mocks, and test data generators
 
 ## Game Architecture Details
 
@@ -97,12 +116,45 @@ This is a SwiftUI iOS game called "Leaves of Blocks" - a Block Blast-style puzzl
 - **Moderate**: Balanced block distribution
 - **Hard**: Increases chance of larger, complex blocks
 
+## UI Architecture & Styling System
+
+### Unified Component System
+The app follows a modular component architecture with extensive code deduplication:
+
+#### View Modifiers (`Views/ViewModifiers/ScreenModifiers.swift`)
+- **gameContainerStyle()** - Consistent background, border, and shadow styling for containers
+- **game3DCardStyle()** - Elevated card styling with multiple shadow layers for depth
+- **gameGradientCardStyle()** - Gradient background cards with customizable styling
+- **gameBadgeStyle()** - Unified badge/pill styling for difficulty modes and status indicators
+- **gameTableHeaderStyle()** - Consistent table header formatting across components
+- **Typography Modifiers** - gameTitleStyle(), gameHeadlineStyle(), gameBodyStyle(), gameCaptionStyle()
+- **Navigation Modifiers** - Standard navigation bar and screen transition styling
+
+#### Reusable Components
+- **GameDifficultyButton** - Unified difficulty selection with compact/expanded modes
+- **StartGameButton** - Consistent game start button with accessibility features
+- **GameStatChip** - Statistical display component for scores, blocks placed, lines cleared
+- **BaseScreenView** - Foundation layout providing background, grass decoration, and content structure
+
+#### Component Organization
+- **Feature-based directories** - Components grouped by app section (Home/, Game/, History/, etc.)
+- **Shared components** - Common UI elements in Views/Components/ for cross-screen usage
+- **Atomic design principles** - Small, composable components that build into larger interfaces
+
+### Code Deduplication Results
+Recent refactoring eliminated ~300+ lines of duplicated styling code by:
+- Consolidating button variations into unified components
+- Replacing complex ZStack shadow patterns with reusable modifiers
+- Standardizing card, container, and badge styling across all screens
+- Unifying typography and spacing through centralized theme system
+
 ## Development Notes
 
 - Pure SwiftUI implementation with Core Data for persistence (no external dependencies)
 - Uses NavigationView with StackNavigationViewStyle for consistent iPad behavior
 - ObservableObject/Published pattern for state management
 - Custom drag gesture implementation with visual feedback
+- Modular component architecture with extensive view modifier system
 - Comprehensive configuration system for feature flags and testing
 - Swift version 5.0, modern iOS 18.5+ deployment target
 - Project structure uses synchronized file groups (Xcode 16+ feature)
