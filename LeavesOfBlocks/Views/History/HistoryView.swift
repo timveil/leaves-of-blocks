@@ -1,6 +1,6 @@
 import SwiftUI
 
-struct GameHistoryView: View {
+struct HistoryView: View {
     @ObservedObject var gameState: GameState
     let onSelectSession: (GameSession) -> Void
     @State private var gameHistory: [GameSession] = []
@@ -106,7 +106,7 @@ struct GameSession: Equatable {
 }
 
 #Preview {
-    GameHistoryView(
+    HistoryView(
         gameState: GameState(),
         onSelectSession: { _ in }
     )

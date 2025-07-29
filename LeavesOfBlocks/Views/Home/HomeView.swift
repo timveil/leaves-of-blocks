@@ -2,7 +2,7 @@ import SwiftUI
 
 // MARK: - Game Home View
 
-struct GameHomeView: View {
+struct HomeView: View {
     @ObservedObject var gameState: GameState
     let onStartGame: (DifficultyMode) -> Void
     let onShowHistory: () -> Void

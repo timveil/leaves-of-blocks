@@ -58,7 +58,7 @@ struct ContentView: View {
                 // Main Content Area
                 switch currentScreen {
             case .home:
-                GameHomeView(
+                HomeView(
                     gameState: gameState,
                     onStartGame: { difficulty in
                         withAnimation(GameTheme.Animations.springAnimation) {
@@ -101,7 +101,7 @@ struct ContentView: View {
                 .ignoresSafeArea(.container, edges: [])
                 
             case .history:
-                GameHistoryView(
+                HistoryView(
                     gameState: gameState,
                     onSelectSession: { session in
                         withAnimation(GameTheme.Animations.springAnimation) {
