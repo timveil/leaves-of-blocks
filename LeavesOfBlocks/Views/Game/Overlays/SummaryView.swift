@@ -46,36 +46,18 @@ struct SummaryView: View {
                 
                 VStack(spacing: 0) {
                     // Header section
-                    VStack(spacing: GameTheme.Layout.largeSpacing) {
-                        if isNewHighScore {
-                            Text("🏆 NEW HIGH SCORE! 🏆")
-                                .font(GameTheme.Typography.titleFont)
-                                .foregroundColor(GameTheme.Colors.accent)
-                                .tracking(1.5)
-                                .scaleEffect(highScoreScale)
-                                .onAppear {
-                                    withAnimation(.easeInOut(duration: 0.8).repeatForever(autoreverses: true)) {
-                                        highScoreScale = 1.1
-                                    }
-                                }
-                                .onDisappear {
-                                    highScoreScale = 1.0
-                                }
-                        }
+                    VStack(spacing: GameTheme.Layout.mediumSpacing) {
+                        Text(historicalSession != nil ? "Past Game Summary" : "Game Summary")
+                            .font(GameTheme.Typography.title)
+                            .foregroundColor(GameTheme.Colors.primaryText)
+                            .tracking(1)
                         
                         VStack(spacing: GameTheme.Layout.mediumSpacing) {
-                            Text(historicalSession != nil ? "Past Game Summary" : "Game Summary")
-                                .font(GameTheme.Typography.title)
-                                .foregroundColor(GameTheme.Colors.primaryText)
-                                .tracking(1)
-                            
-                            VStack(spacing: GameTheme.Layout.mediumSpacing) {
-                                // Show date for historical sessions
-                                if let session = historicalSession {
-                                    Text(session.formattedDate)
-                                        .font(GameTheme.Typography.captionFont)
-                                        .foregroundColor(GameTheme.Colors.secondaryText)
-                                }
+                            // Show date for historical sessions
+                            if let session = historicalSession {
+                                Text(session.formattedDate)
+                                    .font(GameTheme.Typography.captionFont)
+                                    .foregroundColor(GameTheme.Colors.secondaryText)
                             }
                         }
                     }
@@ -90,11 +72,28 @@ struct SummaryView: View {
                             .foregroundColor(GameTheme.Colors.accent)
                             .tracking(1)
                         
-                        Text("\(score)")
-                            .font(GameTheme.Typography.largeScore)
-                            .foregroundColor(GameTheme.Colors.primaryText)
-                            .lineLimit(1)
-                            .minimumScaleFactor(0.7)
+                        HStack(spacing: GameTheme.Layout.smallSpacing) {
+                            if isNewHighScore {
+                                Image(systemName: "crown.fill")
+                                    .font(GameTheme.Typography.largeScore)
+                                    .foregroundColor(GameTheme.Colors.accent)
+                                    .scaleEffect(highScoreScale)
+                                    .onAppear {
+                                        withAnimation(.easeInOut(duration: 0.8).repeatForever(autoreverses: true)) {
+                                            highScoreScale = 1.1
+                                        }
+                                    }
+                                    .onDisappear {
+                                        highScoreScale = 1.0
+                                    }
+                            }
+                            
+                            Text("\(score)")
+                                .font(GameTheme.Typography.largeScore)
+                                .foregroundColor(GameTheme.Colors.primaryText)
+                                .lineLimit(1)
+                                .minimumScaleFactor(0.7)
+                        }
                     }
                     
                     Spacer(minLength: GameTheme.Layout.mediumSpacing)
