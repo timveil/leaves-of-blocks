@@ -12,7 +12,7 @@ struct HomeView: View {
     var body: some View {
         BaseScreenView(showsStatusBar: false) {
             VStack(spacing: GameTheme.Layout.extraLargeSpacing) {
-                Spacer(minLength: 60)
+                Spacer(minLength: 20)
                 
                 // High Score Display - Now tappable for history
                 Button(action: onShowHistory) {
@@ -46,7 +46,7 @@ struct HomeView: View {
                 }
                 .buttonStyle(PlainButtonStyle())
                 
-                Spacer(minLength: 20)
+                Spacer(minLength: 10)
                 
                 // Difficulty Selection
                 DifficultySelectionView(
@@ -54,10 +54,10 @@ struct HomeView: View {
                     onStartGame: onStartGame
                 )
                 
-                Spacer(minLength: 20)
+                Spacer(minLength: 120)
             }
             .padding(.horizontal, GameTheme.Layout.extraLargePadding)
-            .padding(.top, GameTheme.Layout.extraLargePadding)
+            .padding(.bottom, GameTheme.Layout.extraLargePadding)
         }
     }
 }

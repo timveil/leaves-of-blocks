@@ -1,0 +1,270 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Version</key>
+    <string>1.0</string>
+    <key>Name</key>
+    <string>IntelliJ Classic</string>
+    <key>Parent</key>
+    <string>Default</string>
+    <key>Bindings</key>
+    <dict>
+        <!-- Navigation -->
+        <key>Jump to Definition</key>
+        <string>@b</string>
+        <key>Jump to Definition in New Tab</key>
+        <string>@$b</string>
+        <key>Find Call Hierarchy</key>
+        <string>^~h</string>
+        <key>Find Selected Symbol in Workspace</key>
+        <string>~@g</string>
+        <key>Find in Workspace</key>
+        <string>@$f</string>
+        <key>Find and Replace in Workspace</key>
+        <string>@$r</string>
+        <key>Show Related Items</key>
+        <string>^@↑</string>
+        <key>Quick Open</key>
+        <string>@$o</string>
+        <key>Open Quickly</key>
+        <string>@$o</string>
+        <key>Show Document Items</key>
+        <string>@F12</string>
+        <key>Move Focus to Next Area</key>
+        <string>F6</string>
+        <key>Move Focus to Previous Area</key>
+        <string>$F6</string>
+        
+        <!-- Code Navigation -->
+        <key>Jump to Next Issue</key>
+        <string>F2</string>
+        <key>Jump to Previous Issue</key>
+        <string>$F2</string>
+        <key>Jump to Next Counterpart</key>
+        <string>^@↑</string>
+        <key>Jump to Previous Counterpart</key>
+        <string>^@↓</string>
+        <key>Go Forward</key>
+        <string>@]</string>
+        <key>Go Back</key>
+        <string>@[</string>
+        <key>Jump to Line</key>
+        <string>@g</string>
+        
+        <!-- File Navigation -->
+        <key>Show Group Files in Navigator</key>
+        <string>~F1</string>
+        <key>Reveal in Project Navigator</key>
+        <string>~F1</string>
+        <key>Open in New Window</key>
+        <string>$F4</string>
+        <key>Open in Adjacent Editor</key>
+        <string>~@↩</string>
+        <key>Switch to Header/Source</key>
+        <string>^@↑</string>
+        
+        <!-- Editing -->
+        <key>Show Completion List</key>
+        <string>^ </string>
+        <key>Complete</key>
+        <string>^ </string>
+        <key>Edit All in Scope</key>
+        <string>^@g</string>
+        <key>Refactor:Rename</key>
+        <string>$F6</string>
+        <key>Refactor:Extract Function</key>
+        <string>@~m</string>
+        <key>Refactor:Extract Variable</key>
+        <string>@~v</string>
+        <key>Comment Selection</key>
+        <string>@/</string>
+        <key>Duplicate</key>
+        <string>@d</string>
+        <key>Delete Line</key>
+        <string>@y</string>
+        <key>Move Line Up</key>
+        <string>~$↑</string>
+        <key>Move Line Down</key>
+        <string>~$↓</string>
+        <key>Shift Left</key>
+        <string>$⇥</string>
+        <key>Shift Right</key>
+        <string>⇥</string>
+        <key>Re-Indent</key>
+        <string>@~l</string>
+        <key>Format Selected Text</key>
+        <string>@~l</string>
+        <key>Show Quick Help for Selected Item</key>
+        <string>F1</string>
+        <key>Toggle Breakpoint at Current Line</key>
+        <string>@F8</string>
+        
+        <!-- Code Generation -->
+        <key>Generate</key>
+        <string>@n</string>
+        <key>Override Methods</key>
+        <string>^o</string>
+        <key>Implement Methods</key>
+        <string>^i</string>
+        
+        <!-- Search and Replace -->
+        <key>Use Selection for Find</key>
+        <string>@F3</string>
+        <key>Find Next</key>
+        <string>F3</string>
+        <key>Find Previous</key>
+        <string>$F3</string>
+        <key>Replace and Find Next</key>
+        <string>^r</string>
+        <key>Replace All</key>
+        <string>@^r</string>
+        <key>Find Selected Text in Workspace</key>
+        <string>@$F7</string>
+        
+        <!-- Building and Running -->
+        <key>Build</key>
+        <string>@F9</string>
+        <key>Run</key>
+        <string>^r</string>
+        <key>Test</key>
+        <string>^$r</string>
+        <key>Profile</key>
+        <string>^~r</string>
+        <key>Analyze</key>
+        <string>^$b</string>
+        <key>Stop</key>
+        <string>@F2</string>
+        <key>Clean Build Folder</key>
+        <string>@$k</string>
+        <key>Show Scheme</key>
+        <string>^0</string>
+        
+        <!-- Debugging -->
+        <key>Continue</key>
+        <string>F9</string>
+        <key>Step Over</key>
+        <string>F8</string>
+        <key>Step Into</key>
+        <string>F7</string>
+        <key>Step Out</key>
+        <string>$F8</string>
+        <key>Add Breakpoint at Current Line</key>
+        <string>@F8</string>
+        <key>Activate Breakpoints</key>
+        <string>@y</string>
+        <key>Pause</key>
+        <string>@F8</string>
+        
+        <!-- View Management -->
+        <key>Show Navigator</key>
+        <string>@1</string>
+        <key>Show Debug Navigator</key>
+        <string>@8</string>
+        <key>Show Breakpoint Navigator</key>
+        <string>@7</string>
+        <key>Show Test Navigator</key>
+        <string>@6</string>
+        <key>Show Report Navigator</key>
+        <string>@9</string>
+        <key>Show Version Editor</key>
+        <string>@~↩</string>
+        <key>Show Assistant Editor</key>
+        <string>@~↩</string>
+        <key>Hide Assistant Editor</key>
+        <string>@↩</string>
+        <key>Show Inspectors</key>
+        <string>@~0</string>
+        <key>Show Debug Area</key>
+        <string>@$y</string>
+        <key>Show Console</key>
+        <string>@$c</string>
+        
+        <!-- Editor Navigation -->
+        <key>Show Previous Tab</key>
+        <string>^$⇥</string>
+        <key>Show Next Tab</key>
+        <string>^⇥</string>
+        <key>Close Tab</key>
+        <string>@w</string>
+        <key>Close Other Tabs</key>
+        <string>@~w</string>
+        <key>Close Window</key>
+        <string>@$w</string>
+        
+        <!-- Documentation -->
+        <key>Show Quick Help for Selected Item</key>
+        <string>F1</string>
+        <key>Search Documentation for Selected Text</key>
+        <string>^h</string>
+        
+        <!-- Version Control -->
+        <key>Show Source Control</key>
+        <string>@9</string>
+        <key>Commit</key>
+        <string>@k</string>
+        <key>Push</key>
+        <string>@$k</string>
+        <key>Pull</key>
+        <string>@~k</string>
+        <key>Show History</key>
+        <string>^h</string>
+        <key>Show Blame</key>
+        <string>^b</string>
+        
+        <!-- Text Selection -->
+        <key>Select Word</key>
+        <string>^w</string>
+        <key>Select Line</key>
+        <string>^l</string>
+        <key>Expand Selection</key>
+        <string>~↑</string>
+        <key>Contract Selection</key>
+        <string>~↓</string>
+        
+        <!-- Folding -->
+        <key>Fold</key>
+        <string>@-</string>
+        <key>Unfold</key>
+        <string>@+</string>
+        <key>Fold Methods & Functions</key>
+        <string>@~-</string>
+        <key>Unfold All</key>
+        <string>@~+</string>
+        
+        <!-- Quick Actions -->
+        <key>Show Code Actions</key>
+        <string>~↩</string>
+        <key>Fix All Issues</key>
+        <string>@~F8</string>
+        <key>Show Inspector</key>
+        <string>@~i</string>
+        
+        <!-- Additional IntelliJ-style shortcuts -->
+        <key>Structure</key>
+        <string>@F12</string>
+        <key>Recently Changed Files</key>
+        <string>@$e</string>
+        <key>Show Usages</key>
+        <string>@~F7</string>
+        <key>Parameter Info</key>
+        <string>@p</string>
+        <key>Quick Definition</key>
+        <string>~space</string>
+        <key>Toggle Case</key>
+        <string>@$u</string>
+        <key>Join Lines</key>
+        <string>^$j</string>
+        <key>Split Line</key>
+        <string>@↩</string>
+        <key>Start New Line</key>
+        <string>$↩</string>
+        <key>Start New Line Before Current</key>
+        <string>@~↩</string>
+        
+        <!-- Terminal -->
+        <key>Show Terminal</key>
+        <string>~F12</string>
+    </dict>
+</dict>
+</plist>
