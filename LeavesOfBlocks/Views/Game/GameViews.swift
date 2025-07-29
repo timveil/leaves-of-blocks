@@ -26,34 +26,26 @@ struct GameBoardView: View {
         return String(format: "%d:%02d", minutes, seconds)
     }
     
+    private var gameWidth: CGFloat {
+        (8 * cellSize) + (7 * 3) + (2 * GameTheme.Layout.mediumPadding)
+    }
+    
     var body: some View {
-        ZStack {
-            GameBackgroundView()
-            
-            // Grass at bottom (lowest z-index)
-            VStack {
-                Spacer()
-                BlockGrassView()
-                    .ignoresSafeArea(.all, edges: .bottom)
-            }
-            .zIndex(0)
-            
-            // Calculate consistent width for all three rows
-            let gameWidth = (8 * cellSize) + (7 * 3) + (2 * GameTheme.Layout.mediumPadding)
-            
-            VStack(spacing: GameTheme.Layout.smallSpacing) {
-                // Score Row
-                HStack {
-                    Spacer()
-                    SimpleScoreView(gameState: gameState)
-                        .frame(width: gameWidth)
-                    Spacer()
-                }
-                
-                // Grid Row  
-                HStack {
-                    Spacer()
-                    GameGridView(
+        BaseScreenView(showsStatusBar: false) {
+            ZStack {
+                VStack(spacing: GameTheme.Layout.smallSpacing) {
+                    // Score Row
+                    HStack {
+                        Spacer()
+                        SimpleScoreView(gameState: gameState)
+                            .frame(width: gameWidth)
+                        Spacer()
+                    }
+                    
+                    // Grid Row  
+                    HStack {
+                        Spacer()
+                        GameGridView(
                         gameState: gameState,
                         cellSize: cellSize,
                         draggedBlock: draggedBlock,
@@ -61,15 +53,15 @@ struct GameBoardView: View {
                         onGridFrameChange: { frame in
                             gridFrame = frame
                         }
-                    )
-                    .frame(width: gameWidth)
-                    Spacer()
-                }
-                
-                // Game Stats Row
-                HStack {
-                    Spacer()
-                    HStack(alignment: .center, spacing: GameTheme.Layout.mediumSpacing) {
+                        )
+                        .frame(width: gameWidth)
+                        Spacer()
+                    }
+                    
+                    // Game Stats Row
+                    HStack {
+                        Spacer()
+                        HStack(alignment: .center, spacing: GameTheme.Layout.mediumSpacing) {
                         // Blocks Placed Counter
                         HStack(spacing: 6) {
                             Image(systemName: "cube.fill")
@@ -109,18 +101,18 @@ struct GameBoardView: View {
                                 .font(GameTheme.Typography.captionFont)
                                 .foregroundColor(GameTheme.Colors.secondaryText)
                         }
+                        }
+                        .frame(width: gameWidth)
+                        Spacer()
                     }
-                    .frame(width: gameWidth)
+                    .padding(.vertical, GameTheme.Layout.smallPadding)
+                    
                     Spacer()
-                }
-                .padding(.vertical, GameTheme.Layout.smallPadding)
-                
-                Spacer()
-                
-                // Holding Area Row
-                HStack {
-                    Spacer()
-                    CurrentBlocksView(
+                    
+                    // Holding Area Row
+                    HStack {
+                        Spacer()
+                        CurrentBlocksView(
                         gameState: gameState,
                         cellSize: cellSize,
                         draggedBlock: draggedBlock,
@@ -201,22 +193,22 @@ struct GameBoardView: View {
                                 isHoveringOverOrigin = false
                             }
                         }
-                    )
-                    .frame(width: gameWidth)
-                    .background(
-                        GeometryReader { geo in
-                            Color.clear.onAppear {
-                                blockSlotsFrame = geo.frame(in: .global)
+                        )
+                        .frame(width: gameWidth)
+                        .background(
+                            GeometryReader { geo in
+                                Color.clear.onAppear {
+                                    blockSlotsFrame = geo.frame(in: .global)
+                                }
                             }
-                        }
-                    )
-                    Spacer()
+                        )
+                        Spacer()
+                    }
+                    
+                    Spacer(minLength: 100) // Leave space for grass
                 }
-                
-                Spacer(minLength: 100) // Leave space for grass
-            }
-            .zIndex(10) // Game elements above grass
-            .padding(.horizontal, GameTheme.Layout.largePadding)
+                .zIndex(10) // Game elements above grass
+                .padding(.horizontal, GameTheme.Layout.largePadding)
             
             // Game Over Overlay - highest priority, appears above everything
             if gameState.isGameOver {
@@ -244,9 +236,9 @@ struct GameBoardView: View {
                 .zIndex(1000)
                 .scaleEffect(1.1) // Slightly larger during drag for better visibility
                 .shadow(color: .black.opacity(0.3), radius: 8, x: 0, y: 4)
+            }
         }
-        }
-        .statusBarHidden() // Hide status bar for immersive gaming experience
+    }
     }
     
     // MARK: - Helper Methods

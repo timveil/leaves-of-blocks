@@ -41,9 +41,8 @@ struct GameSummaryView: View {
     }
     
     var body: some View {
-        GeometryReader { geometry in
-            ZStack {
-                GameBackgroundView()
+        BaseScreenView(showsStatusBar: false) {
+            GeometryReader { geometry in
                 
                 VStack(spacing: 0) {
                     // Header section
@@ -150,19 +149,10 @@ struct GameSummaryView: View {
                     }
                     .padding(.horizontal, GameTheme.Layout.largePadding)
                     
-                    
                     Spacer(minLength: GameTheme.Layout.extraLargeSpacing)
-                    
-                    
-                    Spacer(minLength: GameTheme.Layout.extraLargeSpacing)
-                    
-                    // Grass always at bottom
-                    BlockGrassView()
-                        .ignoresSafeArea(.all, edges: .bottom)
                 }
             }
         }
-        .statusBarHidden()
     }
     
     private func formatTime(_ timeInterval: TimeInterval) -> String {

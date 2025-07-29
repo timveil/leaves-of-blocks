@@ -3,30 +3,17 @@ import SwiftUI
 struct HowToPlayView: View {
     
     var body: some View {
-        ZStack {
-            GameBackgroundView()
-            
-            // Grass at bottom (lowest z-index)
-            VStack {
-                Spacer()
-                BlockGrassView()
-                    .ignoresSafeArea(.all, edges: .bottom)
-            }
-            .zIndex(0)
-            
-            // Content layer
+        BaseScreenView {
             ScrollView {
                 VStack(spacing: GameTheme.Layout.largePadding) {
                     // Header
                     VStack(spacing: GameTheme.Layout.mediumSpacing) {
                         Text("How to Play")
-                            .font(GameTheme.Typography.title)
-                            .foregroundColor(GameTheme.Colors.primaryText)
+                            .gameTitleStyle()
                             .padding(.top, GameTheme.Layout.mediumPadding)
                         
                         Text("Master the art of block placement!")
-                            .font(GameTheme.Typography.captionFont)
-                            .foregroundColor(GameTheme.Colors.secondaryText)
+                            .gameCaptionStyle()
                             .multilineTextAlignment(.center)
                     }
                     
@@ -35,48 +22,40 @@ struct HowToPlayView: View {
                         // The Grid
                         VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
                             Text("The Grid")
-                                .font(GameTheme.Typography.titleFont)
-                                .foregroundColor(GameTheme.Colors.primaryText)
+                                .gameTitleStyle()
                             
                             Text("You have an 8×8 grid where you'll place block shapes. Fill complete rows or columns to clear them and earn points.")
-                                .font(GameTheme.Typography.headlineFont)
-                                .foregroundColor(GameTheme.Colors.secondaryText)
+                                .gameHeadlineStyle(color: GameTheme.Colors.secondaryText)
                                 .lineSpacing(6)
                         }
                         
                         // Drag & Drop
                         VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
                             Text("Drag & Drop")
-                                .font(GameTheme.Typography.titleFont)
-                                .foregroundColor(GameTheme.Colors.primaryText)
+                                .gameTitleStyle()
                             
                             Text("Drag block shapes from the bottom area onto the grid. Blocks must fit completely within the grid boundaries.")
-                                .font(GameTheme.Typography.headlineFont)
-                                .foregroundColor(GameTheme.Colors.secondaryText)
+                                .gameHeadlineStyle(color: GameTheme.Colors.secondaryText)
                                 .lineSpacing(6)
                         }
                         
                         // Clear Lines
                         VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
                             Text("Clear Lines")
-                                .font(GameTheme.Typography.titleFont)
-                                .foregroundColor(GameTheme.Colors.primaryText)
+                                .gameTitleStyle()
                             
                             Text("Complete horizontal rows or vertical columns disappear, earning you 100 points per line. Clear multiple lines at once for combo bonuses!")
-                                .font(GameTheme.Typography.headlineFont)
-                                .foregroundColor(GameTheme.Colors.secondaryText)
+                                .gameHeadlineStyle(color: GameTheme.Colors.secondaryText)
                                 .lineSpacing(6)
                         }
                         
                         // Game Over
                         VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
                             Text("Game Over")
-                                .font(GameTheme.Typography.titleFont)
-                                .foregroundColor(GameTheme.Colors.primaryText)
+                                .gameTitleStyle()
                             
                             Text("The game ends when none of your current blocks can be placed on the grid. Plan ahead to keep playing longer!")
-                                .font(GameTheme.Typography.headlineFont)
-                                .foregroundColor(GameTheme.Colors.secondaryText)
+                                .gameHeadlineStyle(color: GameTheme.Colors.secondaryText)
                                 .lineSpacing(6)
                         }
                         
@@ -180,11 +159,9 @@ struct HowToPlayView: View {
                     Spacer(minLength: GameTheme.Layout.extraLargePadding)
                 }
                 .padding(.horizontal, GameTheme.Layout.largePadding)
+                .padding(.bottom, 80)
             }
-            .zIndex(1)
-            
         }
-        .ignoresSafeArea(edges: .bottom)
     }
 }
 

@@ -44,24 +44,11 @@ struct GameHistoryView: View {
     }
     
     var body: some View {
-        ZStack {
-            // Background
-            GameBackgroundView()
-            
-            // Grass at bottom (lowest z-index)
-            VStack {
-                Spacer()
-                BlockGrassView()
-                    .ignoresSafeArea(.all, edges: .bottom)
-            }
-            .zIndex(0)
-            
-            // Content layer
+        BaseScreenView {
             VStack(spacing: GameTheme.Layout.mediumSpacing) {
                 // Header
                 Text("Game History")
-                    .font(GameTheme.Typography.title)
-                    .foregroundColor(GameTheme.Colors.primaryText)
+                    .gameTitleStyle()
                     .padding(.top, GameTheme.Layout.mediumPadding)
                 
                 // Statistics Summary
@@ -86,9 +73,7 @@ struct GameHistoryView: View {
                     .padding(.bottom, GameTheme.Layout.extraLargePadding)
                 }
             }
-            .zIndex(1)
         }
-        .ignoresSafeArea(edges: .bottom)
         .onAppear {
             loadGameHistory()
         }
