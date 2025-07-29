@@ -14,7 +14,7 @@ struct CurrentBlocksView: View {
     let onDragEnd: () -> Void
     
     // Fixed dimensions to prevent layout shifts
-    private let containerHeight: CGFloat = 90 // Reduced height for more compact layout
+    private let containerHeight: CGFloat = 50 // Reduced height for more compact layout
     private var gridWidth: CGFloat {
         // Match the game grid width: (8 cells * cellSize) + (7 spacings * 3px)
         return (8 * cellSize) + (7 * 3)

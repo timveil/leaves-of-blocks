@@ -107,7 +107,7 @@ struct BoardView: View {
                     }
                     .padding(.vertical, GameTheme.Layout.smallPadding)
                     
-                    Spacer()
+                    //Spacer()
                     
                     // Holding Area Row
                     HStack {
@@ -205,7 +205,7 @@ struct BoardView: View {
                         Spacer()
                     }
                     
-                    Spacer(minLength: 100) // Leave space for grass
+                    Spacer(minLength: 20) // Leave space for grass
                 }
                 .zIndex(10) // Game elements above grass
                 .padding(.horizontal, GameTheme.Layout.largePadding)
