@@ -2,13 +2,9 @@ import SwiftUI
 
 struct AboutView: View {
     
-    // Get app version from bundle
+    // Get app version from bundle extension
     private var appVersion: String {
-        if let version = Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String,
-           let build = Bundle.main.infoDictionary?["CFBundleVersion"] as? String {
-            return "Version \(version) (\(build))"
-        }
-        return "Version 1.0"
+        return "Version \(Bundle.main.versionAndBuild)"
     }
     
     var body: some View {
