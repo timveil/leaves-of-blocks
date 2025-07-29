@@ -54,9 +54,10 @@ rsvg-convert -w 64 -h 64 "$SVG_FILE" > icons/AppIcon-64.png
 rsvg-convert -w 32 -h 32 "$SVG_FILE" > icons/AppIcon-32.png
 rsvg-convert -w 16 -h 16 "$SVG_FILE" > icons/AppIcon-16.png
 
-# App Clip Icons (if needed)
+# App Clip Icons (with white background, no transparency)
 rsvg-convert -w 180 -h 180 "$SVG_FILE" > icons/AppClipIcon-60@3x.png
 rsvg-convert -w 120 -h 120 "$SVG_FILE" > icons/AppClipIcon-60@2x.png
+rsvg-convert -w 1024 -h 1024 "$SVG_FILE" > icons/AppClipIcon-1024.png
 
 # Launch Screen Icons (for custom launch screen, keep transparent for overlay)
 rsvg-convert -w 240 -h 240 --background-color=transparent "$SVG_FILE" > icons/LaunchIcon@2x.png

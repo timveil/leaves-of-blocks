@@ -192,8 +192,26 @@ cat > "$ASSETS_DIR/Contents.json" << 'EOF'
 }
 EOF
 
+# Copy App Clip icons
+APP_CLIP_ASSETS_DIR="LeavesOfBlocksAppClip/Assets.xcassets/AppIcon.appiconset"
+echo "📱 Copying App Clip icons..."
+mkdir -p "$APP_CLIP_ASSETS_DIR"
+
+cp icons/AppClipIcon-60@3x.png "$APP_CLIP_ASSETS_DIR/Icon-60@3x.png"
+cp icons/AppClipIcon-60@2x.png "$APP_CLIP_ASSETS_DIR/Icon-60@2x.png"
+cp icons/AppClipIcon-1024.png "$APP_CLIP_ASSETS_DIR/AppStore.png"
+
+# Copy additional App Clip notification/settings icons from main app icons
+cp icons/AppIcon-20@2x.png "$APP_CLIP_ASSETS_DIR/Icon-20@2x.png"
+cp icons/AppIcon-20@3x.png "$APP_CLIP_ASSETS_DIR/Icon-20@3x.png"
+cp icons/AppIcon-29@2x.png "$APP_CLIP_ASSETS_DIR/Icon-29@2x.png"
+cp icons/AppIcon-29@3x.png "$APP_CLIP_ASSETS_DIR/Icon-29@3x.png"
+cp icons/AppIcon-40@2x.png "$APP_CLIP_ASSETS_DIR/Icon-40@2x.png"
+cp icons/AppIcon-40@3x.png "$APP_CLIP_ASSETS_DIR/Icon-40@3x.png"
+
 echo "✅ Icons copied to iOS project successfully!"
 echo "📁 App Icons location: $ASSETS_DIR"
+echo "📁 App Clip Icons location: $APP_CLIP_ASSETS_DIR"
 echo "📁 Launch Icons location: $LAUNCH_ICON_DIR"
 echo ""
 echo "🚀 Next steps:"
@@ -207,6 +225,9 @@ echo "5. Build and test your app to see the new icons!"
 echo ""
 echo "📋 Copied App Icon files:"
 ls -la "$ASSETS_DIR"
+echo ""
+echo "📋 Copied App Clip Icon files:"
+ls -la "$APP_CLIP_ASSETS_DIR"
 echo ""
 echo "📋 Copied Launch Icon files:"
 ls -la "$LAUNCH_ICON_DIR"
