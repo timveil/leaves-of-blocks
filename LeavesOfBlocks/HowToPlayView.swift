@@ -1,7 +1,6 @@
 import SwiftUI
 
 struct HowToPlayView: View {
-    let onDismiss: () -> Void
     
     var body: some View {
         ZStack {
@@ -23,7 +22,7 @@ struct HowToPlayView: View {
                         Text("How to Play")
                             .font(GameTheme.Typography.title)
                             .foregroundStyle(GameTheme.Gradients.text)
-                            .padding(.top, GameTheme.Layout.largePadding)
+                            .padding(.top, GameTheme.Layout.mediumPadding)
                         
                         Text("Master the art of block placement!")
                             .font(GameTheme.Typography.captionFont)
@@ -178,34 +177,6 @@ struct HowToPlayView: View {
                     )
                     }
                     
-                    // Ready to Play Button
-                    Button(action: onDismiss) {
-                        HStack {
-                            Image(systemName: "play.fill")
-                                .font(.system(size: 18, weight: .bold))
-                            Text("Ready to Play!")
-                                .font(GameTheme.Typography.bodyFont)
-                                .fontWeight(.bold)
-                        }
-                        .foregroundColor(GameTheme.Colors.buttonText)
-                        .padding(.horizontal, GameTheme.Layout.extraLargePadding)
-                        .padding(.vertical, GameTheme.Layout.largePadding)
-                        .background(
-                            LinearGradient(
-                                colors: GameTheme.Colors.buttonGradient,
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            )
-                        )
-                        .cornerRadius(GameTheme.Layout.buttonCornerRadius)
-                        .shadow(
-                            color: GameTheme.Colors.cardShadow,
-                            radius: 8,
-                            x: 0,
-                            y: 4
-                        )
-                    }
-                    .padding(.bottom, GameTheme.Layout.extraLargePadding)
                     
                     Spacer(minLength: GameTheme.Layout.extraLargePadding)
                 }
@@ -213,28 +184,6 @@ struct HowToPlayView: View {
             }
             .zIndex(1)
             
-            // Close button overlay - top right (highest z-index)
-            VStack {
-                HStack {
-                    Spacer()
-                    
-                    Button(action: onDismiss) {
-                        Image(systemName: "xmark.circle.fill")
-                            .font(.system(size: 32, weight: .medium))
-                            .foregroundColor(GameTheme.Colors.primaryText)
-                            .background(
-                                Circle()
-                                    .fill(GameTheme.Colors.primaryBackground.opacity(0.8))
-                                    .frame(width: 44, height: 44)
-                            )
-                    }
-                    .padding(.trailing, GameTheme.Layout.largePadding)
-                    .padding(.top, GameTheme.Layout.mediumPadding)
-                }
-                
-                Spacer()
-            }
-            .zIndex(2)
         }
         .ignoresSafeArea(edges: .bottom)
     }
@@ -302,5 +251,5 @@ struct TipRow: View {
 }
 
 #Preview {
-    HowToPlayView(onDismiss: {})
+    HowToPlayView()
 }

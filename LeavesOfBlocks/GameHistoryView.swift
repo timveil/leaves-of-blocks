@@ -2,7 +2,6 @@ import SwiftUI
 
 struct GameHistoryView: View {
     @ObservedObject var gameState: GameState
-    let onDismiss: () -> Void
     let onSelectSession: (GameSession) -> Void
     @State private var gameHistory: [GameSession] = []
     @State private var statistics = GameStatistics(totalGames: 0, totalScore: 0, averageScore: 0, totalBlocksPlaced: 0, highScore: 0)
@@ -60,21 +59,10 @@ struct GameHistoryView: View {
             // Content layer
             VStack(spacing: GameTheme.Layout.mediumSpacing) {
                 // Header
-                HStack {
-                    Text("Game History")
-                        .font(GameTheme.Typography.title)
-                        .foregroundStyle(GameTheme.Gradients.text)
-                    
-                    Spacer()
-                    
-                    Button(action: onDismiss) {
-                        Image(systemName: "xmark.circle.fill")
-                            .font(.system(size: 28, weight: .medium))
-                            .foregroundColor(GameTheme.Colors.primaryText)
-                    }
-                }
-                .padding(.horizontal, GameTheme.Layout.largePadding)
-                .padding(.top, GameTheme.Layout.largePadding)
+                Text("Game History")
+                    .font(GameTheme.Typography.title)
+                    .foregroundStyle(GameTheme.Gradients.text)
+                    .padding(.top, GameTheme.Layout.mediumPadding)
                 
                 // Statistics Summary
                 StatsSummaryView(gameHistory: gameHistory, highScore: statistics.highScore)
@@ -110,7 +98,7 @@ struct GameHistoryView: View {
     }
 }
 
-struct GameSession {
+struct GameSession: Equatable {
     let date: Date
     let score: Int
     let blocksPlaced: Int
@@ -159,11 +147,11 @@ struct StatsSummaryView: View {
             HStack {
                 Image(systemName: "chart.bar.fill")
                     .font(.system(size: 18, weight: .semibold))
-                    .foregroundColor(.white)
+                    .foregroundColor(GameTheme.Colors.buttonText)
                 
-                Text("Game Statistics")
+                Text("Statistics")
                     .font(.system(size: 20, weight: .bold))
-                    .foregroundColor(.white)
+                    .foregroundColor(GameTheme.Colors.buttonText)
                 
                 Spacer()
             }
@@ -311,7 +299,7 @@ struct GameSessionRow: View {
                         }
                         Text("\(session.score)")
                             .font(GameTheme.Typography.scoreFont)
-                            .foregroundColor(isHighScore ? GameTheme.Colors.accent : GameTheme.Colors.primaryText)
+                            .foregroundColor(GameTheme.Colors.primaryText)
                     }
                     
                     Text("SCORE")
@@ -383,7 +371,6 @@ struct StatChip: View {
 #Preview {
     GameHistoryView(
         gameState: GameState(),
-        onDismiss: {},
         onSelectSession: { _ in }
     )
 }

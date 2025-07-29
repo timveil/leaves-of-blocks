@@ -7,7 +7,7 @@
 
 import SwiftUI
 
-enum AppScreen {
+enum AppScreen: Equatable {
     case home
     case game
     case summary(GameSession?)
@@ -22,7 +22,29 @@ struct ContentView: View {
     
     var body: some View {
         NavigationView {
-            switch currentScreen {
+            VStack(spacing: 0) {
+                // Persistent Top Toolbar
+                AppToolbarView(
+                    currentScreen: currentScreen,
+                    onGoHome: {
+                        withAnimation(.easeInOut) {
+                            currentScreen = .home
+                        }
+                    },
+                    onShowAbout: {
+                        withAnimation(.easeInOut) {
+                            currentScreen = .about
+                        }
+                    },
+                    onShowHowToPlay: {
+                        withAnimation(.easeInOut) {
+                            currentScreen = .howToPlay
+                        }
+                    }
+                )
+                
+                // Main Content Area
+                switch currentScreen {
             case .home:
                 GameHomeView(
                     gameState: gameState,
@@ -32,19 +54,9 @@ struct ContentView: View {
                             currentScreen = .game
                         }
                     },
-                    onShowAbout: {
-                        withAnimation(.easeInOut) {
-                            currentScreen = .about
-                        }
-                    },
                     onShowHistory: {
                         withAnimation(.easeInOut) {
                             currentScreen = .history
-                        }
-                    },
-                    onShowHowToPlay: {
-                        withAnimation(.easeInOut) {
-                            currentScreen = .howToPlay
                         }
                     }
                 )
@@ -54,11 +66,6 @@ struct ContentView: View {
             case .game:
                 GameBoardView(
                     gameState: gameState,
-                    onGoHome: {
-                        withAnimation(.easeInOut) {
-                            currentScreen = .home
-                        }
-                    },
                     onViewSummary: {
                         withAnimation(.easeInOut) {
                             currentScreen = .summary(nil)
@@ -71,35 +78,19 @@ struct ContentView: View {
             case .summary(let session):
                 GameSummaryView(
                     gameState: gameState,
-                    historicalSession: session,
-                    onGoHome: {
-                        withAnimation(.easeInOut) {
-                            currentScreen = .home
-                        }
-                    }
+                    historicalSession: session
                 )
                 .navigationBarHidden(true)
                 .ignoresSafeArea(.container, edges: [])
                 
             case .about:
-                AboutView(
-                    onDismiss: {
-                        withAnimation(.easeInOut) {
-                            currentScreen = .home
-                        }
-                    }
-                )
+                AboutView()
                 .navigationBarHidden(true)
                 .ignoresSafeArea(.container, edges: [])
                 
             case .history:
                 GameHistoryView(
                     gameState: gameState,
-                    onDismiss: {
-                        withAnimation(.easeInOut) {
-                            currentScreen = .home
-                        }
-                    },
                     onSelectSession: { session in
                         withAnimation(.easeInOut) {
                             currentScreen = .summary(session)
@@ -110,18 +101,67 @@ struct ContentView: View {
                 .ignoresSafeArea(.container, edges: [])
                 
             case .howToPlay:
-                HowToPlayView(
-                    onDismiss: {
-                        withAnimation(.easeInOut) {
-                            currentScreen = .home
-                        }
-                    }
-                )
+                HowToPlayView()
                 .navigationBarHidden(true)
                 .ignoresSafeArea(.container, edges: [])
+                }
             }
         }
         .navigationViewStyle(StackNavigationViewStyle()) // Prevents split view on iPad
+    }
+}
+
+struct AppToolbarView: View {
+    let currentScreen: AppScreen
+    let onGoHome: () -> Void
+    let onShowAbout: () -> Void
+    let onShowHowToPlay: () -> Void
+    
+    var body: some View {
+        HStack {
+            // Home icon (always visible, but disabled on home screen)
+            Button(action: currentScreen == .home ? {} : onGoHome) {
+                Image(systemName: "house.fill")
+                    .font(.system(size: 28, weight: .semibold))
+                    .foregroundColor(currentScreen == .home ? GameTheme.Colors.accent.opacity(0.4) : GameTheme.Colors.accent)
+            }
+            .disabled(currentScreen == .home)
+            
+            Spacer()
+            
+            // Right side icons with proper spacing
+            HStack(spacing: GameTheme.Layout.largePadding) {
+                // Info icon (About) - using gear for better visual balance
+                Button(action: onShowAbout) {
+                    Image(systemName: "gear")
+                        .font(.system(size: 28, weight: .semibold))
+                        .foregroundColor(GameTheme.Colors.blockBlue)
+                }
+                
+                // Help icon (How to Play)
+                Button(action: onShowHowToPlay) {
+                    Image(systemName: "questionmark")
+                        .font(.system(size: 28, weight: .semibold))
+                        .foregroundColor(GameTheme.Colors.blockGreen)
+                }
+            }
+        }
+        .padding(.horizontal, GameTheme.Layout.largePadding)
+        .padding(.vertical, GameTheme.Layout.mediumPadding)
+        .background(
+            LinearGradient(
+                colors: [GameTheme.Colors.cardBackground, GameTheme.Colors.cardBackground.opacity(0.9)],
+                startPoint: .top,
+                endPoint: .bottom
+            )
+            .ignoresSafeArea(edges: .top)
+        )
+        .overlay(
+            Rectangle()
+                .frame(height: 1)
+                .foregroundColor(GameTheme.Colors.gridBorder.opacity(0.3)),
+            alignment: .bottom
+        )
     }
 }
 

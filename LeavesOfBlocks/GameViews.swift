@@ -25,7 +25,6 @@ struct SimpleAppTitleView: View {
 
 struct SimpleScoreView: View {
     @ObservedObject var gameState: GameState
-    let onGoHome: () -> Void
     let onReset: () -> Void
     
     var body: some View {
@@ -37,21 +36,11 @@ struct SimpleScoreView: View {
             
             Spacer()
             
-            // Home and Reset Icons
-            HStack(spacing: GameTheme.Layout.extraLargeSpacing) {
-                // Home Button
-                Button(action: onGoHome) {
-                    Image(systemName: "house.fill")
-                        .font(.system(size: 24, weight: .bold))
-                        .foregroundColor(GameTheme.Colors.accent)
-                }
-                
-                // Reset Button  
-                Button(action: onReset) {
-                    Image(systemName: "arrow.clockwise")
-                        .font(.system(size: 24, weight: .bold))
-                        .foregroundColor(GameTheme.Colors.error)
-                }
+            // Reset Button  
+            Button(action: onReset) {
+                Image(systemName: "arrow.clockwise")
+                    .font(.system(size: 24, weight: .bold))
+                    .foregroundColor(GameTheme.Colors.error)
             }
         }
         .padding(.horizontal, GameTheme.Layout.extraLargePadding)
@@ -404,7 +393,7 @@ struct GameOverOverlayView: View {
                 
                 Text("\(gameState.score)")
                     .font(GameTheme.Typography.largeScore)
-                    .foregroundColor(GameTheme.Colors.accent)
+                    .foregroundColor(GameTheme.Colors.primaryText)
                     .lineLimit(1)
                     .minimumScaleFactor(0.7)
                     .shadow(color: GameTheme.Colors.accent.opacity(0.4), radius: 6, x: 0, y: 3)
@@ -572,7 +561,6 @@ struct GameOverOverlayView: View {
 struct GameSummaryView: View {
     @ObservedObject var gameState: GameState
     let historicalSession: GameSession?
-    let onGoHome: () -> Void
     @State private var highScoreScale: CGFloat = 1.0
     
     // Computed properties to use either current game or historical session
@@ -638,24 +626,28 @@ struct GameSummaryView: View {
                                 .foregroundColor(GameTheme.Colors.primaryText)
                                 .tracking(1)
                             
-                            // Show date for historical sessions
-                            if let session = historicalSession {
-                                Text(session.formattedDate)
-                                    .font(GameTheme.Typography.captionFont)
-                                    .foregroundColor(GameTheme.Colors.secondaryText)
-                            }
-                            
-                            // Difficulty indicator
-                            HStack(spacing: GameTheme.Layout.smallSpacing) {
-                                Image(systemName: difficulty.icon)
-                                    .foregroundColor(difficulty.color)
-                                Text("\(difficulty.rawValue) Mode")
-                                    .font(GameTheme.Typography.headlineFont)
-                                    .foregroundColor(difficulty.color)
+                            VStack(spacing: GameTheme.Layout.mediumSpacing) {
+                                // Show date for historical sessions
+                                if let session = historicalSession {
+                                    Text(session.formattedDate)
+                                        .font(GameTheme.Typography.captionFont)
+                                        .foregroundColor(GameTheme.Colors.secondaryText)
+                                }
+                                
+                                // Difficulty indicator - badge style
+                                Text(difficulty.rawValue.uppercased())
+                                    .font(.system(size: 12, weight: .bold))
+                                    .foregroundColor(GameTheme.Colors.primaryBackground)
+                                    .padding(.horizontal, 12)
+                                    .padding(.vertical, 6)
+                                    .background(
+                                        Capsule()
+                                            .fill(difficulty.color)
+                                    )
                             }
                         }
                     }
-                    .padding(.top, GameTheme.Layout.extraLargePadding)
+                    .padding(.top, GameTheme.Layout.mediumPadding)
                     
                     Spacer(minLength: GameTheme.Layout.extraLargeSpacing)
                     
@@ -663,12 +655,12 @@ struct GameSummaryView: View {
                     VStack(spacing: GameTheme.Layout.smallSpacing) {
                         Text("Final Score")
                             .font(GameTheme.Typography.headlineFont)
-                            .foregroundColor(GameTheme.Colors.secondaryText)
+                            .foregroundColor(GameTheme.Colors.accent)
                             .tracking(1)
                         
                         Text("\(score)")
                             .font(GameTheme.Typography.largeScore)
-                            .foregroundColor(GameTheme.Colors.accent)
+                            .foregroundColor(GameTheme.Colors.primaryText)
                             .lineLimit(1)
                             .minimumScaleFactor(0.7)
                     }
@@ -721,7 +713,7 @@ struct GameSummaryView: View {
                                 .foregroundColor(GameTheme.Colors.secondaryText)
                             Text("\(score)")
                                 .font(GameTheme.Typography.headlineFont)
-                                .foregroundColor(isNewHighScore ? GameTheme.Colors.accent : GameTheme.Colors.primaryText)
+                                .foregroundColor(GameTheme.Colors.primaryText)
                                 .lineLimit(1)
                                 .minimumScaleFactor(0.8)
                         }
@@ -732,7 +724,7 @@ struct GameSummaryView: View {
                                 .foregroundColor(GameTheme.Colors.secondaryText)
                             Text("\(gameState.highScoreManager.highScore)")
                                 .font(GameTheme.Typography.headlineFont)
-                                .foregroundColor(GameTheme.Colors.accent)
+                                .foregroundColor(GameTheme.Colors.primaryText)
                                 .lineLimit(1)
                                 .minimumScaleFactor(0.8)
                         }
@@ -751,62 +743,6 @@ struct GameSummaryView: View {
                     
                     Spacer(minLength: GameTheme.Layout.extraLargeSpacing)
                     
-                    // Return Home Button
-                    Button(action: onGoHome) {
-                        HStack(spacing: GameTheme.Layout.mediumSpacing) {
-                            Image(systemName: "house.fill")
-                                .font(.system(size: 20, weight: .bold))
-                            Text("Return Home")
-                                .font(GameTheme.Typography.headlineFont)
-                                .tracking(0.5)
-                        }
-                        .foregroundColor(GameTheme.Colors.buttonText)
-                        .shadow(color: Color.black.opacity(0.2), radius: 1, x: 0, y: 1)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, GameTheme.Layout.mediumPadding)
-                        .background(
-                            ZStack {
-                                // Deep shadow layers for 3D effect
-                                Capsule()
-                                    .fill(Color.black.opacity(0.15))
-                                    .offset(x: 0, y: 5)
-                                
-                                Capsule()
-                                    .fill(Color.black.opacity(0.08))
-                                    .offset(x: 0, y: 2)
-                                
-                                Capsule()
-                                    .fill(
-                                        LinearGradient(
-                                            colors: [
-                                                GameTheme.Colors.buttonGradient[0],
-                                                GameTheme.Colors.buttonGradient[1],
-                                                GameTheme.Colors.buttonGradient[1].opacity(0.8)
-                                            ],
-                                            startPoint: .topLeading,
-                                            endPoint: .bottomTrailing
-                                        )
-                                    )
-                                    .overlay(
-                                        Capsule()
-                                            .stroke(
-                                                LinearGradient(
-                                                    colors: [
-                                                        Color.white.opacity(0.3),
-                                                        Color.clear,
-                                                        Color.black.opacity(0.2)
-                                                    ],
-                                                    startPoint: .topLeading,
-                                                    endPoint: .bottomTrailing
-                                                ),
-                                                lineWidth: 1
-                                            )
-                                    )
-                                    .shadow(color: GameTheme.Colors.buttonGradient[0].opacity(0.3), radius: 6, x: 0, y: 3)
-                            }
-                        )
-                    }
-                    .padding(.horizontal, GameTheme.Layout.extraLargePadding)
                     
                     Spacer(minLength: GameTheme.Layout.extraLargeSpacing)
                     
@@ -1052,9 +988,7 @@ struct DifficultyButton: View {
 struct GameHomeView: View {
     @ObservedObject var gameState: GameState
     let onStartGame: (DifficultyMode) -> Void
-    let onShowAbout: () -> Void
     let onShowHistory: () -> Void
-    let onShowHowToPlay: () -> Void
     
     @State private var selectedDifficulty: DifficultyMode = .moderate
     
@@ -1077,7 +1011,7 @@ struct GameHomeView: View {
                                 
                                 Text("\(gameState.highScoreManager.highScore)")
                                     .font(GameTheme.Typography.largeScore)
-                                    .foregroundColor(GameTheme.Colors.accent)
+                                    .foregroundColor(GameTheme.Colors.primaryText)
                                     
                                 // Last played info if available
                                 if gameState.score > 0 {
@@ -1121,40 +1055,6 @@ struct GameHomeView: View {
                         .ignoresSafeArea(.all, edges: .bottom)
                 }
                 
-                // Help and About button overlay - top right
-                VStack {
-                    HStack(spacing: GameTheme.Layout.mediumPadding) {
-                        Spacer()
-                        
-                        // Help button
-                        Button(action: onShowHowToPlay) {
-                            Image(systemName: "questionmark.circle")
-                                .font(.system(size: 28, weight: .medium))
-                                .foregroundColor(GameTheme.Colors.primaryText)
-                                .background(
-                                    Circle()
-                                        .fill(GameTheme.Colors.primaryBackground.opacity(0.7))
-                                        .frame(width: 44, height: 44)
-                                )
-                        }
-                        
-                        // About button
-                        Button(action: onShowAbout) {
-                            Image(systemName: "info.circle")
-                                .font(.system(size: 28, weight: .medium))
-                                .foregroundColor(GameTheme.Colors.primaryText)
-                                .background(
-                                    Circle()
-                                        .fill(GameTheme.Colors.primaryBackground.opacity(0.7))
-                                        .frame(width: 44, height: 44)
-                                )
-                        }
-                    }
-                    .padding(.trailing, GameTheme.Layout.largePadding)
-                    .padding(.top, GameTheme.Layout.mediumPadding)
-                    
-                    Spacer()
-                }
             }
         }
         .statusBarHidden()
@@ -1178,7 +1078,6 @@ struct GameBoardView: View {
     private let dragOffsetY: CGFloat = 80 // Distance above finger
     
     let cellSize: CGFloat = 40
-    let onGoHome: () -> Void
     let onViewSummary: () -> Void
     
     var body: some View {
@@ -1190,7 +1089,6 @@ struct GameBoardView: View {
                 // Score Section with integrated buttons
                 SimpleScoreView(
                     gameState: gameState,
-                    onGoHome: onGoHome,
                     onReset: {
                         withAnimation(GameTheme.Animations.springAnimation) {
                             gameState.resetGame()

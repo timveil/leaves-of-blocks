@@ -1,7 +1,6 @@
 import SwiftUI
 
 struct AboutView: View {
-    let onDismiss: () -> Void
     
     // Get app version from bundle
     private var appVersion: String {
@@ -33,7 +32,7 @@ struct AboutView: View {
                         Text("Leaves of Blocks")
                             .font(GameTheme.Typography.title)
                             .foregroundStyle(GameTheme.Gradients.text)
-                            .padding(.top, GameTheme.Layout.largePadding)
+                            .padding(.top, GameTheme.Layout.mediumPadding)
                         
                         Text(appVersion)
                             .font(GameTheme.Typography.captionFont)
@@ -156,28 +155,6 @@ struct AboutView: View {
             }
             .zIndex(1)
             
-            // Close button (highest z-index)
-            VStack {
-                HStack {
-                    Spacer()
-                    
-                    Button(action: onDismiss) {
-                        Image(systemName: "xmark.circle.fill")
-                            .font(.system(size: 32, weight: .medium))
-                            .foregroundColor(GameTheme.Colors.primaryText)
-                            .background(
-                                Circle()
-                                    .fill(GameTheme.Colors.primaryBackground.opacity(0.8))
-                                    .frame(width: 44, height: 44)
-                            )
-                    }
-                    .padding(.trailing, GameTheme.Layout.largePadding)
-                    .padding(.top, GameTheme.Layout.mediumPadding)
-                }
-                
-                Spacer()
-            }
-            .zIndex(2)
         }
         .ignoresSafeArea(edges: .bottom)
     }
@@ -226,5 +203,5 @@ struct AboutSectionView: View {
 }
 
 #Preview {
-    AboutView(onDismiss: {})
+    AboutView()
 }
