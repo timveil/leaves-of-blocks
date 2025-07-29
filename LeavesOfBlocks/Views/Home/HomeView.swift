@@ -18,7 +18,7 @@ struct HomeView: View {
                 Button(action: onShowHistory) {
                     VStack(spacing: GameTheme.Layout.mediumSpacing) {
                         Text("Best Score")
-                            .gameTitleStyle(color: GameTheme.Colors.accent)
+                            .pageTitleStyle(color: GameTheme.Colors.accent)
                         
                         Text("\(gameState.highScore)")
                             .font(GameTheme.Typography.largeScore)

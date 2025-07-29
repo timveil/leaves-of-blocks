@@ -68,7 +68,7 @@ struct StartGameButton: View {
                     .font(.system(size: 20, weight: .bold))
                 
                 Text("Start Game")
-                    .font(GameTheme.Typography.titleFont)
+                    .font(GameTheme.Typography.buttonFont)
                     .fontWeight(.bold)
             }
             .foregroundColor(.white)

@@ -9,7 +9,7 @@ struct HowToPlayView: View {
                     // Header
                     VStack(spacing: GameTheme.Layout.mediumSpacing) {
                         Text("How to Play")
-                            .gameTitleStyle()
+                            .pageTitleStyle()
                             .padding(.top, GameTheme.Layout.mediumPadding)
                         
                         Text("Master the art of block placement!")
@@ -22,48 +22,47 @@ struct HowToPlayView: View {
                         // The Grid
                         VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
                             Text("The Grid")
-                                .gameTitleStyle()
+                                .sectionHeaderStyle()
                             
                             Text("You have an 8×8 grid where you'll place block shapes. Fill complete rows or columns to clear them and earn points.")
-                                .gameHeadlineStyle(color: GameTheme.Colors.secondaryText)
+                                .sectionTextStyle(color: GameTheme.Colors.secondaryText)
                                 .lineSpacing(6)
                         }
                         
                         // Drag & Drop
                         VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
                             Text("Drag & Drop")
-                                .gameTitleStyle()
+                                .sectionHeaderStyle()
                             
                             Text("Drag block shapes from the bottom area onto the grid. Blocks must fit completely within the grid boundaries.")
-                                .gameHeadlineStyle(color: GameTheme.Colors.secondaryText)
+                                .sectionTextStyle(color: GameTheme.Colors.secondaryText)
                                 .lineSpacing(6)
                         }
                         
                         // Clear Lines
                         VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
                             Text("Clear Lines")
-                                .gameTitleStyle()
+                                .sectionHeaderStyle()
                             
                             Text("Complete horizontal rows or vertical columns disappear, earning you 100 points per line. Clear multiple lines at once for combo bonuses!")
-                                .gameHeadlineStyle(color: GameTheme.Colors.secondaryText)
+                                .sectionTextStyle(color: GameTheme.Colors.secondaryText)
                                 .lineSpacing(6)
                         }
                         
                         // Game Over
                         VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
                             Text("Game Over")
-                                .gameTitleStyle()
+                                .sectionHeaderStyle()
                             
                             Text("The game ends when none of your current blocks can be placed on the grid. Plan ahead to keep playing longer!")
-                                .gameHeadlineStyle(color: GameTheme.Colors.secondaryText)
+                                .sectionTextStyle(color: GameTheme.Colors.secondaryText)
                                 .lineSpacing(6)
                         }
                         
                         // Pro Tips
                         VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
                             Text("Pro Tips")
-                                .font(GameTheme.Typography.titleFont)
-                                .foregroundColor(GameTheme.Colors.primaryText)
+                                .sectionHeaderStyle()
                             
                             VStack(alignment: .leading, spacing: GameTheme.Layout.smallSpacing) {
                                 TipRow(text: "Try to keep the grid as empty as possible")
@@ -77,9 +76,6 @@ struct HowToPlayView: View {
                     
                         // Scoring Section - Table Style
                         VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
-                            Text("Scoring")
-                                .font(GameTheme.Typography.titleFont)
-                                .foregroundColor(GameTheme.Colors.primaryText)
                             
                             VStack(spacing: 0) {
                                 // Table Header
@@ -118,9 +114,6 @@ struct HowToPlayView: View {
                         
                         // Difficulty Modes
                         VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
-                            Text("Difficulty Modes")
-                                .font(GameTheme.Typography.titleFont)
-                                .foregroundColor(GameTheme.Colors.primaryText)
                             
                             VStack(spacing: 0) {
                                 // Table Header

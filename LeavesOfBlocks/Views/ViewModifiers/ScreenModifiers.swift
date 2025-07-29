@@ -183,11 +183,26 @@ extension View {
     // MARK: - Typography Modifiers
     
     /// Applies title text styling
-    func gameTitleStyle(color: Color = GameTheme.Colors.primaryText) -> some View {
+    func pageTitleStyle(color: Color = GameTheme.Colors.primaryText) -> some View {
         self
             .font(GameTheme.Typography.titleFont)
             .foregroundColor(color)
     }
+    
+    /// Applies section header text styling
+    func sectionHeaderStyle(color: Color = GameTheme.Colors.primaryText) -> some View {
+        self
+            .font(GameTheme.Typography.sectionHeaderFont)
+            .foregroundColor(color)
+    }
+    
+    /// Applies headline text styling
+    func sectionTextStyle(color: Color = GameTheme.Colors.primaryText) -> some View {
+        self
+            .font(GameTheme.Typography.sectionTextFont)
+            .foregroundColor(color)
+    }
+    
     
     /// Applies headline text styling
     func gameHeadlineStyle(color: Color = GameTheme.Colors.primaryText) -> some View {

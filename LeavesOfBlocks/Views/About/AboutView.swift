@@ -14,7 +14,7 @@ struct AboutView: View {
                     // Header
                     VStack(spacing: GameTheme.Layout.mediumSpacing) {
                         Text("Leaves of Blocks")
-                            .gameTitleStyle()
+                            .pageTitleStyle()
                             .padding(.top, GameTheme.Layout.mediumPadding)
                         
                         Text(appVersion)
@@ -26,21 +26,21 @@ struct AboutView: View {
                 // About the Game
                 VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
                     Text("About the Game")
-                        .gameTitleStyle()
+                        .sectionHeaderStyle()
                     
                     Text("Leaves of Blocks is a relaxing puzzle game that combines the joy of autumn with strategic block placement. Clear lines by filling rows and columns completely, and watch as your score grows with each successful move.\n\nFeatures beautiful block shapes, smooth animations, and progressively challenging gameplay across three difficulty modes.")
-                        .gameHeadlineStyle(color: GameTheme.Colors.secondaryText)
+                        .sectionTextStyle(color: GameTheme.Colors.secondaryText)
                         .lineSpacing(6)
                 }
                 
                 // Inspiration - Custom styled section
                 VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
                     Text("Inspiration")
-                        .gameTitleStyle()
+                        .sectionHeaderStyle()
                     
                     VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
                         Text("For Emma, Annie and Grace.  May this game serve as a momentary distraction from life's struggles, big and small.")
-                            .gameHeadlineStyle(color: GameTheme.Colors.secondaryText)
+                            .sectionTextStyle(color: GameTheme.Colors.secondaryText)
                             .lineSpacing(6)
                             .padding(.bottom, GameTheme.Layout.mediumSpacing)
                         
@@ -93,20 +93,20 @@ struct AboutView: View {
                 // Creator Info
                 VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
                     Text("Creator")
-                        .gameTitleStyle()
+                        .sectionHeaderStyle()
                     
                     Text("Developed with passion by Tim Veil, a software engineer and dad who believes in creating beautiful, accessible games that bring moments of joy to everyday life.\n\nBuilt entirely with SwiftUI, this game represents a commitment to crafting polished experiences that feel natural on iOS devices.")
-                        .gameHeadlineStyle(color: GameTheme.Colors.secondaryText)
+                        .sectionTextStyle(color: GameTheme.Colors.secondaryText)
                         .lineSpacing(6)
                 }
                 
                 // Technical Details
                 VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
                     Text("Technical Details")
-                        .gameTitleStyle()
+                        .sectionHeaderStyle()
                     
                     Text("Built with pure SwiftUI and Swift for a native iOS experience. This game supports both iPhone and iPad devices running iOS 18.5 or later.\n\nEnjoy ad-free gameplay with no in-app purchases. Play offline anytime, and your high scores are automatically saved for friendly competition with yourself.")
-                        .gameHeadlineStyle(color: GameTheme.Colors.secondaryText)
+                        .sectionTextStyle(color: GameTheme.Colors.secondaryText)
                         .lineSpacing(6)
                 }
                     }
@@ -127,7 +127,7 @@ private struct AboutSectionView: View {
     var body: some View {
         VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
             Text(title)
-                .gameHeadlineStyle()
+                .sectionTextStyle()
             
             Text(content)
                 .gameBodyStyle(color: GameTheme.Colors.secondaryText)

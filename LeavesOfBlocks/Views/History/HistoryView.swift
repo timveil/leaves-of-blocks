@@ -48,7 +48,7 @@ struct HistoryView: View {
             VStack(spacing: GameTheme.Layout.mediumSpacing) {
                 // Header
                 Text("Game History")
-                    .gameTitleStyle()
+                    .pageTitleStyle()
                     .padding(.top, GameTheme.Layout.mediumPadding)
                 
                 // Statistics Summary

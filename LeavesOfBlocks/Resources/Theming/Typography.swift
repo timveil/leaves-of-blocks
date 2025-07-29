@@ -4,6 +4,13 @@ extension GameTheme {
     struct Typography {
         static let title = Font.system(size: 32, weight: .semibold, design: .default)
         static let titleFont = Font.system(size: 28, weight: .bold, design: .default)
+        
+        static let sectionHeaderFont = Font.system(size: 22, weight: .bold, design: .default)
+        
+        static let sectionTextFont = Font.system(size: 18, weight: .medium, design: .default)
+        
+        
+        static let buttonFont = Font.system(size: 28, weight: .bold, design: .default)
         static let subtitleFont = Font.system(size: 12, weight: .medium, design: .default)
         static let headline = Font.title2
         static let headlineFont = Font.system(size: 20, weight: .bold, design: .default)

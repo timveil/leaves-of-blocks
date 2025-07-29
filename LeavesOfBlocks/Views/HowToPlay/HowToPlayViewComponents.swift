@@ -30,11 +30,11 @@ struct TipRow: View {
     var body: some View {
         HStack(alignment: .top, spacing: GameTheme.Layout.mediumSpacing) {
             Text("•")
-                .font(GameTheme.Typography.headlineFont)
+                .font(GameTheme.Typography.sectionTextFont)
                 .foregroundColor(GameTheme.Colors.accent)
             
             Text(text)
-                .font(GameTheme.Typography.headlineFont)
+                .font(GameTheme.Typography.sectionTextFont)
                 .foregroundColor(GameTheme.Colors.secondaryText)
                 .fixedSize(horizontal: false, vertical: true)
             
@@ -81,14 +81,14 @@ struct ScoringTableHeaderView: View {
         HStack(spacing: GameTheme.Layout.largePadding) {
             // Points header
             Text("Points")
-                .font(GameTheme.Typography.headlineFont)
+                .font(GameTheme.Typography.sectionTextFont)
                 .fontWeight(.bold)
                 .foregroundColor(GameTheme.Colors.primaryText)
                 .frame(width: 100, alignment: .leading)
             
             // Description header
             Text("Description")
-                .font(GameTheme.Typography.headlineFont)
+                .font(GameTheme.Typography.sectionTextFont)
                 .fontWeight(.bold)
                 .foregroundColor(GameTheme.Colors.primaryText)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -104,14 +104,14 @@ struct DifficultyTableHeaderView: View {
         HStack(spacing: GameTheme.Layout.largePadding) {
             // Mode header
             Text("Mode")
-                .font(GameTheme.Typography.headlineFont)
+                .font(GameTheme.Typography.sectionTextFont)
                 .fontWeight(.bold)
                 .foregroundColor(GameTheme.Colors.primaryText)
                 .frame(width: 100, alignment: .leading)
             
             // Description header
             Text("Description")
-                .font(GameTheme.Typography.headlineFont)
+                .font(GameTheme.Typography.sectionTextFont)
                 .fontWeight(.bold)
                 .foregroundColor(GameTheme.Colors.primaryText)
                 .frame(maxWidth: .infinity, alignment: .leading)
