@@ -67,6 +67,34 @@ struct HowToPlayView: View {
                                 .foregroundColor(GameTheme.Colors.secondaryText)
                                 .lineSpacing(6)
                         }
+                        
+                        // Game Over
+                        VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
+                            Text("Game Over")
+                                .font(GameTheme.Typography.titleFont)
+                                .foregroundColor(GameTheme.Colors.primaryText)
+                            
+                            Text("The game ends when none of your current blocks can be placed on the grid. Plan ahead to keep playing longer!")
+                                .font(GameTheme.Typography.headlineFont)
+                                .foregroundColor(GameTheme.Colors.secondaryText)
+                                .lineSpacing(6)
+                        }
+                        
+                        // Pro Tips
+                        VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
+                            Text("Pro Tips")
+                                .font(GameTheme.Typography.titleFont)
+                                .foregroundColor(GameTheme.Colors.primaryText)
+                            
+                            VStack(alignment: .leading, spacing: GameTheme.Layout.smallSpacing) {
+                                TipRow(text: "Try to keep the grid as empty as possible")
+                                TipRow(text: "Look for opportunities to clear multiple lines")
+                                TipRow(text: "Don't rush - take time to find the best placement")
+                                TipRow(text: "Focus on corners and edges when the grid gets full")
+                                TipRow(text: "Plan ahead by considering all three available blocks")
+                            }
+                        }
+                        
                     
                         // Scoring Section - Table Style
                         VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
@@ -109,18 +137,6 @@ struct HowToPlayView: View {
                             )
                         }
                         
-                        // Game Over
-                        VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
-                            Text("Game Over")
-                                .font(GameTheme.Typography.titleFont)
-                                .foregroundColor(GameTheme.Colors.primaryText)
-                            
-                            Text("The game ends when none of your current blocks can be placed on the grid. Plan ahead to keep playing longer!")
-                                .font(GameTheme.Typography.headlineFont)
-                                .foregroundColor(GameTheme.Colors.secondaryText)
-                                .lineSpacing(6)
-                        }
-                        
                         // Difficulty Modes
                         VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
                             Text("Difficulty Modes")
@@ -159,20 +175,6 @@ struct HowToPlayView: View {
                             )
                         }
                         
-                        // Pro Tips
-                        VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
-                            Text("Pro Tips")
-                                .font(GameTheme.Typography.titleFont)
-                                .foregroundColor(GameTheme.Colors.primaryText)
-                            
-                            VStack(alignment: .leading, spacing: GameTheme.Layout.smallSpacing) {
-                                TipRow(text: "Try to keep the grid as empty as possible")
-                                TipRow(text: "Look for opportunities to clear multiple lines")
-                                TipRow(text: "Don't rush - take time to find the best placement")
-                                TipRow(text: "Focus on corners and edges when the grid gets full")
-                                TipRow(text: "Plan ahead by considering all three available blocks")
-                            }
-                        }
                     }
                     
                     Spacer(minLength: GameTheme.Layout.extraLargePadding)
@@ -261,7 +263,7 @@ struct ScoringTableRowView: View {
                 .font(GameTheme.Typography.headlineFont)
                 .fontWeight(.bold)
                 .foregroundColor(color)
-                .frame(width: 100, alignment: .leading)
+                .frame(width: 100, alignment: .center)
             
             // Description column
             Text(description)

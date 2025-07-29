@@ -60,7 +60,7 @@ struct AboutView: View {
                                 .foregroundColor(GameTheme.Colors.primaryText)
                             
                             VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
-                                Text("For Emma, Annie and Grace.  May this game serve as a momentary distraction from life’s struggles, big and small")
+                                Text("For Emma, Annie and Grace.  May this game serve as a momentary distraction from life’s struggles, big and small.")
                                     .font(GameTheme.Typography.headlineFont)
                                     .foregroundColor(GameTheme.Colors.secondaryText)
                                     .lineSpacing(6)
