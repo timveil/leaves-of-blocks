@@ -201,3 +201,12 @@ struct StatisticCard: View {
         .shadow(color: GameTheme.Colors.cardShadow, radius: 6, x: 0, y: 3)
     }
 }
+
+#Preview {
+    SummaryView(
+        gameState: GameState(),
+        onNewGame: {},
+        onViewHistory: {},
+        onBackToHome: {}
+    )
+}

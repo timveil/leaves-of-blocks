@@ -387,3 +387,10 @@ struct GameBoardView: View {
     }
     
 }
+
+#Preview {
+    BoardView(
+        gameState: GameState(),
+        onViewSummary: {}
+    )
+}

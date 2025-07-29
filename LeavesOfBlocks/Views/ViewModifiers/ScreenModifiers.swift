@@ -308,33 +308,3 @@ extension View {
     }
 }
 
-// MARK: - Preview Provider
-
-#if DEBUG
-struct GameScreenModifiers_Previews: PreviewProvider {
-    static var previews: some View {
-        VStack(spacing: 20) {
-            Text("Card Style")
-                .gameBodyStyle()
-                .padding()
-                .gameCardStyle()
-            
-            Text("Gradient Card")
-                .gameHeadlineStyle()
-                .padding()
-                .gameGradientCardStyle()
-            
-            Text("Title Style")
-                .gameTitleStyle()
-            
-            Text("Disabled Button")
-                .gameBodyStyle()
-                .padding()
-                .gameCardStyle()
-                .gameDisabledStyle(true)
-        }
-        .gameContentPadding()
-        .background(GameBackgroundView())
-    }
-}
-#endif

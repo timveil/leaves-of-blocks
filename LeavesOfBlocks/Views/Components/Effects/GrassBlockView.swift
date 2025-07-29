@@ -25,38 +25,3 @@ struct GrassBlockView: View {
     }
 }
 
-// MARK: - Preview Helpers
-
-#if DEBUG
-struct UIComponents_Previews: PreviewProvider {
-    static var previews: some View {
-        VStack(spacing: 20) {
-            ScoreDisplayView(
-                title: "Score",
-                value: 1250,
-                icon: "🎯",
-                color: GameTheme.Colors.primaryAccent
-            )
-            
-            AnimatedBadgeView(
-                text: "Leaves Cleared:",
-                icon: "🍃",
-                value: 5,
-                isVisible: true
-            )
-            
-            Button("New Game") { }
-                .gameButtonStyle()
-            
-            ErrorStateView(
-                title: "Oops!",
-                message: "Something went wrong",
-                retryAction: { }
-            )
-        }
-        .padding()
-        .background(GameTheme.Colors.primaryBackground)
-        .previewLayout(.sizeThatFits)
-    }
-}
-#endif
