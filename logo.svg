@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
   <defs>
-    <!-- Dark green gradient for L -->
+    <!-- Dark green gradient for L (using grass colors) -->
     <linearGradient id="greenGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#2D7A2D"/>
-      <stop offset="100%" stop-color="#1A4D1A"/>
+      <stop offset="0%" stop-color="#269900"/>
+      <stop offset="100%" stop-color="#1A4D00"/>
     </linearGradient>
     
-    <!-- Bright green gradient for B -->
+    <!-- Bright green gradient for B (using grass colors) -->
     <linearGradient id="lightGreenGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-      <stop offset="0%" stop-color="#66CC66"/>
-      <stop offset="100%" stop-color="#4DB34D"/>
+      <stop offset="0%" stop-color="#40B226"/>
+      <stop offset="100%" stop-color="#33A619"/>
     </linearGradient>
     
   </defs>
