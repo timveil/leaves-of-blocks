@@ -165,7 +165,7 @@ struct BlockView: View {
     }
 }
 
-struct DraggableBlockView: View {
+private struct DraggableBlockView: View {
     let block: BlockShape
     let cellSize: CGFloat
     let onDragStart: (CGPoint, CGPoint) -> Void  // current location, start location

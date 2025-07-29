@@ -164,7 +164,7 @@ struct SummaryView: View {
 
 // MARK: - Statistic Card Component
 
-struct StatisticCard: View {
+private struct StatisticCard: View {
     let title: String
     let value: String
     let icon: String

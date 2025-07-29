@@ -99,7 +99,7 @@ struct BlockGrassView: View {
     }
 }
 
-struct StaticGrassBlockView: View {
+private struct StaticGrassBlockView: View {
     let color: Color
     let size: CGFloat
     

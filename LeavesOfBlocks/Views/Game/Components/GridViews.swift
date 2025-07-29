@@ -122,7 +122,7 @@ struct GameGridView: View {
     }
 }
 
-struct GridCellView: View {
+private struct GridCellView: View {
     let cell: GridCell
     let size: CGFloat
     let isPreview: Bool
@@ -176,7 +176,7 @@ struct GridCellView: View {
 
 // MARK: - Animation Helper Views
 
-struct LineCompletePulseView: View {
+private struct LineCompletePulseView: View {
     @State private var isAnimating: Bool = false
     
     var body: some View {
@@ -192,7 +192,7 @@ struct LineCompletePulseView: View {
     }
 }
 
-struct PreviewPulseView: View {
+private struct PreviewPulseView: View {
     let previewColor: Color
     @State private var isAnimating: Bool = false
     

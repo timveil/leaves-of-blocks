@@ -120,7 +120,7 @@ struct AboutView: View {
     }
 }
 
-struct AboutSectionView: View {
+private struct AboutSectionView: View {
     let title: String
     let content: String
     

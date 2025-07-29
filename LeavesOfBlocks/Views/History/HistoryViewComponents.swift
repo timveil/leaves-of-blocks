@@ -123,7 +123,7 @@ struct StatsSummaryView: View {
     }
 }
 
-struct StatItemView: View {
+private struct StatItemView: View {
     let icon: String
     let title: String
     let value: String
