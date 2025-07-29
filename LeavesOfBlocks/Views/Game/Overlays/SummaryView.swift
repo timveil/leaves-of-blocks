@@ -81,7 +81,7 @@ struct SummaryView: View {
                     }
                     .padding(.top, GameTheme.Layout.mediumPadding)
                     
-                    Spacer(minLength: GameTheme.Layout.extraLargeSpacing)
+                    Spacer(minLength: GameTheme.Layout.mediumSpacing)
                     
                     // Final Score - centered and prominent
                     VStack(spacing: GameTheme.Layout.smallSpacing) {
@@ -97,7 +97,7 @@ struct SummaryView: View {
                             .minimumScaleFactor(0.7)
                     }
                     
-                    Spacer(minLength: GameTheme.Layout.extraLargeSpacing)
+                    Spacer(minLength: GameTheme.Layout.mediumSpacing)
                     
                     // Statistics Cards - 2x3 grid
                     LazyVGrid(columns: [
@@ -149,7 +149,7 @@ struct SummaryView: View {
                     }
                     .padding(.horizontal, GameTheme.Layout.largePadding)
                     
-                    Spacer(minLength: GameTheme.Layout.extraLargeSpacing)
+                    Spacer(minLength:150)
                 }
             }
         }
