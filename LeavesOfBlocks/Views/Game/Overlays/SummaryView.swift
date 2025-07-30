@@ -5,7 +5,6 @@ import SwiftUI
 struct SummaryView: View {
     @ObservedObject var gameState: GameState
     let historicalSession: GameSession?
-    @State private var highScoreScale: CGFloat = 1.0
     
     // Computed properties to use either current game or historical session
     private var score: Int {
@@ -77,15 +76,6 @@ struct SummaryView: View {
                                 Image(systemName: "crown.fill")
                                     .font(GameTheme.Typography.largeScore)
                                     .foregroundColor(GameTheme.Colors.accent)
-                                    .scaleEffect(highScoreScale)
-                                    .onAppear {
-                                        withAnimation(.easeInOut(duration: 0.8).repeatForever(autoreverses: true)) {
-                                            highScoreScale = 1.1
-                                        }
-                                    }
-                                    .onDisappear {
-                                        highScoreScale = 1.0
-                                    }
                             }
                             
                             Text("\(score)")

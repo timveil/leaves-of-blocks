@@ -14,6 +14,7 @@ class GameService: ObservableObject {
     private var gameStartTime: Date = Date()
     
     let highScoreManager = HighScoreManager()
+    private let coreDataManager = CoreDataManager.shared
     
     // MARK: - Initialization
     
@@ -90,9 +91,18 @@ class GameService: ObservableObject {
         difficulty: DifficultyMode,
         longestCombo: Int
     ) {
-        // This would integrate with CoreDataManager if needed
-        // For now, we rely on the high score manager
+        // Update high score
         let _ = updateHighScore(score)
+        
+        // Save to Core Data
+        coreDataManager.saveGameRecord(
+            score: score,
+            difficulty: difficulty,
+            blocksPlaced: blocksPlaced,
+            linesCleared: linesCleared,
+            longestCombo: longestCombo,
+            gameTime: gameTime
+        )
     }
     
     // MARK: - Haptic Feedback

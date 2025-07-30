@@ -53,6 +53,10 @@ class CoreDataManager {
         gameRecord.gameTime = gameTime
         gameRecord.date = Date()
         
+        #if DEBUG
+        print("💾 Saving game record: Score=\(score), Difficulty=\(difficulty.rawValue), Time=\(Int(gameTime))s")
+        #endif
+        
         saveContext()
     }
     
