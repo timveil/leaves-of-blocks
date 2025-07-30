@@ -20,13 +20,13 @@ struct HomeView: View {
                         Text("Best Score")
                             .pageTitleStyle(color: GameTheme.Colors.accent)
                         
-                        Text("\(gameState.highScore)")
+                        Text(gameState.highScore.formattedScore)
                             .font(GameTheme.Typography.largeScore)
                             .foregroundColor(GameTheme.Colors.primaryText)
                             
                         // Last played info if available
                         if gameState.score > 0 {
-                            Text("Last Score: \(gameState.score)")
+                            Text("Last Score: \(gameState.score.formattedScore)")
                                 .gameCaptionStyle()
                         }
                         

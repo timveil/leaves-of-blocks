@@ -67,7 +67,7 @@ struct BoardView: View {
                             Image(systemName: "cube.fill")
                                 .font(.system(size: 16, weight: .semibold))
                                 .foregroundColor(GameTheme.Colors.blockYellow)
-                            Text("\(gameState.blocksPlaced)")
+                            Text(gameState.blocksPlaced.formattedScore)
                                 .font(GameTheme.Typography.captionFont)
                                 .foregroundColor(GameTheme.Colors.secondaryText)
                         }

@@ -59,7 +59,7 @@ struct GameOverOverlayView: View {
                     .tracking(1)
                     .shadow(color: Color.black.opacity(0.1), radius: 1, x: 0, y: 1)
                 
-                Text("\(gameState.score)")
+                Text(gameState.score.formattedScore)
                     .font(GameTheme.Typography.largeScore)
                     .foregroundColor(GameTheme.Colors.primaryText)
                     .lineLimit(1)

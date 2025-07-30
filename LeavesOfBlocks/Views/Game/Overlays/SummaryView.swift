@@ -78,7 +78,7 @@ struct SummaryView: View {
                                     .foregroundColor(GameTheme.Colors.accent)
                             }
                             
-                            Text("\(score)")
+                            Text(score.formattedScore)
                                 .font(GameTheme.Typography.largeScore)
                                 .foregroundColor(GameTheme.Colors.primaryText)
                                 .lineLimit(1)
@@ -103,21 +103,21 @@ struct SummaryView: View {
                         
                         StatisticCard(
                             title: "Blocks Placed",
-                            value: "\(blocksPlaced)",
+                            value: blocksPlaced.formattedScore,
                             icon: "square.grid.3x3.fill",
                             color: GameTheme.Colors.blockGreen
                         )
                         
                         StatisticCard(
                             title: "Lines Cleared",
-                            value: "\(linesCleared)",
+                            value: linesCleared.formattedScore,
                             icon: "line.horizontal.3",
                             color: GameTheme.Colors.blockRed
                         )
                         
                         StatisticCard(
                             title: "Longest Combo",
-                            value: "\(longestCombo)",
+                            value: longestCombo.formattedScore,
                             icon: "flame.fill",
                             color: GameTheme.Colors.blockOrange
                         )
@@ -131,7 +131,7 @@ struct SummaryView: View {
                         
                         StatisticCard(
                             title: "Best Ever",
-                            value: "\(gameState.highScore)",
+                            value: gameState.highScore.formattedScore,
                             icon: "crown.fill",
                             color: GameTheme.Colors.accent
                         )
@@ -149,6 +149,7 @@ struct SummaryView: View {
         let seconds = Int(timeInterval) % 60
         return String(format: "%d:%02d", minutes, seconds)
     }
+    
 }
 
 // MARK: - Statistic Card Component

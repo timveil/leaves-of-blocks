@@ -19,7 +19,7 @@ struct SimpleScoreView: View {
             HStack {
                 // Current Score
                 VStack(alignment: .leading, spacing: 4) {
-                    Text("\(gameState.score)")
+                    Text(gameState.score.formattedScore)
                         .font(GameTheme.Typography.largeScore)
                         .foregroundColor(GameTheme.Colors.primaryText)
                     Text("Score")
@@ -31,7 +31,7 @@ struct SimpleScoreView: View {
                 
                 // Lines Cleared Counter
                 VStack(alignment: .trailing, spacing: 4) {
-                    Text("\(gameState.linesCleared)")
+                    Text(gameState.linesCleared.formattedScore)
                         .font(GameTheme.Typography.largeScore)
                         .foregroundColor(GameTheme.Colors.accent)
                     Text("Lines")

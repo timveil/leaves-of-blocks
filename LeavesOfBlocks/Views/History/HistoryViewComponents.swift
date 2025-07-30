@@ -54,7 +54,7 @@ struct StatsSummaryView: View {
                     StatItemView(
                         icon: "crown.fill",
                         title: "High Score",
-                        value: "\(highScore)",
+                        value: highScore.formattedScore,
                         color: GameTheme.Colors.accent,
                         alignment: .center
                     )
@@ -66,7 +66,7 @@ struct StatsSummaryView: View {
                     StatItemView(
                         icon: "gamecontroller.fill",
                         title: "Games Played",
-                        value: "\(totalGames)",
+                        value: totalGames.formattedScore,
                         color: GameTheme.Colors.blockBlue,
                         alignment: .center
                     )
@@ -80,7 +80,7 @@ struct StatsSummaryView: View {
                     StatItemView(
                         icon: "chart.line.uptrend.xyaxis",
                         title: "Average Score",
-                        value: "\(averageScore)",
+                        value: averageScore.formattedScore,
                         color: GameTheme.Colors.blockGreen,
                         alignment: .center
                     )
@@ -92,7 +92,7 @@ struct StatsSummaryView: View {
                     StatItemView(
                         icon: "square.stack.3d.up.fill",
                         title: "Total Blocks",
-                        value: "\(totalBlocksPlaced)",
+                        value: totalBlocksPlaced.formattedScore,
                         color: GameTheme.Colors.blockOrange,
                         alignment: .center
                     )
@@ -179,7 +179,7 @@ struct GameSessionRow: View {
                                 .foregroundColor(GameTheme.Colors.accent)
                                 .font(.system(size: 12))
                         }
-                        Text("\(session.score)")
+                        Text(session.score.formattedScore)
                             .font(GameTheme.Typography.scoreFont)
                             .foregroundColor(GameTheme.Colors.primaryText)
                     }
@@ -193,8 +193,8 @@ struct GameSessionRow: View {
             // Stats row - more compact
             HStack {
                 HStack(spacing: GameTheme.Layout.mediumSpacing) {
-                    GameStatChip(title: "Blocks", value: "\(session.blocksPlaced)", icon: "cube.fill", color: GameTheme.Colors.blockBlue, style: .compact)
-                    GameStatChip(title: "Lines", value: "\(session.linesCleared)", icon: "square.grid.3x3.fill", color: GameTheme.Colors.blockGreen, style: .compact)
+                    GameStatChip(title: "Blocks", value: session.blocksPlaced.formattedScore, icon: "cube.fill", color: GameTheme.Colors.blockBlue, style: .compact)
+                    GameStatChip(title: "Lines", value: session.linesCleared.formattedScore, icon: "square.grid.3x3.fill", color: GameTheme.Colors.blockGreen, style: .compact)
                 }
                 
                 Spacer()
