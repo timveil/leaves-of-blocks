@@ -12,10 +12,6 @@ struct HowToPlayView: View {
                         Text("How to Play")
                             .pageTitleStyle()
                             .padding(.top, GameTheme.Layout.mediumPadding)
-                        
-                        Text("Master the art of block placement!")
-                            .gameCaptionStyle()
-                            .multilineTextAlignment(.center)
                     }
                     
                     // Content sections

@@ -17,9 +17,6 @@ struct AboutView: View {
                         Text("Leaves of Blocks")
                             .pageTitleStyle()
                             .padding(.top, GameTheme.Layout.mediumPadding)
-                        
-                        Text(appVersion)
-                            .gameCaptionStyle()
                     }
                     
                     // Content sections

@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ToolbarView: View {
-    private static let iconFont = Font.system(size: 20, weight: .semibold)
+    private static let iconFont = Font.system(size: 22, weight: .semibold)
     
     let currentScreen: AppScreen
     let onGoHome: () -> Void
@@ -20,9 +20,9 @@ struct ToolbarView: View {
         HStack {
             // Home icon (always visible, but disabled on home screen)
             Button(action: currentScreen == .home ? {} : onGoHome) {
-                Image(systemName: "house.fill")
+                Image(systemName: "house.circle.fill")
                     .font(Self.iconFont)
-                    .foregroundColor(currentScreen == .home ? GameTheme.Colors.blockBlue.opacity(0.4) : GameTheme.Colors.blockBlue)
+                    .foregroundColor(currentScreen == .home ? GameTheme.Colors.blockGreen.opacity(0.4) : GameTheme.Colors.blockGreen)
             }
             .disabled(currentScreen == .home)
             
@@ -32,21 +32,21 @@ struct ToolbarView: View {
             HStack(spacing: GameTheme.Layout.largePadding) {
                 // New Game button (always visible)
                 Button(action: onNewGame) {
-                    Image(systemName: "play.fill")
+                    Image(systemName: "play.circle.fill")
                         .font(Self.iconFont)
-                        .foregroundColor(GameTheme.Colors.accent)
-                }
-                
-                // Info icon (About) - using gear for better visual balance
-                Button(action: onShowAbout) {
-                    Image(systemName: "gear")
-                        .font(Self.iconFont)
-                        .foregroundColor(Color(red: 0.7, green: 0.7, blue: 0.7))
+                        .foregroundColor(GameTheme.Colors.blockGreen)
                 }
                 
                 // Help icon (How to Play)
                 Button(action: onShowHowToPlay) {
-                    Image(systemName: "questionmark")
+                    Image(systemName: "questionmark.circle.fill")
+                        .font(Self.iconFont)
+                        .foregroundColor(GameTheme.Colors.blockGreen)
+                }
+                
+                // Info icon (About) - using gear for better visual balance
+                Button(action: onShowAbout) {
+                    Image(systemName: "info.circle.fill")
                         .font(Self.iconFont)
                         .foregroundColor(GameTheme.Colors.blockGreen)
                 }
@@ -69,4 +69,19 @@ struct ToolbarView: View {
             alignment: .bottom
         )
     }
+}
+
+#Preview {
+    VStack {
+        ToolbarView(
+            currentScreen: .home,
+            onGoHome: { print("Go Home") },
+            onShowAbout: { print("Show About") },
+            onShowHowToPlay: { print("Show How to Play") },
+            onNewGame: { print("New Game") }
+        )
+        
+        Spacer()
+    }
+    .background(GameTheme.Colors.primaryBackground)
 }
