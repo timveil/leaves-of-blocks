@@ -9,8 +9,9 @@ struct AboutView: View {
     
     var body: some View {
         BaseScreenView {
-            ScrollView {
-                VStack(spacing: GameTheme.Layout.largePadding) {
+            GeometryReader { geometry in
+                ScrollView {
+                    VStack(spacing: GameTheme.Layout.largePadding) {
                     // Header
                     VStack(spacing: GameTheme.Layout.mediumSpacing) {
                         Text("Leaves of Blocks")
@@ -115,6 +116,8 @@ struct AboutView: View {
                 }
                 .padding(.horizontal, GameTheme.Layout.largePadding)
                 .padding(.bottom, 80)
+                }
+                .frame(height: geometry.size.height - 100) // Leave space for grass
             }
         }
     }
