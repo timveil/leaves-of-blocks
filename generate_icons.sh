@@ -13,15 +13,21 @@ fi
 # Create tmp directory if it doesn't exist
 mkdir -p tmp
 
-# Source SVG file
+# Source SVG files
 SVG_FILE="logo.svg"
+TRANSPARENT_SVG_FILE="logo-transparent.svg"
 
 if [ ! -f "$SVG_FILE" ]; then
     echo "Error: $SVG_FILE not found!"
     exit 1
 fi
 
-echo "Generating iOS app icons from $SVG_FILE..."
+if [ ! -f "$TRANSPARENT_SVG_FILE" ]; then
+    echo "Error: $TRANSPARENT_SVG_FILE not found!"
+    exit 1
+fi
+
+echo "Generating iOS app icons from $SVG_FILE and transparent launch icons from $TRANSPARENT_SVG_FILE..."
 
 # iOS App Icon sizes (all square with white background)
 # iPhone App Icons
@@ -59,12 +65,14 @@ rsvg-convert -w 180 -h 180 "$SVG_FILE" > tmp/AppClipIcon-60@3x.png
 rsvg-convert -w 120 -h 120 "$SVG_FILE" > tmp/AppClipIcon-60@2x.png
 rsvg-convert -w 1024 -h 1024 "$SVG_FILE" > tmp/AppClipIcon-1024.png
 
-# Launch Screen Icons (for custom launch screen, keep transparent for overlay)
-rsvg-convert -w 240 -h 240 --background-color=transparent "$SVG_FILE" > tmp/LaunchIcon@2x.png
-rsvg-convert -w 360 -h 360 --background-color=transparent "$SVG_FILE" > tmp/LaunchIcon@3x.png
-# For dark mode, we'll use the same icons (since our logo has transparent background)
-rsvg-convert -w 240 -h 240 --background-color=transparent "$SVG_FILE" > tmp/LaunchIcon-Dark@2x.png
-rsvg-convert -w 360 -h 360 --background-color=transparent "$SVG_FILE" > tmp/LaunchIcon-Dark@3x.png
+# Launch Screen Icons (transparent background for overlay use)
+rsvg-convert -w 120 -h 120 --background-color=transparent "$TRANSPARENT_SVG_FILE" > tmp/LaunchIcon@1x.png
+rsvg-convert -w 240 -h 240 --background-color=transparent "$TRANSPARENT_SVG_FILE" > tmp/LaunchIcon@2x.png
+rsvg-convert -w 360 -h 360 --background-color=transparent "$TRANSPARENT_SVG_FILE" > tmp/LaunchIcon@3x.png
+# For dark mode, we'll use the same transparent icons
+rsvg-convert -w 120 -h 120 --background-color=transparent "$TRANSPARENT_SVG_FILE" > tmp/LaunchIcon-Dark@1x.png
+rsvg-convert -w 240 -h 240 --background-color=transparent "$TRANSPARENT_SVG_FILE" > tmp/LaunchIcon-Dark@2x.png
+rsvg-convert -w 360 -h 360 --background-color=transparent "$TRANSPARENT_SVG_FILE" > tmp/LaunchIcon-Dark@3x.png
 
 echo "✅ Generated all iOS app icons and launch icons successfully!"
 echo "📁 Icons saved in ./tmp/ directory"
@@ -80,6 +88,6 @@ echo "• iPhone Settings: 87x87, 58x58, 29x29"
 echo "• iPhone Spotlight: 120x120, 80x80, 40x40"
 echo "• iPad App: 167x167, 152x152, 76x76"
 echo "• App Store: 1024x1024"
-echo "• Launch Screen: 240x240, 360x360 (with dark mode variants)"
+echo "• Launch Screen: 120x120, 240x240, 360x360 (with dark mode variants)"
 echo "• App icons have white background (Apple requirement)"
-echo "• Launch screen icons remain transparent for overlay use"
+echo "• Launch screen icons are transparent for gradient overlay blending"

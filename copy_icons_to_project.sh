@@ -35,8 +35,10 @@ LAUNCH_ICON_DIR="LeavesOfBlocks/Assets.xcassets/LaunchIcon.imageset"
 echo "📱 Copying Launch Screen icons..."
 mkdir -p "$LAUNCH_ICON_DIR"
 
+cp tmp/LaunchIcon@1x.png "$LAUNCH_ICON_DIR/LaunchIcon@1x.png"
 cp tmp/LaunchIcon@2x.png "$LAUNCH_ICON_DIR/LaunchIcon@2x.png"
 cp tmp/LaunchIcon@3x.png "$LAUNCH_ICON_DIR/LaunchIcon@3x.png"
+cp tmp/LaunchIcon-Dark@1x.png "$LAUNCH_ICON_DIR/LaunchIcon-Dark@1x.png"
 cp tmp/LaunchIcon-Dark@2x.png "$LAUNCH_ICON_DIR/LaunchIcon-Dark@2x.png"
 cp tmp/LaunchIcon-Dark@3x.png "$LAUNCH_ICON_DIR/LaunchIcon-Dark@3x.png"
 
@@ -45,14 +47,25 @@ cat > "$LAUNCH_ICON_DIR/Contents.json" << 'EOF'
 {
   "images" : [
     {
+      "filename" : "LaunchIcon@1x.png",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "LaunchIcon-Dark@1x.png",
+      "idiom" : "universal",
+      "scale" : "1x"
+    },
+    {
       "filename" : "LaunchIcon@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
-    },
-    {
-      "filename" : "LaunchIcon@3x.png",
-      "idiom" : "universal",
-      "scale" : "3x"
     },
     {
       "appearances" : [
@@ -64,6 +77,11 @@ cat > "$LAUNCH_ICON_DIR/Contents.json" << 'EOF'
       "filename" : "LaunchIcon-Dark@2x.png",
       "idiom" : "universal",
       "scale" : "2x"
+    },
+    {
+      "filename" : "LaunchIcon@3x.png",
+      "idiom" : "universal",
+      "scale" : "3x"
     },
     {
       "appearances" : [

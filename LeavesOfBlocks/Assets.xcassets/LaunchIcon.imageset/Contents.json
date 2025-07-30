@@ -1,6 +1,7 @@
 {
   "images" : [
     {
+      "filename" : "LaunchIcon@1x.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
@@ -11,6 +12,7 @@
           "value" : "dark"
         }
       ],
+      "filename" : "LaunchIcon-Dark@1x.png",
       "idiom" : "universal",
       "scale" : "1x"
     },
