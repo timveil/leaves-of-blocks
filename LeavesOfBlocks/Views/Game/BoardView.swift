@@ -219,10 +219,15 @@ struct BoardView: View {
                     Color.black.opacity(0.8)
                         .ignoresSafeArea()
                     
-                    GameOverOverlayView(
-                        gameState: gameState,
-                        onViewSummary: onViewSummary
-                    )
+                    VStack {
+                        GameOverOverlayView(
+                            gameState: gameState,
+                            onViewSummary: onViewSummary
+                        )
+                        .padding(.top, 100) // Position closer to top
+                        
+                        Spacer()
+                    }
                 }
                 .zIndex(2000) // Higher than dragged blocks
             }
