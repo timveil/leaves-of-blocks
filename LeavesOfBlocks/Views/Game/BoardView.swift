@@ -169,6 +169,7 @@ struct BoardView: View {
                             let adjustedLocation = CGPoint(x: dragLocation.x, y: dragLocation.y - dragOffsetY)
                             if isDraggedWayOffScreen(location: adjustedLocation) {
                                 // User dragged way off-screen - return block to holding area regardless of preview
+                                gameState.blockReturnFeedback()
                                 draggedBlock = nil
                                 draggedBlockIndex = nil
                                 previewPosition = nil
@@ -186,6 +187,7 @@ struct BoardView: View {
                                 isHoveringOverOrigin = false
                             } else {
                                 // Invalid placement - return block to holding area
+                                gameState.blockReturnFeedback()
                                 draggedBlock = nil
                                 draggedBlockIndex = nil
                                 previewPosition = nil

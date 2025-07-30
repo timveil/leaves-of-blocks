@@ -209,4 +209,10 @@ class GameState: ObservableObject {
         // Start game session with service
         gameService.startGameSession(difficulty: currentDifficulty)
     }
+    
+    // MARK: - Haptic Feedback
+    
+    func blockReturnFeedback() {
+        gameService.blockReturnFeedback()
+    }
 }

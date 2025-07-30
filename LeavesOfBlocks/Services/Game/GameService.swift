@@ -121,6 +121,12 @@ class GameService: ObservableObject {
         notificationFeedback.notificationOccurred(.success)
     }
     
+    /// Provides haptic feedback for block return to holding area
+    func blockReturnFeedback() {
+        let impactFeedback = UIImpactFeedbackGenerator(style: .soft)
+        impactFeedback.impactOccurred()
+    }
+    
     // MARK: - Game Session Management
     
     /// Starts a new game session
