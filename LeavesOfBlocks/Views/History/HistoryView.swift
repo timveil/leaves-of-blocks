@@ -72,6 +72,7 @@ struct HistoryView: View {
                     .padding(.horizontal, GameTheme.Layout.largePadding)
                     .padding(.bottom, GameTheme.Layout.extraLargePadding)
                 }
+                .padding(.bottom, 80) // Add bottom padding to prevent covering grass
             }
         }
         .onAppear {
