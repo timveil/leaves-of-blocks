@@ -110,3 +110,22 @@ struct GameOverOverlayView: View {
         .transition(.scale.combined(with: .opacity))
     }
 }
+
+#Preview {
+    ZStack {
+        GameTheme.Gradients.background
+            .ignoresSafeArea()
+        
+        GameOverOverlayView(
+            gameState: {
+                let state = GameState()
+                state.score = 1250
+                state.isNewHighScore = true
+                return state
+            }(),
+            onViewSummary: {
+                print("View Summary tapped")
+            }
+        )
+    }
+}
