@@ -4,31 +4,9 @@ import SwiftUI
 
 struct GameBackgroundView: View {
     var body: some View {
-        ZStack {
-            // Autumn forest background
-            LinearGradient(
-                colors: GameTheme.Colors.backgroundGradient,
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
+        // Simplified background - matches LaunchScreen for smooth transitions
+        GameTheme.Gradients.background
             .ignoresSafeArea()
-            
-            // Subtle leaf pattern overlay
-            Rectangle()
-                .fill(
-                    RadialGradient(
-                        colors: [
-                            GameTheme.Colors.overlayPrimary,
-                            Color.clear,
-                            GameTheme.Colors.overlaySecondary
-                        ],
-                        center: .topTrailing,
-                        startRadius: 50,
-                        endRadius: 400
-                    )
-                )
-                .ignoresSafeArea()
-        }
     }
 }
 
@@ -47,41 +25,40 @@ struct BlockGrassView: View {
     private let screenWidth = UIScreen.main.bounds.width
     
     var body: some View {
-        GeometryReader { geometry in
-            VStack(spacing: 0) {
-                // Create columns of varying heights that fill available space
-                HStack(spacing: 1) {
-                    ForEach(0..<Int(screenWidth / (blockSize + 1)), id: \.self) { col in
-                        VStack(spacing: 1) {
-                            Spacer()
-                            // Each column has a random height between 2-5 blocks
-                            let columnHeight = getColumnHeight(for: col)
-                            ForEach(0..<columnHeight, id: \.self) { blockIndex in
-                                StaticGrassBlockView(
-                                    color: grassColors[seededRandom(col: col, blockIndex: blockIndex) % grassColors.count],
-                                    size: blockSize
-                                )
-                            }
+        VStack(spacing: 0) {
+            Spacer()
+            
+            // Simplified grass - reduced column count for better performance
+            HStack(spacing: 2) {
+                ForEach(0..<min(40, Int(screenWidth / (blockSize + 2))), id: \.self) { col in
+                    VStack(spacing: 1) {
+                        Spacer()
+                        // Each column has a random height between 2-4 blocks (reduced)
+                        let columnHeight = getColumnHeight(for: col)
+                        ForEach(0..<columnHeight, id: \.self) { blockIndex in
+                            StaticGrassBlockView(
+                                color: grassColors[seededRandom(col: col, blockIndex: blockIndex) % grassColors.count],
+                                size: blockSize
+                            )
                         }
                     }
                 }
-                .frame(height: max(80, geometry.size.height - 20)) // Use available height minus ground base
-                
-                // Ground base that extends to bottom
-                Rectangle()
-                    .fill(
-                        LinearGradient(
-                            colors: [
-                                Color(red: 0.12, green: 0.45, blue: 0.04),
-                                Color(red: 0.1, green: 0.4, blue: 0.03)
-                            ],
-                            startPoint: .top,
-                            endPoint: .bottom
-                        )
-                    )
-                    .frame(height: 20)
-                    .shadow(color: Color(red: 0.05, green: 0.2, blue: 0.02).opacity(0.5), radius: 4, x: 0, y: -2)
             }
+            .frame(height: 80) // Fixed height for consistency
+            
+            // Ground base
+            Rectangle()
+                .fill(
+                    LinearGradient(
+                        colors: [
+                            Color(red: 0.12, green: 0.45, blue: 0.04),
+                            Color(red: 0.1, green: 0.4, blue: 0.03)
+                        ],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                )
+                .frame(height: 20)
         }
     }
     
@@ -89,7 +66,7 @@ struct BlockGrassView: View {
     private func getColumnHeight(for col: Int) -> Int {
         let seed = col * 7919
         let random = ((seed * 9301 + 49297) % 233280) / 50000
-        return min(5, max(2, random + 2)) // Heights between 2-5 blocks
+        return min(4, max(2, random + 2)) // Heights between 2-4 blocks (reduced for performance)
     }
     
     // Deterministic random for consistent block colors

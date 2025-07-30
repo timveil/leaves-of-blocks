@@ -24,7 +24,7 @@ struct Main: App {
                         .transition(.opacity)
                 } else {
                     ContentView()
-                        .transition(.move(edge: .bottom))
+                        .transition(.opacity)
                         .environment(\.managedObjectContext, coreDataManager.viewContext)
                 }
             }

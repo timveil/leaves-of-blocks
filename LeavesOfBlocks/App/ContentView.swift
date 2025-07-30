@@ -56,7 +56,8 @@ struct ContentView: View {
                 )
                 
                 // Main Content Area
-                switch currentScreen {
+                Group {
+                    switch currentScreen {
             case .home:
                 HomeView(
                     gameState: gameState,
@@ -116,7 +117,9 @@ struct ContentView: View {
                 HowToPlayView()
                 .navigationBarHidden(true)
                 .ignoresSafeArea(.container, edges: [])
+                    }
                 }
+                .transition(.opacity)
             }
         }
         .navigationViewStyle(StackNavigationViewStyle()) // Prevents split view on iPad
