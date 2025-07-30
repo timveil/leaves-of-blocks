@@ -25,9 +25,10 @@ struct BaseScreenView<Content: View>: View {
                 // Background layer
                 GameBackgroundView()
                 
-                // Content layer - constrains the layout width
+                // Content layer - constrains the layout width and centers horizontally
                 content
                     .frame(maxWidth: geometry.size.width)
+                    .frame(maxWidth: .infinity, alignment: .center)
                     .zIndex(1)
                 
                 // Grass layer (if enabled) - positioned absolutely to not affect layout
