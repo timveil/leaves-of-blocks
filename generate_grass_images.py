@@ -122,8 +122,8 @@ def main():
     grass_height = 80
     ground_height = 20
     
-    # Create output directory
-    output_dir = "grass_assets"
+    # Create tmp directory
+    output_dir = "tmp"
     os.makedirs(output_dir, exist_ok=True)
     
     for device_name, width in device_sizes:

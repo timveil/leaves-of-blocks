@@ -11,34 +11,34 @@ echo "📱 Copying icons to iOS project..."
 mkdir -p "$ASSETS_DIR"
 
 # Copy main app icons
-cp icons/AppIcon-60@3x.png "$ASSETS_DIR/AppIcon-60@3x.png"      # iPhone App 180x180
-cp icons/AppIcon-60@2x.png "$ASSETS_DIR/AppIcon-60@2x.png"      # iPhone App 120x120
-cp icons/AppIcon-40@3x.png "$ASSETS_DIR/AppIcon-40@3x.png"      # iPhone Spotlight 120x120
-cp icons/AppIcon-40@2x.png "$ASSETS_DIR/AppIcon-40@2x.png"      # iPhone/iPad Spotlight 80x80
-cp icons/AppIcon-40.png "$ASSETS_DIR/AppIcon-40.png"            # iPad Spotlight 40x40
-cp icons/AppIcon-29@3x.png "$ASSETS_DIR/AppIcon-29@3x.png"      # iPhone Settings 87x87
-cp icons/AppIcon-29@2x.png "$ASSETS_DIR/AppIcon-29@2x.png"      # iPhone/iPad Settings 58x58
-cp icons/AppIcon-29.png "$ASSETS_DIR/AppIcon-29.png"            # iPad Settings 29x29
-cp icons/AppIcon-20@3x.png "$ASSETS_DIR/AppIcon-20@3x.png"      # iPhone Notifications 60x60
-cp icons/AppIcon-20@2x.png "$ASSETS_DIR/AppIcon-20@2x.png"      # iPhone Notifications 40x40
+cp tmp/AppIcon-60@3x.png "$ASSETS_DIR/AppIcon-60@3x.png"      # iPhone App 180x180
+cp tmp/AppIcon-60@2x.png "$ASSETS_DIR/AppIcon-60@2x.png"      # iPhone App 120x120
+cp tmp/AppIcon-40@3x.png "$ASSETS_DIR/AppIcon-40@3x.png"      # iPhone Spotlight 120x120
+cp tmp/AppIcon-40@2x.png "$ASSETS_DIR/AppIcon-40@2x.png"      # iPhone/iPad Spotlight 80x80
+cp tmp/AppIcon-40.png "$ASSETS_DIR/AppIcon-40.png"            # iPad Spotlight 40x40
+cp tmp/AppIcon-29@3x.png "$ASSETS_DIR/AppIcon-29@3x.png"      # iPhone Settings 87x87
+cp tmp/AppIcon-29@2x.png "$ASSETS_DIR/AppIcon-29@2x.png"      # iPhone/iPad Settings 58x58
+cp tmp/AppIcon-29.png "$ASSETS_DIR/AppIcon-29.png"            # iPad Settings 29x29
+cp tmp/AppIcon-20@3x.png "$ASSETS_DIR/AppIcon-20@3x.png"      # iPhone Notifications 60x60
+cp tmp/AppIcon-20@2x.png "$ASSETS_DIR/AppIcon-20@2x.png"      # iPhone Notifications 40x40
 
 # iPad specific icons
-cp icons/AppIcon-83.5@2x.png "$ASSETS_DIR/AppIcon-83.5@2x.png"  # iPad Pro 167x167
-cp icons/AppIcon-76@2x.png "$ASSETS_DIR/AppIcon-76@2x.png"      # iPad 152x152
-cp icons/AppIcon-76.png "$ASSETS_DIR/AppIcon-76.png"            # iPad 76x76
+cp tmp/AppIcon-83.5@2x.png "$ASSETS_DIR/AppIcon-83.5@2x.png"  # iPad Pro 167x167
+cp tmp/AppIcon-76@2x.png "$ASSETS_DIR/AppIcon-76@2x.png"      # iPad 152x152
+cp tmp/AppIcon-76.png "$ASSETS_DIR/AppIcon-76.png"            # iPad 76x76
 
 # App Store icon
-cp icons/AppIcon-1024.png "$ASSETS_DIR/AppIcon-1024.png"        # App Store 1024x1024
+cp tmp/AppIcon-1024.png "$ASSETS_DIR/AppIcon-1024.png"        # App Store 1024x1024
 
 # Copy Launch Screen icons
 LAUNCH_ICON_DIR="LeavesOfBlocks/Assets.xcassets/LaunchIcon.imageset"
 echo "📱 Copying Launch Screen icons..."
 mkdir -p "$LAUNCH_ICON_DIR"
 
-cp icons/LaunchIcon@2x.png "$LAUNCH_ICON_DIR/LaunchIcon@2x.png"
-cp icons/LaunchIcon@3x.png "$LAUNCH_ICON_DIR/LaunchIcon@3x.png"
-cp icons/LaunchIcon-Dark@2x.png "$LAUNCH_ICON_DIR/LaunchIcon-Dark@2x.png"
-cp icons/LaunchIcon-Dark@3x.png "$LAUNCH_ICON_DIR/LaunchIcon-Dark@3x.png"
+cp tmp/LaunchIcon@2x.png "$LAUNCH_ICON_DIR/LaunchIcon@2x.png"
+cp tmp/LaunchIcon@3x.png "$LAUNCH_ICON_DIR/LaunchIcon@3x.png"
+cp tmp/LaunchIcon-Dark@2x.png "$LAUNCH_ICON_DIR/LaunchIcon-Dark@2x.png"
+cp tmp/LaunchIcon-Dark@3x.png "$LAUNCH_ICON_DIR/LaunchIcon-Dark@3x.png"
 
 # Create Contents.json for the launch icon set
 cat > "$LAUNCH_ICON_DIR/Contents.json" << 'EOF'
@@ -197,17 +197,17 @@ APP_CLIP_ASSETS_DIR="LeavesOfBlocksAppClip/Assets.xcassets/AppIcon.appiconset"
 echo "📱 Copying App Clip icons..."
 mkdir -p "$APP_CLIP_ASSETS_DIR"
 
-cp icons/AppClipIcon-60@3x.png "$APP_CLIP_ASSETS_DIR/Icon-60@3x.png"
-cp icons/AppClipIcon-60@2x.png "$APP_CLIP_ASSETS_DIR/Icon-60@2x.png"
-cp icons/AppClipIcon-1024.png "$APP_CLIP_ASSETS_DIR/AppStore.png"
+cp tmp/AppClipIcon-60@3x.png "$APP_CLIP_ASSETS_DIR/Icon-60@3x.png"
+cp tmp/AppClipIcon-60@2x.png "$APP_CLIP_ASSETS_DIR/Icon-60@2x.png"
+cp tmp/AppClipIcon-1024.png "$APP_CLIP_ASSETS_DIR/AppStore.png"
 
 # Copy additional App Clip notification/settings icons from main app icons
-cp icons/AppIcon-20@2x.png "$APP_CLIP_ASSETS_DIR/Icon-20@2x.png"
-cp icons/AppIcon-20@3x.png "$APP_CLIP_ASSETS_DIR/Icon-20@3x.png"
-cp icons/AppIcon-29@2x.png "$APP_CLIP_ASSETS_DIR/Icon-29@2x.png"
-cp icons/AppIcon-29@3x.png "$APP_CLIP_ASSETS_DIR/Icon-29@3x.png"
-cp icons/AppIcon-40@2x.png "$APP_CLIP_ASSETS_DIR/Icon-40@2x.png"
-cp icons/AppIcon-40@3x.png "$APP_CLIP_ASSETS_DIR/Icon-40@3x.png"
+cp tmp/AppIcon-20@2x.png "$APP_CLIP_ASSETS_DIR/Icon-20@2x.png"
+cp tmp/AppIcon-20@3x.png "$APP_CLIP_ASSETS_DIR/Icon-20@3x.png"
+cp tmp/AppIcon-29@2x.png "$APP_CLIP_ASSETS_DIR/Icon-29@2x.png"
+cp tmp/AppIcon-29@3x.png "$APP_CLIP_ASSETS_DIR/Icon-29@3x.png"
+cp tmp/AppIcon-40@2x.png "$APP_CLIP_ASSETS_DIR/Icon-40@2x.png"
+cp tmp/AppIcon-40@3x.png "$APP_CLIP_ASSETS_DIR/Icon-40@3x.png"
 
 echo "✅ Icons copied to iOS project successfully!"
 echo "📁 App Icons location: $ASSETS_DIR"
