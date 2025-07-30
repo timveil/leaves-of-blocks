@@ -216,7 +216,7 @@ struct BoardView: View {
             if gameState.isGameOver {
                 ZStack {
                     // Semi-transparent background to dim the game
-                    Color.black.opacity(0.5)
+                    Color.black.opacity(0.8)
                         .ignoresSafeArea()
                     
                     GameOverOverlayView(

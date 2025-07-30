@@ -42,9 +42,11 @@ struct DifficultySelectionView: View {
                 }
             }
             
-            // Start game button using our new component
-            StartGameButton(
-                difficulty: selectedDifficulty,
+            // Start game button using premium button component
+            PremiumButton(
+                title: "Start Game",
+                icon: "play.fill",
+                color: selectedDifficulty.color,
                 onTap: {
                     onStartGame(selectedDifficulty)
                 }

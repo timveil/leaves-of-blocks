@@ -123,6 +123,71 @@ struct StartGameButton: View {
     }
 }
 
+/// A premium 3D button component with gradient and shadow effects
+struct PremiumButton: View {
+    let title: String
+    let icon: String?
+    let color: Color
+    let onTap: () -> Void
+    @State private var buttonPressed = false
+    
+    init(
+        title: String,
+        icon: String? = nil,
+        color: Color = GameTheme.Colors.accent,
+        onTap: @escaping () -> Void
+    ) {
+        self.title = title
+        self.icon = icon
+        self.color = color
+        self.onTap = onTap
+    }
+    
+    var body: some View {
+        Button(action: onTap) {
+            HStack(spacing: GameTheme.Layout.smallSpacing) {
+                if let icon = icon {
+                    Image(systemName: icon)
+                        .font(.system(size: 16, weight: .bold))
+                        .shadow(color: Color.black.opacity(0.2), radius: 1, x: 0, y: 1)
+                }
+                
+                Text(title)
+                    .font(GameTheme.Typography.headlineFont)
+                    .lineLimit(1)
+                    .fixedSize()
+                    .shadow(color: Color.black.opacity(0.2), radius: 1, x: 0, y: 1)
+            }
+            .foregroundColor(GameTheme.Colors.buttonText)
+            .padding(.horizontal, GameTheme.Layout.largePadding)
+            .padding(.vertical, GameTheme.Layout.mediumPadding)
+            .background(
+                Capsule()
+                    .fill(
+                        LinearGradient(
+                            colors: [
+                                color,
+                                color.opacity(0.8)
+                            ],
+                            startPoint: .topLeading,
+                            endPoint: .bottomTrailing
+                        )
+                    )
+                    .shadow(color: .black.opacity(0.2), radius: 6, x: 0, y: 6)
+                    .shadow(color: .black.opacity(0.1), radius: 3, x: 0, y: 3)
+                    .shadow(color: color.opacity(0.3), radius: 8, x: 0, y: 4)
+            )
+        }
+        .scaleEffect(buttonPressed ? 0.95 : 1.0)
+        .offset(y: buttonPressed ? 3 : 0)
+        .onLongPressGesture(minimumDuration: 0, maximumDistance: .infinity, pressing: { pressing in
+            withAnimation(.easeInOut(duration: 0.1)) {
+                buttonPressed = pressing
+            }
+        }, perform: {})
+    }
+}
+
 /// A unified action button component for game actions
 struct GameActionButton: View {
     let title: String

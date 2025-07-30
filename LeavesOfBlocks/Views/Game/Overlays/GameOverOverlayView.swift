@@ -5,7 +5,6 @@ import SwiftUI
 struct GameOverOverlayView: View {
     @ObservedObject var gameState: GameState
     let onViewSummary: () -> Void
-    @State private var buttonPressed = false
     @State private var trophyScale: CGFloat = 1.0
     
     var body: some View {
@@ -18,6 +17,13 @@ struct GameOverOverlayView: View {
                     .foregroundColor(GameTheme.Colors.primaryText)
                     .tracking(1)
                     .shadow(color: Color.black.opacity(0.2), radius: 2, x: 0, y: 1)
+                
+                // Body text placeholder
+                Text("That the powerful game has ended, and You could not contribute a block.")
+                    .font(GameTheme.Typography.bodyFont)
+                    .foregroundColor(GameTheme.Colors.secondaryText)
+                    .multilineTextAlignment(.center)
+                    .padding(.horizontal, GameTheme.Layout.mediumPadding)
             }
             
             // Score section with enhanced 3D effect
@@ -26,50 +32,16 @@ struct GameOverOverlayView: View {
                 score: gameState.score
             )
             
-            // Enhanced 3D button
-            Button(action: onViewSummary) {
-                HStack(spacing: GameTheme.Layout.smallSpacing) {
-                    Image(systemName: "chart.bar.fill")
-                        .font(.system(size: 16, weight: .bold))
-                        .shadow(color: Color.black.opacity(0.2), radius: 1, x: 0, y: 1)
-                    
-                    Text("View Summary")
-                        .font(GameTheme.Typography.headlineFont)
-                        .lineLimit(1)
-                        .fixedSize()
-                        .shadow(color: Color.black.opacity(0.2), radius: 1, x: 0, y: 1)
-                }
-                .foregroundColor(GameTheme.Colors.buttonText)
-                .padding(.horizontal, GameTheme.Layout.largePadding)
-                .padding(.vertical, GameTheme.Layout.mediumPadding)
-                .background(
-                    Capsule()
-                        .fill(
-                            LinearGradient(
-                                colors: [
-                                    GameTheme.Colors.accent,
-                                    GameTheme.Colors.accent.opacity(0.8)
-                                ],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            )
-                        )
-                        .shadow(color: .black.opacity(0.2), radius: 6, x: 0, y: 6)
-                        .shadow(color: .black.opacity(0.1), radius: 3, x: 0, y: 3)
-                        .shadow(color: GameTheme.Colors.accent.opacity(0.3), radius: 8, x: 0, y: 4)
-                )
-            }
-            .scaleEffect(buttonPressed ? 0.95 : 1.0)
-            .offset(y: buttonPressed ? 3 : 0)
-            .onLongPressGesture(minimumDuration: 0, maximumDistance: .infinity, pressing: { pressing in
-                withAnimation(.easeInOut(duration: 0.1)) {
-                    buttonPressed = pressing
-                }
-            }, perform: {})
+            // Enhanced 3D button using PremiumButton component
+            PremiumButton(
+                title: "View Summary",
+                icon: "chart.bar.fill",
+                onTap: onViewSummary
+            )
         }
         .padding(.horizontal, GameTheme.Layout.largePadding)
         .padding(.vertical, GameTheme.Layout.extraLargePadding)
-        .frame(maxWidth: 280) // Narrower width for iPhone visibility
+        .frame(maxWidth: 2300) // Narrower width for iPhone visibility
         .game3DCardStyle(
             cornerRadius: GameTheme.Layout.overlayCornerRadius,
             elevation: 12
