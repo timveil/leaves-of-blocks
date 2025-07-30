@@ -26,7 +26,7 @@ struct StatsSummaryView: View {
     var body: some View {
         VStack(spacing: 0) {
             // Header with gradient background
-            HStack {
+            HStack(spacing: GameTheme.Layout.smallSpacing) {
                 Image(systemName: "chart.bar.fill")
                     .font(.system(size: 18, weight: .semibold))
                     .foregroundColor(GameTheme.Colors.buttonText)
@@ -34,9 +34,8 @@ struct StatsSummaryView: View {
                 Text("Statistics")
                     .font(.system(size: 20, weight: .bold))
                     .foregroundColor(GameTheme.Colors.buttonText)
-                
-                Spacer()
             }
+            .frame(maxWidth: .infinity)
             .padding(.horizontal, GameTheme.Layout.largePadding)
             .padding(.vertical, GameTheme.Layout.mediumPadding)
             .background(
