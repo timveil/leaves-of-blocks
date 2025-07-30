@@ -69,7 +69,6 @@
 		3A893D112E370BBA00872181 /* LeavesOfBlocksAppClip.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LeavesOfBlocksAppClip.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3A893D1F2E370BBB00872181 /* LeavesOfBlocksAppClipTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LeavesOfBlocksAppClipTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3A893D292E370BBB00872181 /* LeavesOfBlocksAppClipUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LeavesOfBlocksAppClipUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		SL04E1AZ2E015452058300847012 /* LaunchScreen.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = LaunchScreen.storyboard; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */

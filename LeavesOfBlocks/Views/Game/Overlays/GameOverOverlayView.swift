@@ -52,26 +52,9 @@ struct GameOverOverlayView: View {
             }
             
             // Score section with enhanced 3D effect
-            VStack(spacing: GameTheme.Layout.mediumSpacing) {
-                Text("Final Score")
-                    .font(GameTheme.Typography.headlineFont)
-                    .foregroundColor(GameTheme.Colors.secondaryText)
-                    .tracking(1)
-                    .shadow(color: Color.black.opacity(0.1), radius: 1, x: 0, y: 1)
-                
-                Text(gameState.score.formattedScore)
-                    .font(GameTheme.Typography.largeScore)
-                    .foregroundColor(GameTheme.Colors.primaryText)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.7)
-                    .shadow(color: GameTheme.Colors.accent.opacity(0.4), radius: 6, x: 0, y: 3)
-            }
-            .padding(.vertical, GameTheme.Layout.largePadding)
-            .padding(.horizontal, GameTheme.Layout.largePadding)
-            .frame(maxWidth: .infinity)
-            .game3DCardStyle(
-                cornerRadius: GameTheme.Layout.cardCornerRadius,
-                elevation: 8
+            ScoreDisplayView(
+                title: "Final Score",
+                score: gameState.score
             )
             
             // Enhanced 3D button

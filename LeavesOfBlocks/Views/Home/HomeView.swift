@@ -15,36 +15,12 @@ struct HomeView: View {
                 Spacer(minLength: 20)
                 
                 // High Score Display - Now tappable for history
-                Button(action: onShowHistory) {
-                    VStack(spacing: GameTheme.Layout.mediumSpacing) {
-                        Text("Best Score")
-                            .pageTitleStyle(color: GameTheme.Colors.accent)
-                        
-                        Text(gameState.highScore.formattedScore)
-                            .font(GameTheme.Typography.largeScore)
-                            .foregroundColor(GameTheme.Colors.primaryText)
-                            
-                        // Last played info if available
-                        if gameState.score > 0 {
-                            Text("Last Score: \(gameState.score.formattedScore)")
-                                .gameCaptionStyle()
-                        }
-                        
-                        Text("Tap for History")
-                            .gameCaptionStyle(color: GameTheme.Colors.accent.opacity(0.7))
-                    }
-                    .padding(.horizontal, GameTheme.Layout.extraLargePadding)
-                    .padding(.vertical, GameTheme.Layout.extraLargePadding)
-                    .gameGradientCardStyle(
-                        gradient: LinearGradient(
-                            colors: [GameTheme.Colors.accent.opacity(0.3), GameTheme.Colors.accent.opacity(0.1)],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        ),
-                        borderWidth: 2
-                    )
-                }
-                .buttonStyle(PlainButtonStyle())
+                ScoreDisplayView(
+                    score: gameState.highScore,
+                    lastScore: gameState.score > 0 ? gameState.score : nil,
+                    showHistoryHint: true,
+                    action: onShowHistory
+                )
                 
                 Spacer(minLength: 5)
                 

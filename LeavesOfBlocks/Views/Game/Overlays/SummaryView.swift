@@ -65,26 +65,12 @@ struct SummaryView: View {
                     Spacer(minLength: GameTheme.Layout.mediumSpacing)
                     
                     // Final Score - centered and prominent
-                    VStack(spacing: GameTheme.Layout.smallSpacing) {
-                        Text("Final Score")
-                            .font(GameTheme.Typography.headlineFont)
-                            .foregroundColor(GameTheme.Colors.accent)
-                            .tracking(1)
-                        
-                        HStack(spacing: GameTheme.Layout.smallSpacing) {
-                            if isNewHighScore {
-                                Image(systemName: "crown.fill")
-                                    .font(GameTheme.Typography.largeScore)
-                                    .foregroundColor(GameTheme.Colors.accent)
-                            }
-                            
-                            Text(score.formattedScore)
-                                .font(GameTheme.Typography.largeScore)
-                                .foregroundColor(GameTheme.Colors.primaryText)
-                                .lineLimit(1)
-                                .minimumScaleFactor(0.7)
-                        }
-                    }
+                    ScoreDisplayView(
+                        title: "Final Score",
+                        score: score,
+                        showIcon: isNewHighScore,
+                        iconName: "crown.fill"
+                    )
                     
                     Spacer(minLength: GameTheme.Layout.mediumSpacing)
                     
