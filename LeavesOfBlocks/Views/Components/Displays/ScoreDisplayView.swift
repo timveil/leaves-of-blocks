@@ -47,52 +47,71 @@ struct ScoreDisplayView: View {
     }
     
     private var scoreContent: some View {
-        VStack(spacing: GameTheme.Layout.mediumSpacing) {
+        VStack(spacing: 0) {
+            // Header with gradient background (like Statistics widget)
             Text(title)
-                .font(GameTheme.Typography.headlineFont)
-                .foregroundColor(GameTheme.Colors.accent)
-                .tracking(1)
+                .font(.system(size: 20, weight: .bold))
+                .foregroundColor(GameTheme.Colors.buttonText)
+                .frame(maxWidth: .infinity)
+            .padding(.horizontal, GameTheme.Layout.largePadding)
+            .padding(.vertical, GameTheme.Layout.mediumPadding)
+            .background(
+                LinearGradient(
+                    colors: [GameTheme.Colors.accent, GameTheme.Colors.accent.opacity(0.8)],
+                    startPoint: .topLeading,
+                    endPoint: .bottomTrailing
+                )
+            )
             
-            if showIcon, let iconName = iconName {
-                Image(systemName: iconName)
-                    .font(GameTheme.Typography.bodyFont)
-                    .foregroundColor(GameTheme.Colors.accent)
+            // Content area with brown background
+            VStack(spacing: GameTheme.Layout.mediumSpacing) {
+                if showIcon, let iconName = iconName {
+                    Image(systemName: iconName)
+                        .font(GameTheme.Typography.bodyFont)
+                        .foregroundColor(GameTheme.Colors.accent)
+                        .padding(.top, GameTheme.Layout.mediumPadding)
+                }
+                
+                Text(score.formattedScore)
+                    .font(GameTheme.Typography.largeScore)
+                    .foregroundColor(GameTheme.Colors.primaryText)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.7)
+                    .padding(.top, showIcon ? 0 : GameTheme.Layout.mediumPadding)
+                
+                if let lastScore = lastScore {
+                    Text("Last Score: \(lastScore.formattedScore)")
+                        .gameCaptionStyle()
+                }
+                
+                if showHistoryHint {
+                    Text("Tap for History")
+                        .gameCaptionStyle(color: GameTheme.Colors.accent.opacity(0.7))
+                        .padding(.bottom, GameTheme.Layout.mediumPadding)
+                }
             }
-            
-            Text(score.formattedScore)
-                .font(GameTheme.Typography.largeScore)
-                .foregroundColor(GameTheme.Colors.primaryText)
-                .lineLimit(1)
-                .minimumScaleFactor(0.7)
-            
-            if let lastScore = lastScore {
-                Text("Last Score: \(lastScore.formattedScore)")
-                    .gameCaptionStyle()
-            }
-            
-            if showHistoryHint {
-                Text("Tap for History")
-                    .gameCaptionStyle(color: GameTheme.Colors.accent.opacity(0.7))
-            }
+            .frame(maxWidth: .infinity)
+            .padding(.horizontal, GameTheme.Layout.largePadding)
+            .padding(.bottom, GameTheme.Layout.largePadding)
+            .background(GameTheme.Colors.cardBackground)
         }
-        .padding(.horizontal, GameTheme.Layout.extraLargePadding)
-        .padding(.vertical, GameTheme.Layout.extraLargePadding)
-        .frame(maxWidth: .infinity)
-        .background(
+        .clipShape(RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius))
+        .overlay(
             RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
-                .fill(
+                .stroke(
                     LinearGradient(
-                        colors: isHighlighted 
-                            ? [GameTheme.Colors.accent.opacity(0.4), GameTheme.Colors.accent.opacity(0.2)]
-                            : [GameTheme.Colors.accent.opacity(0.3), GameTheme.Colors.accent.opacity(0.1)],
+                        colors: [GameTheme.Colors.accent.opacity(0.3), GameTheme.Colors.accent.opacity(0.1)],
                         startPoint: .topLeading,
                         endPoint: .bottomTrailing
-                    )
+                    ),
+                    lineWidth: 1
                 )
         )
-        .game3DCardStyle(
-            cornerRadius: GameTheme.Layout.cardCornerRadius,
-            elevation: isHighlighted ? 10 : 8
+        .shadow(
+            color: GameTheme.Colors.cardShadow.opacity(0.15),
+            radius: 12,
+            x: 0,
+            y: 6
         )
     }
 }
