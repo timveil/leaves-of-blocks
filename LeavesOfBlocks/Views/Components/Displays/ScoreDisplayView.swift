@@ -53,19 +53,17 @@ struct ScoreDisplayView: View {
                 .foregroundColor(GameTheme.Colors.accent)
                 .tracking(1)
             
-            HStack(spacing: GameTheme.Layout.smallSpacing) {
-                if showIcon, let iconName = iconName {
-                    Image(systemName: iconName)
-                        .font(GameTheme.Typography.largeScore)
-                        .foregroundColor(GameTheme.Colors.accent)
-                }
-                
-                Text(score.formattedScore)
-                    .font(GameTheme.Typography.largeScore)
-                    .foregroundColor(GameTheme.Colors.primaryText)
-                    .lineLimit(1)
-                    .minimumScaleFactor(0.7)
+            if showIcon, let iconName = iconName {
+                Image(systemName: iconName)
+                    .font(GameTheme.Typography.bodyFont)
+                    .foregroundColor(GameTheme.Colors.accent)
             }
+            
+            Text(score.formattedScore)
+                .font(GameTheme.Typography.largeScore)
+                .foregroundColor(GameTheme.Colors.primaryText)
+                .lineLimit(1)
+                .minimumScaleFactor(0.7)
             
             if let lastScore = lastScore {
                 Text("Last Score: \(lastScore.formattedScore)")

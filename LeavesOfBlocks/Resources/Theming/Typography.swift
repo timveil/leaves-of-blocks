@@ -2,6 +2,7 @@ import SwiftUI
 
 extension GameTheme {
     struct Typography {
+        
         static let title = Font.system(size: 32, weight: .semibold, design: .default)
         static let titleFont = Font.system(size: 28, weight: .bold, design: .default)
         
