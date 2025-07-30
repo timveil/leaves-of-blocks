@@ -12,37 +12,6 @@ struct GameOverOverlayView: View {
         VStack(spacing: GameTheme.Layout.largePadding) {
             // Header section with new high score celebration
             VStack(spacing: GameTheme.Layout.mediumSpacing) {
-                if gameState.isNewHighScore {
-                    VStack(spacing: GameTheme.Layout.smallSpacing) {
-                        Text("🏆")
-                            .font(.system(size: 40))
-                            .scaleEffect(trophyScale)
-                            .shadow(color: GameTheme.Colors.accent.opacity(0.6), radius: 8, x: 0, y: 4)
-                            .onAppear {
-                                withAnimation(.easeInOut(duration: 1.0).repeatForever(autoreverses: true)) {
-                                    trophyScale = 1.2
-                                }
-                            }
-                            .onDisappear {
-                                withAnimation(.easeInOut(duration: 0.2)) {
-                                    trophyScale = 1.0
-                                }
-                            }
-                        
-                        Text("NEW HIGH SCORE!")
-                            .font(GameTheme.Typography.titleFont)
-                            .foregroundColor(GameTheme.Colors.accent)
-                            .tracking(1.5)
-                            .multilineTextAlignment(.center)
-                            .shadow(color: GameTheme.Colors.accent.opacity(0.3), radius: 4, x: 0, y: 2)
-                    }
-                    .padding(.vertical, GameTheme.Layout.mediumPadding)
-                    .frame(maxWidth: .infinity)
-                    .game3DCardStyle(
-                        cornerRadius: GameTheme.Layout.buttonCornerRadius,
-                        elevation: 6
-                    )
-                }
                 
                 Text("Game Over")
                     .font(GameTheme.Typography.title)

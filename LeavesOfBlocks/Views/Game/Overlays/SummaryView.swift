@@ -70,7 +70,7 @@ struct SummaryView: View {
                         score: score,
                         showIcon: isNewHighScore,
                         iconName: "crown.fill"
-                    )
+                    ).frame(maxWidth: 280)
                     
                     Spacer(minLength: GameTheme.Layout.mediumSpacing)
                     

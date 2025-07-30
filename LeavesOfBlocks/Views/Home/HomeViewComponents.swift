@@ -14,19 +14,33 @@ struct DifficultySelectionView: View {
                 .tracking(0.5)
             
             // Horizontal difficulty buttons
-            HStack(spacing: GameTheme.Layout.mediumSpacing) {
+            HStack(spacing: GameTheme.Layout.largeSpacing) {
                 ForEach(DifficultyMode.allCases, id: \.self) { difficulty in
-                    GameDifficultyButton(
-                        difficulty: difficulty,
-                        isSelected: selectedDifficulty == difficulty,
-                        isCompact: true,
-                        onTap: {
+                    VStack(spacing: GameTheme.Layout.smallSpacing) {
+                        Button(action: {
                             selectedDifficulty = difficulty
+                        }) {
+                            VStack(spacing: GameTheme.Layout.smallSpacing) {
+                                Image(systemName: difficulty.icon)
+                                    .font(.system(size: 28, weight: .semibold))
+                                    .foregroundColor(selectedDifficulty == difficulty ? difficulty.color : GameTheme.Colors.secondaryText)
+                                    .frame(width: 60, height: 60)
+                            }
+                            .frame(width: 80, height: 80)
+                            .gameButtonCardStyle(
+                                isSelected: selectedDifficulty == difficulty,
+                                selectedColor: difficulty.color
+                            )
                         }
-                    )
+                        .buttonStyle(PlainButtonStyle())
+                        
+                        Text(difficulty.rawValue)
+                            .font(GameTheme.Typography.captionFont)
+                            .fontWeight(.medium)
+                            .foregroundColor(selectedDifficulty == difficulty ? difficulty.color : GameTheme.Colors.secondaryText)
+                    }
                 }
             }
-            .padding(.horizontal, GameTheme.Layout.smallPadding)
             
             // Start game button using our new component
             StartGameButton(

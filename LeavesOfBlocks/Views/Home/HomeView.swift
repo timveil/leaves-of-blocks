@@ -21,8 +21,9 @@ struct HomeView: View {
                     showHistoryHint: true,
                     action: onShowHistory
                 )
+                .frame(maxWidth: 280)
                 
-                Spacer(minLength: 5)
+                Spacer().frame(maxHeight: 10)
                 
                 // Difficulty Selection
                 DifficultySelectionView(
