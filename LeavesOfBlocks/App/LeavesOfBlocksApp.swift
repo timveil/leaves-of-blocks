@@ -28,7 +28,6 @@ struct Main: App {
                         .environment(\.managedObjectContext, coreDataManager.viewContext)
                 }
             }
-            .animation(.spring(response: 0.7, dampingFraction: 0.8), value: showLaunchScreen)
             .onAppear {
                 // Show launch screen for 2.5 seconds
                 DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
