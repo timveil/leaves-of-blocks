@@ -20,13 +20,15 @@ struct BlockGrassView: View {
                 .resizable()
                 .aspectRatio(contentMode: .fill)
                 .frame(height: 80)
+                .frame(maxWidth: .infinity) // Ensure it fills available width
                 .clipped()
             
-            // Static ground texture from asset catalog
+            // Static ground texture from asset catalog  
             Image("GroundTexture")
                 .resizable()
                 .aspectRatio(contentMode: .fill)
                 .frame(height: 20)
+                .frame(maxWidth: .infinity) // Ensure it fills available width
                 .clipped()
         }
     }

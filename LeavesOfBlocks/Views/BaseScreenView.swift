@@ -20,23 +20,28 @@ struct BaseScreenView<Content: View>: View {
     }
     
     var body: some View {
-        ZStack {
-            // Background layer
-            GameBackgroundView()
-            
-            // Grass layer (if enabled)
-            if showsGrass {
-                VStack {
-                    Spacer()
-                    BlockGrassView()
-                        .ignoresSafeArea(.all, edges: .bottom)
+        GeometryReader { geometry in
+            ZStack {
+                // Background layer
+                GameBackgroundView()
+                
+                // Content layer - constrains the layout width
+                content
+                    .frame(maxWidth: geometry.size.width)
+                    .zIndex(1)
+                
+                // Grass layer (if enabled) - positioned absolutely to not affect layout
+                if showsGrass {
+                    VStack {
+                        Spacer()
+                        BlockGrassView()
+                            .frame(width: geometry.size.width) // Constrain to screen width
+                            .clipped() // Clip any overflow
+                            .ignoresSafeArea(.all, edges: .bottom)
+                    }
+                    .zIndex(0)
                 }
-                .zIndex(0)
             }
-            
-            // Content layer
-            content
-                .zIndex(1)
         }
         .ignoresSafeArea(edges: .bottom)
         .statusBarHidden(!showsStatusBar)
