@@ -140,3 +140,17 @@
 "feature_game_history" = "Game history & statistics";
 "feature_persistent_scores" = "Persistent high scores";
 "feature_all_shapes" = "All 21 block shapes";
+
+// MARK: - Combo Notifications
+"combo" = "COMBO";
+"combo_excited" = "COMBO!";
+"mega_combo" = "MEGA COMBO!";
+"lines_cleared_format" = "%d LINES";
+
+// MARK: - Preview Interface
+"combo_notifications_preview" = "Combo Notifications Preview";
+"tap_to_trigger_combos" = "Tap to trigger combo animations:";
+"two_line_combo_button" = "2-Line Combo (+50)";
+"three_line_combo_button" = "3-Line Combo (+100)";
+"five_line_combo_button" = "5-Line Mega Combo (+200)";
+"show_all_combos" = "Show All Combos";

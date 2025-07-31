@@ -124,6 +124,10 @@ struct BoardView: View {
                 .zIndex(10) // Game elements above grass
                 .padding(.horizontal, GameTheme.Layout.largePadding)
             
+            // Combo Notification Overlay - appears above game elements but below game over
+            ComboNotificationOverlay(gameState: gameState)
+                .zIndex(1500) // Above game elements, below game over
+            
             // Game Over Overlay - highest priority, appears above everything
             if gameState.isGameOver {
                 ZStack {

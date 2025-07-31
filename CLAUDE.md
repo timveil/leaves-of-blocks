@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Coding Standards
 
-**IMPORTANT**: All code changes must follow the established coding standards documented in `LeavesOfBlocks/Documentation/CodingStandards.md`. This document contains:
+**CRITICAL**: All code changes must follow the established coding standards documented in `LeavesOfBlocks/Documentation/CodingStandards.md`. This document contains:
 - Swift language guidelines and formatting rules
 - Code organization patterns and file structure standards
 - Naming conventions for types, variables, and functions
@@ -13,6 +13,35 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Error handling best practices and testing standards
 
 Always reference this document before making code changes to ensure consistency and maintainability.
+
+### 🚨 CRITICAL LOCALIZATION REQUIREMENT
+
+**NEVER USE HARDCODED TEXT STRINGS IN USER-FACING CODE**
+
+All user-visible text MUST use localization keys from `LeavesOfBlocks/Resources/Localizable.strings`:
+
+**❌ WRONG - Hardcoded strings:**
+```swift
+Text("Game Over")
+Button("Start Game") { }
+.navigationTitle("Settings")
+```
+
+**✅ CORRECT - Localized strings:**
+```swift
+Text("game_over".localized)
+Button("start_game".localized) { }
+.navigationTitle("settings".localized)
+```
+
+**Enforcement Rules:**
+1. **ALL Text(), Button(), navigationTitle(), etc. MUST use `.localized`**
+2. **Add new keys to Localizable.strings when needed**
+3. **Use descriptive, consistent naming conventions for keys**
+4. **Use parameterized localization for dynamic content: `"score_format".localized(with: score)`**
+5. **This applies to ALL code including previews, debug code, and temporary implementations**
+
+**No exceptions** - this ensures the app is ready for internationalization and maintains consistency.
 
 ## Project Overview
 
