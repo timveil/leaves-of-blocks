@@ -19,13 +19,6 @@ struct BoardView: View {
     let cellSize: CGFloat = 40
     let onViewSummary: () -> Void
     
-    // Helper function to format game time
-    private func formatGameTime(_ timeInterval: TimeInterval) -> String {
-        let minutes = Int(timeInterval) / 60
-        let seconds = Int(timeInterval) % 60
-        return String(format: "%d:%02d", minutes, seconds)
-    }
-    
     private var gameWidth: CGFloat {
         (8 * cellSize) + (7 * 3) + (2 * GameTheme.Layout.mediumPadding)
     }
@@ -59,55 +52,12 @@ struct BoardView: View {
                     }
                     
                     // Game Stats Row
-                    HStack {
-                        Spacer()
-                        HStack(alignment: .center, spacing: GameTheme.Layout.mediumSpacing) {
-                        // Blocks Placed Counter
-                        HStack(spacing: 6) {
-                            Image(systemName: "cube.fill")
-                                .font(.system(size: 16, weight: .semibold))
-                                .foregroundColor(GameTheme.Colors.blockYellow)
-                            Text(gameState.blocksPlaced.formattedScore)
-                                .font(GameTheme.Typography.captionFont)
-                                .foregroundColor(GameTheme.Colors.secondaryText)
-                        }
-                        
-                        // Separator
-                        Text("•")
-                            .font(.system(size: 12, weight: .bold))
-                            .foregroundColor(GameTheme.Colors.gridBorder.opacity(0.6))
-                        
-                        // Timer
-                        HStack(spacing: 6) {
-                            Image(systemName: "clock.fill")
-                                .font(.system(size: 16, weight: .semibold))
-                                .foregroundColor(GameTheme.Colors.blockBlue)
-                            Text(formatGameTime(gameState.currentGameTime))
-                                .font(GameTheme.Typography.captionFont)
-                                .foregroundColor(GameTheme.Colors.secondaryText)
-                        }
-                        
-                        // Separator
-                        Text("•")
-                            .font(.system(size: 12, weight: .bold))
-                            .foregroundColor(GameTheme.Colors.gridBorder.opacity(0.6))
-                        
-                        // Difficulty Level
-                        HStack(spacing: 6) {
-                            Image(systemName: gameState.currentDifficulty.icon)
-                                .font(.system(size: 16, weight: .semibold))
-                                .foregroundColor(gameState.currentDifficulty.color)
-                            Text(gameState.currentDifficulty.rawValue)
-                                .font(GameTheme.Typography.captionFont)
-                                .foregroundColor(GameTheme.Colors.secondaryText)
-                        }
-                        }
-                        .frame(width: gameWidth)
-                        Spacer()
-                    }
-                    .padding(.vertical, GameTheme.Layout.smallPadding)
+                    GameStatsRowView(
+                        gameState: gameState,
+                        gameWidth: gameWidth
+                    )
                     
-                    //Spacer()
+                    Spacer().frame(maxHeight: 30)
                     
                     // Holding Area Row
                     HStack {
