@@ -47,7 +47,7 @@ struct SummaryView: View {
                     // Header section
                     VStack(spacing: GameTheme.Layout.mediumSpacing) {
                         Text(historicalSession != nil ? "Past Game Summary" : "Game Summary")
-                            .font(GameTheme.Typography.title)
+                            .font(GameTheme.Typography.largeDisplay)
                             .foregroundColor(GameTheme.Colors.primaryText)
                             .tracking(1)
                         
@@ -55,7 +55,7 @@ struct SummaryView: View {
                             // Show date for historical sessions
                             if let session = historicalSession {
                                 Text(session.formattedDate)
-                                    .font(GameTheme.Typography.captionFont)
+                                    .font(GameTheme.Typography.compactBody)
                                     .foregroundColor(GameTheme.Colors.secondaryText)
                             }
                         }
@@ -153,13 +153,13 @@ private struct StatisticCard: View {
                 .foregroundColor(color)
             
             Text(value)
-                .font(GameTheme.Typography.titleFont)
+                .font(GameTheme.Typography.mediumDisplay)
                 .foregroundColor(GameTheme.Colors.primaryText)
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
             
             Text(title)
-                .font(GameTheme.Typography.captionFont)
+                .font(GameTheme.Typography.compactBody)
                 .foregroundColor(GameTheme.Colors.secondaryText)
                 .multilineTextAlignment(.center)
                 .lineLimit(2)

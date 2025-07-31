@@ -9,7 +9,7 @@ struct DifficultySelectionView: View {
     var body: some View {
         VStack(spacing: GameTheme.Layout.extraLargeSpacing) {
             Text("Select Difficulty")
-                .font(GameTheme.Typography.titleFont)
+                .font(GameTheme.Typography.mediumDisplay)
                 .foregroundColor(GameTheme.Colors.primaryText)
                 .tracking(0.5)
             
@@ -35,7 +35,7 @@ struct DifficultySelectionView: View {
                         .buttonStyle(PlainButtonStyle())
                         
                         Text(difficulty.rawValue)
-                            .font(GameTheme.Typography.captionFont)
+                            .font(GameTheme.Typography.compactBody)
                             .fontWeight(.medium)
                             .foregroundColor(selectedDifficulty == difficulty ? difficulty.color : GameTheme.Colors.secondaryText)
                     }

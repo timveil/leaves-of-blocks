@@ -13,14 +13,14 @@ struct GameOverOverlayView: View {
             VStack(spacing: GameTheme.Layout.mediumSpacing) {
                 
                 Text("Game Over")
-                    .font(GameTheme.Typography.title)
+                    .font(GameTheme.Typography.largeDisplay)
                     .foregroundColor(GameTheme.Colors.primaryText)
                     .tracking(1)
                     .shadow(color: Color.black.opacity(0.2), radius: 2, x: 0, y: 1)
                 
                 // Body text placeholder
                 Text("That the powerful game has ended, and You could not contribute a block.")
-                    .font(GameTheme.Typography.bodyFont)
+                    .font(GameTheme.Typography.standardBody)
                     .foregroundColor(GameTheme.Colors.secondaryText)
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, GameTheme.Layout.mediumPadding)
