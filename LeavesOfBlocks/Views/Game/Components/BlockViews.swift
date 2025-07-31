@@ -9,7 +9,7 @@ struct CurrentBlocksView: View {
     let isDragging: Bool
     let draggedBlockIndex: Int?
     let isHoveringOverOrigin: Bool
-    let onDragStart: (BlockShape, Int, CGPoint) -> Void  // Added index parameter
+    let onDragStart: (BlockShape, Int, CGPoint) -> Void  // block, index, location
     let onDragMove: (CGPoint) -> Void
     let onDragEnd: () -> Void
     
@@ -47,8 +47,8 @@ struct CurrentBlocksView: View {
                         DraggableBlockView(
                             block: block,
                             cellSize: scaledCellSize(for: block),
-                            onDragStart: { location, startLocation in
-                                onDragStart(block, index, location)  // Pass index
+                            onDragStart: { location in
+                                onDragStart(block, index, location)
                             },
                             onDragMove: onDragMove,
                             onDragEnd: onDragEnd
@@ -190,7 +190,7 @@ struct BlockView: View {
 private struct DraggableBlockView: View {
     let block: BlockShape
     let cellSize: CGFloat
-    let onDragStart: (CGPoint, CGPoint) -> Void  // current location, start location
+    let onDragStart: (CGPoint) -> Void  // current location
     let onDragMove: (CGPoint) -> Void
     let onDragEnd: () -> Void
     
@@ -212,11 +212,9 @@ private struct DraggableBlockView: View {
                     if !isDragging {
                         isDragging = true
                         lastUpdateTime = now
-                        let blockCenter = CGPoint(
-                            x: getBlockWidth() / 2,
-                            y: getBlockHeight() / 2
-                        )
-                        onDragStart(value.location, blockCenter)
+                        
+                        // Use current location for smooth initial positioning
+                        onDragStart(value.location)
                     } else if now.timeIntervalSince(lastUpdateTime) >= 0.016 { // ~60fps limit
                         lastUpdateTime = now
                         onDragMove(value.location)

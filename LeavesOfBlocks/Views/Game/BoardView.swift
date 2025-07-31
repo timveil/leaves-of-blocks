@@ -4,23 +4,51 @@ import SwiftUI
 
 struct BoardView: View {
     @ObservedObject var gameState: GameState
-    @State private var draggedBlock: BlockShape?
-    @State private var draggedBlockIndex: Int?  // Track which slot the block came from
-    @State private var previewPosition: GridPosition?
-    @State private var dragLocation: CGPoint = .zero
-    @State private var isDragging: Bool = false
+    @State private var dragState: DragState = DragState()
     @State private var gridFrame: CGRect = .zero
-    @State private var blockSlotsFrame: CGRect = .zero  // Track the holding area frame
-    @State private var isHoveringOverOrigin: Bool = false  // Track if hovering over original slot
+    @State private var blockSlotsFrame: CGRect = .zero
     
-    // Constants for consistent positioning
-    private let dragOffsetY: CGFloat = 80 // Distance above finger
+    // MARK: - Configuration
+    private struct DragConfiguration {
+        static let offsetAboveFinger: CGFloat = 80
+        static let offScreenMargin: CGFloat = 100
+        static let hoverTolerance: CGFloat = 15
+        static let maxSnapDistance: CGFloat = 300
+    }
+    
+    private struct GridConstants {
+        static let cellSpacing: CGFloat = 3
+        static let gridPadding: CGFloat = 16 // GameTheme.Layout.mediumPadding
+        
+        static func cellWithSpacing(cellSize: CGFloat) -> CGFloat {
+            return cellSize + cellSpacing
+        }
+    }
+    
+    // MARK: - Drag State
+    private struct DragState {
+        var draggedBlock: BlockShape?
+        var draggedBlockIndex: Int?
+        var isDragging: Bool = false
+        var dragLocation: CGPoint = .zero
+        var dragOffset: CGSize = .zero
+        var previewPosition: GridPosition?
+        var isHoveringOverOrigin: Bool = false
+        
+        mutating func reset() {
+            draggedBlock = nil
+            draggedBlockIndex = nil
+            isDragging = false
+            previewPosition = nil
+            isHoveringOverOrigin = false
+        }
+    }
     
     let cellSize: CGFloat = 40
     let onViewSummary: () -> Void
     
     private var gameWidth: CGFloat {
-        (8 * cellSize) + (7 * 3) + (2 * GameTheme.Layout.mediumPadding)
+        (8 * cellSize) + (7 * GridConstants.cellSpacing) + (2 * GridConstants.gridPadding)
     }
     
     var body: some View {
@@ -41,8 +69,8 @@ struct BoardView: View {
                         GameGridView(
                         gameState: gameState,
                         cellSize: cellSize,
-                        draggedBlock: draggedBlock,
-                        previewPosition: previewPosition,
+                        draggedBlock: dragState.draggedBlock,
+                        previewPosition: dragState.previewPosition,
                         onGridFrameChange: { frame in
                             gridFrame = frame
                         }
@@ -65,85 +93,18 @@ struct BoardView: View {
                         CurrentBlocksView(
                         gameState: gameState,
                         cellSize: cellSize,
-                        draggedBlock: draggedBlock,
-                        isDragging: isDragging,
-                        draggedBlockIndex: draggedBlockIndex,
-                        isHoveringOverOrigin: isHoveringOverOrigin,
+                        draggedBlock: dragState.draggedBlock,
+                        isDragging: dragState.isDragging,
+                        draggedBlockIndex: dragState.draggedBlockIndex,
+                        isHoveringOverOrigin: dragState.isHoveringOverOrigin,
                         onDragStart: { block, index, location in
-                            draggedBlock = block
-                            draggedBlockIndex = index  // Remember which slot it came from
-                            isDragging = true
-                            dragLocation = location
+                            handleDragStart(block: block, index: index, fingerLocation: location)
                         },
                         onDragMove: { location in
-                            dragLocation = location
-                            
-                            // Check if hovering over the holding area container  
-                            isHoveringOverOrigin = isBlockOverHoldingArea(location: location)
-                            
-                            // Calculate preview position based on the dragged block's position
-                            if let block = draggedBlock {
-                                let blockCenterLocation = CGPoint(
-                                    x: location.x,
-                                    y: location.y - dragOffsetY
-                                )
-                                
-                                // First check if user dragged way off-screen - clear preview if so
-                                if isDraggedWayOffScreen(location: blockCenterLocation) {
-                                    previewPosition = nil  // Clear preview when dragged off-screen
-                                } else {
-                                    // Calculate the block's dimensions relative to its anchor point (0,0)
-                                    let minRow = block.positions.map(\.row).min() ?? 0
-                                    let minCol = block.positions.map(\.col).min() ?? 0
-                                    
-                                    let blockWidth = CGFloat((block.positions.map(\.col).max() ?? 0) - minCol + 1) * cellSize
-                                    let blockHeight = CGFloat((block.positions.map(\.row).max() ?? 0) - minRow + 1) * cellSize
-                                    
-                                    // Calculate where the block's anchor point (0,0) would be placed
-                                    let anchorLocation = CGPoint(
-                                        x: blockCenterLocation.x - blockWidth/2 + CGFloat(minCol) * cellSize,
-                                        y: blockCenterLocation.y - blockHeight/2 + CGFloat(minRow) * cellSize
-                                    )
-                                    
-                                    // Only update preview position if not hovering over origin
-                                    if !isHoveringOverOrigin {
-                                        updatePreviewPosition(for: anchorLocation)
-                                    } else {
-                                        previewPosition = nil  // Clear preview when hovering over origin
-                                    }
-                                }
-                            }
+                            handleDragMove(fingerLocation: location)
                         },
                         onDragEnd: {
-                            // First check if the user dragged way off-screen to cancel
-                            let adjustedLocation = CGPoint(x: dragLocation.x, y: dragLocation.y - dragOffsetY)
-                            if isDraggedWayOffScreen(location: adjustedLocation) {
-                                // User dragged way off-screen - return block to holding area regardless of preview
-                                gameState.blockReturnFeedback()
-                                draggedBlock = nil
-                                draggedBlockIndex = nil
-                                previewPosition = nil
-                                isDragging = false
-                                isHoveringOverOrigin = false
-                            } else if let block = draggedBlock,
-                                      let previewPos = previewPosition,
-                                      gameState.canPlaceBlock(block, at: previewPos) {
-                                // Valid placement on grid - place the block
-                                gameState.placeBlock(block, at: previewPos)
-                                draggedBlock = nil
-                                draggedBlockIndex = nil
-                                previewPosition = nil
-                                isDragging = false
-                                isHoveringOverOrigin = false
-                            } else {
-                                // Invalid placement - return block to holding area
-                                gameState.blockReturnFeedback()
-                                draggedBlock = nil
-                                draggedBlockIndex = nil
-                                previewPosition = nil
-                                isDragging = false
-                                isHoveringOverOrigin = false
-                            }
+                            handleDragEnd()
                         }
                         )
                         .frame(width: gameWidth)
@@ -182,13 +143,10 @@ struct BoardView: View {
                 .zIndex(2000) // Higher than dragged blocks
             }
         
-        // Dragged block following finger - positioned above finger for better visibility
-        if let draggedBlock = draggedBlock, isDragging {
+        // Dragged block following finger - positioned with flexible offset for better visibility
+        if let draggedBlock = dragState.draggedBlock, dragState.isDragging {
             BlockView(block: draggedBlock, cellSize: cellSize)
-                .position(
-                    x: dragLocation.x,
-                    y: dragLocation.y - dragOffsetY  // Position block above finger
-                )
+                .position(getDraggedBlockVisualCenter())
                 .allowsHitTesting(false)
                 .zIndex(1000)
                 .scaleEffect(1.1) // Slightly larger during drag for better visibility
@@ -198,151 +156,175 @@ struct BoardView: View {
     }
     }
     
+    // MARK: - Drag Lifecycle Methods
+    
+    private func handleDragStart(block: BlockShape, index: Int, fingerLocation: CGPoint) {
+        dragState.draggedBlock = block
+        dragState.draggedBlockIndex = index
+        dragState.isDragging = true
+        dragState.dragLocation = fingerLocation
+        dragState.dragOffset = CGSize(width: 0, height: -DragConfiguration.offsetAboveFinger)
+    }
+    
+    private func handleDragMove(fingerLocation: CGPoint) {
+        dragState.dragLocation = fingerLocation
+        
+        let blockVisualCenter = getDraggedBlockVisualCenter()
+        dragState.isHoveringOverOrigin = isBlockOverHoldingArea(visualCenter: blockVisualCenter)
+        
+        updateDragPreview(blockVisualCenter: blockVisualCenter)
+    }
+    
+    private func handleDragEnd() {
+        defer { dragState.reset() }
+        
+        guard let block = dragState.draggedBlock else { return }
+        
+        let blockVisualCenter = getDraggedBlockVisualCenter()
+        
+        // Check cancellation conditions
+        if isLocationOffScreen(blockVisualCenter) {
+            gameState.blockReturnFeedback()
+            return
+        }
+        
+        // Try to place the block
+        if let position = dragState.previewPosition,
+           gameState.canPlaceBlock(block, at: position) {
+            gameState.placeBlock(block, at: position)
+        } else {
+            gameState.blockReturnFeedback()
+        }
+    }
+    
     // MARK: - Helper Methods
     
-    private func isDraggedWayOffScreen(location: CGPoint) -> Bool {
-        // Get screen bounds
-        let screenBounds = UIScreen.main.bounds
-        
-        // Define generous boundaries - user needs to drag way off screen
-        let margin: CGFloat = 100 // pixels beyond screen edge
-        let leftBound = -margin
-        let rightBound = screenBounds.width + margin
-        let topBound = -margin
-        let bottomBound = screenBounds.height + margin
-        
-        // Check if dragged way outside these bounds
-        return location.x < leftBound || 
-               location.x > rightBound || 
-               location.y < topBound || 
-               location.y > bottomBound
+    private func getDraggedBlockVisualCenter() -> CGPoint {
+        return CGPoint(
+            x: dragState.dragLocation.x + dragState.dragOffset.width,
+            y: dragState.dragLocation.y + dragState.dragOffset.height
+        )
     }
     
-    private func isBlockOverHoldingArea(location: CGPoint) -> Bool {
-        // Check if the current drag location is within the bounds of the entire holding area container
-        // Validate that we have a valid blockSlotsFrame
+    private func isLocationOffScreen(_ location: CGPoint) -> Bool {
+        let screenBounds = UIScreen.main.bounds
+        let margin = DragConfiguration.offScreenMargin
+        
+        return location.x < -margin ||
+               location.x > screenBounds.width + margin ||
+               location.y < -margin ||
+               location.y > screenBounds.height + margin
+    }
+    
+    private func isBlockOverHoldingArea(visualCenter: CGPoint) -> Bool {
         guard blockSlotsFrame.width > 0 && blockSlotsFrame.height > 0 else { return false }
         
-        // Check if the drag location (adjusted for finger offset) is within the entire container bounds
-        let adjustedLocation = CGPoint(x: location.x, y: location.y - dragOffsetY)
+        let tolerance = DragConfiguration.hoverTolerance
+        let expandedFrame = blockSlotsFrame.insetBy(dx: -tolerance, dy: -tolerance)
         
-        // Add some tolerance to make it easier to hit the container
-        let tolerance: CGFloat = 15
-        
-        return adjustedLocation.x >= (blockSlotsFrame.minX - tolerance) &&
-               adjustedLocation.x <= (blockSlotsFrame.maxX + tolerance) &&
-               adjustedLocation.y >= (blockSlotsFrame.minY - tolerance) &&
-               adjustedLocation.y <= (blockSlotsFrame.maxY + tolerance)
+        return expandedFrame.contains(visualCenter)
     }
     
-    private func getGridPosition(from location: CGPoint, in size: CGSize) -> GridPosition {
-        // Account for the grid's internal padding (mediumPadding = 16)
-        let adjustedX = location.x - 16  // GameTheme.Layout.mediumPadding
-        let adjustedY = location.y - 16  // GameTheme.Layout.mediumPadding
-        
-        // Each cell is cellSize + 3 points spacing (except the last one)
-        let cellSpacing: CGFloat = 3
-        let cellWithSpacing = cellSize + cellSpacing
-        
-        let col = Int(adjustedX / cellWithSpacing)
-        let row = Int(adjustedY / cellWithSpacing)
-        
-        // Don't clamp to grid bounds - allow negative/out-of-bounds positions for proper edge detection
-        return GridPosition(row: row, col: col)
-    }
-    
-    private func updatePreviewPosition(for globalLocation: CGPoint) {
-        guard let draggedBlock = draggedBlock else {
-            previewPosition = nil
+    private func updateDragPreview(blockVisualCenter: CGPoint) {
+        guard let block = dragState.draggedBlock,
+              !dragState.isHoveringOverOrigin,
+              !isLocationOffScreen(blockVisualCenter) else {
+            dragState.previewPosition = nil
             return
         }
         
-        // Validate grid frame is available and reasonable
-        guard gridFrame.width > 0 && gridFrame.height > 0 else {
+        guard let gridRelativeCenter = globalToGridCoordinates(blockVisualCenter) else {
+            dragState.previewPosition = nil
             return
         }
         
-        // Convert global coordinates to grid-relative coordinates
-        let relativeLocation = CGPoint(
+        let newPosition = findOptimalPlacement(for: block, nearPoint: gridRelativeCenter)
+        
+        // Only update if position changed to reduce animation triggers
+        if dragState.previewPosition != newPosition {
+            dragState.previewPosition = newPosition
+        }
+    }
+    
+    private func globalToGridCoordinates(_ globalLocation: CGPoint) -> CGPoint? {
+        guard gridFrame.width > 0 && gridFrame.height > 0 else { return nil }
+        
+        return CGPoint(
             x: globalLocation.x - gridFrame.minX,
             y: globalLocation.y - gridFrame.minY
         )
-        
-        // Only update if coordinates are reasonable (not too far negative)
-        guard relativeLocation.x > -100 && relativeLocation.y > -100 else {
-            previewPosition = nil
-            return
-        }
-        
-        // Find the best fit position for the block
-        if let bestFit = findBestFitPosition(for: draggedBlock, near: relativeLocation) {
-            // Only update if position actually changed to reduce animation triggers
-            if previewPosition != bestFit {
-                previewPosition = bestFit
-            }
-        } else {
-            previewPosition = nil
-        }
     }
     
-    private func findBestFitPosition(for block: BlockShape, near targetLocation: CGPoint) -> GridPosition? {
+    private func findOptimalPlacement(for block: BlockShape, nearPoint: CGPoint) -> GridPosition? {
+        let maxDistance = DragConfiguration.maxSnapDistance
         var bestPosition: GridPosition?
-        var bestDistanceSquared: CGFloat = CGFloat.greatestFiniteMagnitude
-        let maxSnapDistanceSquared: CGFloat = 300 * 300 // Maximum snap distance squared for performance
+        var bestDistance = CGFloat.greatestFiniteMagnitude
         
-        // Check all possible positions on the grid
-        for row in 0..<GameTheme.GameConfig.gridSize {
-            for col in 0..<GameTheme.GameConfig.gridSize {
+        let bounds = block.getBounds()
+        let cellWithSpacing = GridConstants.cellWithSpacing(cellSize: cellSize)
+        
+        // Optimize search area - only check positions near the drag location
+        let centerRow = Int(nearPoint.y / cellWithSpacing)
+        let centerCol = Int(nearPoint.x / cellWithSpacing)
+        let searchRadius = max(bounds.width, bounds.height) + 2
+        
+        let startRow = max(0, centerRow - searchRadius)
+        let endRow = min(GameTheme.GameConfig.gridSize - 1, centerRow + searchRadius)
+        let startCol = max(0, centerCol - searchRadius)
+        let endCol = min(GameTheme.GameConfig.gridSize - 1, centerCol + searchRadius)
+        
+        for row in startRow...endRow {
+            for col in startCol...endCol {
                 let position = GridPosition(row: row, col: col)
                 
-                // Check if block can be placed at this position
-                if gameState.canPlaceBlock(block, at: position) {
-                    // Calculate the center point of the block if placed at this position
-                    let blockCenter = getBlockCenterInGrid(for: block, at: position)
-                    
-                    // Calculate squared distance from target location (faster than sqrt)
-                    let distanceSquared = pow(blockCenter.x - targetLocation.x, 2) + pow(blockCenter.y - targetLocation.y, 2)
-                    
-                    // Update best position if this is closer
-                    if distanceSquared < bestDistanceSquared {
-                        bestDistanceSquared = distanceSquared
-                        bestPosition = position
-                    }
+                guard gameState.canPlaceBlock(block, at: position) else { continue }
+                
+                let blockCenter = calculateBlockCenter(block: block, at: position)
+                let distance = hypot(blockCenter.x - nearPoint.x, blockCenter.y - nearPoint.y)
+                
+                if distance < bestDistance && distance <= maxDistance {
+                    bestDistance = distance
+                    bestPosition = position
                 }
             }
         }
         
-        // Only return a position if we found one within a reasonable distance
-        // This prevents snapping when the user drags very far from the grid
-        if bestDistanceSquared <= maxSnapDistanceSquared {
-            return bestPosition
-        }
-        
-        return nil
+        return bestPosition
     }
     
-    private func getBlockCenterInGrid(for block: BlockShape, at position: GridPosition) -> CGPoint {
-        // Calculate the bounding box of the block
-        let minRow = block.positions.map(\.row).min() ?? 0
-        let maxRow = block.positions.map(\.row).max() ?? 0
-        let minCol = block.positions.map(\.col).min() ?? 0
-        let maxCol = block.positions.map(\.col).max() ?? 0
+    private func calculateBlockCenter(block: BlockShape, at position: GridPosition) -> CGPoint {
+        let bounds = block.getBounds()
+        let cellWithSpacing = GridConstants.cellWithSpacing(cellSize: cellSize)
         
-        // Calculate the center of the block in grid coordinates
-        let blockCenterRow = CGFloat(position.row) + CGFloat(maxRow + minRow) / 2.0
-        let blockCenterCol = CGFloat(position.col) + CGFloat(maxCol + minCol) / 2.0
+        let centerRow = CGFloat(position.row) + CGFloat(bounds.maxRow + bounds.minRow) / 2.0
+        let centerCol = CGFloat(position.col) + CGFloat(bounds.maxCol + bounds.minCol) / 2.0
         
-        // Convert to pixel coordinates within the grid
-        let cellSpacing: CGFloat = 3
-        let cellWithSpacing = cellSize + cellSpacing
-        let gridPadding: CGFloat = 16  // GameTheme.Layout.mediumPadding
-        
-        let centerX = blockCenterCol * cellWithSpacing + cellSize / 2.0 + gridPadding
-        let centerY = blockCenterRow * cellWithSpacing + cellSize / 2.0 + gridPadding
-        
-        return CGPoint(x: centerX, y: centerY)
+        return CGPoint(
+            x: centerCol * cellWithSpacing + cellSize / 2.0 + GridConstants.gridPadding,
+            y: centerRow * cellWithSpacing + cellSize / 2.0 + GridConstants.gridPadding
+        )
     }
     
+}
+
+// MARK: - Block Model Extensions
+extension BlockShape {
+    /// Returns the bounding box of the block
+    func getBounds() -> (minRow: Int, maxRow: Int, minCol: Int, maxCol: Int, width: Int, height: Int) {
+        let minRow = positions.map(\.row).min() ?? 0
+        let maxRow = positions.map(\.row).max() ?? 0
+        let minCol = positions.map(\.col).min() ?? 0
+        let maxCol = positions.map(\.col).max() ?? 0
+        
+        return (
+            minRow: minRow,
+            maxRow: maxRow,
+            minCol: minCol,
+            maxCol: maxCol,
+            width: maxCol - minCol + 1,
+            height: maxRow - minRow + 1
+        )
+    }
 }
 
 #Preview {
