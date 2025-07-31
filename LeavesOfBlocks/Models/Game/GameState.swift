@@ -162,7 +162,7 @@ class GameState: ObservableObject {
             isGameOver = true
             gameService.endGameSession()
             
-            isNewHighScore = gameService.updateHighScore(score)
+            isNewHighScore = gameService.isNewHighScore(score)
             
             if isNewHighScore {
                 gameService.newHighScoreFeedback()

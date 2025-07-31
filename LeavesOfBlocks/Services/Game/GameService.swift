@@ -13,7 +13,6 @@ class GameService: ObservableObject {
     private var gameTimer: Timer?
     private var gameStartTime: Date = Date()
     
-    let highScoreManager = HighScoreManager()
     private let coreDataManager = CoreDataManager.shared
     
     // MARK: - Initialization
@@ -68,16 +67,16 @@ class GameService: ObservableObject {
     
     // MARK: - High Score Management
     
-    /// Updates high score if current score is higher
-    func updateHighScore(_ score: Int) -> Bool {
-        let oldHighScore = highScoreManager.highScore
-        highScoreManager.updateHighScore(score)
-        return score > oldHighScore
+    /// Checks if the given score is a new high score
+    func isNewHighScore(_ score: Int) -> Bool {
+        let statistics = coreDataManager.calculateStatistics()
+        return score > statistics.highScore
     }
     
-    /// Gets the current high score
+    /// Gets the current high score from Core Data
     func getHighScore() -> Int {
-        return highScoreManager.highScore
+        let statistics = coreDataManager.calculateStatistics()
+        return statistics.highScore
     }
     
     // MARK: - Game Record Management
@@ -91,8 +90,7 @@ class GameService: ObservableObject {
         difficulty: DifficultyMode,
         longestCombo: Int
     ) {
-        // Update high score
-        let _ = updateHighScore(score)
+        // High score is automatically tracked in Core Data
         
         // Save to Core Data
         coreDataManager.saveGameRecord(
@@ -150,4 +148,5 @@ class GameService: ObservableObject {
         stopGameTimer()
         // Any cleanup logic
     }
+    
 }

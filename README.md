@@ -314,8 +314,7 @@ LeavesOfBlocks.xcodeproj/           # Xcode project file
 │   │   │   ├── AppConfiguration.swift # Environment & feature flags
 │   │   │   └── UserPreferences.swift  # User settings
 │   │   └── Data/
-│   │       ├── HighScoreManager.swift # Score persistence
-│   │       └── CoreDataManager.swift  # Core Data stack
+│   │       └── CoreDataManager.swift  # Core Data stack & high scores
 │   ├── Resources/                  # App resources
 │   │   ├── Theming/                # Comprehensive theme system
 │   │   │   ├── Theme.swift         # Main theme orchestration

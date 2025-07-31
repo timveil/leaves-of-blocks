@@ -120,7 +120,7 @@ The app reads version information through `Bundle+Extensions.swift`:
 - `Services/` - Service layer architecture:
   - `Configuration/AppConfiguration.swift` - Environment detection, feature flags, preferences
   - `Configuration/UserPreferences.swift` - User preference management and logging utilities
-  - `Data/HighScoreManager.swift` - High score persistence using UserDefaults
+  - High scores tracked via Core Data (part of game history records)
   - `Data/CoreDataManager.swift` - Core Data stack management for game history
   - `Game/GameService.swift` - Centralized game services (timing, haptics, persistence)
 - `Models/Data/GameRecord+CoreDataClass.swift` - Core Data entity class for game records
@@ -319,6 +319,6 @@ The project hosts documentation at the repository's GitHub Pages URL:
 - Uses NavigationView with StackNavigationViewStyle for consistent behavior
 - Custom drag gesture implementation with visual feedback  
 - Configuration system via `Configuration.swift` for feature flags and environment detection
-- High score persistence through `HighScoreManager.swift` using UserDefaults
+- High score persistence through Core Data as part of game history
 - Game history persistence through Core Data (`CoreDataManager.swift`)
 - App Clip ready with simplified experience option
