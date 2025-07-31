@@ -44,11 +44,11 @@ struct DifficultySelectionView: View {
             
             Spacer().frame(maxHeight: 15)
             
-            // Start game button using premium button component
-            PremiumButton(
+            // Start game button using full width action button component
+            FullWidthActionButton(
                 title: "Start Game",
                 icon: "play.fill",
-                color: selectedDifficulty.color,
+                style: .primary,
                 onTap: {
                     onStartGame(selectedDifficulty)
                 }

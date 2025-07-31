@@ -32,10 +32,11 @@ struct GameOverOverlayView: View {
                 score: gameState.score
             )
             
-            // Enhanced 3D button using PremiumButton component
-            PremiumButton(
+            // Enhanced button using FullWidthActionButton component
+            FullWidthActionButton(
                 title: "View Summary",
                 icon: "chart.bar.fill",
+                style: .primary,
                 onTap: onViewSummary
             )
         }

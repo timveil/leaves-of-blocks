@@ -14,7 +14,7 @@ struct AboutView: View {
                     VStack(spacing: GameTheme.Layout.largePadding) {
                     // Header
                     VStack(spacing: GameTheme.Layout.mediumSpacing) {
-                        Text("Leaves of Blocks")
+                        Text("About the Game")
                             .pageTitleStyle()
                             .padding(.top, GameTheme.Layout.mediumPadding)
                     }
@@ -23,9 +23,7 @@ struct AboutView: View {
                     VStack(alignment: .leading, spacing: GameTheme.Layout.largePadding) {
                 // About the Game
                 VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
-                    Text("About the Game")
-                        .sectionHeaderStyle()
-                    
+                 
                     Text("Leaves of Blocks is a relaxing puzzle game that combines the joy of autumn with strategic block placement. Clear lines by filling rows and columns completely, and watch as your score grows with each successful move.\n\nFeatures beautiful block shapes, smooth animations, and progressively challenging gameplay across three difficulty modes.")
                         .sectionTextStyle(color: GameTheme.Colors.secondaryText)
                         .lineSpacing(6)

@@ -32,6 +32,8 @@ enum AppScreen: Equatable {
     case history
     /// Tutorial and gameplay instructions
     case howToPlay
+    /// Settings screen for data management and app preferences
+    case settings
 }
 
 // MARK: - Main Content View
@@ -73,6 +75,11 @@ struct ContentView: View {
                     onShowHowToPlay: {
 
                         currentScreen = .howToPlay
+
+                    },
+                    onShowSettings: {
+
+                        currentScreen = .settings
 
                     },
                     onNewGame: {
@@ -144,6 +151,10 @@ struct ContentView: View {
 
                     case .howToPlay:
                         HowToPlayView()
+                            .gameScreenNavigation()
+                            
+                    case .settings:
+                        SettingsView(gameState: gameState)
                             .gameScreenNavigation()
                     }
                 }

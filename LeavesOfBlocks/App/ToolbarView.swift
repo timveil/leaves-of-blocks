@@ -14,6 +14,7 @@ struct ToolbarView: View {
     let onGoHome: () -> Void
     let onShowAbout: () -> Void
     let onShowHowToPlay: () -> Void
+    let onShowSettings: () -> Void
     let onNewGame: () -> Void
     
     var body: some View {
@@ -44,9 +45,16 @@ struct ToolbarView: View {
                         .foregroundColor(GameTheme.Colors.blockGreen)
                 }
                 
-                // Info icon (About) - using gear for better visual balance
+                // Info icon (About)
                 Button(action: onShowAbout) {
                     Image(systemName: "info.circle.fill")
+                        .font(Self.iconFont)
+                        .foregroundColor(GameTheme.Colors.blockGreen)
+                }
+                
+                // Settings icon
+                Button(action: onShowSettings) {
+                    Image(systemName: "gearshape.circle.fill")
                         .font(Self.iconFont)
                         .foregroundColor(GameTheme.Colors.blockGreen)
                 }
@@ -78,6 +86,7 @@ struct ToolbarView: View {
             onGoHome: { print("Go Home") },
             onShowAbout: { print("Show About") },
             onShowHowToPlay: { print("Show How to Play") },
+            onShowSettings: { print("Show Settings") },
             onNewGame: { print("New Game") }
         )
         
