@@ -130,7 +130,7 @@ struct ComboNotificationOverlay: View {
         ZStack {
             if let combo = activeCombo {
                 // Semi-transparent background to dim the game
-                Color.black.opacity(0.4)
+                Color.black.opacity(0.7)
                     .ignoresSafeArea()
                 
                 // Position combo notification higher on screen
