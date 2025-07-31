@@ -227,10 +227,16 @@ cp tmp/AppIcon-29@3x.png "$APP_CLIP_ASSETS_DIR/Icon-29@3x.png"
 cp tmp/AppIcon-40@2x.png "$APP_CLIP_ASSETS_DIR/Icon-40@2x.png"
 cp tmp/AppIcon-40@3x.png "$APP_CLIP_ASSETS_DIR/Icon-40@3x.png"
 
+# Copy GitHub Pages app icon
+echo "📄 Copying GitHub Pages app icon..."
+mkdir -p docs
+cp tmp/app-icon.png docs/app-icon.png
+
 echo "✅ Icons copied to iOS project successfully!"
 echo "📁 App Icons location: $ASSETS_DIR"
 echo "📁 App Clip Icons location: $APP_CLIP_ASSETS_DIR"
 echo "📁 Launch Icons location: $LAUNCH_ICON_DIR"
+echo "📁 GitHub Pages Icon location: docs/app-icon.png"
 echo ""
 echo "🚀 Next steps:"
 echo "1. Open your Xcode project"
@@ -249,3 +255,6 @@ ls -la "$APP_CLIP_ASSETS_DIR"
 echo ""
 echo "📋 Copied Launch Icon files:"
 ls -la "$LAUNCH_ICON_DIR"
+echo ""
+echo "📋 Copied GitHub Pages Icon:"
+ls -la docs/app-icon.png

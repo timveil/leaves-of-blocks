@@ -60,6 +60,9 @@ rsvg-convert -w 64 -h 64 "$SVG_FILE" > tmp/AppIcon-64.png
 rsvg-convert -w 32 -h 32 "$SVG_FILE" > tmp/AppIcon-32.png
 rsvg-convert -w 16 -h 16 "$SVG_FILE" > tmp/AppIcon-16.png
 
+# GitHub Pages app icon (for documentation site, transparent background)
+rsvg-convert -w 256 -h 256 --background-color=transparent "$TRANSPARENT_SVG_FILE" > tmp/app-icon.png
+
 # App Clip Icons (with white background, no transparency)
 rsvg-convert -w 180 -h 180 "$SVG_FILE" > tmp/AppClipIcon-60@3x.png
 rsvg-convert -w 120 -h 120 "$SVG_FILE" > tmp/AppClipIcon-60@2x.png
