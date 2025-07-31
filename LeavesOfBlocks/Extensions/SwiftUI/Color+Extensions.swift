@@ -40,11 +40,69 @@ extension Color {
     
     // MARK: - Color Variations
     
+    /// Creates a lighter version of the color by increasing brightness
     func lighter(by percentage: CGFloat = 0.2) -> Color {
-        return self.opacity(1.0 - percentage)
+        let clampedPercentage = max(0, min(1, percentage))
+        
+        #if canImport(UIKit)
+        let uiColor = UIColor(self)
+        var hue: CGFloat = 0
+        var saturation: CGFloat = 0  
+        var brightness: CGFloat = 0
+        var alpha: CGFloat = 0
+        
+        uiColor.getHue(&hue, saturation: &saturation, brightness: &brightness, alpha: &alpha)
+        
+        // Increase brightness while maintaining hue and saturation
+        let newBrightness = min(1.0, brightness + (1.0 - brightness) * clampedPercentage)
+        
+        return Color(UIColor(hue: hue, saturation: saturation, brightness: newBrightness, alpha: alpha))
+        #else
+        // Fallback for non-UIKit platforms (macOS)
+        let nsColor = NSColor(self)
+        var hue: CGFloat = 0
+        var saturation: CGFloat = 0
+        var brightness: CGFloat = 0
+        var alpha: CGFloat = 0
+        
+        nsColor.getHue(&hue, saturation: &saturation, brightness: &brightness, alpha: &alpha)
+        
+        let newBrightness = min(1.0, brightness + (1.0 - brightness) * clampedPercentage)
+        
+        return Color(NSColor(hue: hue, saturation: saturation, brightness: newBrightness, alpha: alpha))
+        #endif
     }
     
+    /// Creates a darker version of the color by decreasing brightness
     func darker(by percentage: CGFloat = 0.2) -> Color {
-        return self.opacity(1.0 + percentage)
+        let clampedPercentage = max(0, min(1, percentage))
+        
+        #if canImport(UIKit)
+        let uiColor = UIColor(self)
+        var hue: CGFloat = 0
+        var saturation: CGFloat = 0
+        var brightness: CGFloat = 0
+        var alpha: CGFloat = 0
+        
+        uiColor.getHue(&hue, saturation: &saturation, brightness: &brightness, alpha: &alpha)
+        
+        // Decrease brightness while maintaining hue and saturation
+        let newBrightness = max(0.0, brightness * (1.0 - clampedPercentage))
+        
+        return Color(UIColor(hue: hue, saturation: saturation, brightness: newBrightness, alpha: alpha))
+        #else
+        // Fallback for non-UIKit platforms (macOS)
+        let nsColor = NSColor(self)
+        var hue: CGFloat = 0
+        var saturation: CGFloat = 0
+        var brightness: CGFloat = 0
+        var alpha: CGFloat = 0
+        
+        nsColor.getHue(&hue, saturation: &saturation, brightness: &brightness, alpha: &alpha)
+        
+        let newBrightness = max(0.0, brightness * (1.0 - clampedPercentage))
+        
+        return Color(NSColor(hue: hue, saturation: saturation, brightness: newBrightness, alpha: alpha))
+        #endif
     }
 }

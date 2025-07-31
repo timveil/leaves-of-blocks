@@ -73,8 +73,7 @@ struct ContentView: View {
 
                             }
                         )
-                        .navigationBarHidden(true)
-                        .ignoresSafeArea(.container, edges: [])
+                        .gameScreenNavigation()
 
                     case .game:
                         BoardView(
@@ -85,21 +84,18 @@ struct ContentView: View {
 
                             }
                         )
-                        .navigationBarHidden(true)
-                        .ignoresSafeArea(.container, edges: [])
+                        .gameScreenNavigation()
 
                     case .summary(let session):
                         SummaryView(
                             gameState: gameState,
                             historicalSession: session
                         )
-                        .navigationBarHidden(true)
-                        .ignoresSafeArea(.container, edges: [])
+                        .gameScreenNavigation()
 
                     case .about:
                         AboutView()
-                            .navigationBarHidden(true)
-                            .ignoresSafeArea(.container, edges: [])
+                            .gameScreenNavigation()
 
                     case .history:
                         HistoryView(
@@ -110,13 +106,11 @@ struct ContentView: View {
 
                             }
                         )
-                        .navigationBarHidden(true)
-                        .ignoresSafeArea(.container, edges: [])
+                        .gameScreenNavigation()
 
                     case .howToPlay:
                         HowToPlayView()
-                            .navigationBarHidden(true)
-                            .ignoresSafeArea(.container, edges: [])
+                            .gameScreenNavigation()
                     }
                 }
             }
@@ -127,12 +121,4 @@ struct ContentView: View {
 
 #Preview {
     ContentView()
-}
-
-struct Previews_ContentView_LibraryContent: LibraryContentProvider {
-    var views: [LibraryItem] {
-        LibraryItem( /*@START_MENU_TOKEN@*/
-            Text("Hello, World!") /*@END_MENU_TOKEN@*/
-        )
-    }
 }

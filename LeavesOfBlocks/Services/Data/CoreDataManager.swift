@@ -11,8 +11,16 @@ class CoreDataManager {
         
         container.loadPersistentStores { _, error in
             if let error = error as NSError? {
-                // In production, this should be handled more gracefully
-                fatalError("Unresolved error \(error), \(error.userInfo)")
+                // Log the error for debugging
+                print("Core Data error: \(error), \(error.userInfo)")
+                
+                #if DEBUG
+                // In debug mode, we can crash to help identify issues
+                fatalError("Core Data failed to load: \(error)")
+                #else
+                // In production, attempt recovery by deleting and recreating the store
+                self.handleCoreDataLoadFailure(container: container, error: error)
+                #endif
             }
         }
         
@@ -33,7 +41,49 @@ class CoreDataManager {
             } catch {
                 let nsError = error as NSError
                 print("Error saving context: \(nsError), \(nsError.userInfo)")
+                
+                // Attempt to rollback changes on save failure
+                context.rollback()
+                
+                // Notify observers that save failed (could be used for user notification)
+                NotificationCenter.default.post(
+                    name: NSNotification.Name("CoreDataSaveFailure"),
+                    object: nil,
+                    userInfo: ["error": nsError]
+                )
             }
+        }
+    }
+    
+    // MARK: - Error Recovery
+    
+    /// Handles Core Data load failures by attempting to recreate the persistent store
+    private func handleCoreDataLoadFailure(container: NSPersistentContainer, error: NSError) {
+        print("Attempting Core Data recovery...")
+        
+        // Get the store URL
+        guard let storeURL = container.persistentStoreDescriptions.first?.url else {
+            print("Could not get store URL for recovery")
+            return
+        }
+        
+        // Attempt to delete the corrupted store
+        do {
+            try FileManager.default.removeItem(at: storeURL)
+            print("Deleted corrupted Core Data store")
+            
+            // Try to reload the store
+            container.loadPersistentStores { _, recoveryError in
+                if let recoveryError = recoveryError {
+                    print("Core Data recovery failed: \(recoveryError)")
+                    // At this point, the app will have to run without persistence
+                    // You could implement a fallback storage mechanism here
+                } else {
+                    print("Core Data recovery successful")
+                }
+            }
+        } catch {
+            print("Failed to delete corrupted store: \(error)")
         }
     }
     
