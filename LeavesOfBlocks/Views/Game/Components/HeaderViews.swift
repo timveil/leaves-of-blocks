@@ -15,31 +15,31 @@ struct SimpleScoreView: View {
     @ObservedObject var gameState: GameState
     
     var body: some View {
-        VStack(spacing: GameTheme.Layout.smallSpacing) {
+        VStack(spacing: GameTheme.Layout.tinySpacing) {
             HStack {
                 // Current Score
-                VStack(alignment: .leading, spacing: 4) {
+                VStack(alignment: .leading, spacing: 2) {
                     Text(gameState.score.formattedScore)
-                        .font(GameTheme.Typography.largeScore)
+                        .font(GameTheme.Typography.scoreFont)
                         .foregroundColor(GameTheme.Colors.primaryText)
                     Text("Score")
-                        .font(GameTheme.Typography.captionFont)
+                        .font(GameTheme.Typography.subtitleFont)
                         .foregroundColor(GameTheme.Colors.secondaryText)
                 }
                 
                 Spacer()
                 
                 // Lines Cleared Counter
-                VStack(alignment: .trailing, spacing: 4) {
+                VStack(alignment: .trailing, spacing: 2) {
                     Text(gameState.linesCleared.formattedScore)
-                        .font(GameTheme.Typography.largeScore)
+                        .font(GameTheme.Typography.scoreFont)
                         .foregroundColor(GameTheme.Colors.accent)
                     Text("Lines")
-                        .font(GameTheme.Typography.captionFont)
+                        .font(GameTheme.Typography.subtitleFont)
                         .foregroundColor(GameTheme.Colors.secondaryText)
                 }
             }
         }
-        .padding(.vertical, GameTheme.Layout.mediumPadding)
+        .padding(.vertical, GameTheme.Layout.smallPadding)
     }
 }
