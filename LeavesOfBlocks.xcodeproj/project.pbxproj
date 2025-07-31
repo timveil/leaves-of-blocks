@@ -11,34 +11,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
-		3A692C0F2E3460EE00451CB3 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 3A692BF92E3460ED00451CB3 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 3A692C002E3460ED00451CB3;
-			remoteInfo = "Leaves of Blocks";
-		};
-		3A692C192E3460EE00451CB3 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 3A692BF92E3460ED00451CB3 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 3A692C002E3460ED00451CB3;
-			remoteInfo = "Leaves of Blocks";
-		};
-		3A893D202E370BBB00872181 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 3A692BF92E3460ED00451CB3 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 3A893D102E370BBA00872181;
-			remoteInfo = LeavesOfBlocksAppClip;
-		};
-		3A893D2A2E370BBB00872181 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 3A692BF92E3460ED00451CB3 /* Project object */;
-			proxyType = 1;
-			remoteGlobalIDString = 3A893D102E370BBA00872181;
-			remoteInfo = LeavesOfBlocksAppClip;
-		};
 		3A893D312E370BBB00872181 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 3A692BF92E3460ED00451CB3 /* Project object */;
@@ -64,11 +36,7 @@
 
 /* Begin PBXFileReference section */
 		3A692C012E3460ED00451CB3 /* LeavesOfBlocks.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LeavesOfBlocks.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		3A692C0E2E3460EE00451CB3 /* LeavesOfBlocksTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LeavesOfBlocksTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		3A692C182E3460EE00451CB3 /* LeavesOfBlocksUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LeavesOfBlocksUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		3A893D112E370BBA00872181 /* LeavesOfBlocksAppClip.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LeavesOfBlocksAppClip.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		3A893D1F2E370BBB00872181 /* LeavesOfBlocksAppClipTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LeavesOfBlocksAppClipTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		3A893D292E370BBB00872181 /* LeavesOfBlocksAppClipUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LeavesOfBlocksAppClipUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -105,35 +73,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		3A692C0B2E3460EE00451CB3 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		3A692C152E3460EE00451CB3 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		3A893D0E2E370BBA00872181 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		3A893D1C2E370BBB00872181 /* Frameworks */ = {
-			isa = PBXFrameworksBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		3A893D262E370BBB00872181 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -156,11 +96,7 @@
 			isa = PBXGroup;
 			children = (
 				3A692C012E3460ED00451CB3 /* LeavesOfBlocks.app */,
-				3A692C0E2E3460EE00451CB3 /* LeavesOfBlocksTests.xctest */,
-				3A692C182E3460EE00451CB3 /* LeavesOfBlocksUITests.xctest */,
 				3A893D112E370BBA00872181 /* LeavesOfBlocksAppClip.app */,
-				3A893D1F2E370BBB00872181 /* LeavesOfBlocksAppClipTests.xctest */,
-				3A893D292E370BBB00872181 /* LeavesOfBlocksAppClipUITests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -192,46 +128,6 @@
 			productReference = 3A692C012E3460ED00451CB3 /* LeavesOfBlocks.app */;
 			productType = "com.apple.product-type.application";
 		};
-		3A692C0D2E3460EE00451CB3 /* LeavesOfBlocksTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 3A692C252E3460EE00451CB3 /* Build configuration list for PBXNativeTarget "LeavesOfBlocksTests" */;
-			buildPhases = (
-				3A692C0A2E3460EE00451CB3 /* Sources */,
-				3A692C0B2E3460EE00451CB3 /* Frameworks */,
-				3A692C0C2E3460EE00451CB3 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				3A692C102E3460EE00451CB3 /* PBXTargetDependency */,
-			);
-			name = LeavesOfBlocksTests;
-			packageProductDependencies = (
-			);
-			productName = "Leaves of BlocksTests";
-			productReference = 3A692C0E2E3460EE00451CB3 /* LeavesOfBlocksTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		3A692C172E3460EE00451CB3 /* LeavesOfBlocksUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 3A692C282E3460EE00451CB3 /* Build configuration list for PBXNativeTarget "LeavesOfBlocksUITests" */;
-			buildPhases = (
-				3A692C142E3460EE00451CB3 /* Sources */,
-				3A692C152E3460EE00451CB3 /* Frameworks */,
-				3A692C162E3460EE00451CB3 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				3A692C1A2E3460EE00451CB3 /* PBXTargetDependency */,
-			);
-			name = LeavesOfBlocksUITests;
-			packageProductDependencies = (
-			);
-			productName = "Leaves of BlocksUITests";
-			productReference = 3A692C182E3460EE00451CB3 /* LeavesOfBlocksUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 		3A893D102E370BBA00872181 /* LeavesOfBlocksAppClip */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 3A893D3C2E370BBB00872181 /* Build configuration list for PBXNativeTarget "LeavesOfBlocksAppClip" */;
@@ -254,46 +150,6 @@
 			productReference = 3A893D112E370BBA00872181 /* LeavesOfBlocksAppClip.app */;
 			productType = "com.apple.product-type.application.on-demand-install-capable";
 		};
-		3A893D1E2E370BBB00872181 /* LeavesOfBlocksAppClipTests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 3A893D3D2E370BBB00872181 /* Build configuration list for PBXNativeTarget "LeavesOfBlocksAppClipTests" */;
-			buildPhases = (
-				3A893D1B2E370BBB00872181 /* Sources */,
-				3A893D1C2E370BBB00872181 /* Frameworks */,
-				3A893D1D2E370BBB00872181 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				3A893D212E370BBB00872181 /* PBXTargetDependency */,
-			);
-			name = LeavesOfBlocksAppClipTests;
-			packageProductDependencies = (
-			);
-			productName = LeavesOfBlocksAppClipTests;
-			productReference = 3A893D1F2E370BBB00872181 /* LeavesOfBlocksAppClipTests.xctest */;
-			productType = "com.apple.product-type.bundle.unit-test";
-		};
-		3A893D282E370BBB00872181 /* LeavesOfBlocksAppClipUITests */ = {
-			isa = PBXNativeTarget;
-			buildConfigurationList = 3A893D3E2E370BBB00872181 /* Build configuration list for PBXNativeTarget "LeavesOfBlocksAppClipUITests" */;
-			buildPhases = (
-				3A893D252E370BBB00872181 /* Sources */,
-				3A893D262E370BBB00872181 /* Frameworks */,
-				3A893D272E370BBB00872181 /* Resources */,
-			);
-			buildRules = (
-			);
-			dependencies = (
-				3A893D2B2E370BBB00872181 /* PBXTargetDependency */,
-			);
-			name = LeavesOfBlocksAppClipUITests;
-			packageProductDependencies = (
-			);
-			productName = LeavesOfBlocksAppClipUITests;
-			productReference = 3A893D292E370BBB00872181 /* LeavesOfBlocksAppClipUITests.xctest */;
-			productType = "com.apple.product-type.bundle.ui-testing";
-		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -307,24 +163,8 @@
 					3A692C002E3460ED00451CB3 = {
 						CreatedOnToolsVersion = 16.4;
 					};
-					3A692C0D2E3460EE00451CB3 = {
-						CreatedOnToolsVersion = 16.4;
-						TestTargetID = 3A692C002E3460ED00451CB3;
-					};
-					3A692C172E3460EE00451CB3 = {
-						CreatedOnToolsVersion = 16.4;
-						TestTargetID = 3A692C002E3460ED00451CB3;
-					};
 					3A893D102E370BBA00872181 = {
 						CreatedOnToolsVersion = 16.4;
-					};
-					3A893D1E2E370BBB00872181 = {
-						CreatedOnToolsVersion = 16.4;
-						TestTargetID = 3A893D102E370BBA00872181;
-					};
-					3A893D282E370BBB00872181 = {
-						CreatedOnToolsVersion = 16.4;
-						TestTargetID = 3A893D102E370BBA00872181;
 					};
 				};
 			};
@@ -343,11 +183,7 @@
 			projectRoot = "";
 			targets = (
 				3A692C002E3460ED00451CB3 /* LeavesOfBlocks */,
-				3A692C0D2E3460EE00451CB3 /* LeavesOfBlocksTests */,
-				3A692C172E3460EE00451CB3 /* LeavesOfBlocksUITests */,
 				3A893D102E370BBA00872181 /* LeavesOfBlocksAppClip */,
-				3A893D1E2E370BBB00872181 /* LeavesOfBlocksAppClipTests */,
-				3A893D282E370BBB00872181 /* LeavesOfBlocksAppClipUITests */,
 			);
 		};
 /* End PBXProject section */
@@ -360,35 +196,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		3A692C0C2E3460EE00451CB3 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		3A692C162E3460EE00451CB3 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		3A893D0F2E370BBA00872181 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		3A893D1D2E370BBB00872181 /* Resources */ = {
-			isa = PBXResourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		3A893D272E370BBB00872181 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -405,35 +213,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		3A692C0A2E3460EE00451CB3 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		3A692C142E3460EE00451CB3 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		3A893D0D2E370BBA00872181 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		3A893D1B2E370BBB00872181 /* Sources */ = {
-			isa = PBXSourcesBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		3A893D252E370BBB00872181 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -443,26 +223,6 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
-		3A692C102E3460EE00451CB3 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 3A692C002E3460ED00451CB3 /* LeavesOfBlocks */;
-			targetProxy = 3A692C0F2E3460EE00451CB3 /* PBXContainerItemProxy */;
-		};
-		3A692C1A2E3460EE00451CB3 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 3A692C002E3460ED00451CB3 /* LeavesOfBlocks */;
-			targetProxy = 3A692C192E3460EE00451CB3 /* PBXContainerItemProxy */;
-		};
-		3A893D212E370BBB00872181 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 3A893D102E370BBA00872181 /* LeavesOfBlocksAppClip */;
-			targetProxy = 3A893D202E370BBB00872181 /* PBXContainerItemProxy */;
-		};
-		3A893D2B2E370BBB00872181 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			target = 3A893D102E370BBA00872181 /* LeavesOfBlocksAppClip */;
-			targetProxy = 3A893D2A2E370BBB00872181 /* PBXContainerItemProxy */;
-		};
 		3A893D322E370BBB00872181 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = 3A893D102E370BBA00872181 /* LeavesOfBlocksAppClip */;
@@ -664,90 +424,6 @@
 			};
 			name = Release;
 		};
-		3A692C262E3460EE00451CB3 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = timothy.veil.LeavesOfBlocksTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-				SUPPORTS_MACCATALYST = NO;
-				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
-				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LeavesOfBlocks.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/LeavesOfBlocks";
-			};
-			name = Debug;
-		};
-		3A692C272E3460EE00451CB3 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = timothy.veil.LeavesOfBlocksTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-				SUPPORTS_MACCATALYST = NO;
-				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
-				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LeavesOfBlocks.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/LeavesOfBlocks";
-			};
-			name = Release;
-		};
-		3A692C292E3460EE00451CB3 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = timothy.veil.LeavesOfBlocksUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-				SUPPORTS_MACCATALYST = NO;
-				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
-				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
-				TEST_TARGET_NAME = "Leaves of Blocks";
-			};
-			name = Debug;
-		};
-		3A692C2A2E3460EE00451CB3 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = timothy.veil.LeavesOfBlocksUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-				SUPPORTS_MACCATALYST = NO;
-				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
-				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
-				TEST_TARGET_NAME = "Leaves of Blocks";
-			};
-			name = Release;
-		};
 		3A893D352E370BBB00872181 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -769,7 +445,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = timothy.veil.LeavesOfBlocks.Clip;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -803,7 +479,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 1.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = timothy.veil.LeavesOfBlocks.Clip;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
@@ -813,94 +489,6 @@
 				SWIFT_EMIT_LOC_STRINGS = YES;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
-			};
-			name = Release;
-		};
-		3A893D372E370BBB00872181 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 85U9MWUBJL;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = timothy.veil.LeavesOfBlocks.LeavesOfBlocksAppClipTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-				SUPPORTS_MACCATALYST = NO;
-				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
-				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LeavesOfBlocksAppClip.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/LeavesOfBlocksAppClip";
-			};
-			name = Debug;
-		};
-		3A893D382E370BBB00872181 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 85U9MWUBJL;
-				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = timothy.veil.LeavesOfBlocks.LeavesOfBlocksAppClipTests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-				SUPPORTS_MACCATALYST = NO;
-				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
-				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/LeavesOfBlocksAppClip.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/LeavesOfBlocksAppClip";
-			};
-			name = Release;
-		};
-		3A893D392E370BBB00872181 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 85U9MWUBJL;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = timothy.veil.LeavesOfBlocks.LeavesOfBlocksAppClipUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-				SUPPORTS_MACCATALYST = NO;
-				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
-				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
-				TEST_TARGET_NAME = LeavesOfBlocksAppClip;
-			};
-			name = Debug;
-		};
-		3A893D3A2E370BBB00872181 /* Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 85U9MWUBJL;
-				GENERATE_INFOPLIST_FILE = YES;
-				MARKETING_VERSION = 1.0;
-				PRODUCT_BUNDLE_IDENTIFIER = timothy.veil.LeavesOfBlocks.LeavesOfBlocksAppClipUITests;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
-				SUPPORTS_MACCATALYST = NO;
-				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
-				SUPPORTS_XR_DESIGNED_FOR_IPHONE_IPAD = NO;
-				SWIFT_EMIT_LOC_STRINGS = NO;
-				SWIFT_VERSION = 5.0;
-				TARGETED_DEVICE_FAMILY = 1;
-				TEST_TARGET_NAME = LeavesOfBlocksAppClip;
 			};
 			name = Release;
 		};
@@ -925,47 +513,11 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		3A692C252E3460EE00451CB3 /* Build configuration list for PBXNativeTarget "LeavesOfBlocksTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				3A692C262E3460EE00451CB3 /* Debug */,
-				3A692C272E3460EE00451CB3 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		3A692C282E3460EE00451CB3 /* Build configuration list for PBXNativeTarget "LeavesOfBlocksUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				3A692C292E3460EE00451CB3 /* Debug */,
-				3A692C2A2E3460EE00451CB3 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
 		3A893D3C2E370BBB00872181 /* Build configuration list for PBXNativeTarget "LeavesOfBlocksAppClip" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				3A893D352E370BBB00872181 /* Debug */,
 				3A893D362E370BBB00872181 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		3A893D3D2E370BBB00872181 /* Build configuration list for PBXNativeTarget "LeavesOfBlocksAppClipTests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				3A893D372E370BBB00872181 /* Debug */,
-				3A893D382E370BBB00872181 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		3A893D3E2E370BBB00872181 /* Build configuration list for PBXNativeTarget "LeavesOfBlocksAppClipUITests" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				3A893D392E370BBB00872181 /* Debug */,
-				3A893D3A2E370BBB00872181 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

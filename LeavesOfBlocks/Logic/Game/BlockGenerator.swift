@@ -177,7 +177,7 @@ struct BlockGenerator {
         var usedOrientations: [ShapeOrientation] = []
         var hasSpecialShape = false
         
-        for i in 0..<count {
+        for _ in 0..<count {
             // Check if we should generate a special shape
             let specialProbability = specialShapeProbability[difficulty] ?? 0.1
             let shouldGenerateSpecial = Double.random(in: 0...1) < specialProbability && !hasSpecialShape
