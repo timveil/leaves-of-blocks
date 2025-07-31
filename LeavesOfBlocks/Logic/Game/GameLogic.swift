@@ -9,32 +9,68 @@ class GameLogic {
     
     /// Validates if a block can be placed at the specified position
     static func canPlaceBlock(_ block: BlockShape, at gridPosition: GridPosition, in grid: [[GridCell]]) -> Bool {
-        for blockPos in block.positions {
-            let finalRow = gridPosition.row + blockPos.row
-            let finalCol = gridPosition.col + blockPos.col
+        switch block.type {
+        case .horizontalClear:
+            // Can place horizontal clear if the row is valid
+            return gridPosition.row >= 0 && gridPosition.row < GameTheme.GameConfig.gridSize &&
+                   gridPosition.col >= 0 && gridPosition.col < GameTheme.GameConfig.gridSize
             
-            // Check bounds
-            if finalRow < 0 || finalRow >= GameTheme.GameConfig.gridSize || 
-               finalCol < 0 || finalCol >= GameTheme.GameConfig.gridSize {
-                return false
-            }
+        case .verticalClear:
+            // Can place vertical clear if the column is valid
+            return gridPosition.col >= 0 && gridPosition.col < GameTheme.GameConfig.gridSize &&
+                   gridPosition.row >= 0 && gridPosition.row < GameTheme.GameConfig.gridSize
             
-            // Check if cell is already filled
-            if grid[finalRow][finalCol].isFilled {
-                return false
+        case .normal:
+            // Normal block placement validation
+            for blockPos in block.positions {
+                let finalRow = gridPosition.row + blockPos.row
+                let finalCol = gridPosition.col + blockPos.col
+                
+                // Check bounds
+                if finalRow < 0 || finalRow >= GameTheme.GameConfig.gridSize || 
+                   finalCol < 0 || finalCol >= GameTheme.GameConfig.gridSize {
+                    return false
+                }
+                
+                // Check if cell is already filled
+                if grid[finalRow][finalCol].isFilled {
+                    return false
+                }
             }
+            return true
         }
-        return true
     }
     
     /// Places a block on the grid and returns the updated grid
     static func placeBlock(_ block: BlockShape, at gridPosition: GridPosition, in grid: inout [[GridCell]]) {
-        for blockPos in block.positions {
-            let finalRow = gridPosition.row + blockPos.row
-            let finalCol = gridPosition.col + blockPos.col
+        switch block.type {
+        case .horizontalClear:
+            // Clear the entire row where the special block is placed
+            let targetRow = gridPosition.row
+            if targetRow >= 0 && targetRow < GameTheme.GameConfig.gridSize {
+                for col in 0..<GameTheme.GameConfig.gridSize {
+                    grid[targetRow][col] = GridCell()  // Reset to default state
+                }
+            }
             
-            grid[finalRow][finalCol].isFilled = true
-            grid[finalRow][finalCol].color = block.color
+        case .verticalClear:
+            // Clear the entire column where the special block is placed
+            let targetCol = gridPosition.col
+            if targetCol >= 0 && targetCol < GameTheme.GameConfig.gridSize {
+                for row in 0..<GameTheme.GameConfig.gridSize {
+                    grid[row][targetCol] = GridCell()  // Reset to default state
+                }
+            }
+            
+        case .normal:
+            // Normal block placement
+            for blockPos in block.positions {
+                let finalRow = gridPosition.row + blockPos.row
+                let finalCol = gridPosition.col + blockPos.col
+                
+                grid[finalRow][finalCol].isFilled = true
+                grid[finalRow][finalCol].color = block.color
+            }
         }
     }
     
@@ -120,8 +156,14 @@ class GameLogic {
     // MARK: - Score Calculation
     
     /// Calculates score for placing a block
-    static func calculateBlockScore(blockSize: Int) -> Int {
-        return blockSize * GameTheme.GameConfig.baseBlockScore
+    static func calculateBlockScore(block: BlockShape) -> Int {
+        switch block.type {
+        case .horizontalClear, .verticalClear:
+            // Special shapes give bonus points
+            return GameTheme.GameConfig.lineScore  // Same as clearing one line
+        case .normal:
+            return block.positions.count * GameTheme.GameConfig.baseBlockScore
+        }
     }
     
     /// Calculates score for clearing lines with combo bonus

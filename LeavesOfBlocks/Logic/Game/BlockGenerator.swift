@@ -6,6 +6,13 @@ struct BlockGenerator {
     
     // MARK: - Difficulty-Based Block Generation
     
+    // Special shape generation probabilities by difficulty
+    private static let specialShapeProbability: [DifficultyMode: Double] = [
+        .easy: 0.15,      // 15% chance in easy mode
+        .moderate: 0.10,  // 10% chance in moderate mode
+        .hard: 0.05       // 5% chance in hard mode
+    ]
+    
     // MARK: - Shape Variety Helpers
     
     enum ShapeOrientation: CaseIterable {
@@ -13,18 +20,26 @@ struct BlockGenerator {
     }
     
     private static func getShapeType(_ block: BlockShape) -> String {
-        let cellCount = block.positions.count
-        
-        switch cellCount {
-        case 1: return "single"
-        case 2: return "double"
-        case 3: return "triple"
-        case 4: return "quad"
-        case 5: return "penta"
-        case 6: return "hexa" 
-        case 7: return "hepta"
-        case 9: return "nona"
-        default: return "other"
+        // Handle special shapes
+        switch block.type {
+        case .horizontalClear:
+            return "horizontal_clear"
+        case .verticalClear:
+            return "vertical_clear"
+        case .normal:
+            let cellCount = block.positions.count
+            
+            switch cellCount {
+            case 1: return "single"
+            case 2: return "double"
+            case 3: return "triple"
+            case 4: return "quad"
+            case 5: return "penta"
+            case 6: return "hexa" 
+            case 7: return "hepta"
+            case 9: return "nona"
+            default: return "other"
+            }
         }
     }
     
@@ -160,22 +175,36 @@ struct BlockGenerator {
         var blocks: [BlockShape] = []
         var usedShapeTypes: [String] = []
         var usedOrientations: [ShapeOrientation] = []
+        var hasSpecialShape = false
         
-        for _ in 0..<count {
-            let newBlock = generateVariedBlock(
-                difficulty: difficulty,
-                excludeShapeTypes: usedShapeTypes,
-                excludeOrientations: usedOrientations
-            )
+        for i in 0..<count {
+            // Check if we should generate a special shape
+            let specialProbability = specialShapeProbability[difficulty] ?? 0.1
+            let shouldGenerateSpecial = Double.random(in: 0...1) < specialProbability && !hasSpecialShape
             
-            blocks.append(newBlock)
-            
-            // Track what we've used to ensure variety
-            let shapeType = getShapeType(newBlock)
-            let orientation = getShapeOrientation(newBlock)
-            
-            usedShapeTypes.append(shapeType)
-            usedOrientations.append(orientation)
+            if shouldGenerateSpecial {
+                // Generate a special shape (50/50 between horizontal and vertical clear)
+                let isHorizontal = Bool.random()
+                let specialBlock = isHorizontal ? BlockShape.horizontalClearShape : BlockShape.verticalClearShape
+                blocks.append(specialBlock)
+                hasSpecialShape = true
+            } else {
+                // Generate a normal block
+                let newBlock = generateVariedBlock(
+                    difficulty: difficulty,
+                    excludeShapeTypes: usedShapeTypes,
+                    excludeOrientations: usedOrientations
+                )
+                
+                blocks.append(newBlock)
+                
+                // Track what we've used to ensure variety
+                let shapeType = getShapeType(newBlock)
+                let orientation = getShapeOrientation(newBlock)
+                
+                usedShapeTypes.append(shapeType)
+                usedOrientations.append(orientation)
+            }
         }
         
         return blocks

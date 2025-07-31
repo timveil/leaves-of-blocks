@@ -18,6 +18,7 @@ class GameState: ObservableObject {
     @Published var longestCombo: Int = 0
     @Published var currentCombo: Int = 0
     @Published var isNewHighScore: Bool = false
+    @Published var specialShapesUsed: Int = 0  // Track special shape usage
     
     // Difficulty mode
     @Published var currentDifficulty: DifficultyMode = .easy
@@ -83,8 +84,13 @@ class GameState: ObservableObject {
         // Update statistics
         blocksPlaced += 1
         
+        // Track special shape usage
+        if block.type != .normal {
+            specialShapesUsed += 1
+        }
+        
         // Add points for placing block
-        score += GameLogic.calculateBlockScore(blockSize: block.positions.count)
+        score += GameLogic.calculateBlockScore(block: block)
         
         // Remove the placed block from current blocks
         if let index = currentBlocks.firstIndex(where: { $0.positions == block.positions && $0.color == block.color }) {
@@ -200,6 +206,7 @@ class GameState: ObservableObject {
         longestCombo = 0
         currentCombo = 0
         isNewHighScore = false
+        specialShapesUsed = 0
         
         // Randomly pre-fill the grid with shapes
         GameLogic.randomlyFillGrid(&grid)

@@ -58,15 +58,26 @@ struct GameGridView: View {
         // Only show preview if the block can be placed at this position
         guard gameState.canPlaceBlock(draggedBlock, at: previewPos) else { return false }
         
-        // Check if this grid cell matches any block position
-        for blockPos in draggedBlock.positions {
-            let finalRow = previewPos.row + blockPos.row
-            let finalCol = previewPos.col + blockPos.col
-            if finalRow == row && finalCol == col {
-                return true
+        switch draggedBlock.type {
+        case .horizontalClear:
+            // Show preview for the entire row
+            return row == previewPos.row
+            
+        case .verticalClear:
+            // Show preview for the entire column
+            return col == previewPos.col
+            
+        case .normal:
+            // Check if this grid cell matches any block position
+            for blockPos in draggedBlock.positions {
+                let finalRow = previewPos.row + blockPos.row
+                let finalCol = previewPos.col + blockPos.col
+                if finalRow == row && finalCol == col {
+                    return true
+                }
             }
+            return false
         }
-        return false
     }
     
     private func isLineCompleteCell(row: Int, col: Int) -> Bool {
@@ -74,11 +85,22 @@ struct GameGridView: View {
               let draggedBlock = draggedBlock,
               gameState.canPlaceBlock(draggedBlock, at: previewPos) else { return false }
         
-        // Get the lines that would be completed with this placement
-        let completedLines = getCompletedLinesForPreview()
-        
-        // Check if this cell is in any completed row or column
-        return completedLines.rows.contains(row) || completedLines.cols.contains(col)
+        switch draggedBlock.type {
+        case .horizontalClear:
+            // Horizontal clear always shows the entire row as "complete"
+            return row == previewPos.row
+            
+        case .verticalClear:
+            // Vertical clear always shows the entire column as "complete"
+            return col == previewPos.col
+            
+        case .normal:
+            // Get the lines that would be completed with this placement
+            let completedLines = getCompletedLinesForPreview()
+            
+            // Check if this cell is in any completed row or column
+            return completedLines.rows.contains(row) || completedLines.cols.contains(col)
+        }
     }
     
     private func getCompletedLinesForPreview() -> (rows: Set<Int>, cols: Set<Int>) {

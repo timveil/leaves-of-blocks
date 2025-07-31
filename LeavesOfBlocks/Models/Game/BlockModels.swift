@@ -4,9 +4,30 @@ enum BlockColor: CaseIterable, Codable, Hashable {
     case blue, green, red, yellow, purple, orange, pink
 }
 
+enum BlockType: Codable, Hashable {
+    case normal
+    case horizontalClear  // Clears entire horizontal row
+    case verticalClear    // Clears entire vertical column
+}
+
 struct BlockShape: Codable, Equatable, Hashable {
     let positions: [GridPosition]
     let color: BlockColor
+    let type: BlockType
+    
+    // Convenience initializer for normal blocks
+    init(positions: [GridPosition], color: BlockColor) {
+        self.positions = positions
+        self.color = color
+        self.type = .normal
+    }
+    
+    // Full initializer for special blocks
+    init(positions: [GridPosition], color: BlockColor, type: BlockType) {
+        self.positions = positions
+        self.color = color
+        self.type = type
+    }
     
     static let allShapes: [BlockShape] = [
         // Single block
@@ -80,4 +101,17 @@ struct BlockShape: Codable, Equatable, Hashable {
             GridPosition(row: 2, col: 0), GridPosition(row: 2, col: 1), GridPosition(row: 2, col: 2)
         ], color: .green)
     ]
+    
+    // Special power-up shapes
+    static let horizontalClearShape = BlockShape(
+        positions: [GridPosition(row: 0, col: 0)],  // Single cell representation
+        color: .red,
+        type: .horizontalClear
+    )
+    
+    static let verticalClearShape = BlockShape(
+        positions: [GridPosition(row: 0, col: 0)],  // Single cell representation
+        color: .blue,
+        type: .verticalClear
+    )
 }

@@ -39,5 +39,9 @@ extension GameTheme {
         static let shadowRadius: CGFloat = 12
         static let shadowOffset: CGFloat = 6
         static let shadowOffsetSize = CGSize(width: 0, height: 6)
+        
+        // Special Block Styling
+        static let specialBlockCornerRadius: CGFloat = 12
+        static let specialBlockIconScale: CGFloat = 0.5
     }
 }

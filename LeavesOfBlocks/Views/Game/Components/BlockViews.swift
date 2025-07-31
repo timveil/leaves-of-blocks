@@ -125,41 +125,63 @@ struct BlockView: View {
     let cellSize: CGFloat
     
     var body: some View {
-        ZStack {
-            // Calculate the bounding box of the block
-            let minRow = block.positions.map(\.row).min() ?? 0
-            let maxRow = block.positions.map(\.row).max() ?? 0
-            let minCol = block.positions.map(\.col).min() ?? 0
-            let maxCol = block.positions.map(\.col).max() ?? 0
-            
-            let width = CGFloat(maxCol - minCol + 1) * cellSize
-            let height = CGFloat(maxRow - minRow + 1) * cellSize
-            
-            // Background for the block area
-            Rectangle()
-                .fill(Color.clear)
-                .frame(width: width, height: height)
-            
-            // Individual leaf-like cells of the block
-            ForEach(Array(block.positions.enumerated()), id: \.offset) { index, position in
-                RoundedRectangle(cornerRadius: 8)
+        if block.type == .horizontalClear || block.type == .verticalClear {
+            // Special power-up block rendering
+            ZStack {
+                RoundedRectangle(cornerRadius: GameTheme.Layout.specialBlockCornerRadius)
                     .fill(
                         LinearGradient(
-                            colors: [block.color.color, block.color.color.opacity(0.6)],
+                            colors: [block.color.color, block.color.color.opacity(0.7)],
                             startPoint: .topLeading,
                             endPoint: .bottomTrailing
                         )
                     )
                     .frame(width: cellSize - 2, height: cellSize - 2)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 8)
-                            .stroke(Color(red: 0.95, green: 0.9, blue: 0.8).opacity(0.5), lineWidth: 1.5)
-                    )
-                    .shadow(color: block.color.color.opacity(0.5), radius: 5, x: 0, y: 3)
-                    .offset(
-                        x: CGFloat(position.col - minCol) * cellSize - width/2 + cellSize/2,
-                        y: CGFloat(position.row - minRow) * cellSize - height/2 + cellSize/2
-                    )
+                    .shadow(color: block.color.color.opacity(0.4), radius: 4)
+                
+                // Icon overlay
+                Image(systemName: block.type == .horizontalClear ? "arrow.left.and.right" : "arrow.up.and.down")
+                    .foregroundColor(.white)
+                    .font(.system(size: cellSize * GameTheme.Layout.specialBlockIconScale, weight: .bold))
+            }
+        } else {
+            // Normal block rendering
+            ZStack {
+                // Calculate the bounding box of the block
+                let minRow = block.positions.map(\.row).min() ?? 0
+                let maxRow = block.positions.map(\.row).max() ?? 0
+                let minCol = block.positions.map(\.col).min() ?? 0
+                let maxCol = block.positions.map(\.col).max() ?? 0
+                
+                let width = CGFloat(maxCol - minCol + 1) * cellSize
+                let height = CGFloat(maxRow - minRow + 1) * cellSize
+                
+                // Background for the block area
+                Rectangle()
+                    .fill(Color.clear)
+                    .frame(width: width, height: height)
+                
+                // Individual leaf-like cells of the block
+                ForEach(Array(block.positions.enumerated()), id: \.offset) { index, position in
+                    RoundedRectangle(cornerRadius: 8)
+                        .fill(
+                            LinearGradient(
+                                colors: [block.color.color, block.color.color.opacity(0.6)],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        )
+                        .frame(width: cellSize - 2, height: cellSize - 2)
+                        .overlay(
+                            RoundedRectangle(cornerRadius: 8)
+                                .stroke(Color(red: 0.95, green: 0.9, blue: 0.8).opacity(0.5), lineWidth: 1.5)
+                        )
+                        .shadow(color: block.color.color.opacity(0.5), radius: 5, x: 0, y: 3)
+                        .offset(
+                            x: CGFloat(position.col - minCol) * cellSize - width/2 + cellSize/2,
+                            y: CGFloat(position.row - minRow) * cellSize - height/2 + cellSize/2
+                        )
+                }
             }
         }
     }
