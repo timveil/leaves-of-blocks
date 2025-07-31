@@ -1,0 +1,118 @@
+/* 
+   Localizable.strings
+   LeavesOfBlocks
+
+   Created for localization support.
+   Copyright © 2025 Tim Veil. All rights reserved.
+*/
+
+// MARK: - App Title and Branding
+"app_title" = "Leaves of Blocks";
+"app_subtitle" = "Block Puzzle Adventure";
+"app_tagline" = "Oh Me! Oh Blocks!";
+"app_description" = "An autumn-themed puzzle game where you clear lines by filling rows and columns";
+
+// MARK: - Navigation and Screens
+"how_to_play" = "How to Play";
+"game_history" = "Game History";
+"about_the_game" = "About the Game";
+"settings" = "Settings";
+"select_difficulty" = "Select Difficulty";
+"start_game" = "Start Game";
+
+// MARK: - Game UI
+"score" = "Score";
+"lines" = "Lines";
+"loading" = "Loading...";
+"game_over" = "Game Over";
+"final_score" = "Final Score";
+"view_summary" = "View Summary";
+
+// MARK: - Game Statistics
+"statistics" = "Statistics";
+"high_score" = "High Score";
+"games_played" = "Games Played";
+"average_score" = "Average Score";
+"total_blocks" = "Total Blocks";
+"blocks" = "Blocks";
+"time_played" = "Time Played"; 
+"blocks_placed" = "Blocks Placed";
+"lines_cleared" = "Lines Cleared";
+"longest_combo" = "Longest Combo";
+"difficulty" = "Difficulty";
+"best_ever" = "Best Ever";
+
+// MARK: - Settings
+"settings_description" = "Manage your game data and preferences";
+"clear_game_history" = "Clear Game History";
+"reset_all_data" = "Reset All Data";
+"clear_history_warning" = "This will permanently delete all your saved games and statistics. This action cannot be undone.";
+"reset_data_warning" = "This will permanently delete ALL game data including history, high scores, and preferences. This action cannot be undone.";
+"clear_all_game_history" = "Clear All Game History";
+"cancel" = "Cancel";
+"reset_everything" = "Reset Everything";
+"reset_complete" = "Reset Complete";
+"ok" = "OK";
+"history_cleared_message" = "Game history has been cleared successfully.";
+"all_data_reset_message" = "All game data has been reset successfully.";
+
+// MARK: - How to Play
+"the_grid" = "The Grid";
+"the_grid_description" = "You have an 8×8 grid where you'll place block shapes. Fill complete rows or columns to clear them and earn points.";
+"drag_drop" = "Drag & Drop";
+"drag_drop_description" = "Drag block shapes from the bottom area onto the grid. Blocks must fit completely within the grid boundaries.";
+"clear_lines" = "Clear Lines";
+"clear_lines_description" = "Complete horizontal rows or vertical columns disappear, earning you 100 points per line. Clear multiple lines at once for combo bonuses!";
+"game_over_rules" = "Game Over";
+"game_over_description" = "The game ends when none of your current blocks can be placed on the grid. Plan ahead to keep playing longer!";
+"pro_tips" = "Pro Tips";
+
+// MARK: - Pro Tips
+"tip_keep_empty" = "Try to keep the grid as empty as possible";
+"tip_multiple_lines" = "Look for opportunities to clear multiple lines";
+"tip_dont_rush" = "Don't rush - take time to find the best placement";
+"tip_corners_edges" = "Focus on corners and edges when the grid gets full";
+"tip_plan_ahead" = "Plan ahead by considering all three available blocks";
+
+// MARK: - Scoring Table
+"points" = "Points";
+"description" = "Description";
+"mode" = "Mode";
+
+// MARK: - About Page
+"about_game_description" = "Leaves of Blocks is a relaxing puzzle game that combines the joy of autumn with strategic block placement. Clear lines by filling rows and columns completely, and watch as your score grows with each successful move.\n\nFeatures beautiful block shapes, smooth animations, and progressively challenging gameplay across three difficulty modes.";
+"inspiration" = "Inspiration";
+"inspiration_quote" = "For Emma, Annie and Grace.  May this game serve as a momentary distraction from life's struggles, big and small.";
+"answer" = "Answer.";
+"whitman_quote_1" = "That you are here—that life exists and identity,";
+"whitman_quote_2" = "That the powerful play goes on, and you may contribute a verse..";
+"whitman_attribution" = "— Walt Whitman";
+"creator" = "Creator";
+"creator_description" = "Developed with passion by Tim Veil, a software engineer and dad who believes in creating beautiful, accessible games that bring moments of joy to everyday life.\n\nBuilt entirely with SwiftUI, this game represents a commitment to crafting polished experiences that feel natural on iOS devices.";
+"technical_details" = "Technical Details";
+"technical_description" = "Built with pure SwiftUI and Swift for a native iOS experience. This game supports both iPhone and iPad devices running iOS 18.5 or later.\n\nEnjoy ad-free gameplay with no in-app purchases. Play offline anytime, and your high scores are automatically saved for friendly competition with yourself.";
+
+// MARK: - Game Over Overlay
+"game_over_quote" = "That the powerful game has ended, and You could not contribute a block.";
+
+// MARK: - Score Display
+"last_score_format" = "Last Score: %@";
+"tap_for_history" = "Tap for History";
+
+// MARK: - App Clip Content
+"get_full_game" = "Get Full Game";
+"free_to_play" = "Free to play • No ads";
+"get_full_experience" = "Get the Full Experience";
+"download_from_app_store" = "Download from App Store";
+"free_no_purchases" = "Free to play • No ads • No in-app purchases";
+
+// MARK: - App Clip Features
+"feature_8x8_grid" = "8x8 puzzle grid";
+"feature_21_shapes" = "21 unique block shapes";
+"feature_3_difficulties" = "3 difficulty levels";
+"feature_high_scores" = "High score tracking";
+"feature_complete_gameplay" = "Complete gameplay experience";
+"feature_track_progress" = "Track your progress";
+"feature_game_history" = "Game history & statistics";
+"feature_persistent_scores" = "Persistent high scores";
+"feature_all_shapes" = "All 21 block shapes";

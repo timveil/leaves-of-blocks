@@ -27,11 +27,11 @@ struct SettingsView: View {
             VStack(spacing: GameTheme.Layout.extraLargePadding) {
                 // Header
                 VStack(spacing: GameTheme.Layout.smallPadding) {
-                    Text("Settings")
+                    Text("settings".localized)
                         .pageTitleStyle()
                         .padding(.top, GameTheme.Layout.mediumPadding)
                     
-                    Text("Manage your game data and preferences")
+                    Text("settings_description".localized)
                         .gameBodyStyle()
                         .multilineTextAlignment(.center)
                 }
@@ -40,7 +40,7 @@ struct SettingsView: View {
                 VStack(spacing: GameTheme.Layout.mediumPadding) {
                     // Clear Game History Button
                     FullWidthActionButton(
-                        title: "Clear Game History",
+                        title: "clear_game_history".localized,
                         icon: "clock.arrow.circlepath",
                         style: .secondary
                     ) {
@@ -49,7 +49,7 @@ struct SettingsView: View {
                     
                     // Reset All Data Button
                     FullWidthActionButton(
-                        title: "Reset All Data",
+                        title: "reset_all_data".localized,
                         icon: "trash.circle",
                         style: .danger
                     ) {
@@ -61,24 +61,24 @@ struct SettingsView: View {
                 Spacer()
             }
         }
-        .confirmationDialog("Clear Game History", isPresented: $showingClearHistoryConfirmation, titleVisibility: .visible) {
-            Button("Clear All Game History", role: .destructive) {
+        .confirmationDialog("clear_game_history".localized, isPresented: $showingClearHistoryConfirmation, titleVisibility: .visible) {
+            Button("clear_all_game_history".localized, role: .destructive) {
                 clearGameHistory()
             }
-            Button("Cancel", role: .cancel) { }
+            Button("cancel".localized, role: .cancel) { }
         } message: {
-            Text("This will permanently delete all your saved games and statistics. This action cannot be undone.")
+            Text("clear_history_warning".localized)
         }
-        .confirmationDialog("Reset All Data", isPresented: $showingResetAllConfirmation, titleVisibility: .visible) {
-            Button("Reset Everything", role: .destructive) {
+        .confirmationDialog("reset_all_data".localized, isPresented: $showingResetAllConfirmation, titleVisibility: .visible) {
+            Button("reset_everything".localized, role: .destructive) {
                 resetAllData()
             }
-            Button("Cancel", role: .cancel) { }
+            Button("cancel".localized, role: .cancel) { }
         } message: {
-            Text("This will permanently delete ALL game data including history, high scores, and preferences. This action cannot be undone.")
+            Text("reset_data_warning".localized)
         }
-        .alert("Reset Complete", isPresented: $showingResetCompleted) {
-            Button("OK") { }
+        .alert("reset_complete".localized, isPresented: $showingResetCompleted) {
+            Button("ok".localized) { }
         } message: {
             if let message = resetCompletedMessage {
                 Text(message)
@@ -90,14 +90,14 @@ struct SettingsView: View {
     
     private func clearGameHistory() {
         gameService.clearGameHistory()
-        resetCompletedMessage = "Game history has been cleared successfully."
+        resetCompletedMessage = "history_cleared_message".localized
         showingResetCompleted = true
     }
     
     private func resetAllData() {
         gameService.resetAllData()
         gameState.resetGame() // Reset current game state
-        resetCompletedMessage = "All data has been reset successfully."
+        resetCompletedMessage = "all_data_reset_message".localized
         showingResetCompleted = true
     }
 }

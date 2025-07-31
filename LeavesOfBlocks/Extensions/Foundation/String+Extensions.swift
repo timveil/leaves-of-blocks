@@ -39,4 +39,19 @@ extension String {
     func localized(with arguments: CVarArg...) -> String {
         return String(format: localized, arguments: arguments)
     }
+    
+    /// Returns a localized version of the string in uppercase.
+    ///
+    /// This computed property is useful for UI elements that require uppercase text
+    /// while maintaining localization support.
+    ///
+    /// ## Usage
+    /// ```swift
+    /// let title = "score".localizedUppercase
+    /// ```
+    ///
+    /// - Returns: The localized string converted to uppercase
+    var localizedUppercase: String {
+        return localized.uppercased()
+    }
 }

@@ -8,7 +8,7 @@ struct DifficultySelectionView: View {
     
     var body: some View {
         VStack(spacing: GameTheme.Layout.extraLargeSpacing) {
-            Text("Select Difficulty")
+            Text("select_difficulty".localized)
                 .font(GameTheme.Typography.fontLarge)
                 .foregroundColor(GameTheme.Colors.primaryText)
                 .tracking(0.5)
@@ -46,7 +46,7 @@ struct DifficultySelectionView: View {
             
             // Start game button using full width action button component
             FullWidthActionButton(
-                title: "Start Game",
+                title: "start_game".localized,
                 icon: "play.fill",
                 style: .primary,
                 onTap: {

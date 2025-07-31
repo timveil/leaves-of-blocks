@@ -80,12 +80,12 @@ struct ScoreDisplayView: View {
                     .padding(.top, showIcon ? 0 : GameTheme.Layout.mediumPadding)
                 
                 if let lastScore = lastScore {
-                    Text("Last Score: \(lastScore.formattedScore)")
+                    Text("last_score_format".localized(with: lastScore.formattedScore))
                         .gameCaptionStyle()
                 }
                 
                 if showHistoryHint {
-                    Text("Tap for History")
+                    Text("tap_for_history".localized)
                         .gameCaptionStyle(color: GameTheme.Colors.accent.opacity(0.7))
                         .padding(.bottom, GameTheme.Layout.mediumPadding)
                 }

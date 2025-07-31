@@ -14,7 +14,7 @@ struct AboutView: View {
                     VStack(spacing: GameTheme.Layout.largePadding) {
                     // Header
                     VStack(spacing: GameTheme.Layout.mediumSpacing) {
-                        Text("About the Game")
+                        Text("about_the_game".localized)
                             .pageTitleStyle()
                             .padding(.top, GameTheme.Layout.mediumPadding)
                     }
@@ -24,18 +24,18 @@ struct AboutView: View {
                 // About the Game
                 VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
                  
-                    Text("Leaves of Blocks is a relaxing puzzle game that combines the joy of autumn with strategic block placement. Clear lines by filling rows and columns completely, and watch as your score grows with each successful move.\n\nFeatures beautiful block shapes, smooth animations, and progressively challenging gameplay across three difficulty modes.")
+                    Text("about_game_description".localized)
                         .sectionTextStyle(color: GameTheme.Colors.secondaryText)
                         .lineSpacing(6)
                 }
                 
                 // Inspiration - Custom styled section
                 VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
-                    Text("Inspiration")
+                    Text("inspiration".localized)
                         .sectionHeaderStyle()
                     
                     VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
-                        Text("For Emma, Annie and Grace.  May this game serve as a momentary distraction from life's struggles, big and small.")
+                        Text("inspiration_quote".localized)
                             .sectionTextStyle(color: GameTheme.Colors.secondaryText)
                             .lineSpacing(6)
                             .padding(.bottom, GameTheme.Layout.mediumSpacing)
@@ -44,18 +44,18 @@ struct AboutView: View {
                         VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
                             // Quote text
                             VStack(alignment: .leading, spacing: GameTheme.Layout.smallSpacing) {
-                                Text("Answer.")
+                                Text("answer".localized)
                                     .font(.system(size: 18, weight: .medium, design: .serif))
                                     .foregroundColor(GameTheme.Colors.primaryText)
                                     .italic()
                                 
-                                Text("That you are here—that life exists and identity,")
+                                Text("whitman_quote_1".localized)
                                     .font(.system(size: 18, weight: .regular, design: .serif))
                                     .foregroundColor(GameTheme.Colors.primaryText)
                                     .italic()
                                     .lineSpacing(4)
                                 
-                                Text("That the powerful play goes on, and you may contribute a verse..")
+                                Text("whitman_quote_2".localized)
                                     .font(.system(size: 18, weight: .regular, design: .serif))
                                     .foregroundColor(GameTheme.Colors.primaryText)
                                     .italic()
@@ -65,7 +65,7 @@ struct AboutView: View {
                             // Attribution
                             HStack {
                                 Spacer()
-                                Text("— Walt Whitman")
+                                Text("whitman_attribution".localized)
                                     .font(.system(size: 14, weight: .medium, design: .serif))
                                     .foregroundColor(GameTheme.Colors.secondaryText)
                             }

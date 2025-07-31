@@ -31,7 +31,7 @@ struct StatsSummaryView: View {
                     .font(.system(size: 18, weight: .semibold))
                     .foregroundColor(GameTheme.Colors.buttonText)
                 
-                Text("Statistics")
+                Text("statistics".localized)
                     .font(.system(size: 20, weight: .bold))
                     .foregroundColor(GameTheme.Colors.buttonText)
             }
@@ -52,7 +52,7 @@ struct StatsSummaryView: View {
                 HStack(spacing: 0) {
                     StatItemView(
                         icon: "crown.fill",
-                        title: "High Score",
+                        title: "high_score".localized,
                         value: highScore.formattedScore,
                         color: GameTheme.Colors.accent,
                         alignment: .center
@@ -64,7 +64,7 @@ struct StatsSummaryView: View {
                     
                     StatItemView(
                         icon: "gamecontroller.fill",
-                        title: "Games Played",
+                        title: "games_played".localized,
                         value: totalGames.formattedScore,
                         color: GameTheme.Colors.blockBlue,
                         alignment: .center
@@ -78,7 +78,7 @@ struct StatsSummaryView: View {
                 HStack(spacing: 0) {
                     StatItemView(
                         icon: "chart.line.uptrend.xyaxis",
-                        title: "Average Score",
+                        title: "average_score".localized,
                         value: averageScore.formattedScore,
                         color: GameTheme.Colors.blockGreen,
                         alignment: .center
@@ -90,7 +90,7 @@ struct StatsSummaryView: View {
                     
                     StatItemView(
                         icon: "square.stack.3d.up.fill",
-                        title: "Total Blocks",
+                        title: "total_blocks".localized,
                         value: totalBlocksPlaced.formattedScore,
                         color: GameTheme.Colors.blockOrange,
                         alignment: .center
@@ -183,7 +183,7 @@ struct GameSessionRow: View {
                             .foregroundColor(GameTheme.Colors.primaryText)
                     }
                     
-                    Text("SCORE")
+                    Text("score".localizedUppercase)
                         .font(.system(size: 10, weight: .medium))
                         .foregroundColor(GameTheme.Colors.secondaryText)
                 }
@@ -192,9 +192,9 @@ struct GameSessionRow: View {
             // Stats row - more compact
             HStack {
                 HStack(spacing: GameTheme.Layout.mediumSpacing) {
-                    GameStatChip(title: "Blocks", value: session.blocksPlaced.formattedScore, icon: "cube.fill", color: GameTheme.Colors.blockBlue, style: .compact)
+                    GameStatChip(title: "blocks".localized, value: session.blocksPlaced.formattedScore, icon: "cube.fill", color: GameTheme.Colors.blockBlue, style: .compact)
                         .fixedSize(horizontal: true, vertical: false)
-                    GameStatChip(title: "Lines", value: session.linesCleared.formattedScore, icon: "square.grid.3x3.fill", color: GameTheme.Colors.blockGreen, style: .compact)
+                    GameStatChip(title: "lines".localized, value: session.linesCleared.formattedScore, icon: "square.grid.3x3.fill", color: GameTheme.Colors.blockGreen, style: .compact)
                         .fixedSize(horizontal: true, vertical: false)
                 }
                 

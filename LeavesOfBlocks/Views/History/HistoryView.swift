@@ -47,7 +47,7 @@ struct HistoryView: View {
         BaseScreenView {
             VStack(spacing: GameTheme.Layout.mediumSpacing) {
                 // Header
-                Text("Game History")
+                Text("game_history".localized)
                     .pageTitleStyle()
                     .padding(.top, GameTheme.Layout.mediumPadding)
                 

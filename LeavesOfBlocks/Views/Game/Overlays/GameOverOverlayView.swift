@@ -12,14 +12,14 @@ struct GameOverOverlayView: View {
             // Header section with new high score celebration
             VStack(spacing: GameTheme.Layout.mediumSpacing) {
                 
-                Text("Game Over")
+                Text("game_over".localized)
                     .font(GameTheme.Typography.fontXLarge)
                     .foregroundColor(GameTheme.Colors.primaryText)
                     .tracking(1)
                     .shadow(color: Color.black.opacity(0.2), radius: 2, x: 0, y: 1)
                 
                 // Body text placeholder
-                Text("That the powerful game has ended, and You could not contribute a block.")
+                Text("game_over_quote".localized)
                     .font(GameTheme.Typography.fontSmall)
                     .foregroundColor(GameTheme.Colors.secondaryText)
                     .multilineTextAlignment(.center)
@@ -28,13 +28,13 @@ struct GameOverOverlayView: View {
             
             // Score section with enhanced 3D effect
             ScoreDisplayView(
-                title: "Final Score",
+                title: "final_score".localized,
                 score: gameState.score
             )
             
             // Enhanced button using FullWidthActionButton component
             FullWidthActionButton(
-                title: "View Summary",
+                title: "view_summary".localized,
                 icon: "chart.bar.fill",
                 style: .primary,
                 onTap: onViewSummary
