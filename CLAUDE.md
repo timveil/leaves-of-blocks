@@ -35,6 +35,38 @@ This is a SwiftUI iOS game called "Leaves of Blocks" - a Block Blast-style puzzl
 - Automatically creates iPhone 16 Pro simulator for testing
 - Runs on push to main and pull requests
 
+### Version Management
+The project uses **Xcode's built-in "Manage Version and Build Number"** feature for automatic build number management:
+
+#### Current Configuration
+- **Marketing Version (CFBundleShortVersionString)**: 1.0 (set in project settings)
+- **Build Number (CFBundleVersion/CURRENT_PROJECT_VERSION)**: 1 (set in project settings)
+- **Main App Bundle ID**: `timothy.veil.LeavesOfBlocks`
+- **App Clip Bundle ID**: `timothy.veil.LeavesOfBlocks.Clip`
+
+#### How It Works
+- **Automatic Increment**: During App Store upload, Xcode detects invalid/duplicate build numbers and automatically increments them
+- **Archive-Only Changes**: Build numbers are updated only in the uploaded archive, not in source code
+- **Multi-Target Support**: Automatically syncs build numbers across main app, App Clip, and all embedded content
+- **No Configuration Required**: Feature is enabled by default during distribution
+
+#### Version Usage in Code
+The app reads version information through `Bundle+Extensions.swift`:
+- **Display Version**: Used in About screen (`Bundle.main.versionAndBuild`)
+- **Logging**: Used in `UserPreferences.swift` for app version tracking
+- **Safe Fallbacks**: Extensions provide default values if bundle info is unavailable
+
+#### Benefits
+- **Zero maintenance** - No custom scripts or manual increment needed
+- **Error prevention** - Eliminates duplicate build number submission failures
+- **Multi-target compatibility** - Handles App Clip and main app synchronization automatically
+- **CI/CD friendly** - Works seamlessly with GitHub Actions workflow
+
+#### Important Notes
+- Project files will show outdated build numbers after App Store uploads
+- Version information in source code remains unchanged
+- Feature can be disabled during export if needed (uncheck "Manage Version and Build Number")
+
 ## Architecture
 
 ### Navigation Flow
