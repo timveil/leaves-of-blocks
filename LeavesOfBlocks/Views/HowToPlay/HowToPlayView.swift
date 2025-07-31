@@ -144,6 +144,47 @@ struct HowToPlayView: View {
                             )
                         }
                         
+                        // Block Shapes Section - Table Style
+                        VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
+                            
+                            VStack(spacing: 0) {
+                                // Table Header
+                                ShapesTableHeaderView()
+                                
+                                ShapesTableRowView(
+                                    shapeType: .normalBlocks,
+                                    description: "Standard blocks with various shapes and sizes (1-9 cells). Place them to fill the grid and clear lines.",
+                                    isFirst: false
+                                )
+                                
+                                ShapesTableRowView(
+                                    shapeType: .horizontalClear,
+                                    description: "Special red block that clears an entire horizontal row when placed. Worth 100 points.",
+                                    isFirst: false
+                                )
+                                
+                                ShapesTableRowView(
+                                    shapeType: .verticalClear,
+                                    description: "Special blue block that clears an entire vertical column when placed. Worth 100 points.",
+                                    isFirst: false
+                                )
+                                
+                                ShapesTableRowView(
+                                    shapeType: .areaClear,
+                                    description: "Special purple block that clears a 3×3 area around placement. Worth 200 points - the most powerful!",
+                                    isFirst: false
+                                )
+                            }
+                            .background(
+                                RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
+                                    .fill(GameTheme.Colors.cardBackground)
+                            )
+                            .overlay(
+                                RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
+                                    .stroke(GameTheme.Colors.gridBorder.opacity(0.3), lineWidth: 1)
+                            )
+                        }
+                        
                     }
                     
                     Spacer(minLength: GameTheme.Layout.extraLargePadding)

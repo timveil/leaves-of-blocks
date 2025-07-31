@@ -160,3 +160,188 @@ struct DifficultyTableRowView: View {
         )
     }
 }
+
+// MARK: - Shapes Table Components
+
+struct ShapesTableHeaderView: View {
+    var body: some View {
+        HStack(spacing: GameTheme.Layout.largePadding) {
+            // Shape header
+            Text("Shape")
+                .font(GameTheme.Typography.fontSmallLarge)
+                .fontWeight(.bold)
+                .foregroundColor(GameTheme.Colors.primaryText)
+                .frame(width: 100, alignment: .leading)
+            
+            // Description header
+            Text("Description")
+                .font(GameTheme.Typography.fontSmallLarge)
+                .fontWeight(.bold)
+                .foregroundColor(GameTheme.Colors.primaryText)
+                .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .padding(.horizontal, GameTheme.Layout.largePadding)
+        .padding(.vertical, GameTheme.Layout.mediumPadding)
+        .gameTableHeaderStyle()
+    }
+}
+
+struct ShapesTableRowView: View {
+    let shapeType: ShapeType
+    let description: String
+    let isFirst: Bool
+    
+    var body: some View {
+        HStack(spacing: GameTheme.Layout.largePadding) {
+            // Shape visual column
+            VStack(spacing: GameTheme.Layout.smallSpacing) {
+                shapeType.visualRepresentation
+                    .frame(height: 40)
+                
+                Text(shapeType.displayName)
+                    .font(GameTheme.Typography.fontXSmall)
+                    .fontWeight(.medium)
+                    .foregroundColor(GameTheme.Colors.primaryText)
+                    .multilineTextAlignment(.center)
+            }
+            .frame(width: 100, alignment: .center)
+            
+            // Description column
+            Text(description)
+                .font(GameTheme.Typography.fontSmall)
+                .foregroundColor(GameTheme.Colors.secondaryText)
+                .frame(maxWidth: .infinity, alignment: .leading)
+        }
+        .padding(.horizontal, GameTheme.Layout.largePadding)
+        .padding(.vertical, GameTheme.Layout.largePadding)
+        .background(shapeType.backgroundColor)
+        .overlay(
+            Rectangle()
+                .frame(height: isFirst ? 0 : 1)
+                .foregroundColor(GameTheme.Colors.gridBorder.opacity(0.2)),
+            alignment: .top
+        )
+    }
+}
+
+// MARK: - Shape Type Definition
+
+enum ShapeType {
+    case normalBlocks
+    case horizontalClear
+    case verticalClear
+    case areaClear
+    
+    var displayName: String {
+        switch self {
+        case .normalBlocks:
+            return "Normal\nBlocks"
+        case .horizontalClear:
+            return "Row Clear"
+        case .verticalClear:
+            return "Column Clear"
+        case .areaClear:
+            return "Area Clear"
+        }
+    }
+    
+    var visualRepresentation: some View {
+        switch self {
+        case .normalBlocks:
+            return AnyView(
+                // Show a mini grid pattern representing various normal blocks
+                HStack(spacing: 2) {
+                    VStack(spacing: 2) {
+                        RoundedRectangle(cornerRadius: 2)
+                            .fill(GameTheme.Colors.blockBlue.opacity(0.8))
+                            .frame(width: 8, height: 8)
+                        RoundedRectangle(cornerRadius: 2)
+                            .fill(GameTheme.Colors.blockGreen.opacity(0.8))
+                            .frame(width: 8, height: 8)
+                    }
+                    VStack(spacing: 2) {
+                        RoundedRectangle(cornerRadius: 2)
+                            .fill(GameTheme.Colors.blockRed.opacity(0.8))
+                            .frame(width: 8, height: 8)
+                        RoundedRectangle(cornerRadius: 2)
+                            .fill(GameTheme.Colors.blockYellow.opacity(0.8))
+                            .frame(width: 8, height: 8)
+                    }
+                    RoundedRectangle(cornerRadius: 2)
+                        .fill(GameTheme.Colors.blockPurple.opacity(0.8))
+                        .frame(width: 8, height: 16)
+                }
+            )
+        case .horizontalClear:
+            return AnyView(
+                ZStack {
+                    RoundedRectangle(cornerRadius: 6)
+                        .fill(
+                            LinearGradient(
+                                colors: [GameTheme.Colors.blockRed, GameTheme.Colors.blockRed.opacity(0.7)],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        )
+                        .frame(width: 30, height: 30)
+                        .shadow(color: GameTheme.Colors.blockRed.opacity(0.4), radius: 3)
+                    
+                    Image(systemName: "arrow.left.and.right")
+                        .foregroundColor(.white)
+                        .font(.system(size: 14, weight: .bold))
+                }
+            )
+        case .verticalClear:
+            return AnyView(
+                ZStack {
+                    RoundedRectangle(cornerRadius: 6)
+                        .fill(
+                            LinearGradient(
+                                colors: [GameTheme.Colors.blockBlue, GameTheme.Colors.blockBlue.opacity(0.7)],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        )
+                        .frame(width: 30, height: 30)
+                        .shadow(color: GameTheme.Colors.blockBlue.opacity(0.4), radius: 3)
+                    
+                    Image(systemName: "arrow.up.and.down")
+                        .foregroundColor(.white)
+                        .font(.system(size: 14, weight: .bold))
+                }
+            )
+        case .areaClear:
+            return AnyView(
+                ZStack {
+                    RoundedRectangle(cornerRadius: 6)
+                        .fill(
+                            LinearGradient(
+                                colors: [GameTheme.Colors.blockPurple, GameTheme.Colors.blockPurple.opacity(0.7)],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            )
+                        )
+                        .frame(width: 30, height: 30)
+                        .shadow(color: GameTheme.Colors.blockPurple.opacity(0.4), radius: 3)
+                    
+                    Image(systemName: "square.3.layers.3d")
+                        .foregroundColor(.white)
+                        .font(.system(size: 14, weight: .bold))
+                }
+            )
+        }
+    }
+    
+    var backgroundColor: Color {
+        switch self {
+        case .normalBlocks:
+            return GameTheme.Colors.secondaryText.opacity(0.05)
+        case .horizontalClear:
+            return GameTheme.Colors.blockRed.opacity(0.05)
+        case .verticalClear:
+            return GameTheme.Colors.blockBlue.opacity(0.05)
+        case .areaClear:
+            return GameTheme.Colors.blockPurple.opacity(0.05)
+        }
+    }
+}
