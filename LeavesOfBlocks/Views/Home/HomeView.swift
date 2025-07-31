@@ -12,7 +12,7 @@ struct HomeView: View {
     var body: some View {
         BaseScreenView(showsStatusBar: false) {
             VStack(spacing: GameTheme.Layout.extraLargeSpacing) {
-                Spacer(minLength: 20)
+                //Spacer(minLength: 20)
                 
                 // High Score Display - Now tappable for history
                 ScoreDisplayView(
@@ -31,7 +31,7 @@ struct HomeView: View {
                     onStartGame: onStartGame
                 )
                 
-                Spacer(minLength: 150)
+                //Spacer(minLength: 100)
             }
             .padding(.horizontal, GameTheme.Layout.extraLargePadding)
             .padding(.bottom, GameTheme.Layout.extraLargePadding)

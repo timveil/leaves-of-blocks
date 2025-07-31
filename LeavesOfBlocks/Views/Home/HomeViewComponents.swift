@@ -42,7 +42,7 @@ struct DifficultySelectionView: View {
                 }
             }
             
-            Spacer().frame(maxHeight: 30)
+            Spacer().frame(maxHeight: 15)
             
             // Start game button using premium button component
             PremiumButton(
