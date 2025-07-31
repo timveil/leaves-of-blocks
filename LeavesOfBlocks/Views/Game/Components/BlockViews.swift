@@ -96,13 +96,10 @@ struct CurrentBlocksView: View {
     
     // Calculate optimal cell size for each block to fit in its slot
     private func scaledCellSize(for block: BlockShape) -> CGFloat {
-        let minRow = block.positions.map(\.row).min() ?? 0
-        let maxRow = block.positions.map(\.row).max() ?? 0
-        let minCol = block.positions.map(\.col).min() ?? 0
-        let maxCol = block.positions.map(\.col).max() ?? 0
+        let bounds = block.getBounds()
         
-        let blockWidth = CGFloat(maxCol - minCol + 1)
-        let blockHeight = CGFloat(maxRow - minRow + 1)
+        let blockWidth = CGFloat(bounds.width)
+        let blockHeight = CGFloat(bounds.height)
         
         // Calculate scale to fit within slot, leaving some padding
         let availableWidth = slotWidth * 0.8 // 80% of slot width for padding
@@ -148,13 +145,10 @@ struct BlockView: View {
             // Normal block rendering
             ZStack {
                 // Calculate the bounding box of the block
-                let minRow = block.positions.map(\.row).min() ?? 0
-                let maxRow = block.positions.map(\.row).max() ?? 0
-                let minCol = block.positions.map(\.col).min() ?? 0
-                let maxCol = block.positions.map(\.col).max() ?? 0
+                let bounds = block.getBounds()
                 
-                let width = CGFloat(maxCol - minCol + 1) * cellSize
-                let height = CGFloat(maxRow - minRow + 1) * cellSize
+                let width = CGFloat(bounds.width) * cellSize
+                let height = CGFloat(bounds.height) * cellSize
                 
                 // Background for the block area
                 Rectangle()
@@ -178,8 +172,8 @@ struct BlockView: View {
                         )
                         .shadow(color: block.color.color.opacity(0.5), radius: 5, x: 0, y: 3)
                         .offset(
-                            x: CGFloat(position.col - minCol) * cellSize - width/2 + cellSize/2,
-                            y: CGFloat(position.row - minRow) * cellSize - height/2 + cellSize/2
+                            x: CGFloat(position.col - bounds.minCol) * cellSize - width/2 + cellSize/2,
+                            y: CGFloat(position.row - bounds.minRow) * cellSize - height/2 + cellSize/2
                         )
                 }
             }
@@ -228,14 +222,10 @@ private struct DraggableBlockView: View {
     }
     
     private func getBlockWidth() -> CGFloat {
-        let minCol = block.positions.map(\.col).min() ?? 0
-        let maxCol = block.positions.map(\.col).max() ?? 0
-        return CGFloat(maxCol - minCol + 1) * cellSize
+        return CGFloat(block.getBounds().width) * cellSize
     }
     
     private func getBlockHeight() -> CGFloat {
-        let minRow = block.positions.map(\.row).min() ?? 0
-        let maxRow = block.positions.map(\.row).max() ?? 0
-        return CGFloat(maxRow - minRow + 1) * cellSize
+        return CGFloat(block.getBounds().height) * cellSize
     }
 }

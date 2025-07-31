@@ -10,15 +10,26 @@ class GameService: ObservableObject {
     // MARK: - Properties
     
     @Published var currentGameTime: TimeInterval = 0
-    private var gameTimer: Timer?
+    private var _gameTimer: Timer?
     private var gameStartTime: Date = Date()
+    private var isTimerActive: Bool = false
     
     private let coreDataManager = CoreDataManager.shared
+    
+    // MARK: - Timer Property with Safe Management
+    
+    private var gameTimer: Timer? {
+        get { _gameTimer }
+        set {
+            _gameTimer?.invalidate()
+            _gameTimer = newValue
+        }
+    }
     
     // MARK: - Initialization
     
     init() {
-        startGameTimer()
+        // Timer will be started lazily when needed
     }
     
     deinit {
@@ -29,7 +40,12 @@ class GameService: ObservableObject {
     
     /// Starts the game timer to track elapsed time
     func startGameTimer() {
+        guard !isTimerActive else { return } // Prevent duplicate timers
+        
         gameStartTime = Date()
+        currentGameTime = 0
+        isTimerActive = true
+        
         gameTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
             DispatchQueue.main.async {
                 self.currentGameTime = Date().timeIntervalSince(self.gameStartTime)
@@ -39,8 +55,8 @@ class GameService: ObservableObject {
     
     /// Stops the game timer
     func stopGameTimer() {
-        gameTimer?.invalidate()
-        gameTimer = nil
+        gameTimer = nil // This will automatically invalidate due to our custom setter
+        isTimerActive = false
     }
     
     /// Resets the game timer

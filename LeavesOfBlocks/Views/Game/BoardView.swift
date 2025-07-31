@@ -47,6 +47,7 @@ struct BoardView: View {
     let cellSize: CGFloat = 40
     let onViewSummary: () -> Void
     
+    // Computed property - simple calculation, no need for lazy loading in SwiftUI
     private var gameWidth: CGFloat {
         (8 * cellSize) + (7 * GridConstants.cellSpacing) + (2 * GridConstants.gridPadding)
     }
@@ -309,20 +310,27 @@ struct BoardView: View {
 
 // MARK: - Block Model Extensions
 extension BlockShape {
-    /// Returns the bounding box of the block
+    /// Returns the bounding box of the block using a single-pass algorithm
     func getBounds() -> (minRow: Int, maxRow: Int, minCol: Int, maxCol: Int, width: Int, height: Int) {
-        let minRow = positions.map(\.row).min() ?? 0
-        let maxRow = positions.map(\.row).max() ?? 0
-        let minCol = positions.map(\.col).min() ?? 0
-        let maxCol = positions.map(\.col).max() ?? 0
+        guard let first = positions.first else {
+            return (minRow: 0, maxRow: 0, minCol: 0, maxCol: 0, width: 0, height: 0)
+        }
+        
+        // Single-pass calculation for better performance
+        let bounds = positions.reduce((first.row, first.row, first.col, first.col)) { bounds, position in
+            (min(bounds.0, position.row),    // minRow
+             max(bounds.1, position.row),    // maxRow
+             min(bounds.2, position.col),    // minCol
+             max(bounds.3, position.col))    // maxCol
+        }
         
         return (
-            minRow: minRow,
-            maxRow: maxRow,
-            minCol: minCol,
-            maxCol: maxCol,
-            width: maxCol - minCol + 1,
-            height: maxRow - minRow + 1
+            minRow: bounds.0,
+            maxRow: bounds.1,
+            minCol: bounds.2,
+            maxCol: bounds.3,
+            width: bounds.3 - bounds.2 + 1,
+            height: bounds.1 - bounds.0 + 1
         )
     }
 }

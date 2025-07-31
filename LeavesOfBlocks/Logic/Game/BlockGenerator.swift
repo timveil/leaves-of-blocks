@@ -44,13 +44,10 @@ struct BlockGenerator {
     }
     
     private static func getShapeOrientation(_ block: BlockShape) -> ShapeOrientation {
-        let minRow = block.positions.map(\.row).min() ?? 0
-        let maxRow = block.positions.map(\.row).max() ?? 0
-        let minCol = block.positions.map(\.col).min() ?? 0
-        let maxCol = block.positions.map(\.col).max() ?? 0
+        let bounds = block.getBounds()
         
-        let width = maxCol - minCol + 1
-        let height = maxRow - minRow + 1
+        let width = bounds.width
+        let height = bounds.height
         
         if width == height {
             return .square
