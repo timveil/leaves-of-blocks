@@ -67,6 +67,10 @@ struct GameGridView: View {
             // Show preview for the entire column
             return col == previewPos.col
             
+        case .areaClear:
+            // Show preview for 3x3 area centered on placement position
+            return isWithinAreaClearRange(row: row, col: col, center: previewPos)
+            
         case .normal:
             // Check if this grid cell matches any block position
             for blockPos in draggedBlock.positions {
@@ -93,6 +97,10 @@ struct GameGridView: View {
         case .verticalClear:
             // Vertical clear always shows the entire column as "complete"
             return col == previewPos.col
+            
+        case .areaClear:
+            // Area clear always shows the 3x3 area as "complete"
+            return isWithinAreaClearRange(row: row, col: col, center: previewPos)
             
         case .normal:
             // Get the lines that would be completed with this placement
@@ -141,6 +149,12 @@ struct GameGridView: View {
         }
         
         return (rows: completedRows, cols: completedCols)
+    }
+    
+    private func isWithinAreaClearRange(row: Int, col: Int, center: GridPosition) -> Bool {
+        let rowDistance = abs(row - center.row)
+        let colDistance = abs(col - center.col)
+        return rowDistance <= 1 && colDistance <= 1
     }
 }
 

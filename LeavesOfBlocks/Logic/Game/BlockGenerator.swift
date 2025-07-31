@@ -4,6 +4,24 @@ import Foundation
 
 struct BlockGenerator {
     
+    // MARK: - Special Block Types
+    
+    /// Enumeration of available special block types for cleaner generation logic
+    private enum SpecialBlockType: CaseIterable {
+        case horizontal, vertical, area
+        
+        var blockShape: BlockShape {
+            switch self {
+            case .horizontal:
+                return BlockShape.horizontalClearShape
+            case .vertical:
+                return BlockShape.verticalClearShape
+            case .area:
+                return BlockShape.areaClearShape
+            }
+        }
+    }
+    
     // MARK: - Difficulty-Based Block Generation
     
     // Special shape generation probabilities by difficulty
@@ -26,6 +44,8 @@ struct BlockGenerator {
             return "horizontal_clear"
         case .verticalClear:
             return "vertical_clear"
+        case .areaClear:
+            return "area_clear"
         case .normal:
             let cellCount = block.positions.count
             
@@ -180,9 +200,8 @@ struct BlockGenerator {
             let shouldGenerateSpecial = Double.random(in: 0...1) < specialProbability && !hasSpecialShape
             
             if shouldGenerateSpecial {
-                // Generate a special shape (50/50 between horizontal and vertical clear)
-                let isHorizontal = Bool.random()
-                let specialBlock = isHorizontal ? BlockShape.horizontalClearShape : BlockShape.verticalClearShape
+                // Generate a special shape (equal chance between all special types)
+                let specialBlock = SpecialBlockType.allCases.randomElement()!.blockShape
                 blocks.append(specialBlock)
                 hasSpecialShape = true
             } else {

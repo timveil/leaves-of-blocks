@@ -122,7 +122,7 @@ struct BlockView: View {
     let cellSize: CGFloat
     
     var body: some View {
-        if block.type == .horizontalClear || block.type == .verticalClear {
+        if block.type == .horizontalClear || block.type == .verticalClear || block.type == .areaClear {
             // Special power-up block rendering
             ZStack {
                 RoundedRectangle(cornerRadius: GameTheme.Layout.specialBlockCornerRadius)
@@ -137,7 +137,7 @@ struct BlockView: View {
                     .shadow(color: block.color.color.opacity(0.4), radius: 4)
                 
                 // Icon overlay
-                Image(systemName: block.type == .horizontalClear ? "arrow.left.and.right" : "arrow.up.and.down")
+                Image(systemName: block.type.systemIconName)
                     .foregroundColor(.white)
                     .font(.system(size: cellSize * GameTheme.Layout.specialBlockIconScale, weight: .bold))
             }

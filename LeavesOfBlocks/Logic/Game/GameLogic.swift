@@ -10,15 +10,9 @@ class GameLogic {
     /// Validates if a block can be placed at the specified position
     static func canPlaceBlock(_ block: BlockShape, at gridPosition: GridPosition, in grid: [[GridCell]]) -> Bool {
         switch block.type {
-        case .horizontalClear:
-            // Can place horizontal clear if the row is valid
-            return gridPosition.row >= 0 && gridPosition.row < GameTheme.GameConfig.gridSize &&
-                   gridPosition.col >= 0 && gridPosition.col < GameTheme.GameConfig.gridSize
-            
-        case .verticalClear:
-            // Can place vertical clear if the column is valid
-            return gridPosition.col >= 0 && gridPosition.col < GameTheme.GameConfig.gridSize &&
-                   gridPosition.row >= 0 && gridPosition.row < GameTheme.GameConfig.gridSize
+        case .horizontalClear, .verticalClear, .areaClear:
+            // All special blocks require a valid grid position
+            return isValidGridPosition(gridPosition)
             
         case .normal:
             // Normal block placement validation
@@ -59,6 +53,25 @@ class GameLogic {
             if targetCol >= 0 && targetCol < GameTheme.GameConfig.gridSize {
                 for row in 0..<GameTheme.GameConfig.gridSize {
                     grid[row][targetCol] = GridCell()  // Reset to default state
+                }
+            }
+            
+        case .areaClear:
+            // Clear a 3x3 area centered on the placement position
+            let centerRow = gridPosition.row
+            let centerCol = gridPosition.col
+            
+            // Clear 3x3 area (one cell in each direction from center)
+            for rowOffset in -1...1 {
+                for colOffset in -1...1 {
+                    let targetRow = centerRow + rowOffset
+                    let targetCol = centerCol + colOffset
+                    let targetPosition = GridPosition(row: targetRow, col: targetCol)
+                    
+                    // Only clear cells that are within grid bounds
+                    if isValidGridPosition(targetPosition) {
+                        grid[targetRow][targetCol] = GridCell()  // Reset to default state
+                    }
                 }
             }
             
@@ -161,6 +174,9 @@ class GameLogic {
         case .horizontalClear, .verticalClear:
             // Special shapes give bonus points
             return GameTheme.GameConfig.lineScore  // Same as clearing one line
+        case .areaClear:
+            // Area clear gives higher bonus points (equivalent to clearing 2 lines)
+            return GameTheme.GameConfig.lineScore * 2
         case .normal:
             return block.positions.count * GameTheme.GameConfig.baseBlockScore
         }
@@ -232,5 +248,12 @@ class GameLogic {
         }
         
         return false
+    }
+    
+    // MARK: - Helper Methods
+    
+    /// Validates if a grid position is within valid bounds
+    private static func isValidGridPosition(_ position: GridPosition) -> Bool {
+        return position.row.isValidGridIndex && position.col.isValidGridIndex
     }
 }

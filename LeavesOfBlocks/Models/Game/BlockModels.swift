@@ -23,6 +23,30 @@ enum BlockType: Codable, Hashable {
     case horizontalClear
     /// Special block that clears an entire vertical column when placed
     case verticalClear
+    /// Special block that clears a 3x3 area centered on placement when placed
+    ///
+    /// When this block type is placed on the grid, it clears all cells in a 3x3 area
+    /// centered on the placement position. The clearing effect extends one cell in
+    /// each direction (horizontal, vertical, and diagonal) from the center position.
+    /// Cells outside the grid boundaries are safely ignored during the clearing process.
+    ///
+    /// - Note: This block type awards double the points of single-line clearing blocks
+    /// - Visual Representation: Purple block with a 3D layered cube icon (`square.3.layers.3d`)
+    case areaClear
+    
+    /// Returns the system icon name for special blocks
+    var systemIconName: String {
+        switch self {
+        case .horizontalClear:
+            return "arrow.left.and.right"
+        case .verticalClear:
+            return "arrow.up.and.down"
+        case .areaClear:
+            return "square.3.layers.3d"
+        case .normal:
+            return ""
+        }
+    }
 }
 
 // MARK: - Block Shape Model
@@ -184,5 +208,27 @@ struct BlockShape: Codable, Equatable, Hashable {
         positions: [GridPosition(row: 0, col: 0)],  // Single cell representation
         color: .blue,
         type: .verticalClear
+    )
+    
+    /// Special power-up block that clears a 3x3 area centered on placement.
+    ///
+    /// When placed, this block clears all cells in a 3x3 area centered on the placement position.
+    /// The clearing effect extends one cell in each direction from the center, creating a 3x3 grid
+    /// of cleared cells. Cells outside the grid boundaries are safely ignored during clearing.
+    ///
+    /// ## Visual Characteristics
+    /// - **Color**: Purple (`BlockColor.purple`)
+    /// - **Icon**: 3D layered cube (`square.3.layers.3d`)
+    /// - **Size**: Single cell representation with special visual effects
+    ///
+    /// ## Scoring
+    /// Awards 200 points when placed (equivalent to clearing 2 lines), making it more valuable
+    /// than single-line clearing blocks but requiring strategic placement for maximum effectiveness.
+    ///
+    /// - Note: This is the most powerful special block, capable of clearing up to 9 cells at once
+    static let areaClearShape = BlockShape(
+        positions: [GridPosition(row: 0, col: 0)],  // Single cell representation
+        color: .purple,
+        type: .areaClear
     )
 }
