@@ -63,7 +63,7 @@ struct LaunchScreen: View {
                     // App title
                     VStack(spacing: 8) {
                         Text("Leaves of Blocks")
-                            .font(GameTheme.Typography.largeDisplay)
+                            .font(GameTheme.Typography.fontXLarge)
                             .foregroundStyle(GameTheme.Gradients.text)
                             .scaleEffect(isAnimated ? 1.0 : 0.8)
                             .opacity(isAnimated ? 1.0 : 0.0)
@@ -74,7 +74,7 @@ struct LaunchScreen: View {
                             )
                         
                         Text("Block Puzzle Adventure")
-                            .font(GameTheme.Typography.smallBody)
+                            .font(GameTheme.Typography.fontXXSmall)
                             .foregroundColor(GameTheme.Colors.secondaryText)
                             .opacity(isAnimated ? 0.8 : 0.0)
                             .animation(
@@ -105,7 +105,7 @@ struct LaunchScreen: View {
                     }
                     
                     Text("Loading...")
-                        .font(GameTheme.Typography.compactBody)
+                        .font(GameTheme.Typography.fontXSmall)
                         .foregroundColor(GameTheme.Colors.tertiaryText)
                         .opacity(isAnimated ? 0.6 : 0.0)
                         .animation(

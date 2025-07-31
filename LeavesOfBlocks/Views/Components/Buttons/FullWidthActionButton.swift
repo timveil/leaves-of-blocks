@@ -50,7 +50,7 @@ struct FullWidthActionButton: View {
                     .font(.system(size: 16, weight: .semibold))
                 
                 Text(title)
-                    .font(GameTheme.Typography.standardBody)
+                    .font(GameTheme.Typography.fontSmall)
                     .fontWeight(.medium)
             }
             .frame(maxWidth: .infinity)

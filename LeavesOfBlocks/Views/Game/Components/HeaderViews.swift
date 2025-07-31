@@ -5,7 +5,7 @@ import SwiftUI
 struct SimpleAppTitleView: View {
     var body: some View {
         Text("Leaves of Blocks")
-            .font(GameTheme.Typography.largeDisplay)
+            .font(GameTheme.Typography.fontXLarge)
             .foregroundColor(GameTheme.Colors.primaryText)
             .padding(.vertical, GameTheme.Layout.smallPadding)
     }
@@ -20,10 +20,10 @@ struct SimpleScoreView: View {
                 // Current Score
                 VStack(alignment: .leading, spacing: 2) {
                     Text(gameState.score.formattedScore)
-                        .font(GameTheme.Typography.regularDisplay)
+                        .font(GameTheme.Typography.fontMediumLarge)
                         .foregroundColor(GameTheme.Colors.primaryText)
                     Text("Score")
-                        .font(GameTheme.Typography.smallBody)
+                        .font(GameTheme.Typography.fontXXSmall)
                         .foregroundColor(GameTheme.Colors.secondaryText)
                 }
                 
@@ -32,10 +32,10 @@ struct SimpleScoreView: View {
                 // Lines Cleared Counter
                 VStack(alignment: .trailing, spacing: 2) {
                     Text(gameState.linesCleared.formattedScore)
-                        .font(GameTheme.Typography.regularDisplay)
+                        .font(GameTheme.Typography.fontMediumLarge)
                         .foregroundColor(GameTheme.Colors.accent)
                     Text("Lines")
-                        .font(GameTheme.Typography.smallBody)
+                        .font(GameTheme.Typography.fontXXSmall)
                         .foregroundColor(GameTheme.Colors.secondaryText)
                 }
             }

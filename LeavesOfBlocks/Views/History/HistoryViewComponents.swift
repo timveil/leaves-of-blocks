@@ -161,11 +161,11 @@ struct GameSessionRow: View {
             HStack {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(session.formattedDate)
-                        .font(GameTheme.Typography.standardBody)
+                        .font(GameTheme.Typography.fontSmall)
                         .foregroundColor(GameTheme.Colors.primaryText)
                     
                     Text(session.formattedGameTime)
-                        .font(GameTheme.Typography.compactBody)
+                        .font(GameTheme.Typography.fontXSmall)
                         .foregroundColor(GameTheme.Colors.secondaryText)
                 }
                 
@@ -179,7 +179,7 @@ struct GameSessionRow: View {
                                 .font(.system(size: 12))
                         }
                         Text(session.score.formattedScore)
-                            .font(GameTheme.Typography.regularDisplay)
+                            .font(GameTheme.Typography.fontMediumLarge)
                             .foregroundColor(GameTheme.Colors.primaryText)
                     }
                     

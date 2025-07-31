@@ -67,13 +67,13 @@ struct ScoreDisplayView: View {
             VStack(spacing: GameTheme.Layout.mediumSpacing) {
                 if showIcon, let iconName = iconName {
                     Image(systemName: iconName)
-                        .font(GameTheme.Typography.standardBody)
+                        .font(GameTheme.Typography.fontSmall)
                         .foregroundColor(GameTheme.Colors.accent)
                         .padding(.top, GameTheme.Layout.mediumPadding)
                 }
                 
                 Text(score.formattedScore)
-                    .font(GameTheme.Typography.extraLargeDisplay)
+                    .font(GameTheme.Typography.fontXXLarge)
                     .foregroundColor(GameTheme.Colors.primaryText)
                     .lineLimit(1)
                     .minimumScaleFactor(0.7)

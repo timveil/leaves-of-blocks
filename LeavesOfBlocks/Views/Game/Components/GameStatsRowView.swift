@@ -21,7 +21,7 @@ struct GameStatsRowView: View {
                         .font(.system(size: 16, weight: .semibold))
                         .foregroundColor(GameTheme.Colors.blockYellow)
                     Text(gameState.blocksPlaced.formattedScore)
-                        .font(GameTheme.Typography.compactBody)
+                        .font(GameTheme.Typography.fontXSmall)
                         .foregroundColor(GameTheme.Colors.secondaryText)
                 }
                 
@@ -36,7 +36,7 @@ struct GameStatsRowView: View {
                         .font(.system(size: 16, weight: .semibold))
                         .foregroundColor(GameTheme.Colors.blockBlue)
                     Text(formatGameTime(gameState.currentGameTime))
-                        .font(GameTheme.Typography.compactBody)
+                        .font(GameTheme.Typography.fontXSmall)
                         .foregroundColor(GameTheme.Colors.secondaryText)
                 }
                 
@@ -51,7 +51,7 @@ struct GameStatsRowView: View {
                         .font(.system(size: 16, weight: .semibold))
                         .foregroundColor(gameState.currentDifficulty.color)
                     Text(gameState.currentDifficulty.rawValue)
-                        .font(GameTheme.Typography.compactBody)
+                        .font(GameTheme.Typography.fontXSmall)
                         .foregroundColor(GameTheme.Colors.secondaryText)
                 }
             }
