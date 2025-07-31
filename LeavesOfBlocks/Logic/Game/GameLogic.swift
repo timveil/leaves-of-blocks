@@ -185,7 +185,7 @@ class GameLogic {
     }
     
     /// Randomly fills grid for testing purposes
-    static func randomlyFillGrid(_ grid: inout [[GridCell]], targetPercentage: Double = 0.3) {
+    static func randomlyFillGrid(_ grid: inout [[GridCell]], targetPercentage: Double = 0.15) {
         let totalCells = GameTheme.GameConfig.gridSize * GameTheme.GameConfig.gridSize
         let targetCells = Int(Double(totalCells) * targetPercentage)
         
