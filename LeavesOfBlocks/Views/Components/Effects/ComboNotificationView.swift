@@ -129,10 +129,20 @@ struct ComboNotificationOverlay: View {
     var body: some View {
         ZStack {
             if let combo = activeCombo {
-                ComboNotificationView(
-                    comboCount: combo.count,
-                    bonusPoints: combo.bonus
-                )
+                // Semi-transparent background to dim the game
+                Color.black.opacity(0.4)
+                    .ignoresSafeArea()
+                
+                // Position combo notification higher on screen
+                VStack {
+                    ComboNotificationView(
+                        comboCount: combo.count,
+                        bonusPoints: combo.bonus
+                    )
+                    .padding(.top, 80) // Position higher than center
+                    
+                    Spacer()
+                }
                 .id(notificationId) // Force recreation for each new combo
                 .onAppear {
                     // Clear the combo after animation completes
