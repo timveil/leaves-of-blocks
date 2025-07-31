@@ -41,6 +41,9 @@
 "longest_combo" = "Longest Combo";
 "difficulty" = "Difficulty";
 "best_ever" = "Best Ever";
+"game_summary" = "Game Summary";
+"past_game_summary" = "Past Game Summary";
+"best_score" = "Best Score";
 
 // MARK: - Settings
 "settings_description" = "Manage your game data and preferences";
@@ -78,6 +81,27 @@
 "points" = "Points";
 "description" = "Description";
 "mode" = "Mode";
+"shape" = "Shape";
+
+// MARK: - Scoring Descriptions
+"scoring_blocks_placed" = "Placing blocks on the grid";
+"scoring_clear_lines" = "Clearing complete lines";
+"scoring_combo_bonus" = "Combo bonus for each additional line";
+
+// MARK: - Difficulty Descriptions
+"difficulty_easy_desc" = "Smaller blocks appear more often";
+"difficulty_moderate_desc" = "Balanced block distribution";
+"difficulty_hard_desc" = "Larger, complex blocks are more common";
+
+// MARK: - Shape Descriptions
+"shape_normal_blocks" = "Normal\nBlocks";
+"shape_row_clear" = "Row Clear";
+"shape_column_clear" = "Column Clear";
+"shape_area_clear" = "Area Clear";
+"shape_normal_desc" = "Standard blocks with various shapes and sizes (1-9 cells). Place them to fill the grid and clear lines.";
+"shape_horizontal_desc" = "Special red block that clears an entire horizontal row when placed. Worth 100 points.";
+"shape_vertical_desc" = "Special blue block that clears an entire vertical column when placed. Worth 100 points.";
+"shape_area_desc" = "Special purple block that clears a 3×3 area around placement. Worth 200 points - the most powerful!";
 
 // MARK: - About Page
 "about_game_description" = "Leaves of Blocks is a relaxing puzzle game that combines the joy of autumn with strategic block placement. Clear lines by filling rows and columns completely, and watch as your score grows with each successful move.\n\nFeatures beautiful block shapes, smooth animations, and progressively challenging gameplay across three difficulty modes.";

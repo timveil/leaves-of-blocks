@@ -14,7 +14,7 @@ struct ScoreDisplayView: View {
     let action: (() -> Void)?
     
     init(
-        title: String = "Best Score",
+        title: String = "best_score".localized,
         score: Int,
         lastScore: Int? = nil,
         showHistoryHint: Bool = false,

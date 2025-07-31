@@ -10,6 +10,11 @@ import SwiftUI
 struct ContentView: View {
     @State private var showGetAppPrompt = false
     
+    // Helper function for localization (since App Clip doesn't have String+Extensions)
+    private func localized(_ key: String) -> String {
+        return NSLocalizedString(key, comment: "")
+    }
+    
     // Helper function to get block colors similar to the main game
     private func getBlockColor(row: Int, col: Int) -> Color {
         let colors = [
@@ -40,11 +45,11 @@ struct ContentView: View {
             VStack(spacing: 30) {
                 // Title
                 VStack(spacing: 8) {
-                    Text("Leaves of Blocks")
+                    Text(localized("app_title"))
                         .font(.system(size: 36, weight: .bold))
                         .foregroundColor(Color(red: 0.9, green: 0.7, blue: 0.1))
                     
-                    Text("Oh Me! Oh Blocks!")
+                    Text(localized("app_tagline"))
                         .font(.system(size: 20, weight: .medium))
                         .foregroundColor(Color(red: 0.9, green: 0.8, blue: 0.7).opacity(0.7))
                 }
@@ -94,7 +99,7 @@ struct ContentView: View {
                     .frame(width: 280, height: 280)
                     .shadow(color: Color.black.opacity(0.3), radius: 8, x: 0, y: 4)
                     
-                    Text("An autumn-themed puzzle game where you clear lines by filling rows and columns")
+                    Text(localized("app_description"))
                         .font(.system(size: 16))
                         .foregroundColor(Color(red: 0.95, green: 0.9, blue: 0.8))
                         .multilineTextAlignment(.center)
@@ -106,10 +111,10 @@ struct ContentView: View {
                 
                 // Features list
                 VStack(alignment: .leading, spacing: 12) {
-                    FeatureRow(icon: "square.grid.3x3.fill", text: "8x8 puzzle grid")
-                    FeatureRow(icon: "cube.fill", text: "21 unique block shapes")
-                    FeatureRow(icon: "gauge.with.dots.needle.33percent", text: "3 difficulty levels")
-                    FeatureRow(icon: "trophy.fill", text: "High score tracking")
+                    FeatureRow(icon: "square.grid.3x3.fill", text: localized("feature_8x8_grid"))
+                    FeatureRow(icon: "cube.fill", text: localized("feature_21_shapes"))
+                    FeatureRow(icon: "gauge.with.dots.needle.33percent", text: localized("feature_3_difficulties"))
+                    FeatureRow(icon: "trophy.fill", text: localized("feature_high_scores"))
                 }
                 .padding(.horizontal, 40)
                 
@@ -121,7 +126,7 @@ struct ContentView: View {
                 }) {
                     HStack {
                         Image(systemName: "arrow.down.app.fill")
-                        Text("Get Full Game")
+                        Text(localized("get_full_game"))
                     }
                     .font(.system(size: 20, weight: .semibold))
                     .foregroundColor(Color(red: 0.1, green: 0.05, blue: 0.02))
@@ -132,7 +137,7 @@ struct ContentView: View {
                 }
                 .padding(.horizontal, 30)
                 
-                Text("Free to play • No ads")
+                Text(localized("free_to_play"))
                     .font(.system(size: 14))
                     .foregroundColor(Color(red: 0.9, green: 0.8, blue: 0.7).opacity(0.5))
                     .padding(.bottom, 30)
@@ -167,6 +172,11 @@ struct FeatureRow: View {
 struct GetFullAppView: View {
     @Environment(\.dismiss) var dismiss
     
+    // Helper function for localization (since App Clip doesn't have String+Extensions)
+    private func localized(_ key: String) -> String {
+        return NSLocalizedString(key, comment: "")
+    }
+    
     var body: some View {
         ZStack {
             // Background
@@ -195,17 +205,17 @@ struct GetFullAppView: View {
                 
                 // Content
                 VStack(spacing: 20) {
-                    Text("Get the Full Experience")
+                    Text(localized("get_full_experience"))
                         .font(.system(size: 28, weight: .bold))
                         .foregroundColor(Color(red: 0.9, green: 0.7, blue: 0.1))
                         .multilineTextAlignment(.center)
                     
                     VStack(alignment: .leading, spacing: 16) {
-                        FullFeatureRow(icon: "gamecontroller.fill", text: "Complete gameplay experience")
-                        FullFeatureRow(icon: "chart.line.uptrend.xyaxis", text: "Track your progress")
-                        FullFeatureRow(icon: "clock.arrow.circlepath", text: "Game history & statistics")
-                        FullFeatureRow(icon: "trophy.fill", text: "Persistent high scores")
-                        FullFeatureRow(icon: "square.stack.3d.up.fill", text: "All 21 block shapes")
+                        FullFeatureRow(icon: "gamecontroller.fill", text: localized("feature_complete_gameplay"))
+                        FullFeatureRow(icon: "chart.line.uptrend.xyaxis", text: localized("feature_track_progress"))
+                        FullFeatureRow(icon: "clock.arrow.circlepath", text: localized("feature_game_history"))
+                        FullFeatureRow(icon: "trophy.fill", text: localized("feature_persistent_scores"))
+                        FullFeatureRow(icon: "square.stack.3d.up.fill", text: localized("feature_all_shapes"))
                     }
                     .padding(.horizontal, 30)
                     .padding(.vertical, 10)
@@ -216,7 +226,7 @@ struct GetFullAppView: View {
                     Link(destination: URL(string: "https://apps.apple.com/app/leaves-of-blocks/idYOUR_APP_ID")!) {
                         HStack {
                             Image(systemName: "arrow.down.app.fill")
-                            Text("Download from App Store")
+                            Text(localized("download_from_app_store"))
                         }
                         .font(.system(size: 20, weight: .semibold))
                         .foregroundColor(.white)
@@ -227,7 +237,7 @@ struct GetFullAppView: View {
                     }
                     .padding(.horizontal, 30)
                     
-                    Text("Free to play • No ads • No in-app purchases")
+                    Text(localized("free_no_purchases"))
                         .font(.system(size: 14))
                         .foregroundColor(Color(red: 0.9, green: 0.8, blue: 0.7).opacity(0.5))
                         .multilineTextAlignment(.center)

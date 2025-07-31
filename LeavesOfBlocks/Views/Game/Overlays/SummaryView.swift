@@ -46,7 +46,7 @@ struct SummaryView: View {
                 VStack(spacing: 0) {
                     // Header section
                     VStack(spacing: GameTheme.Layout.mediumSpacing) {
-                        Text(historicalSession != nil ? "Past Game Summary" : "Game Summary")
+                        Text(historicalSession != nil ? "past_game_summary".localized : "game_summary".localized)
                             .font(GameTheme.Typography.fontXLarge)
                             .foregroundColor(GameTheme.Colors.primaryText)
                             .tracking(1)
@@ -66,7 +66,7 @@ struct SummaryView: View {
                     
                     // Final Score - centered and prominent
                     ScoreDisplayView(
-                        title: "Final Score",
+                        title: "final_score".localized,
                         score: score,
                         showIcon: isNewHighScore,
                         iconName: "crown.fill"
@@ -81,42 +81,42 @@ struct SummaryView: View {
                     ], spacing: GameTheme.Layout.mediumSpacing) {
                         
                         StatisticCard(
-                            title: "Time Played",
+                            title: "time_played".localized,
                             value: formatTime(gameTime),
                             icon: "clock.fill",
                             color: GameTheme.Colors.blockBlue
                         )
                         
                         StatisticCard(
-                            title: "Blocks Placed",
+                            title: "blocks_placed".localized,
                             value: blocksPlaced.formattedScore,
                             icon: "square.grid.3x3.fill",
                             color: GameTheme.Colors.blockGreen
                         )
                         
                         StatisticCard(
-                            title: "Lines Cleared",
+                            title: "lines_cleared".localized,
                             value: linesCleared.formattedScore,
                             icon: "line.horizontal.3",
                             color: GameTheme.Colors.blockRed
                         )
                         
                         StatisticCard(
-                            title: "Longest Combo",
+                            title: "longest_combo".localized,
                             value: longestCombo.formattedScore,
                             icon: "flame.fill",
                             color: GameTheme.Colors.blockOrange
                         )
                         
                         StatisticCard(
-                            title: "Difficulty",
+                            title: "difficulty".localized,
                             value: difficulty.rawValue.capitalized,
                             icon: "target",
                             color: difficulty.color
                         )
                         
                         StatisticCard(
-                            title: "Best Ever",
+                            title: "best_ever".localized,
                             value: gameState.highScore.formattedScore,
                             icon: "crown.fill",
                             color: GameTheme.Colors.accent

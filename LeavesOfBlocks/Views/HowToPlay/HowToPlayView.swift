@@ -9,7 +9,7 @@ struct HowToPlayView: View {
                     VStack(spacing: GameTheme.Layout.largePadding) {
                     // Header
                     VStack(spacing: GameTheme.Layout.mediumSpacing) {
-                        Text("How to Play")
+                        Text("how_to_play".localized)
                             .pageTitleStyle()
                             .padding(.top, GameTheme.Layout.mediumPadding)
                     }
@@ -18,55 +18,55 @@ struct HowToPlayView: View {
                     VStack(alignment: .leading, spacing: GameTheme.Layout.largePadding) {
                         // The Grid
                         VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
-                            Text("The Grid")
+                            Text("the_grid".localized)
                                 .sectionHeaderStyle()
                             
-                            Text("You have an 8×8 grid where you'll place block shapes. Fill complete rows or columns to clear them and earn points.")
+                            Text("the_grid_description".localized)
                                 .sectionTextStyle(color: GameTheme.Colors.secondaryText)
                                 .lineSpacing(6)
                         }
                         
                         // Drag & Drop
                         VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
-                            Text("Drag & Drop")
+                            Text("drag_drop".localized)
                                 .sectionHeaderStyle()
                             
-                            Text("Drag block shapes from the bottom area onto the grid. Blocks must fit completely within the grid boundaries.")
+                            Text("drag_drop_description".localized)
                                 .sectionTextStyle(color: GameTheme.Colors.secondaryText)
                                 .lineSpacing(6)
                         }
                         
                         // Clear Lines
                         VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
-                            Text("Clear Lines")
+                            Text("clear_lines".localized)
                                 .sectionHeaderStyle()
                             
-                            Text("Complete horizontal rows or vertical columns disappear, earning you 100 points per line. Clear multiple lines at once for combo bonuses!")
+                            Text("clear_lines_description".localized)
                                 .sectionTextStyle(color: GameTheme.Colors.secondaryText)
                                 .lineSpacing(6)
                         }
                         
                         // Game Over
                         VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
-                            Text("Game Over")
+                            Text("game_over_rules".localized)
                                 .sectionHeaderStyle()
                             
-                            Text("The game ends when none of your current blocks can be placed on the grid. Plan ahead to keep playing longer!")
+                            Text("game_over_description".localized)
                                 .sectionTextStyle(color: GameTheme.Colors.secondaryText)
                                 .lineSpacing(6)
                         }
                         
                         // Pro Tips
                         VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
-                            Text("Pro Tips")
+                            Text("pro_tips".localized)
                                 .sectionHeaderStyle()
                             
                             VStack(alignment: .leading, spacing: GameTheme.Layout.smallSpacing) {
-                                TipRow(text: "Try to keep the grid as empty as possible")
-                                TipRow(text: "Look for opportunities to clear multiple lines")
-                                TipRow(text: "Don't rush - take time to find the best placement")
-                                TipRow(text: "Focus on corners and edges when the grid gets full")
-                                TipRow(text: "Plan ahead by considering all three available blocks")
+                                TipRow(text: "tip_keep_empty".localized)
+                                TipRow(text: "tip_multiple_lines".localized)
+                                TipRow(text: "tip_dont_rush".localized)
+                                TipRow(text: "tip_corners_edges".localized)
+                                TipRow(text: "tip_plan_ahead".localized)
                             }
                         }
                         
@@ -80,21 +80,21 @@ struct HowToPlayView: View {
                                 
                                 ScoringTableRowView(
                                     points: "10",
-                                    description: "Placing blocks on the grid",
+                                    description: "scoring_blocks_placed".localized,
                                     color: GameTheme.Colors.blockBlue,
                                     isFirst: false
                                 )
                                 
                                 ScoringTableRowView(
                                     points: "100",
-                                    description: "Clearing complete lines",
+                                    description: "scoring_clear_lines".localized,
                                     color: GameTheme.Colors.blockGreen,
                                     isFirst: false
                                 )
                                 
                                 ScoringTableRowView(
                                     points: "+50",
-                                    description: "Combo bonus for each additional line",
+                                    description: "scoring_combo_bonus".localized,
                                     color: GameTheme.Colors.blockOrange,
                                     isFirst: false
                                 )
@@ -118,19 +118,19 @@ struct HowToPlayView: View {
                                 
                                 DifficultyTableRowView(
                                     mode: .easy,
-                                    description: "Smaller blocks appear more often",
+                                    description: "difficulty_easy_desc".localized,
                                     isFirst: false
                                 )
                                 
                                 DifficultyTableRowView(
                                     mode: .moderate,
-                                    description: "Balanced block distribution",
+                                    description: "difficulty_moderate_desc".localized,
                                     isFirst: false
                                 )
                                 
                                 DifficultyTableRowView(
                                     mode: .hard,
-                                    description: "Larger, complex blocks are more common",
+                                    description: "difficulty_hard_desc".localized,
                                     isFirst: false
                                 )
                             }
@@ -153,25 +153,25 @@ struct HowToPlayView: View {
                                 
                                 ShapesTableRowView(
                                     shapeType: .normalBlocks,
-                                    description: "Standard blocks with various shapes and sizes (1-9 cells). Place them to fill the grid and clear lines.",
+                                    description: "shape_normal_desc".localized,
                                     isFirst: false
                                 )
                                 
                                 ShapesTableRowView(
                                     shapeType: .horizontalClear,
-                                    description: "Special red block that clears an entire horizontal row when placed. Worth 100 points.",
+                                    description: "shape_horizontal_desc".localized,
                                     isFirst: false
                                 )
                                 
                                 ShapesTableRowView(
                                     shapeType: .verticalClear,
-                                    description: "Special blue block that clears an entire vertical column when placed. Worth 100 points.",
+                                    description: "shape_vertical_desc".localized,
                                     isFirst: false
                                 )
                                 
                                 ShapesTableRowView(
                                     shapeType: .areaClear,
-                                    description: "Special purple block that clears a 3×3 area around placement. Worth 200 points - the most powerful!",
+                                    description: "shape_area_desc".localized,
                                     isFirst: false
                                 )
                             }

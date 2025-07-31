@@ -88,20 +88,20 @@ struct AboutView: View {
                 
                 // Creator Info
                 VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
-                    Text("Creator")
+                    Text("creator".localized)
                         .sectionHeaderStyle()
                     
-                    Text("Developed with passion by Tim Veil, a software engineer and dad who believes in creating beautiful, accessible games that bring moments of joy to everyday life.\n\nBuilt entirely with SwiftUI, this game represents a commitment to crafting polished experiences that feel natural on iOS devices.")
+                    Text("creator_description".localized)
                         .sectionTextStyle(color: GameTheme.Colors.secondaryText)
                         .lineSpacing(6)
                 }
                 
                 // Technical Details
                 VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
-                    Text("Technical Details")
+                    Text("technical_details".localized)
                         .sectionHeaderStyle()
                     
-                    Text("Built with pure SwiftUI and Swift for a native iOS experience. This game supports both iPhone and iPad devices running iOS 18.5 or later.\n\nEnjoy ad-free gameplay with no in-app purchases. Play offline anytime, and your high scores are automatically saved for friendly competition with yourself.")
+                    Text("technical_description".localized)
                         .sectionTextStyle(color: GameTheme.Colors.secondaryText)
                         .lineSpacing(6)
                 }

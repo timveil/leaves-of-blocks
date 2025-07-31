@@ -80,14 +80,14 @@ struct ScoringTableHeaderView: View {
     var body: some View {
         HStack(spacing: GameTheme.Layout.largePadding) {
             // Points header
-            Text("Points")
+            Text("points".localized)
                 .font(GameTheme.Typography.fontSmallLarge)
                 .fontWeight(.bold)
                 .foregroundColor(GameTheme.Colors.primaryText)
                 .frame(width: 100, alignment: .leading)
             
             // Description header
-            Text("Description")
+            Text("description".localized)
                 .font(GameTheme.Typography.fontSmallLarge)
                 .fontWeight(.bold)
                 .foregroundColor(GameTheme.Colors.primaryText)
@@ -103,14 +103,14 @@ struct DifficultyTableHeaderView: View {
     var body: some View {
         HStack(spacing: GameTheme.Layout.largePadding) {
             // Mode header
-            Text("Mode")
+            Text("mode".localized)
                 .font(GameTheme.Typography.fontSmallLarge)
                 .fontWeight(.bold)
                 .foregroundColor(GameTheme.Colors.primaryText)
                 .frame(width: 100, alignment: .leading)
             
             // Description header
-            Text("Description")
+            Text("description".localized)
                 .font(GameTheme.Typography.fontSmallLarge)
                 .fontWeight(.bold)
                 .foregroundColor(GameTheme.Colors.primaryText)
@@ -167,14 +167,14 @@ struct ShapesTableHeaderView: View {
     var body: some View {
         HStack(spacing: GameTheme.Layout.largePadding) {
             // Shape header
-            Text("Shape")
+            Text("shape".localized)
                 .font(GameTheme.Typography.fontSmallLarge)
                 .fontWeight(.bold)
                 .foregroundColor(GameTheme.Colors.primaryText)
                 .frame(width: 100, alignment: .leading)
             
             // Description header
-            Text("Description")
+            Text("description".localized)
                 .font(GameTheme.Typography.fontSmallLarge)
                 .fontWeight(.bold)
                 .foregroundColor(GameTheme.Colors.primaryText)
@@ -235,13 +235,13 @@ enum ShapeType {
     var displayName: String {
         switch self {
         case .normalBlocks:
-            return "Normal\nBlocks"
+            return "shape_normal_blocks".localized
         case .horizontalClear:
-            return "Row Clear"
+            return "shape_row_clear".localized
         case .verticalClear:
-            return "Column Clear"
+            return "shape_column_clear".localized
         case .areaClear:
-            return "Area Clear"
+            return "shape_area_clear".localized
         }
     }
     
