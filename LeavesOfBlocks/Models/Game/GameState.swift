@@ -1,6 +1,17 @@
 import Foundation
 import SwiftUI
 
+/// The main game state management class that handles all game logic and UI state.
+///
+/// `GameState` is an `ObservableObject` that manages the current state of the game,
+/// including the grid, active blocks, score, and game statistics. It delegates
+/// business logic to `GameLogic` and infrastructure concerns to `GameService`.
+///
+/// ## Usage
+/// ```swift
+/// let gameState = GameState()
+/// gameState.startGame(difficulty: .moderate)
+/// ```
 class GameState: ObservableObject {
     
     // MARK: - Published Properties
@@ -59,15 +70,62 @@ class GameState: ObservableObject {
     
     // MARK: - Game Actions
     
+    /// Generates a new set of blocks for the player to place.
+    ///
+    /// This method creates 3 new blocks using weighted random generation based on the current
+    /// difficulty level. After generating new blocks, it automatically checks if the game is over
+    /// by testing if any of the new blocks can be placed on the current grid.
+    ///
+    /// - Note: This method is called automatically when all current blocks have been placed,
+    ///   or when starting/resetting a game.
     func generateNewBlocks() {
         currentBlocks = BlockGenerator.generateWeightedBlocks(count: 3, difficulty: currentDifficulty)
         checkGameOver()
     }
     
+    /// Validates whether a block can be placed at the specified grid position.
+    ///
+    /// This method checks if the given block can be legally placed at the target position
+    /// without overlapping existing blocks or extending beyond grid boundaries.
+    ///
+    /// - Parameters:
+    ///   - block: The `BlockShape` to validate for placement
+    ///   - gridPosition: The target `GridPosition` where the block would be placed
+    /// - Returns: `true` if the block can be placed, `false` otherwise
+    ///
+    /// ## Example
+    /// ```swift
+    /// let block = BlockShape.allShapes[0] // Single block
+    /// let position = GridPosition(row: 2, col: 3)
+    /// if gameState.canPlaceBlock(block, at: position) {
+    ///     gameState.placeBlock(block, at: position)
+    /// }
+    /// ```
     func canPlaceBlock(_ block: BlockShape, at gridPosition: GridPosition) -> Bool {
         return GameLogic.canPlaceBlock(block, at: gridPosition, in: grid)
     }
     
+    /// Places a block on the game grid at the specified position.
+    ///
+    /// This method handles the complete block placement process, including validation,
+    /// grid updates, scoring, line clearing, and game state management. It provides
+    /// haptic feedback and automatically generates new blocks when needed.
+    ///
+    /// - Parameters:
+    ///   - block: The `BlockShape` to place on the grid
+    ///   - gridPosition: The `GridPosition` where the block should be placed
+    ///
+    /// ## Process Flow
+    /// 1. Validates placement using `canPlaceBlock(_:at:)`
+    /// 2. Updates the grid with the new block
+    /// 3. Calculates and adds score points
+    /// 4. Removes the placed block from available blocks
+    /// 5. Clears any completed lines and awards bonus points
+    /// 6. Generates new blocks if all current blocks are used
+    /// 7. Checks for game over conditions
+    ///
+    /// - Note: If placement is invalid, the method returns early without making changes.
+    ///   The method automatically provides haptic feedback and updates all relevant statistics.
     func placeBlock(_ block: BlockShape, at gridPosition: GridPosition) {
         guard canPlaceBlock(block, at: gridPosition) else { return }
         
@@ -185,11 +243,36 @@ class GameState: ObservableObject {
         }
     }
     
+    /// Starts a new game with the specified difficulty level.
+    ///
+    /// This method initializes a fresh game session by setting the difficulty
+    /// and calling `resetGame()` to clear all game state.
+    ///
+    /// - Parameter difficulty: The `DifficultyMode` for the new game session
+    ///
+    /// ## Available Difficulty Modes
+    /// - `.easy`: Favors smaller blocks, more forgiving generation
+    /// - `.moderate`: Balanced block distribution
+    /// - `.hard`: Increases chance of larger, complex blocks
     func startGame(difficulty: DifficultyMode) {
         currentDifficulty = difficulty
         resetGame()
     }
     
+    /// Resets the current game to its initial state.
+    ///
+    /// This method clears all game progress and reinitializes the game state for a fresh start.
+    /// It maintains the current difficulty level but resets all scores, statistics, and the game grid.
+    ///
+    /// ## Reset Operations
+    /// - Clears the 8x8 game grid
+    /// - Resets score and statistics to zero
+    /// - Generates new starting blocks
+    /// - Randomly pre-fills some grid positions
+    /// - Starts a new game session with timing
+    ///
+    /// - Note: This method is called automatically by `startGame(difficulty:)`
+    ///   and can be used to restart the current game without changing difficulty.
     func resetGame() {
         // Reset grid using GameLogic
         grid = GameLogic.createEmptyGrid()
@@ -219,6 +302,13 @@ class GameState: ObservableObject {
     
     // MARK: - Haptic Feedback
     
+    /// Provides haptic feedback when a block is returned to its original position.
+    ///
+    /// This method triggers light haptic feedback to indicate that a dragged block
+    /// has been returned to its starting position without being placed on the grid.
+    ///
+    /// - Note: This method is typically called by the UI when a drag gesture is cancelled
+    ///   or when a block cannot be placed at the attempted position.
     func blockReturnFeedback() {
         gameService.blockReturnFeedback()
     }

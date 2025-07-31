@@ -84,20 +84,43 @@ struct HistoryView: View {
     }
 }
 
+/// Represents a completed game session with all relevant statistics.
+///
+/// `GameSession` captures the key metrics from a finished game, providing
+/// a comprehensive snapshot for historical analysis and display.
+///
+/// ## Usage
+/// Used in game history displays, high score tracking, and session comparisons.
+/// Created automatically when games end or loaded from Core Data persistence.
 struct GameSession: Equatable {
+    /// When the game session was completed
     let date: Date
+    /// Final score achieved in the session
     let score: Int
+    /// Total number of blocks successfully placed
     let blocksPlaced: Int
+    /// Total number of lines cleared during the session
     let linesCleared: Int
+    /// Difficulty level used for the session
     let difficulty: DifficultyMode
+    /// Total time spent playing the session
     let gameTime: TimeInterval
     
+    /// Formats the game time as MM:SS for display.
+    ///
+    /// - Returns: A string in "M:SS" or "MM:SS" format (e.g., "3:45", "12:30")
     var formattedGameTime: String {
         let minutes = Int(gameTime) / 60
         let seconds = Int(gameTime) % 60
         return String(format: "%d:%02d", minutes, seconds)
     }
     
+    /// Formats the session date for user-friendly display.
+    ///
+    /// Uses medium date style and short time style for optimal readability
+    /// while conserving display space in history lists.
+    ///
+    /// - Returns: A formatted date string (e.g., "Jan 15, 2025 at 3:30 PM")
     var formattedDate: String {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium

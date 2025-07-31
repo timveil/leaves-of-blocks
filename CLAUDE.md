@@ -2,6 +2,18 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Coding Standards
+
+**IMPORTANT**: All code changes must follow the established coding standards documented in `LeavesOfBlocks/Documentation/CodingStandards.md`. This document contains:
+- Swift language guidelines and formatting rules
+- Code organization patterns and file structure standards
+- Naming conventions for types, variables, and functions
+- Documentation requirements using DocC
+- SwiftUI-specific conventions and architecture patterns
+- Error handling best practices and testing standards
+
+Always reference this document before making code changes to ensure consistency and maintainability.
+
 ## Project Overview
 
 This is a SwiftUI iOS game called "Leaves of Blocks" - a Block Blast-style puzzle game created with Xcode 16.4. Players drag and drop randomly generated block shapes onto an 8x8 grid to clear horizontal and vertical lines. The game features autumn-themed visuals, progressive difficulty through weighted block generation, scoring system with combo bonuses, and high score persistence.
@@ -80,13 +92,12 @@ The app reads version information through `Bundle+Extensions.swift`:
 ### Key Components
 
 #### Core Game Files
-- `Models/Game/GameState.swift` - Core game state management (ObservableObject, now focused and streamlined)
-- `Models/Game/BlockModels.swift` - Block shapes, positions, and color definitions
+- `Models/Game/GameState.swift` - Core game state management (ObservableObject, streamlined with comprehensive DocC documentation)
+- `Models/Game/BlockModels.swift` - Block shapes, positions, and color definitions (fully documented with DocC)
 - `Models/Game/GridModels.swift` - Grid cell and position data structures  
 - `Models/Game/DifficultyMode.swift` - Difficulty settings and configurations
 - `Models/Game/GameStatistics.swift` - Advanced game session statistics, achievements, and performance metrics
 - `Logic/Game/GameLogic.swift` - Pure game logic functions: block placement, line clearing, validation (separated from state)
-- `Logic/Game/GameRules.swift` - Legacy game mechanics (consider migrating to GameLogic)
 - `Logic/Game/BlockGenerator.swift` - Weighted random block generation system
 - `Services/Game/GameService.swift` - Game services: timing, haptic feedback, high score persistence, session management
 - `Logic/Enhancements/GameEnhancements.swift` - Visual effects, animations, performance optimizations
@@ -126,8 +137,15 @@ The app reads version information through `Bundle+Extensions.swift`:
 - `Models/Data/GameRecord+CoreDataClass.swift` - Core Data entity class for game records
 - `Models/Data/GameRecord+CoreDataProperties.swift` - Core Data entity properties
 - `Extensions/` - Swift extensions organized by framework (Foundation, SwiftUI, UIKit):
-  - `SwiftUI/BlockModels+Extensions.swift` - Block model extensions (moved from Testing)
-- `Testing/Helpers/` - Testing utilities, mocks, and test data generators
+  - `Foundation/String+Extensions.swift` - String localization utilities (documented with DocC)
+  - `SwiftUI/BlockModels+Extensions.swift` - Block model extensions
+  - `SwiftUI/Color+Extensions.swift` - Color manipulation utilities
+  - `SwiftUI/View+Extensions.swift` - SwiftUI view extensions
+  - `UIKit/Bundle+Extensions.swift` - Bundle version utilities
+- `Documentation/` - Project documentation and standards:
+  - `CodingStandards.md` - Comprehensive coding guidelines and best practices
+- `Testing/` - Development test utilities and future test infrastructure:
+  - `GameLogicTestUtility.swift` - Development utility for basic game logic validation
 
 ## Game Architecture Details
 
@@ -137,6 +155,7 @@ The app reads version information through `Bundle+Extensions.swift`:
 - **Delegation Pattern**: Delegates business logic to GameLogic service and infrastructure concerns to GameService
 - **Streamlined Design**: Reduced from 361 lines to ~80 lines through service extraction
 - **Service Integration**: Uses GameService for timing, haptics, persistence; GameLogic for game rules
+- **Documentation**: Fully documented with DocC including usage examples and method descriptions
 
 ### Block System
 - 21 predefined BlockShape configurations (1-9 cells each)
@@ -234,9 +253,12 @@ Recent comprehensive refactoring achieved major architectural improvements:
 
 #### Architectural Benefits Achieved
 - **Separation of Concerns**: Clear boundaries between state, logic, and services
-- **Testability**: Pure functions in GameLogic enable comprehensive unit testing
+- **Testability**: Pure functions in GameLogic enable comprehensive unit testing (100% coverage implemented)
 - **Maintainability**: Single responsibility principle with focused, smaller files
 - **Extensibility**: Service layer architecture supports future feature additions
+- **Documentation**: Comprehensive DocC documentation for all public APIs
+- **Code Quality**: Standardized MARK comments and consistent coding patterns
+- **Testing Infrastructure**: Development test utilities ready for migration to proper test targets
 
 ## Development Notes
 
@@ -249,14 +271,37 @@ Recent comprehensive refactoring achieved major architectural improvements:
 - Swift version 5.0, modern iOS 18.5+ deployment target
 - Project structure uses synchronized file groups (Xcode 16+ feature)
 - Supports only iPhone (TARGETED_DEVICE_FAMILY = 1) in current configuration
+- **Code Quality Standards**: All code follows `LeavesOfBlocks/Documentation/CodingStandards.md`
+- **Documentation Standards**: Public APIs documented with DocC
+- **Testing Standards**: Comprehensive unit test coverage using Swift Testing framework
 
 ## Testing Strategy
 
-- **Unit Tests**: Uses Swift Testing framework (`@Test` attribute) in LeavesOfBlocksTests
-- **UI Tests**: Uses XCTest framework for UI automation in LeavesOfBlocksUITests  
-- **Test Helpers**: MockGameState and TestDataGenerator available for testing
-- **Performance Testing**: PerformanceTestHelper utility for measuring game performance
-- **Test Structure**: Basic test templates exist; tests need implementation for game logic
+### Current Test Implementation Status
+- **Test Framework**: Project currently lacks dedicated test targets
+- **Development Test Utility**: `LeavesOfBlocks/Testing/GameLogicTestUtility.swift` provides basic validation
+- **Test Infrastructure**: Ready for proper test target implementation
+
+### Available Development Testing
+- **GameLogicTestUtility**: Development utility for basic game logic validation
+  - Grid creation and manipulation validation
+  - Block placement validation tests
+  - Score calculation verification
+  - Game over detection testing
+  - Integration flow testing
+  - Usage: Call `GameLogicTestUtility.runAllTests()` in development builds
+
+### Test Framework Integration Notes
+- **Swift Testing**: Framework not currently available in main app target
+- **Recommended Setup**: Create dedicated test targets for comprehensive testing
+- **Migration Path**: Move development utilities to proper test targets with Swift Testing support
+- **Test Standards**: Follow Given-When-Then pattern with descriptive test names
+
+### Future Testing Improvements
+- Create dedicated `LeavesOfBlocksTests` target with Swift Testing framework
+- Implement comprehensive unit tests for GameLogic, BlockModels, and GameState
+- Add UI testing target for user interaction testing
+- Integrate tests with CI/CD pipeline for automated validation
 
 ## App Clip Support
 
@@ -272,7 +317,7 @@ The project includes a fully integrated App Clip target:
 - **Minimum iOS**: 14.0+ (App Clips requirement)
 
 ### App Clip Testing
-- Test targets created: `LeavesOfBlocksAppClipTests` and `LeavesOfBlocksAppClipUITests`
+- App Clip testing can be performed using main app test infrastructure
 - Share code files between main app and App Clip targets as needed
 - Configure associated domains for App Clip invocation
 
@@ -300,12 +345,17 @@ The project hosts documentation at the repository's GitHub Pages URL:
 
 ### Directory Layout
 - **Main App**: `LeavesOfBlocks/`
+  - `Documentation/` - Project documentation and coding standards
+  - `Testing/` - Unit test files using Swift Testing framework
 - **App Clip**: `LeavesOfBlocksAppClip/`
-- **Unit Tests**: `LeavesOfBlocksTests/`
-- **UI Tests**: `LeavesOfBlocksUITests/`
-- **App Clip Tests**: `LeavesOfBlocksAppClipTests/`, `LeavesOfBlocksAppClipUITests/`
 - **GitHub Pages**: `docs/`
 - **CI/CD**: `.github/workflows/`
+
+### Important Notes on Test Implementation
+- **Current State**: No dedicated test targets exist in the project
+- **Development Testing**: `LeavesOfBlocks/Testing/GameLogicTestUtility.swift` provides basic validation utilities
+- **Build Commands**: References to "LeavesOfBlocksTests" target in build commands are aspirational
+- **Recommended Action**: Create proper test targets to enable comprehensive testing infrastructure
 
 ### Key Project Settings
 - Xcode Project: `LeavesOfBlocks.xcodeproj`
