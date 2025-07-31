@@ -6,7 +6,7 @@ struct ComboNotificationView: View {
     let comboCount: Int
     let bonusPoints: Int
     @State private var isVisible: Bool = false
-    @State private var scale: CGFloat = 0.8
+    @State private var scale: CGFloat = 0.9
     @State private var opacity: Double = 0.0
     @State private var yOffset: CGFloat = 0
     
@@ -101,19 +101,19 @@ struct ComboNotificationView: View {
     }
     
     private func startAnimation() {
-        // Entry animation using theme animations
-        withAnimation(GameTheme.Animations.springAnimation) {
+        // Entry animation - faster, smoother spring
+        withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
             scale = 1.0
             opacity = 1.0
             isVisible = true
         }
         
-        // Hold for a moment, then exit with theme animation
-        DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
-            withAnimation(GameTheme.Animations.smoothEase) {
+        // Shorter hold time, then quick fade out
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
+            withAnimation(.easeOut(duration: 0.3)) {
                 opacity = 0.0
-                yOffset = -20
-                scale = 0.95
+                yOffset = -15
+                scale = 0.9
             }
         }
     }
@@ -145,8 +145,8 @@ struct ComboNotificationOverlay: View {
                 }
                 .id(notificationId) // Force recreation for each new combo
                 .onAppear {
-                    // Clear the combo after animation completes
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+                    // Clear the combo after animation completes - faster dismissal
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
                         activeCombo = nil
                     }
                 }
