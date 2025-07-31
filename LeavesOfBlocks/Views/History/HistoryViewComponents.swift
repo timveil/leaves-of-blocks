@@ -193,7 +193,9 @@ struct GameSessionRow: View {
             HStack {
                 HStack(spacing: GameTheme.Layout.mediumSpacing) {
                     GameStatChip(title: "Blocks", value: session.blocksPlaced.formattedScore, icon: "cube.fill", color: GameTheme.Colors.blockBlue, style: .compact)
+                        .fixedSize(horizontal: true, vertical: false)
                     GameStatChip(title: "Lines", value: session.linesCleared.formattedScore, icon: "square.grid.3x3.fill", color: GameTheme.Colors.blockGreen, style: .compact)
+                        .fixedSize(horizontal: true, vertical: false)
                 }
                 
                 Spacer()
