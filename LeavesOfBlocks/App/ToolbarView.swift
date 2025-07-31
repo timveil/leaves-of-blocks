@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct ToolbarView: View {
-    private static let iconFont = Font.system(size: 22, weight: .semibold)
+    private static let iconFont = GameTheme.Typography.sectionHeaderFont
     
     let currentScreen: AppScreen
     let onGoHome: () -> Void

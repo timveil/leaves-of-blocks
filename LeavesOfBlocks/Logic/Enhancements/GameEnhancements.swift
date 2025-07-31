@@ -14,7 +14,7 @@ struct LineCleaningEffect: View {
             // Highlight cleared rows
             ForEach(Array(rows), id: \.self) { row in
                 Rectangle()
-                    .fill(Color.yellow.opacity(0.6))
+                    .fill(GameTheme.Colors.lineCompletionAccent.opacity(0.6))
                     .frame(width: CGFloat(gridSize) * cellSize, height: cellSize)
                     .position(
                         x: CGFloat(gridSize) * cellSize / 2,
@@ -25,7 +25,7 @@ struct LineCleaningEffect: View {
             // Highlight cleared columns
             ForEach(Array(cols), id: \.self) { col in
                 Rectangle()
-                    .fill(Color.yellow.opacity(0.6))
+                    .fill(GameTheme.Colors.lineCompletionAccent.opacity(0.6))
                     .frame(width: cellSize, height: CGFloat(gridSize) * cellSize)
                     .position(
                         x: CGFloat(col) * cellSize + cellSize / 2,

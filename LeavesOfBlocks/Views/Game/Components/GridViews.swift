@@ -157,19 +157,19 @@ private struct GridCellView: View {
                 cell.isFilled ? 
                     LinearGradient(colors: [cell.color.color, cell.color.color.opacity(0.6)], startPoint: .topLeading, endPoint: .bottomTrailing) :
                 (isLineComplete ? 
-                    LinearGradient(colors: [Color(red: 1.0, green: 0.8, blue: 0.0), Color(red: 1.0, green: 0.6, blue: 0.0)], startPoint: .topLeading, endPoint: .bottomTrailing) :
+                    LinearGradient(colors: [GameTheme.Colors.lineCompletionPrimary, GameTheme.Colors.lineCompletionSecondary], startPoint: .topLeading, endPoint: .bottomTrailing) :
                 (isPreview ? 
                     LinearGradient(colors: [previewColor.opacity(0.8), previewColor.opacity(0.4)], startPoint: .topLeading, endPoint: .bottomTrailing) : 
-                    LinearGradient(colors: [Color(red: 0.25, green: 0.2, blue: 0.15).opacity(0.3), Color(red: 0.2, green: 0.15, blue: 0.1).opacity(0.2)], startPoint: .topLeading, endPoint: .bottomTrailing)
+                    LinearGradient(colors: [GameTheme.Colors.cardShadow.opacity(0.3), GameTheme.Colors.blockBackground.opacity(0.2)], startPoint: .topLeading, endPoint: .bottomTrailing)
                 ))
             )
             .frame(width: size, height: size)
             .overlay(
                 RoundedRectangle(cornerRadius: 8)
                     .stroke(
-                        cell.isFilled ? Color(red: 0.95, green: 0.9, blue: 0.8).opacity(0.4) :
-                        (isLineComplete ? Color(red: 1.0, green: 0.8, blue: 0.0).opacity(0.9) :
-                        (isPreview ? previewColor.opacity(0.8) : Color(red: 0.4, green: 0.25, blue: 0.1).opacity(0.2))),
+                        cell.isFilled ? GameTheme.Colors.primaryText.opacity(0.4) :
+                        (isLineComplete ? GameTheme.Colors.lineCompletionPrimary.opacity(0.9) :
+                        (isPreview ? previewColor.opacity(0.8) : GameTheme.Colors.gridBorder.opacity(0.2))),
                         lineWidth: cell.isFilled ? 2 : (isLineComplete ? 3 : (isPreview ? 2 : 1))
                     )
             )
@@ -179,7 +179,7 @@ private struct GridCellView: View {
                     if isLineComplete {
                         // Static golden glow for line clearing (no pulsing to avoid conflicts)
                         RoundedRectangle(cornerRadius: 8)
-                            .stroke(Color(red: 1.0, green: 0.9, blue: 0.2), lineWidth: 3)
+                            .stroke(GameTheme.Colors.lineCompletionAccent, lineWidth: 3)
                             .opacity(0.8)
                             .scaleEffect(1.02)
                     }
@@ -187,7 +187,7 @@ private struct GridCellView: View {
             )
             .shadow(
                 color: cell.isFilled ? cell.color.color.opacity(0.4) :
-                      (isLineComplete ? Color(red: 1.0, green: 0.8, blue: 0.0).opacity(0.8) :
+                      (isLineComplete ? GameTheme.Colors.lineCompletionPrimary.opacity(0.8) :
                       (isPreview ? previewColor.opacity(0.6) : .clear)),
                 radius: cell.isFilled ? 5 : (isLineComplete ? 8 : (isPreview ? 6 : 0)),
                 x: 0, y: cell.isFilled ? 2 : 1
@@ -203,7 +203,7 @@ private struct LineCompletePulseView: View {
     
     var body: some View {
         RoundedRectangle(cornerRadius: 8)
-            .stroke(Color(red: 1.0, green: 0.9, blue: 0.2), lineWidth: 4)
+            .stroke(GameTheme.Colors.lineCompletionAccent, lineWidth: 4)
             .opacity(isAnimating ? 0.8 : 0.4)
             .scaleEffect(isAnimating ? 1.05 : 1.0)
             .onAppear {

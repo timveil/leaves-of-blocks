@@ -36,6 +36,11 @@ extension GameTheme {
         private static let mediumGreen = Color(red: 0.25, green: 0.7, blue: 0.15)
         private static let lightGreen = Color(red: 0.2, green: 0.65, blue: 0.1)
         
+        // Game Effects
+        private static let brightGold = Color(red: 1.0, green: 0.8, blue: 0.0)
+        private static let mediumGold = Color(red: 1.0, green: 0.6, blue: 0.0)
+        private static let lightGold = Color(red: 1.0, green: 0.9, blue: 0.2)
+        
         // MARK: - Public Semantic Color Aliases
         
         // Background Colors
@@ -122,5 +127,10 @@ extension GameTheme {
         static let grassPrimary = darkGreen
         static let grassSecondary = mediumGreen
         static let grassTertiary = lightGreen
+        
+        // Game Effect Colors
+        static let lineCompletionPrimary = brightGold
+        static let lineCompletionSecondary = mediumGold
+        static let lineCompletionAccent = lightGold
     }
 }
