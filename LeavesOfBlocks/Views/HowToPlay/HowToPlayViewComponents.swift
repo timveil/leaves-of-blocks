@@ -48,6 +48,7 @@ struct ScoringTableRowView: View {
     let description: String
     let color: Color
     let isFirst: Bool
+    let isLast: Bool
     
     var body: some View {
         HStack(spacing: GameTheme.Layout.largePadding) {
@@ -66,7 +67,12 @@ struct ScoringTableRowView: View {
         }
         .padding(.horizontal, GameTheme.Layout.largePadding)
         .padding(.vertical, GameTheme.Layout.mediumPadding)
-        .background(color.opacity(0.05))
+        .modifier(
+            ConditionalTableRowStyleModifier(
+                isLast: isLast,
+                backgroundColor: color.opacity(0.05)
+            )
+        )
         .overlay(
             Rectangle()
                 .frame(height: isFirst ? 0 : 1)
@@ -126,6 +132,7 @@ struct DifficultyTableRowView: View {
     let mode: DifficultyMode
     let description: String
     let isFirst: Bool
+    let isLast: Bool
     
     var body: some View {
         HStack(spacing: GameTheme.Layout.largePadding) {
@@ -151,7 +158,12 @@ struct DifficultyTableRowView: View {
         }
         .padding(.horizontal, GameTheme.Layout.largePadding)
         .padding(.vertical, GameTheme.Layout.largePadding)
-        .background(mode.color.opacity(0.05))
+        .modifier(
+            ConditionalTableRowStyleModifier(
+                isLast: isLast,
+                backgroundColor: mode.color.opacity(0.05)
+            )
+        )
         .overlay(
             Rectangle()
                 .frame(height: isFirst ? 0 : 1)
@@ -190,6 +202,7 @@ struct ShapesTableRowView: View {
     let shapeType: ShapeType
     let description: String
     let isFirst: Bool
+    let isLast: Bool
     
     var body: some View {
         HStack(spacing: GameTheme.Layout.largePadding) {
@@ -214,7 +227,12 @@ struct ShapesTableRowView: View {
         }
         .padding(.horizontal, GameTheme.Layout.largePadding)
         .padding(.vertical, GameTheme.Layout.largePadding)
-        .background(shapeType.backgroundColor)
+        .modifier(
+            ConditionalTableRowStyleModifier(
+                isLast: isLast,
+                backgroundColor: shapeType.backgroundColor
+            )
+        )
         .overlay(
             Rectangle()
                 .frame(height: isFirst ? 0 : 1)
@@ -342,6 +360,23 @@ enum ShapeType {
             return GameTheme.Colors.blockBlue.opacity(0.05)
         case .areaClear:
             return GameTheme.Colors.blockPurple.opacity(0.05)
+        }
+    }
+}
+
+// MARK: - Table Row Style Modifier
+
+struct ConditionalTableRowStyleModifier: ViewModifier {
+    let isLast: Bool
+    let backgroundColor: Color
+    
+    func body(content: Content) -> some View {
+        if isLast {
+            content
+                .gameTableFooterStyle(backgroundColor: backgroundColor)
+        } else {
+            content
+                .gameTableRowStyle(backgroundColor: backgroundColor)
         }
     }
 }

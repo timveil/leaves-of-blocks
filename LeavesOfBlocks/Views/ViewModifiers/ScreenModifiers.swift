@@ -290,6 +290,30 @@ extension View {
             )
     }
     
+    /// Applies table row styling for middle rows (no rounded corners)
+    func gameTableRowStyle(
+        backgroundColor: Color = GameTheme.Colors.cardBackground
+    ) -> some View {
+        self
+            .background(backgroundColor)
+    }
+    
+    /// Applies table footer styling with bottom rounded corners
+    func gameTableFooterStyle(
+        backgroundColor: Color = GameTheme.Colors.cardBackground
+    ) -> some View {
+        self
+            .background(
+                UnevenRoundedRectangle(
+                    topLeadingRadius: 0,
+                    bottomLeadingRadius: GameTheme.Layout.cardCornerRadius,
+                    bottomTrailingRadius: GameTheme.Layout.cardCornerRadius,
+                    topTrailingRadius: 0
+                )
+                .fill(backgroundColor)
+            )
+    }
+    
     // MARK: - Interaction Modifiers
     
     /// Applies disabled state styling

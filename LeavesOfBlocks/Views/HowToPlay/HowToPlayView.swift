@@ -82,27 +82,26 @@ struct HowToPlayView: View {
                                     points: "10",
                                     description: "scoring_blocks_placed".localized,
                                     color: GameTheme.Colors.blockBlue,
-                                    isFirst: false
+                                    isFirst: false,
+                                    isLast: false
                                 )
                                 
                                 ScoringTableRowView(
                                     points: "100",
                                     description: "scoring_clear_lines".localized,
                                     color: GameTheme.Colors.blockGreen,
-                                    isFirst: false
+                                    isFirst: false,
+                                    isLast: false
                                 )
                                 
                                 ScoringTableRowView(
                                     points: "+50",
                                     description: "scoring_combo_bonus".localized,
                                     color: GameTheme.Colors.blockOrange,
-                                    isFirst: false
+                                    isFirst: false,
+                                    isLast: true
                                 )
                             }
-                            .background(
-                                RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
-                                    .fill(GameTheme.Colors.cardBackground)
-                            )
                             .overlay(
                                 RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
                                     .stroke(GameTheme.Colors.gridBorder.opacity(0.3), lineWidth: 1)
@@ -119,25 +118,24 @@ struct HowToPlayView: View {
                                 DifficultyTableRowView(
                                     mode: .easy,
                                     description: "difficulty_easy_desc".localized,
-                                    isFirst: false
+                                    isFirst: false,
+                                    isLast: false
                                 )
                                 
                                 DifficultyTableRowView(
                                     mode: .moderate,
                                     description: "difficulty_moderate_desc".localized,
-                                    isFirst: false
+                                    isFirst: false,
+                                    isLast: false
                                 )
                                 
                                 DifficultyTableRowView(
                                     mode: .hard,
                                     description: "difficulty_hard_desc".localized,
-                                    isFirst: false
+                                    isFirst: false,
+                                    isLast: true
                                 )
                             }
-                            .background(
-                                RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
-                                    .fill(GameTheme.Colors.cardBackground)
-                            )
                             .overlay(
                                 RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
                                     .stroke(GameTheme.Colors.gridBorder.opacity(0.3), lineWidth: 1)
@@ -154,31 +152,31 @@ struct HowToPlayView: View {
                                 ShapesTableRowView(
                                     shapeType: .normalBlocks,
                                     description: "shape_normal_desc".localized,
-                                    isFirst: false
+                                    isFirst: false,
+                                    isLast: false
                                 )
                                 
                                 ShapesTableRowView(
                                     shapeType: .horizontalClear,
                                     description: "shape_horizontal_desc".localized,
-                                    isFirst: false
+                                    isFirst: false,
+                                    isLast: false
                                 )
                                 
                                 ShapesTableRowView(
                                     shapeType: .verticalClear,
                                     description: "shape_vertical_desc".localized,
-                                    isFirst: false
+                                    isFirst: false,
+                                    isLast: false
                                 )
                                 
                                 ShapesTableRowView(
                                     shapeType: .areaClear,
                                     description: "shape_area_desc".localized,
-                                    isFirst: false
+                                    isFirst: false,
+                                    isLast: true
                                 )
                             }
-                            .background(
-                                RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
-                                    .fill(GameTheme.Colors.cardBackground)
-                            )
                             .overlay(
                                 RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
                                     .stroke(GameTheme.Colors.gridBorder.opacity(0.3), lineWidth: 1)
