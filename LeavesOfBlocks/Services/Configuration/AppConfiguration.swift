@@ -1,4 +1,5 @@
 import Foundation
+import UIKit
 
 // MARK: - Application Configuration
 
@@ -47,8 +48,30 @@ struct AppConfiguration {
     struct Performance {
         static let maxFallingLeaves = 50
         static let animationFrameRate = 60.0
+        static let dragUpdateThrottleInterval: TimeInterval = 1.0 / 60.0 // 60fps throttling
+        static let previewCacheValidityDuration: TimeInterval = 0.1 // 100ms cache for expensive calculations
         static let enableReducedMotion = false // Could be tied to system settings
-        static let enableLowGameMode = false   // For older devices
+        static let enableLowPowerMode = false   // For older devices - reduced shadows and effects
+        
+        // Device-specific optimizations
+        static var isOlderDevice: Bool {
+            // Check for iPhone 12 Pro Max and older devices
+            let deviceModel = UIDevice.current.model
+            let systemVersion = UIDevice.current.systemVersion
+            
+            // Simple heuristic - could be enhanced with more detailed device detection
+            return ProcessInfo.processInfo.processorCount < 6 || // Less than 6 CPU cores
+                   ProcessInfo.processInfo.physicalMemory < 4_000_000_000 // Less than 4GB RAM
+        }
+        
+        static var shouldUseLowPowerMode: Bool {
+            return enableLowPowerMode || isOlderDevice || ProcessInfo.processInfo.isLowPowerModeEnabled
+        }
+        
+        // Performance monitoring flags
+        static let enableFrameRateMonitoring = Environment.current == .debug
+        static let enableMemoryMonitoring = Environment.current != .release
+        static let logPerformanceMetrics = Environment.current == .debug
     }
     
     // MARK: - Accessibility

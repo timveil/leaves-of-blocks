@@ -155,7 +155,7 @@ struct BoardView: View {
                 .allowsHitTesting(false)
                 .zIndex(1000)
                 .scaleEffect(1.1) // Slightly larger during drag for better visibility
-                .shadow(color: .black.opacity(0.3), radius: 8, x: 0, y: 4)
+                .shadow(color: .black.opacity(0.2), radius: 4, x: 0, y: 2)
             }
         }
     }

@@ -1,5 +1,40 @@
 import SwiftUI
 
+// MARK: - Performance Optimization Structures
+
+/// Cache class for expensive preview calculations during drag operations
+private class PreviewCache {
+    private var lastBlockId: String?
+    private var lastPreviewPosition: GridPosition?
+    private var cachedCompletedLines: (rows: Set<Int>, cols: Set<Int>)?
+    private var cacheTimestamp: Date = Date()
+    
+    // Cache validity duration from configuration
+    private let cacheValidityDuration: TimeInterval = AppConfiguration.Performance.previewCacheValidityDuration
+    
+    func getCachedLines(for blockId: String, at position: GridPosition) -> (rows: Set<Int>, cols: Set<Int>)? {
+        let now = Date()
+        let isValid = now.timeIntervalSince(cacheTimestamp) < cacheValidityDuration &&
+                     lastBlockId == blockId &&
+                     lastPreviewPosition == position
+        
+        return isValid ? cachedCompletedLines : nil
+    }
+    
+    func setCachedLines(_ lines: (rows: Set<Int>, cols: Set<Int>), for blockId: String, at position: GridPosition) {
+        lastBlockId = blockId
+        lastPreviewPosition = position
+        cachedCompletedLines = lines
+        cacheTimestamp = Date()
+    }
+    
+    func invalidate() {
+        lastBlockId = nil
+        lastPreviewPosition = nil
+        cachedCompletedLines = nil
+    }
+}
+
 // MARK: - Grid Components
 
 struct GameGridView: View {
@@ -8,6 +43,9 @@ struct GameGridView: View {
     let draggedBlock: BlockShape?
     let previewPosition: GridPosition?
     let onGridFrameChange: (CGRect) -> Void
+    
+    // Performance caching for preview calculations
+    @State private var previewCache = PreviewCache()
     
     var body: some View {
         VStack(spacing: 3) {
@@ -42,6 +80,10 @@ struct GameGridView: View {
                     )
                     .shadow(color: GameTheme.Colors.cardShadow, radius: GameTheme.Layout.shadowRadius, x: 0, y: GameTheme.Layout.shadowOffset)
             )
+            .onChange(of: gameState.blocksPlaced) { _, _ in
+                // Invalidate cache when blocks are placed to avoid stale data
+                previewCache.invalidate()
+            }
             .background(
                 GeometryReader { geo in
                     Color.clear.onAppear {
@@ -118,13 +160,32 @@ struct GameGridView: View {
             return (rows: Set<Int>(), cols: Set<Int>()) 
         }
         
+        // Create a unique identifier for this block at this position
+        let blockId = "\(draggedBlock.positions.count)-\(draggedBlock.color.hashValue)"
+        
+        // Check cache first
+        if let cachedResult = previewCache.getCachedLines(for: blockId, at: previewPos) {
+            return cachedResult
+        }
+        
+        // Perform expensive calculation only if not cached
+        let result = calculateCompletedLines(for: draggedBlock, at: previewPos)
+        
+        // Cache the result for future use
+        previewCache.setCachedLines(result, for: blockId, at: previewPos)
+        
+        return result
+    }
+    
+    /// Separated expensive calculation logic for better performance monitoring
+    private func calculateCompletedLines(for block: BlockShape, at position: GridPosition) -> (rows: Set<Int>, cols: Set<Int>) {
         // Create a temporary grid state to check line completion
         var tempGrid = gameState.grid
         
         // Place the block temporarily
-        for blockPos in draggedBlock.positions {
-            let finalRow = previewPos.row + blockPos.row
-            let finalCol = previewPos.col + blockPos.col
+        for blockPos in block.positions {
+            let finalRow = position.row + blockPos.row
+            let finalCol = position.col + blockPos.col
             if finalRow >= 0 && finalRow < GameTheme.GameConfig.gridSize && 
                finalCol >= 0 && finalCol < GameTheme.GameConfig.gridSize {
                 tempGrid[finalRow][finalCol].isFilled = true
@@ -169,12 +230,12 @@ private struct GridCellView: View {
         RoundedRectangle(cornerRadius: 8)
             .fill(
                 cell.isFilled ? 
-                    LinearGradient(colors: [cell.color.color, cell.color.color.opacity(0.6)], startPoint: .topLeading, endPoint: .bottomTrailing) :
+                    cell.color.color :
                 (isLineComplete ? 
-                    LinearGradient(colors: [GameTheme.Colors.lineCompletionPrimary, GameTheme.Colors.lineCompletionSecondary], startPoint: .topLeading, endPoint: .bottomTrailing) :
+                    GameTheme.Colors.lineCompletionPrimary :
                 (isPreview ? 
-                    LinearGradient(colors: [previewColor.opacity(0.8), previewColor.opacity(0.4)], startPoint: .topLeading, endPoint: .bottomTrailing) : 
-                    LinearGradient(colors: [GameTheme.Colors.cardShadow.opacity(0.3), GameTheme.Colors.blockBackground.opacity(0.2)], startPoint: .topLeading, endPoint: .bottomTrailing)
+                    previewColor.opacity(0.6) : 
+                    GameTheme.Colors.blockBackground.opacity(0.3)
                 ))
             )
             .frame(width: size, height: size)
@@ -200,11 +261,11 @@ private struct GridCellView: View {
                 }
             )
             .shadow(
-                color: cell.isFilled ? cell.color.color.opacity(0.4) :
-                      (isLineComplete ? GameTheme.Colors.lineCompletionPrimary.opacity(0.8) :
-                      (isPreview ? previewColor.opacity(0.6) : .clear)),
-                radius: cell.isFilled ? 5 : (isLineComplete ? 8 : (isPreview ? 6 : 0)),
-                x: 0, y: cell.isFilled ? 2 : 1
+                color: cell.isFilled ? cell.color.color.opacity(0.2) :
+                      (isLineComplete ? GameTheme.Colors.lineCompletionPrimary.opacity(0.4) :
+                      (isPreview ? previewColor.opacity(0.3) : .clear)),
+                radius: cell.isFilled ? 3 : (isLineComplete ? 4 : (isPreview ? 3 : 0)),
+                x: 0, y: cell.isFilled ? 1 : 0
             )
             .scaleEffect(cell.isFilled ? 1.0 : (isLineComplete ? 0.98 : (isPreview ? 0.95 : 0.88)))
     }

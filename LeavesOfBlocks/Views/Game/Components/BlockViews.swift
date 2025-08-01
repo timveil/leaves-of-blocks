@@ -126,15 +126,9 @@ struct BlockView: View {
             // Special power-up block rendering
             ZStack {
                 RoundedRectangle(cornerRadius: GameTheme.Layout.specialBlockCornerRadius)
-                    .fill(
-                        LinearGradient(
-                            colors: [block.color.color, block.color.color.opacity(0.7)],
-                            startPoint: .topLeading,
-                            endPoint: .bottomTrailing
-                        )
-                    )
+                    .fill(block.color.color)
                     .frame(width: cellSize - 2, height: cellSize - 2)
-                    .shadow(color: block.color.color.opacity(0.4), radius: 4)
+                    .shadow(color: block.color.color.opacity(0.2), radius: 2)
                 
                 // Icon overlay
                 Image(systemName: block.type.systemIconName)
@@ -158,19 +152,13 @@ struct BlockView: View {
                 // Individual leaf-like cells of the block
                 ForEach(Array(block.positions.enumerated()), id: \.offset) { index, position in
                     RoundedRectangle(cornerRadius: 8)
-                        .fill(
-                            LinearGradient(
-                                colors: [block.color.color, block.color.color.opacity(0.6)],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            )
-                        )
+                        .fill(block.color.color)
                         .frame(width: cellSize - 2, height: cellSize - 2)
                         .overlay(
                             RoundedRectangle(cornerRadius: 8)
                                 .stroke(Color(red: 0.95, green: 0.9, blue: 0.8).opacity(0.5), lineWidth: 1.5)
                         )
-                        .shadow(color: block.color.color.opacity(0.5), radius: 5, x: 0, y: 3)
+                        .shadow(color: block.color.color.opacity(0.3), radius: 3, x: 0, y: 2)
                         .offset(
                             x: CGFloat(position.col - bounds.minCol) * cellSize - width/2 + cellSize/2,
                             y: CGFloat(position.row - bounds.minRow) * cellSize - height/2 + cellSize/2
@@ -190,6 +178,12 @@ private struct DraggableBlockView: View {
     
     @State private var isDragging: Bool = false
     @State private var lastUpdateTime: Date = Date()
+    @State private var throttleTimer: Timer?
+    @State private var pendingLocation: CGPoint?
+    
+    // Performance constants from configuration
+    private let targetFPS: Double = AppConfiguration.Performance.animationFrameRate
+    private let frameInterval: TimeInterval = AppConfiguration.Performance.dragUpdateThrottleInterval
     
     var body: some View {
         ZStack {
@@ -202,23 +196,41 @@ private struct DraggableBlockView: View {
         .gesture(
             DragGesture(minimumDistance: 5, coordinateSpace: .global)
                 .onChanged { value in
-                    let now = Date()
                     if !isDragging {
                         isDragging = true
-                        lastUpdateTime = now
-                        
-                        // Use current location for smooth initial positioning
+                        lastUpdateTime = Date()
                         onDragStart(value.location)
-                    } else if now.timeIntervalSince(lastUpdateTime) >= 0.016 { // ~60fps limit
-                        lastUpdateTime = now
-                        onDragMove(value.location)
+                        startThrottledUpdates()
+                    } else {
+                        // Store the latest location for throttled processing
+                        pendingLocation = value.location
                     }
                 }
                 .onEnded { _ in
                     isDragging = false
+                    stopThrottledUpdates()
                     onDragEnd()
                 }
         )
+        .onDisappear {
+            // Clean up timer if view disappears during drag
+            stopThrottledUpdates()
+        }
+    }
+    
+    private func startThrottledUpdates() {
+        throttleTimer = Timer.scheduledTimer(withTimeInterval: frameInterval, repeats: true) { _ in
+            if let location = pendingLocation {
+                onDragMove(location)
+                pendingLocation = nil
+            }
+        }
+    }
+    
+    private func stopThrottledUpdates() {
+        throttleTimer?.invalidate()
+        throttleTimer = nil
+        pendingLocation = nil
     }
     
     private func getBlockWidth() -> CGFloat {

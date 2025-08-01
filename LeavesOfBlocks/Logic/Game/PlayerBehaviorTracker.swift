@@ -214,7 +214,7 @@ extension GameSessionStatistics {
             difficulty: difficulty
         )
         
-        // Finalize tracking session
+        // Finalize tracking session1
         let sessionMetrics = tracker.finalizeSession(
             score: score,
             blocksPlaced: blocksPlaced,

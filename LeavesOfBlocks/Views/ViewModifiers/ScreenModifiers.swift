@@ -102,9 +102,7 @@ extension View {
                                 lineWidth: 2
                             )
                     )
-                    .shadow(color: .black.opacity(0.1), radius: elevation * 0.5, x: 0, y: elevation * 0.25)
-                    .shadow(color: .black.opacity(0.05), radius: elevation, x: 0, y: elevation * 0.5)
-                    .shadow(color: GameTheme.Colors.accent.opacity(0.1), radius: elevation * 0.75, x: 0, y: elevation * 0.125)
+                    .shadow(color: .black.opacity(0.08), radius: elevation * 0.4, x: 0, y: elevation * 0.3)
             )
     }
     
