@@ -47,6 +47,8 @@ struct BoardView: View {
     let cellSize: CGFloat = 40
     let onViewSummary: () -> Void
     let onNewGame: () -> Void
+    let onSaveAndExit: (() -> Void)?
+    let onExitWithoutSaving: (() -> Void)?
     
     // Computed property - simple calculation, no need for lazy loading in SwiftUI
     private var gameWidth: CGFloat {
@@ -148,6 +150,31 @@ struct BoardView: View {
                     }
                 }
                 .zIndex(2000) // Higher than dragged blocks
+            }
+            
+            // Save Game Overlay - appears when user tries to navigate away from active game
+            if gameState.showSaveGameOverlay {
+                ZStack {
+                    // Semi-transparent background to dim the game
+                    Color.black.opacity(0.8)
+                        .ignoresSafeArea()
+                    
+                    VStack {
+                        SaveGameOverlayView(
+                            gameState: gameState,
+                            onSaveGame: {
+                                onSaveAndExit?()
+                            },
+                            onExitGame: {
+                                onExitWithoutSaving?()
+                            }
+                        )
+                        .padding(.top, 100) // Position closer to top
+                        
+                        Spacer()
+                    }
+                }
+                .zIndex(2100) // Higher than game over overlay
             }
         
         // Dragged block following finger - positioned with flexible offset for better visibility
@@ -319,6 +346,8 @@ struct BoardView: View {
     BoardView(
         gameState: GameState(),
         onViewSummary: {},
-        onNewGame: {}
+        onNewGame: {},
+        onSaveAndExit: {},
+        onExitWithoutSaving: {}
     )
 }

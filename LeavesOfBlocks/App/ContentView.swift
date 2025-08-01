@@ -53,6 +53,8 @@ struct ContentView: View {
     @StateObject private var gameState = GameState()
     /// Current active screen in the navigation flow
     @State private var currentScreen: AppScreen = .home
+    /// Pending navigation destination when save dialog is shown
+    @State private var pendingNavigation: AppScreen?
 
     // MARK: - View Body
     
@@ -63,36 +65,26 @@ struct ContentView: View {
                 ToolbarView(
                     currentScreen: currentScreen,
                     onGoHome: {
-
-                        currentScreen = .home
-
+                        handleNavigation(to: .home)
                     },
                     onShowAbout: {
-
-                        currentScreen = .about
-
+                        handleNavigation(to: .about)
                     },
                     onShowHowToPlay: {
-
-                        currentScreen = .howToPlay
-
+                        handleNavigation(to: .howToPlay)
                     },
                     onShowSettings: {
-
-                        currentScreen = .settings
-
+                        handleNavigation(to: .settings)
                     },
                     onNewGame: {
-
                         if currentScreen != .game {
                             // If not on game screen, start a new game and navigate to game screen
                             gameState.startGame(difficulty: .moderate)
                             currentScreen = .game
                         } else {
-                            // If on game screen, reset the current game
-                            gameState.resetGame()
+                            // If on game screen, reset the current game (this could also trigger save dialog)
+                            handleNewGameInProgress()
                         }
-
                     }
                 )
 
@@ -120,14 +112,20 @@ struct ContentView: View {
                         BoardView(
                             gameState: gameState,
                             onViewSummary: {
-
                                 currentScreen = .summary(nil)
-
                             },
                             onNewGame: {
-
                                 gameState.resetGame()
-
+                            },
+                            onSaveAndExit: {
+                                gameState.saveAndEndGame {
+                                    completePendingNavigation()
+                                }
+                            },
+                            onExitWithoutSaving: {
+                                gameState.exitWithoutSaving {
+                                    completePendingNavigation()
+                                }
                             }
                         )
                         .gameScreenNavigation()
@@ -166,6 +164,49 @@ struct ContentView: View {
             }
         }
         .navigationViewStyle(StackNavigationViewStyle())  // Prevents split view on iPad
+    }
+    
+    // MARK: - Navigation Helpers
+    
+    /// Handles navigation requests, showing save dialog if currently in an active game
+    private func handleNavigation(to destination: AppScreen) {
+        // Check if we're in an active game and not game over
+        if currentScreen == .game && !gameState.isGameOver && gameState.score > 0 {
+            // Store the pending destination and show save dialog
+            pendingNavigation = destination
+            gameState.showSaveGameDialog()
+        } else {
+            // Navigate immediately if not in active game
+            currentScreen = destination
+        }
+    }
+    
+    /// Handles new game request when already in game
+    private func handleNewGameInProgress() {
+        // Check if we have an active game with progress
+        if !gameState.isGameOver && gameState.score > 0 {
+            // Store new game as pending action and show save dialog
+            pendingNavigation = .game  // Special case: staying on game screen but resetting
+            gameState.showSaveGameDialog()
+        } else {
+            // Reset immediately if no progress to lose
+            gameState.resetGame()
+        }
+    }
+    
+    /// Completes navigation after save dialog resolution
+    private func completePendingNavigation() {
+        guard let destination = pendingNavigation else { return }
+        
+        if destination == .game {
+            // Special case: new game request
+            gameState.resetGame()
+        } else {
+            // Regular navigation
+            currentScreen = destination
+        }
+        
+        pendingNavigation = nil
     }
 }
 

@@ -125,6 +125,13 @@
 // MARK: - Game Over Overlay
 "game_over_quote" = "That the powerful game has ended, and You could not contribute a block.";
 
+// MARK: - Save Game Overlay
+"save_game_title" = "Save Game";
+"save_game_message" = "Would you like to save your current progress or exit without saving?";
+"current_score" = "Current Score";
+"save_game_button" = "Save Game";
+"exit_without_saving" = "Exit Without Saving";
+
 // MARK: - Score Display
 "last_score_format" = "Last Score: %@";
 "tap_for_history" = "Tap for History";

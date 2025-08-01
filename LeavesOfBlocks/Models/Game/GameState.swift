@@ -20,6 +20,7 @@ class GameState: ObservableObject {
     @Published var currentBlocks: [BlockShape]
     @Published var score: Int = 0
     @Published var isGameOver: Bool = false
+    @Published var showSaveGameOverlay: Bool = false
     @Published var linesCleared: Int = 0
     @Published var lastClearedCells: [ClearedCell] = []
     
@@ -332,5 +333,61 @@ class GameState: ObservableObject {
     ///   or when a block cannot be placed at the attempted position.
     func blockReturnFeedback() {
         gameService.blockReturnFeedback()
+    }
+    
+    // MARK: - Save Game Actions
+    
+    /// Shows the save game overlay dialog.
+    ///
+    /// This method displays a modal overlay that allows the user to choose between
+    /// saving the current game or exiting without saving.
+    func showSaveGameDialog() {
+        showSaveGameOverlay = true
+    }
+    
+    /// Saves the current game and ends the session.
+    ///
+    /// This method saves the current game state as a completed game record
+    /// and ends the current session. The navigation completion should be handled
+    /// by the calling view.
+    ///
+    /// - Parameter onComplete: Callback to execute after save is complete
+    func saveAndEndGame(onComplete: @escaping () -> Void = {}) {
+        gameService.endGameSession()
+        
+        // Save game record with current progress
+        let sessionMetrics = behaviorTracker.finalizeSession(
+            score: score,
+            blocksPlaced: blocksPlaced,
+            linesCleared: linesCleared,
+            longestCombo: longestCombo,
+            gameTime: currentGameTime,
+            difficulty: currentDifficulty
+        )
+        
+        gameService.saveGameRecord(
+            score: score,
+            linesCleared: linesCleared,
+            blocksPlaced: blocksPlaced,
+            gameTime: currentGameTime,
+            difficulty: currentDifficulty,
+            longestCombo: longestCombo,
+            sessionMetrics: sessionMetrics
+        )
+        
+        showSaveGameOverlay = false
+        onComplete()
+    }
+    
+    /// Exits the current game without saving.
+    ///
+    /// This method ends the current game session without creating a game record.
+    /// The navigation completion should be handled by the calling view.
+    ///
+    /// - Parameter onComplete: Callback to execute after exit is complete
+    func exitWithoutSaving(onComplete: @escaping () -> Void = {}) {
+        gameService.endGameSession()
+        showSaveGameOverlay = false
+        onComplete()
     }
 }
