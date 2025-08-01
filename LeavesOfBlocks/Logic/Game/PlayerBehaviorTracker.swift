@@ -215,7 +215,7 @@ extension GameSessionStatistics {
         )
         
         // Finalize tracking session1
-        let sessionMetrics = tracker.finalizeSession(
+        let _ = tracker.finalizeSession(
             score: score,
             blocksPlaced: blocksPlaced,
             linesCleared: linesCleared,

@@ -46,6 +46,7 @@ struct BoardView: View {
     
     let cellSize: CGFloat = 40
     let onViewSummary: () -> Void
+    let onNewGame: () -> Void
     
     // Computed property - simple calculation, no need for lazy loading in SwiftUI
     private var gameWidth: CGFloat {
@@ -138,7 +139,8 @@ struct BoardView: View {
                     VStack {
                         GameOverOverlayView(
                             gameState: gameState,
-                            onViewSummary: onViewSummary
+                            onViewSummary: onViewSummary,
+                            onNewGame: onNewGame
                         )
                         .padding(.top, 100) // Position closer to top
                         
@@ -316,6 +318,7 @@ struct BoardView: View {
 #Preview {
     BoardView(
         gameState: GameState(),
-        onViewSummary: {}
+        onViewSummary: {},
+        onNewGame: {}
     )
 }

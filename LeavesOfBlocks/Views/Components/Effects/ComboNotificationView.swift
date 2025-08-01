@@ -109,8 +109,8 @@ struct ComboNotificationView: View {
         }
         
         // Shorter hold time, then quick fade out
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.8) {
-            withAnimation(.easeOut(duration: 0.3)) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+            withAnimation(.easeOut(duration: 0.25)) {
                 opacity = 0.0
                 yOffset = -15
                 scale = 0.9
@@ -146,7 +146,7 @@ struct ComboNotificationOverlay: View {
                 .id(notificationId) // Force recreation for each new combo
                 .onAppear {
                     // Clear the combo after animation completes - faster dismissal
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.5) {
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
                         activeCombo = nil
                     }
                 }

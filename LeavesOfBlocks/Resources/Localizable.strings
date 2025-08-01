@@ -19,6 +19,7 @@
 "settings" = "Settings";
 "select_difficulty" = "Select Difficulty";
 "start_game" = "Start Game";
+"new_game" = "New Game";
 
 // MARK: - Game UI
 "score" = "Score";

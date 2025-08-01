@@ -123,6 +123,11 @@ struct ContentView: View {
 
                                 currentScreen = .summary(nil)
 
+                            },
+                            onNewGame: {
+
+                                gameState.resetGame()
+
                             }
                         )
                         .gameScreenNavigation()

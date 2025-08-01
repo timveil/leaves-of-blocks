@@ -47,8 +47,8 @@ struct DifficultySelectionView: View {
             // Start game button using full width action button component
             FullWidthActionButton(
                 title: "start_game".localized,
-                icon: "play.fill",
-                style: .primary,
+                icon: "play.circle.fill",
+                style: .success,
                 onTap: {
                     onStartGame(selectedDifficulty)
                 }

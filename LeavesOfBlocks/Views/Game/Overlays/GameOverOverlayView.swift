@@ -5,6 +5,7 @@ import SwiftUI
 struct GameOverOverlayView: View {
     @ObservedObject var gameState: GameState
     let onViewSummary: () -> Void
+    let onNewGame: () -> Void
     @State private var trophyScale: CGFloat = 1.0
     
     var body: some View {
@@ -32,13 +33,24 @@ struct GameOverOverlayView: View {
                 score: gameState.score
             )
             
-            // Enhanced button using FullWidthActionButton component
-            FullWidthActionButton(
-                title: "view_summary".localized,
-                icon: "chart.bar.fill",
-                style: .primary,
-                onTap: onViewSummary
-            )
+            // Action buttons
+            VStack(spacing: GameTheme.Layout.mediumSpacing) {
+                // New Game button
+                FullWidthActionButton(
+                    title: "new_game".localized,
+                    icon: "play.circle.fill",
+                    style: .success,
+                    onTap: onNewGame
+                )
+                
+                // View Summary button
+                FullWidthActionButton(
+                    title: "view_summary".localized,
+                    icon: "chart.bar.fill",
+                    style: .secondary,
+                    onTap: onViewSummary
+                )
+            }
         }
         .padding(.horizontal, GameTheme.Layout.largePadding)
         .padding(.vertical, GameTheme.Layout.extraLargePadding)
@@ -67,6 +79,9 @@ struct GameOverOverlayView: View {
             }(),
             onViewSummary: {
                 print("View Summary tapped")
+            },
+            onNewGame: {
+                print("New Game tapped")
             }
         )
     }
