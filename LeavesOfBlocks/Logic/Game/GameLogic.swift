@@ -250,7 +250,190 @@ class GameLogic {
         return false
     }
     
-    // MARK: - Helper Methods
+    // MARK: - Solvability Validation
+    
+    /// Checks if all blocks in the given array can be placed on the grid simultaneously
+    /// Uses optimized backtracking algorithm with performance limits
+    static func canAllBlocksBePlaced(_ blocks: [BlockShape], in grid: [[GridCell]]) -> Bool {
+        guard !blocks.isEmpty else { return true }
+        
+        // Quick check: ensure we have enough empty cells for all blocks
+        let totalBlockCells = blocks.reduce(0) { $0 + $1.positions.count }
+        let emptyCells = countEmptyCells(in: grid)
+        
+        if totalBlockCells > emptyCells {
+            return false
+        }
+        
+        // Sort blocks by constraint (largest first for better pruning)
+        let sortedBlocks = blocks.sorted { $0.positions.count > $1.positions.count }
+        
+        // Use optimized backtracking with depth limit
+        var callCount = 0
+        let maxCalls = 1000 // Prevent excessive computation
+        
+        var mutableGrid = grid
+        return canPlaceBlocksOptimized(sortedBlocks, startingAt: 0, grid: &mutableGrid, callCount: &callCount, maxCalls: maxCalls)
+    }
+    
+    /// Optimized recursive backtracking with performance limits and in-place grid modification
+    private static func canPlaceBlocksOptimized(_ blocks: [BlockShape], startingAt index: Int, grid: inout [[GridCell]], callCount: inout Int, maxCalls: Int) -> Bool {
+        callCount += 1
+        if callCount > maxCalls {
+            return false // Timeout protection
+        }
+        
+        // Base case: all blocks have been placed successfully
+        if index >= blocks.count {
+            return true
+        }
+        
+        let currentBlock = blocks[index]
+        
+        // Try placing the current block at each valid position (inline validation)
+        for row in 0..<GameTheme.GameConfig.gridSize {
+            for col in 0..<GameTheme.GameConfig.gridSize {
+                let position = GridPosition(row: row, col: col)
+                
+                // Inline placement validation for better performance
+                if canPlaceBlockInline(currentBlock, at: position, in: grid) {
+                    // Place block in-place for better memory efficiency
+                    let placedPositions = placeBlockInPlace(currentBlock, at: position, in: &grid)
+                    
+                    // Recursively try to place the remaining blocks
+                    if canPlaceBlocksOptimized(blocks, startingAt: index + 1, grid: &grid, callCount: &callCount, maxCalls: maxCalls) {
+                        // Restore grid state before returning success
+                        removeBlockInPlace(at: placedPositions, in: &grid)
+                        return true
+                    }
+                    
+                    // Restore grid state for next attempt
+                    removeBlockInPlace(at: placedPositions, in: &grid)
+                }
+            }
+        }
+        
+        // No valid placement found for this block
+        return false
+    }
+    
+    /// Finds all valid positions where a block can be placed on the grid
+    static func findValidPositions(for block: BlockShape, in grid: [[GridCell]]) -> [GridPosition] {
+        var validPositions: [GridPosition] = []
+        
+        for row in 0..<GameTheme.GameConfig.gridSize {
+            for col in 0..<GameTheme.GameConfig.gridSize {
+                let position = GridPosition(row: row, col: col)
+                if canPlaceBlock(block, at: position, in: grid) {
+                    validPositions.append(position)
+                }
+            }
+        }
+        
+        return validPositions
+    }
+    
+    // MARK: - Optimized Helper Methods
+    
+    /// Efficient empty cell counting without creating intermediate arrays
+    private static func countEmptyCells(in grid: [[GridCell]]) -> Int {
+        var count = 0
+        for row in grid {
+            for cell in row {
+                if !cell.isFilled {
+                    count += 1
+                }
+            }
+        }
+        return count
+    }
+    
+    /// Inline block placement validation without creating Position objects
+    private static func canPlaceBlockInline(_ block: BlockShape, at gridPosition: GridPosition, in grid: [[GridCell]]) -> Bool {
+        switch block.type {
+        case .horizontalClear, .verticalClear, .areaClear:
+            return isValidGridPosition(gridPosition)
+            
+        case .normal:
+            for blockPos in block.positions {
+                let finalRow = gridPosition.row + blockPos.row
+                let finalCol = gridPosition.col + blockPos.col
+                
+                // Check bounds and occupancy in one step
+                if finalRow < 0 || finalRow >= GameTheme.GameConfig.gridSize || 
+                   finalCol < 0 || finalCol >= GameTheme.GameConfig.gridSize ||
+                   grid[finalRow][finalCol].isFilled {
+                    return false
+                }
+            }
+            return true
+        }
+    }
+    
+    /// In-place block placement that returns affected positions for efficient restoration
+    private static func placeBlockInPlace(_ block: BlockShape, at gridPosition: GridPosition, in grid: inout [[GridCell]]) -> [(Int, Int)] {
+        var placedPositions: [(Int, Int)] = []
+        
+        switch block.type {
+        case .horizontalClear:
+            let targetRow = gridPosition.row
+            if targetRow >= 0 && targetRow < GameTheme.GameConfig.gridSize {
+                for col in 0..<GameTheme.GameConfig.gridSize {
+                    if grid[targetRow][col].isFilled {
+                        placedPositions.append((targetRow, col))
+                        grid[targetRow][col] = GridCell()
+                    }
+                }
+            }
+            
+        case .verticalClear:
+            let targetCol = gridPosition.col
+            if targetCol >= 0 && targetCol < GameTheme.GameConfig.gridSize {
+                for row in 0..<GameTheme.GameConfig.gridSize {
+                    if grid[row][targetCol].isFilled {
+                        placedPositions.append((row, targetCol))
+                        grid[row][targetCol] = GridCell()
+                    }
+                }
+            }
+            
+        case .areaClear:
+            let centerRow = gridPosition.row
+            let centerCol = gridPosition.col
+            
+            for rowOffset in -1...1 {
+                for colOffset in -1...1 {
+                    let targetRow = centerRow + rowOffset
+                    let targetCol = centerCol + colOffset
+                    let targetPosition = GridPosition(row: targetRow, col: targetCol)
+                    
+                    if isValidGridPosition(targetPosition) && grid[targetRow][targetCol].isFilled {
+                        placedPositions.append((targetRow, targetCol))
+                        grid[targetRow][targetCol] = GridCell()
+                    }
+                }
+            }
+            
+        case .normal:
+            for blockPos in block.positions {
+                let finalRow = gridPosition.row + blockPos.row
+                let finalCol = gridPosition.col + blockPos.col
+                
+                placedPositions.append((finalRow, finalCol))
+                grid[finalRow][finalCol].isFilled = true
+                grid[finalRow][finalCol].color = block.color
+            }
+        }
+        
+        return placedPositions
+    }
+    
+    /// Efficient restoration of grid state
+    private static func removeBlockInPlace(at positions: [(Int, Int)], in grid: inout [[GridCell]]) {
+        for (row, col) in positions {
+            grid[row][col] = GridCell()
+        }
+    }
     
     /// Validates if a grid position is within valid bounds
     private static func isValidGridPosition(_ position: GridPosition) -> Bool {

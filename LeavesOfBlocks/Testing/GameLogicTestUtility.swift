@@ -234,13 +234,210 @@ struct GameLogicTestUtility {
         expect(score == 10, "Should calculate correct score")
     }
     
+    // MARK: - Solvability Validation Tests
+    
+    /// Test: Solvability check with empty grid
+    static func testSolvabilityEmptyGrid() {
+        print("Testing solvability with empty grid...")
+        
+        // Given
+        let grid = GameLogic.createEmptyGrid()
+        let blocks = [
+            BlockShape.allShapes[0], // Single block
+            BlockShape.allShapes[1], // 2-block horizontal
+            BlockShape.allShapes[2]  // 2-block vertical
+        ]
+        
+        // When
+        let canPlaceAll = GameLogic.canAllBlocksBePlaced(blocks, in: grid)
+        
+        // Then
+        expect(canPlaceAll == true, "Should be able to place all blocks on empty grid")
+    }
+    
+    /// Test: Solvability check with nearly full grid
+    static func testSolvabilityNearlyFullGrid() {
+        print("Testing solvability with nearly full grid...")
+        
+        // Given
+        var grid = GameLogic.createEmptyGrid()
+        
+        // Fill most of the grid, leaving only a few spaces
+        for row in 0..<6 {
+            for col in 0..<8 {
+                grid[row][col].isFilled = true
+                grid[row][col].color = .blue
+            }
+        }
+        // Leave rows 6-7 empty (16 cells)
+        
+        let blocks = [
+            BlockShape.allShapes[0], // Single block (1 cell)
+            BlockShape.allShapes[0], // Single block (1 cell)  
+            BlockShape.allShapes[0]  // Single block (1 cell)
+        ]
+        
+        // When
+        let canPlaceAll = GameLogic.canAllBlocksBePlaced(blocks, in: grid)
+        
+        // Then
+        expect(canPlaceAll == true, "Should be able to place 3 single blocks with 16 empty cells")
+    }
+    
+    /// Test: Solvability check with impossible scenario
+    static func testSolvabilityImpossibleScenario() {
+        print("Testing solvability with impossible scenario...")
+        
+        // Given
+        var grid = GameLogic.createEmptyGrid()
+        
+        // Fill all but 2 cells
+        for row in 0..<8 {
+            for col in 0..<8 {
+                if !(row == 7 && col == 6) && !(row == 7 && col == 7) {
+                    grid[row][col].isFilled = true
+                    grid[row][col].color = .blue
+                }
+            }
+        }
+        // Only 2 empty cells remain
+        
+        let blocks = [
+            BlockShape.allShapes[4], // 2x2 square (4 cells) - impossible to fit
+            BlockShape.allShapes[0], // Single block
+            BlockShape.allShapes[0]  // Single block
+        ]
+        
+        // When
+        let canPlaceAll = GameLogic.canAllBlocksBePlaced(blocks, in: grid)
+        
+        // Then
+        expect(canPlaceAll == false, "Should not be able to place 4-cell block with only 2 empty cells")
+    }
+    
+    /// Test: Block generation solvability integration
+    static func testBlockGenerationSolvability() {
+        print("Testing block generation solvability integration...")
+        
+        // Given
+        var grid = GameLogic.createEmptyGrid()
+        
+        // Partially fill grid to create challenging but solvable scenario
+        for row in 0..<4 {
+            for col in 0..<6 {
+                grid[row][col].isFilled = true
+                grid[row][col].color = .red
+            }
+        }
+        // Leave bottom half and rightmost columns available
+        
+        // When
+        let blocks = BlockGenerator.generateWeightedBlocks(count: 3, difficulty: .easy, grid: grid)
+        let canPlaceAll = GameLogic.canAllBlocksBePlaced(blocks, in: grid)
+        
+        // Then
+        expect(canPlaceAll == true, "Generated blocks should always be solvable")
+        expect(blocks.count == 3, "Should generate exactly 3 blocks")
+    }
+    
+    /// Test: Fallback strategy effectiveness
+    static func testFallbackStrategyEffectiveness() {
+        print("Testing fallback strategy effectiveness...")
+        
+        // Given
+        var grid = GameLogic.createEmptyGrid()
+        
+        // Create scenario where only small blocks can fit
+        for row in 0..<8 {
+            for col in 0..<8 {
+                // Leave only scattered single cells
+                if !((row == 1 && col == 1) || (row == 3 && col == 5) || (row == 6 && col == 2)) {
+                    grid[row][col].isFilled = true
+                    grid[row][col].color = .green
+                }
+            }
+        }
+        // Only 3 scattered single cells remain
+        
+        // When
+        let blocks = BlockGenerator.generateWeightedBlocks(count: 3, difficulty: .hard, grid: grid)
+        let canPlaceAll = GameLogic.canAllBlocksBePlaced(blocks, in: grid)
+        
+        // Then
+        expect(canPlaceAll == true, "Fallback strategy should ensure solvability even with limited space")
+        
+        // Verify blocks are appropriately sized for available space
+        let allBlocksSmall = blocks.allSatisfy { $0.positions.count <= 1 }
+        expect(allBlocksSmall == true, "Fallback should generate single blocks when only scattered cells available")
+    }
+    
+    /// Test: Find valid positions function
+    static func testFindValidPositions() {
+        print("Testing find valid positions function...")
+        
+        // Given
+        var grid = GameLogic.createEmptyGrid()
+        
+        // Fill some positions to limit valid placements
+        grid[0][0].isFilled = true
+        grid[0][1].isFilled = true
+        grid[1][0].isFilled = true
+        
+        let twoBlockHorizontal = BlockShape.allShapes[1] // 2-block horizontal
+        
+        // When
+        let validPositions = GameLogic.findValidPositions(for: twoBlockHorizontal, in: grid)
+        
+        // Then
+        expect(validPositions.count > 0, "Should find some valid positions for 2-block horizontal")
+        expect(!validPositions.contains(GridPosition(row: 0, col: 0)), "Should not include blocked position")
+        
+        // Verify all returned positions are actually valid
+        for position in validPositions {
+            let isValid = GameLogic.canPlaceBlock(twoBlockHorizontal, at: position, in: grid)
+            expect(isValid == true, "All returned positions should be valid for placement")
+        }
+    }
+    
+    /// Test: Logging functionality with unsolvable scenario
+    static func testLoggingFunctionality() {
+        print("Testing logging functionality with unsolvable scenario...")
+        
+        // Given
+        var grid = GameLogic.createEmptyGrid()
+        
+        // Create nearly impossible scenario - fill most cells
+        for row in 0..<8 {
+            for col in 0..<8 {
+                // Leave only 3 scattered cells empty
+                if !((row == 2 && col == 3) || (row == 5 && col == 1) || (row == 7 && col == 6)) {
+                    grid[row][col].isFilled = true
+                    grid[row][col].color = .blue
+                }
+            }
+        }
+        
+        print("📝 Testing logging output (should see SOLVABILITY logs):")
+        
+        // When - This should trigger solvability logging
+        let blocks = BlockGenerator.generateWeightedBlocks(count: 3, difficulty: .hard, grid: grid)
+        
+        // Then
+        expect(blocks.count == 3, "Should still generate 3 blocks")
+        let canPlaceAll = GameLogic.canAllBlocksBePlaced(blocks, in: grid)
+        expect(canPlaceAll == true, "Generated blocks should be solvable even in difficult scenarios")
+        
+        print("✅ Logging test completed - check console output for [SOLVABILITY] messages")
+    }
+    
     // MARK: - Test Runner
     
-    /// Runs all available tests
+    /// Runs all available tests including new solvability tests
     static func runAllTests() {
         print("🧪 Running GameLogic Development Tests...")
         print("=" * 50)
         
+        // Original tests
         testCreateEmptyGrid()
         testCanPlaceSingleBlockValid()
         testCanPlaceBlockOutOfBounds()
@@ -251,6 +448,15 @@ struct GameLogicTestUtility {
         testGameOverDetectionEmptyGrid()
         testGameOverDetectionNoBlocks()
         testCompleteBlockPlacementFlow()
+        
+        // New solvability tests
+        testSolvabilityEmptyGrid()
+        testSolvabilityNearlyFullGrid()
+        testSolvabilityImpossibleScenario()
+        testBlockGenerationSolvability()
+        testFallbackStrategyEffectiveness()
+        testFindValidPositions()
+        testLoggingFunctionality()
         
         print("=" * 50)
         print("✅ GameLogic development tests completed")

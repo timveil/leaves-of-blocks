@@ -79,7 +79,7 @@ class GameState: ObservableObject {
     /// - Note: This method is called automatically when all current blocks have been placed,
     ///   or when starting/resetting a game.
     func generateNewBlocks() {
-        currentBlocks = BlockGenerator.generateWeightedBlocks(count: 3, difficulty: currentDifficulty)
+        currentBlocks = BlockGenerator.generateWeightedBlocks(count: 3, difficulty: currentDifficulty, grid: grid)
         checkGameOver()
     }
     
