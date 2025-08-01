@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		3A2F82A82E3D835000642422 /* TestPlan.xctestplan in Resources */ = {isa = PBXBuildFile; fileRef = 3A2F82A72E3D835000642422 /* TestPlan.xctestplan */; };
 		3A893D332E370BBB00872181 /* LeavesOfBlocksAppClip.app in Embed App Clips */ = {isa = PBXBuildFile; fileRef = 3A893D112E370BBA00872181 /* LeavesOfBlocksAppClip.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
@@ -42,7 +43,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		3A2F82A62E3D81CB00642422 /* LeavesOfBlocks.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = LeavesOfBlocks.xctestplan; sourceTree = "<group>"; };
+		3A2F82A72E3D835000642422 /* TestPlan.xctestplan */ = {isa = PBXFileReference; lastKnownFileType = text; path = TestPlan.xctestplan; sourceTree = "<group>"; };
 		3A692C012E3460ED00451CB3 /* LeavesOfBlocks.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LeavesOfBlocks.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3A893D112E370BBA00872181 /* LeavesOfBlocksAppClip.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = LeavesOfBlocksAppClip.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		3AF786EF2E3D7C3800B1A3BE /* LeavesOfBlocksUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = LeavesOfBlocksUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -107,7 +108,7 @@
 		3A692BF82E3460ED00451CB3 = {
 			isa = PBXGroup;
 			children = (
-				3A2F82A62E3D81CB00642422 /* LeavesOfBlocks.xctestplan */,
+				3A2F82A72E3D835000642422 /* TestPlan.xctestplan */,
 				3A692C032E3460ED00451CB3 /* LeavesOfBlocks */,
 				3A893D122E370BBA00872181 /* LeavesOfBlocksAppClip */,
 				3AF786F02E3D7C3800B1A3BE /* LeavesOfBlocksUITests */,
@@ -245,6 +246,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3A2F82A82E3D835000642422 /* TestPlan.xctestplan in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

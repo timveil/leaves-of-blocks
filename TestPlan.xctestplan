@@ -1,0 +1,24 @@
+{
+  "configurations" : [
+    {
+      "id" : "127B7B7B-47DB-4252-9EE0-24E6B9A0FDA2",
+      "name" : "Configuration 1",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "testTimeoutsEnabled" : true
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:LeavesOfBlocks.xcodeproj",
+        "identifier" : "3AF786EE2E3D7C3800B1A3BE",
+        "name" : "LeavesOfBlocksUITests"
+      }
+    }
+  ],
+  "version" : 1
+}
