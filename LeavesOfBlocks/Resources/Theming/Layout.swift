@@ -43,5 +43,19 @@ extension GameTheme {
         // Special Block Styling
         static let specialBlockCornerRadius: CGFloat = 12
         static let specialBlockIconScale: CGFloat = 0.5
+        
+        // Opacity Constants for UI Elements
+        static let lowOpacity: Double = 0.2
+        static let mediumLowOpacity: Double = 0.3
+        static let mediumOpacity: Double = 0.4
+        static let mediumHighOpacity: Double = 0.6
+        static let highOpacity: Double = 0.8
+        static let veryHighOpacity: Double = 0.9
+        
+        // Scale Effects
+        static let subtleScale: Double = 1.02
+        static let minorScale: Double = 0.95
+        static let reducedScale: Double = 0.88
+        static let slightlyReducedScale: Double = 0.98
     }
 }

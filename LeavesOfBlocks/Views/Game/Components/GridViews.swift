@@ -234,17 +234,17 @@ private struct GridCellView: View {
                 (isLineComplete ? 
                     GameTheme.Colors.lineCompletionPrimary :
                 (isPreview ? 
-                    previewColor.opacity(0.6) : 
-                    GameTheme.Colors.blockBackground.opacity(0.3)
+                    previewColor.opacity(GameTheme.Layout.mediumHighOpacity) : 
+                    GameTheme.Colors.blockBackground.opacity(GameTheme.Layout.mediumLowOpacity)
                 ))
             )
             .frame(width: size, height: size)
             .overlay(
                 RoundedRectangle(cornerRadius: 8)
                     .stroke(
-                        cell.isFilled ? GameTheme.Colors.primaryText.opacity(0.4) :
-                        (isLineComplete ? GameTheme.Colors.lineCompletionPrimary.opacity(0.9) :
-                        (isPreview ? previewColor.opacity(0.8) : GameTheme.Colors.gridBorder.opacity(0.2))),
+                        cell.isFilled ? GameTheme.Colors.primaryText.opacity(GameTheme.Layout.mediumOpacity) :
+                        (isLineComplete ? GameTheme.Colors.lineCompletionPrimary.opacity(GameTheme.Layout.veryHighOpacity) :
+                        (isPreview ? previewColor.opacity(GameTheme.Layout.highOpacity) : GameTheme.Colors.gridBorder.opacity(GameTheme.Layout.lowOpacity))),
                         lineWidth: cell.isFilled ? 2 : (isLineComplete ? 3 : (isPreview ? 2 : 1))
                     )
             )
@@ -255,19 +255,19 @@ private struct GridCellView: View {
                         // Static golden glow for line clearing (no pulsing to avoid conflicts)
                         RoundedRectangle(cornerRadius: 8)
                             .stroke(GameTheme.Colors.lineCompletionAccent, lineWidth: 3)
-                            .opacity(0.8)
-                            .scaleEffect(1.02)
+                            .opacity(GameTheme.Layout.highOpacity)
+                            .scaleEffect(GameTheme.Layout.subtleScale)
                     }
                 }
             )
             .shadow(
-                color: cell.isFilled ? cell.color.color.opacity(0.2) :
-                      (isLineComplete ? GameTheme.Colors.lineCompletionPrimary.opacity(0.4) :
-                      (isPreview ? previewColor.opacity(0.3) : .clear)),
+                color: cell.isFilled ? cell.color.color.opacity(GameTheme.Layout.lowOpacity) :
+                      (isLineComplete ? GameTheme.Colors.lineCompletionPrimary.opacity(GameTheme.Layout.mediumOpacity) :
+                      (isPreview ? previewColor.opacity(GameTheme.Layout.mediumLowOpacity) : .clear)),
                 radius: cell.isFilled ? 3 : (isLineComplete ? 4 : (isPreview ? 3 : 0)),
                 x: 0, y: cell.isFilled ? 1 : 0
             )
-            .scaleEffect(cell.isFilled ? 1.0 : (isLineComplete ? 0.98 : (isPreview ? 0.95 : 0.88)))
+            .scaleEffect(cell.isFilled ? 1.0 : (isLineComplete ? GameTheme.Layout.slightlyReducedScale : (isPreview ? GameTheme.Layout.minorScale : GameTheme.Layout.reducedScale)))
     }
 }
 

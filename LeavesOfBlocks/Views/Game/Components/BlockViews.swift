@@ -189,7 +189,7 @@ private struct DraggableBlockView: View {
         ZStack {
             // Original block stays in place with reduced opacity when dragging
             BlockView(block: block, cellSize: cellSize)
-                .opacity(isDragging ? 0.3 : 1.0)
+                .opacity(isDragging ? GameTheme.Layout.mediumLowOpacity : 1.0)
         }
         .frame(width: getBlockWidth(), height: getBlockHeight())
         .contentShape(Rectangle()) // Ensure entire frame is tappable

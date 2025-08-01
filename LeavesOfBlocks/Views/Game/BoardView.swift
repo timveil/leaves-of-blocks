@@ -312,32 +312,6 @@ struct BoardView: View {
     
 }
 
-// MARK: - Block Model Extensions
-extension BlockShape {
-    /// Returns the bounding box of the block using a single-pass algorithm
-    func getBounds() -> (minRow: Int, maxRow: Int, minCol: Int, maxCol: Int, width: Int, height: Int) {
-        guard let first = positions.first else {
-            return (minRow: 0, maxRow: 0, minCol: 0, maxCol: 0, width: 0, height: 0)
-        }
-        
-        // Single-pass calculation for better performance
-        let bounds = positions.reduce((first.row, first.row, first.col, first.col)) { bounds, position in
-            (min(bounds.0, position.row),    // minRow
-             max(bounds.1, position.row),    // maxRow
-             min(bounds.2, position.col),    // minCol
-             max(bounds.3, position.col))    // maxCol
-        }
-        
-        return (
-            minRow: bounds.0,
-            maxRow: bounds.1,
-            minCol: bounds.2,
-            maxCol: bounds.3,
-            width: bounds.3 - bounds.2 + 1,
-            height: bounds.1 - bounds.0 + 1
-        )
-    }
-}
 
 #Preview {
     BoardView(
