@@ -3,8 +3,42 @@ name: iOS Build and Test
 on:
   push:
     branches: [ "main" ]
+    paths:
+      - '**.swift'
+      - '**.xcodeproj/**'
+      - '**.xcworkspace/**'
+      - '**.xcdatamodeld/**'
+      - '**.xcassets/**'
+      - '**.storyboard'
+      - '**.xib'
+      - '**.plist'
+      - '**.entitlements'
+      - 'LeavesOfBlocks/**'
+      - 'LeavesOfBlocksTests/**'
+      - 'LeavesOfBlocksUITests/**'
+      - 'LeavesOfBlocksAppClip/**'
+      - 'LeavesOfBlocksAppClipTests/**'
+      - 'LeavesOfBlocksAppClipUITests/**'
+      - '.github/workflows/ios.yml'
   pull_request:
     branches: [ "main" ]
+    paths:
+      - '**.swift'
+      - '**.xcodeproj/**'
+      - '**.xcworkspace/**'
+      - '**.xcdatamodeld/**'
+      - '**.xcassets/**'
+      - '**.storyboard'
+      - '**.xib'
+      - '**.plist'
+      - '**.entitlements'
+      - 'LeavesOfBlocks/**'
+      - 'LeavesOfBlocksTests/**'
+      - 'LeavesOfBlocksUITests/**'
+      - 'LeavesOfBlocksAppClip/**'
+      - 'LeavesOfBlocksAppClipTests/**'
+      - 'LeavesOfBlocksAppClipUITests/**'
+      - '.github/workflows/ios.yml'
 
 jobs:
   build:
