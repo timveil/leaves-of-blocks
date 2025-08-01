@@ -11,11 +11,16 @@ final class LeavesOfBlocksUITests: XCTestCase {
     
     var app: XCUIApplication!
 
+    @MainActor
     override func setUpWithError() throws {
         continueAfterFailure = false
         
         app = XCUIApplication()
         app.launchArguments = ["-ui-testing", "-screenshot-mode"]
+        
+        // Setup for Fastlane snapshot
+        setupSnapshot(app)
+        
         app.launch()
         
         // Wait for app to fully load (should be immediate now with launch screen skip)
@@ -38,6 +43,7 @@ final class LeavesOfBlocksUITests: XCTestCase {
         captureAboutScreen()
     }
     
+    @MainActor
     private func captureHomeScreen() {
         // Wait for home screen to load by looking for difficulty buttons or score display
         let easyButton = app.buttons["easy_button"]
@@ -53,6 +59,7 @@ final class LeavesOfBlocksUITests: XCTestCase {
         takeScreenshot(named: "01_HomeScreen")
     }
     
+    @MainActor
     private func captureHowToPlayScreen() {
         // Navigate to How to Play
         let howToPlayButton = app.buttons["how_to_play_button"]
@@ -74,6 +81,7 @@ final class LeavesOfBlocksUITests: XCTestCase {
         }
     }
     
+    @MainActor
     private func captureGameplayScreens() {
         // Capture Easy difficulty
         captureGameplay(difficulty: "easy_button", screenshotName: "03_GameplayEasy")
@@ -85,6 +93,7 @@ final class LeavesOfBlocksUITests: XCTestCase {
         captureGameplay(difficulty: "hard_button", screenshotName: "05_GameplayHard")
     }
     
+    @MainActor
     private func captureGameplay(difficulty: String, screenshotName: String) {
         // Select difficulty
         let difficultyButton = app.buttons[difficulty]
@@ -117,6 +126,7 @@ final class LeavesOfBlocksUITests: XCTestCase {
         _ = easyButton.waitForExistence(timeout: 5)
     }
     
+    @MainActor
     private func captureGameHistoryScreen() {
         // Navigate to History
         let historyButton = app.buttons["history_button"]
@@ -135,6 +145,7 @@ final class LeavesOfBlocksUITests: XCTestCase {
         }
     }
     
+    @MainActor
     private func captureAboutScreen() {
         // Navigate to About
         let aboutButton = app.buttons["about_button"]
@@ -280,6 +291,7 @@ final class LeavesOfBlocksUITests: XCTestCase {
     
     // MARK: - Helper Methods
     
+    @MainActor
     private func takeScreenshot(named name: String) {
         // Take XCTest screenshot for test results
         let screenshot = XCUIScreen.main.screenshot()
@@ -288,8 +300,8 @@ final class LeavesOfBlocksUITests: XCTestCase {
         attachment.lifetime = .keepAlways
         add(attachment)
         
-        // For Fastlane snapshot - will be enabled when SnapshotHelper is added
-        // snapshot(name)
+        // Take Fastlane snapshot
+        snapshot(name)
     }
 }
 
