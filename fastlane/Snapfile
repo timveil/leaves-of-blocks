@@ -2,11 +2,7 @@
 
 # Devices for screenshot capture
 devices([
-  "iPhone 16 Pro Max",
-  "iPhone 16 Pro", 
-  "iPhone 16",
-  "iPhone SE (3rd generation)",
-  "iPad Pro (12.9-inch) (6th generation)"
+  "iPhone 16 Pro Max"
 ])
 
 # Languages for localized screenshots
