@@ -1,0 +1,131 @@
+# This file contains the fastlane.tools configuration
+# You can find the documentation at https://docs.fastlane.tools
+#
+# For a list of all available actions, check out
+#
+#     https://docs.fastlane.tools/actions
+#
+# For a list of all available plugins, check out
+#
+#     https://docs.fastlane.tools/plugins/available-plugins
+#
+
+# Uncomment the line if you want fastlane to automatically update itself
+# update_fastlane
+
+default_platform(:ios)
+
+platform :ios do
+  before_all do
+    ensure_xcode_version(version: "16.4")
+  end
+
+  desc "Run tests"
+  lane :test do
+    run_tests(
+      project: "LeavesOfBlocks.xcodeproj",
+      scheme: "LeavesOfBlocks",
+      destination: "platform=iOS Simulator,name=iPhone 16"
+    )
+  end
+
+  desc "Build for testing"
+  lane :build_for_testing do
+    build_app(
+      project: "LeavesOfBlocks.xcodeproj",
+      scheme: "LeavesOfBlocks",
+      destination: "platform=iOS Simulator,name=iPhone 16",
+      skip_archive: true,
+      skip_codesigning: true
+    )
+  end
+
+  desc "Create a new build for App Store"
+  lane :build do
+    increment_build_number(xcodeproj: "LeavesOfBlocks.xcodeproj")
+    build_app(
+      project: "LeavesOfBlocks.xcodeproj",
+      scheme: "LeavesOfBlocks",
+      export_method: "app-store"
+    )
+  end
+
+  desc "Upload to TestFlight"
+  lane :beta do
+    increment_build_number(xcodeproj: "LeavesOfBlocks.xcodeproj")
+    build_app(
+      project: "LeavesOfBlocks.xcodeproj",
+      scheme: "LeavesOfBlocks",
+      export_method: "app-store"
+    )
+    upload_to_testflight(
+      skip_waiting_for_build_processing: true
+    )
+  end
+
+  desc "Upload to App Store"
+  lane :release do
+    increment_build_number(xcodeproj: "LeavesOfBlocks.xcodeproj")
+    build_app(
+      project: "LeavesOfBlocks.xcodeproj",
+      scheme: "LeavesOfBlocks",
+      export_method: "app-store"
+    )
+    upload_to_app_store(
+      force: true,
+      submit_for_review: false
+    )
+  end
+
+  desc "Generate new localized screenshots"
+  lane :screenshots do
+    UI.user_error!("📱 Screenshot capture requires UI tests to be set up.")
+    UI.message("🔧 To enable screenshot capture:")
+    UI.message("1. Add a UI test target to your Xcode project")
+    UI.message("2. Create UI tests that navigate through your app")
+    UI.message("3. Use snapshot() calls in your UI tests to capture screenshots")
+    UI.message("4. Then re-run: fastlane ios screenshots")
+    UI.message("")
+    UI.message("📖 For detailed setup instructions, visit:")
+    UI.message("https://docs.fastlane.tools/actions/snapshot/")
+  end
+
+  desc "Generate manual screenshots (simulator only)"
+  lane :manual_screenshots do
+    UI.message("🚀 Building app for manual screenshot capture...")
+    
+    # Build the app for simulator
+    build_for_testing
+    
+    UI.success("✅ App built successfully!")
+    UI.message("📱 To capture screenshots manually:")
+    UI.message("1. Open iOS Simulator")
+    UI.message("2. Launch your app from Xcode or run: xcrun simctl launch booted timothy.veil.LeavesOfBlocks")
+    UI.message("3. Navigate through your app")
+    UI.message("4. Press ⌘+S in Simulator to save screenshots")
+    UI.message("5. Screenshots will be saved to ~/Desktop")
+    UI.message("")
+    UI.message("💡 Pro tip: Use ⌘+1, ⌘+2, ⌘+3 to switch device sizes quickly")
+  end
+
+  desc "App Clip build"
+  lane :build_app_clip do
+    build_app(
+      project: "LeavesOfBlocks.xcodeproj",
+      scheme: "LeavesOfBlocksAppClip",
+      export_method: "app-store"
+    )
+  end
+
+  after_all do |lane|
+    # This block is called, only if the executed lane was successful
+    notification(message: "Fastlane finished '#{lane}' successfully! 🎉")
+  end
+
+  error do |lane, exception|
+    # This block is called, only if the executed lane failed
+    notification(
+      message: "Fastlane '#{lane}' failed with error: #{exception.message} ❌"
+    )
+  end
+end

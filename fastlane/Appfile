@@ -1,0 +1,10 @@
+app_identifier("timothy.veil.LeavesOfBlocks") # The bundle identifier of your app
+# apple_id("[[APPLE_ID]]") # Your Apple Developer Portal username
+
+team_id("85U9MWUBJL") # Your Developer Portal Team ID
+
+# Uncomment and set your Apple ID for App Store Connect operations
+# apple_id("your.email@example.com")
+
+# For more information about the Appfile, see:
+#     https://docs.fastlane.tools/advanced/#appfile

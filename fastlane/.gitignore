@@ -1,0 +1,19 @@
+# Fastlane Specific
+*.mobileprovision
+*.p12
+
+# Deliver temporary files
+*.itmsp
+*.dSYM.zip
+*.dSYM
+
+# Test output
+test_output
+
+# Preview HTML files
+report.xml
+screenshots
+derivedData
+
+# App Store Connect API key
+AuthKey_*.p8
