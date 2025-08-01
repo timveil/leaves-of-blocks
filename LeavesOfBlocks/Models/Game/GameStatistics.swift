@@ -15,6 +15,12 @@ struct GameSessionStatistics {
     let currentCombo: Int
     let difficulty: DifficultyMode
     
+    // MARK: - Efficiency Metrics (Optional)
+    
+    var efficiencyGrade: String?
+    var strategicGrade: String?
+    var fallbackActivations: Int?
+    
     // MARK: - Initialization
     
     init(
@@ -24,7 +30,10 @@ struct GameSessionStatistics {
         gameTime: TimeInterval,
         longestCombo: Int,
         currentCombo: Int,
-        difficulty: DifficultyMode
+        difficulty: DifficultyMode,
+        efficiencyGrade: String? = nil,
+        strategicGrade: String? = nil,
+        fallbackActivations: Int? = nil
     ) {
         self.score = score
         self.blocksPlaced = blocksPlaced
@@ -33,6 +42,9 @@ struct GameSessionStatistics {
         self.longestCombo = longestCombo
         self.currentCombo = currentCombo
         self.difficulty = difficulty
+        self.efficiencyGrade = efficiencyGrade
+        self.strategicGrade = strategicGrade
+        self.fallbackActivations = fallbackActivations
     }
     
     // MARK: - Computed Statistics

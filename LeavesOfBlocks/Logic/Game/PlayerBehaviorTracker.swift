@@ -69,6 +69,38 @@ class PlayerBehaviorTracker: ObservableObject {
     private var totalMeasurements: Int = 0
     private var highTierMeasurements: Int = 0
     
+    // MARK: - Current Metrics Access
+    
+    /// Get current efficiency metrics without finalizing the session
+    func getCurrentMetrics(
+        score: Int,
+        blocksPlaced: Int,
+        linesCleared: Int,
+        longestCombo: Int,
+        gameTime: TimeInterval,
+        difficulty: DifficultyMode
+    ) -> SessionMetrics {
+        let averageEfficiency = gridEfficiencyHistory.isEmpty ? 0.0 : gridEfficiencyHistory.reduce(0, +) / Double(gridEfficiencyHistory.count)
+        let averageFragmentation = fragmentationHistory.isEmpty ? 0.0 : fragmentationHistory.reduce(0, +) / Double(fragmentationHistory.count)
+        let averageStrategic = strategicOpportunities.isEmpty ? 0.0 : strategicOpportunities.reduce(0, +) / Double(strategicOpportunities.count)
+        let challengeMaintained = totalMeasurements > 0 ? Double(highTierMeasurements) / Double(totalMeasurements) : 0.0
+        
+        return SessionMetrics(
+            score: score,
+            blocksPlaced: blocksPlaced,
+            linesCleared: linesCleared,
+            longestCombo: longestCombo,
+            gameTime: gameTime,
+            difficulty: difficulty,
+            averageGridEfficiency: averageEfficiency,
+            averageFragmentation: averageFragmentation,
+            strategicPlayRating: averageStrategic,
+            tierUsageDistribution: tierUsageCount,
+            fallbackActivations: fallbackCount,
+            challengeMaintained: challengeMaintained
+        )
+    }
+    
     // MARK: - Session Management
     
     /// Starts a new tracking session
@@ -203,29 +235,28 @@ extension GameSessionStatistics {
         currentCombo: Int,
         difficulty: DifficultyMode
     ) -> GameSessionStatistics {
-        // Get standard statistics
-        let baseStats = GameSessionStatistics(
+        // Get current metrics without finalizing session
+        let metrics = tracker.getCurrentMetrics(
+            score: score,
+            blocksPlaced: blocksPlaced,
+            linesCleared: linesCleared,
+            longestCombo: longestCombo,
+            gameTime: gameTime,
+            difficulty: difficulty
+        )
+        
+        // Return statistics with efficiency metrics
+        return GameSessionStatistics(
             score: score,
             blocksPlaced: blocksPlaced,
             linesCleared: linesCleared,
             gameTime: gameTime,
             longestCombo: longestCombo,
             currentCombo: currentCombo,
-            difficulty: difficulty
+            difficulty: difficulty,
+            efficiencyGrade: metrics.efficiencyGrade,
+            strategicGrade: metrics.strategicGrade,
+            fallbackActivations: metrics.fallbackActivations
         )
-        
-        // Finalize tracking session1
-        let _ = tracker.finalizeSession(
-            score: score,
-            blocksPlaced: blocksPlaced,
-            linesCleared: linesCleared,
-            longestCombo: longestCombo,
-            gameTime: gameTime,
-            difficulty: difficulty
-        )
-        
-        // Enhanced statistics would be returned here
-        // For now, return base statistics until we extend the model
-        return baseStats
     }
 }
