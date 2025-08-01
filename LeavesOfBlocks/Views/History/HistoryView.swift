@@ -47,7 +47,7 @@ struct HistoryView: View {
                     averageFragmentation: record.averageFragmentation > 0 ? record.averageFragmentation : nil,
                     strategicPlayRating: record.strategicPlayRating > 0 ? record.strategicPlayRating : nil,
                     challengeMaintained: record.challengeMaintained > 0 ? record.challengeMaintained : nil,
-                    fallbackActivations: record.fallbackActivations > 0 ? Int(record.fallbackActivations) : nil,
+                    fallbackActivations: nil,
                     efficiencyGrade: record.efficiencyGrade?.isEmpty == false ? record.efficiencyGrade : nil,
                     strategicGrade: record.strategicGrade?.isEmpty == false ? record.strategicGrade : nil,
                     tierUsageDistribution: record.tierUsageDistribution?.isEmpty == false ? record.tierUsageDistribution : nil

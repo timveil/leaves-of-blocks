@@ -184,18 +184,6 @@ struct SummaryView: View {
                     }
                     .padding(.horizontal, GameTheme.Layout.extraLargePadding)
                     
-                    // Fallback Activations (if any)
-                    if let fallbacks = fallbackActivations, fallbacks > 0 {
-                        Text("fallbacks".localized(with: fallbacks))
-                            .font(GameTheme.Typography.fontSmall)
-                            .foregroundColor(GameTheme.Colors.secondaryText)
-                            .gameBadgeStyle(
-                                backgroundColor: GameTheme.Colors.blockBackground.opacity(0.3),
-                                borderColor: GameTheme.Colors.gridBorder.opacity(0.3),
-                                borderWidth: 1
-                            )
-                            .padding(.top, GameTheme.Layout.mediumSpacing)
-                    }
                     
                     Spacer(minLength: GameTheme.Layout.extraLargeSpacing)
                 }
