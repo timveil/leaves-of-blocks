@@ -8,6 +8,7 @@ struct SimpleAppTitleView: View {
             .font(GameTheme.Typography.fontXLarge)
             .foregroundColor(GameTheme.Colors.primaryText)
             .padding(.vertical, GameTheme.Layout.smallPadding)
+            .accessibilityIdentifier("leaves_of_blocks_title")
     }
 }
 
@@ -22,6 +23,7 @@ struct SimpleScoreView: View {
                     Text(gameState.score.formattedScore)
                         .font(GameTheme.Typography.fontMediumLarge)
                         .foregroundColor(GameTheme.Colors.primaryText)
+                        .accessibilityIdentifier("score_display")
                     Text("score".localized)
                         .font(GameTheme.Typography.fontXXSmall)
                         .foregroundColor(GameTheme.Colors.secondaryText)

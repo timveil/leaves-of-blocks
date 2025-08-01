@@ -79,15 +79,19 @@ platform :ios do
 
   desc "Generate new localized screenshots"
   lane :screenshots do
-    UI.user_error!("📱 Screenshot capture requires UI tests to be set up.")
-    UI.message("🔧 To enable screenshot capture:")
-    UI.message("1. Add a UI test target to your Xcode project")
-    UI.message("2. Create UI tests that navigate through your app")
-    UI.message("3. Use snapshot() calls in your UI tests to capture screenshots")
-    UI.message("4. Then re-run: fastlane ios screenshots")
-    UI.message("")
-    UI.message("📖 For detailed setup instructions, visit:")
-    UI.message("https://docs.fastlane.tools/actions/snapshot/")
+    # Build for testing first
+    build_for_testing
+    
+    # Capture screenshots using snapshot
+    capture_screenshots(
+      scheme: "LeavesOfBlocks",
+      output_directory: "./fastlane/screenshots",
+      clear_previous_screenshots: true,
+      override_status_bar: true
+    )
+    
+    UI.success("✅ Screenshots captured successfully!")
+    UI.message("📱 Find your screenshots in: fastlane/screenshots/")
   end
 
   desc "Generate manual screenshots (simulator only)"

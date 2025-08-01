@@ -12,7 +12,16 @@ struct FullWidthActionButton: View {
     let title: String
     let icon: String
     let style: ActionButtonStyle
+    let accessibilityId: String?
     let onTap: () -> Void
+    
+    init(title: String, icon: String, style: ActionButtonStyle, accessibilityId: String? = nil, onTap: @escaping () -> Void) {
+        self.title = title
+        self.icon = icon
+        self.style = style
+        self.accessibilityId = accessibilityId
+        self.onTap = onTap
+    }
     
     enum ActionButtonStyle {
         case primary
@@ -79,6 +88,7 @@ struct FullWidthActionButton: View {
             )
         }
         .buttonStyle(PlainButtonStyle())
+        .accessibilityIdentifier(accessibilityId ?? "")
     }
 }
 

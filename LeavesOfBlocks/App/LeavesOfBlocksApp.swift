@@ -29,9 +29,14 @@ struct Main: App {
                 }
             }
             .onAppear {
-                // Show launch screen for 2.5 seconds
-                DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+                // Skip launch screen during UI testing
+                if ProcessInfo.processInfo.arguments.contains("-ui-testing") {
                     showLaunchScreen = false
+                } else {
+                    // Show launch screen for 2.5 seconds
+                    DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+                        showLaunchScreen = false
+                    }
                 }
             }
         }

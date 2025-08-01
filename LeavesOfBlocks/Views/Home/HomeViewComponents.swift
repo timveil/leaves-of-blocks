@@ -33,6 +33,7 @@ struct DifficultySelectionView: View {
                             )
                         }
                         .buttonStyle(PlainButtonStyle())
+                        .accessibilityIdentifier("\(difficulty.rawValue.lowercased())_button")
                         
                         Text(difficulty.rawValue)
                             .font(GameTheme.Typography.fontXSmall)
@@ -49,6 +50,7 @@ struct DifficultySelectionView: View {
                 title: "start_game".localized,
                 icon: "play.circle.fill",
                 style: .success,
+                accessibilityId: "start_game_button",
                 onTap: {
                     onStartGame(selectedDifficulty)
                 }

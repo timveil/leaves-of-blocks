@@ -12,7 +12,10 @@ struct HomeView: View {
     var body: some View {
         BaseScreenView(showsStatusBar: false) {
             VStack(spacing: GameTheme.Layout.extraLargeSpacing) {
-                //Spacer(minLength: 20)
+                // Invisible accessibility element for UI testing
+                Text("")
+                    .accessibilityIdentifier("home_screen_identifier")
+                    .hidden()
                 
                 // High Score Display - Now tappable for history
                 ScoreDisplayView(

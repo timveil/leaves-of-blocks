@@ -26,6 +26,7 @@ struct ToolbarView: View {
                     .foregroundColor(currentScreen == .home ? GameTheme.Colors.blockGreen.opacity(0.4) : GameTheme.Colors.blockGreen)
             }
             .disabled(currentScreen == .home)
+            .accessibilityIdentifier("home_button")
             
             Spacer()
             
@@ -37,6 +38,7 @@ struct ToolbarView: View {
                         .font(Self.iconFont)
                         .foregroundColor(GameTheme.Colors.blockGreen)
                 }
+                .accessibilityIdentifier("new_game_button")
                 
                 // Help icon (How to Play)
                 Button(action: onShowHowToPlay) {
@@ -44,6 +46,7 @@ struct ToolbarView: View {
                         .font(Self.iconFont)
                         .foregroundColor(GameTheme.Colors.blockGreen)
                 }
+                .accessibilityIdentifier("how_to_play_button")
                 
                 // Info icon (About)
                 Button(action: onShowAbout) {
@@ -51,6 +54,7 @@ struct ToolbarView: View {
                         .font(Self.iconFont)
                         .foregroundColor(GameTheme.Colors.blockGreen)
                 }
+                .accessibilityIdentifier("about_button")
                 
                 // Settings icon
                 Button(action: onShowSettings) {
@@ -58,6 +62,7 @@ struct ToolbarView: View {
                         .font(Self.iconFont)
                         .foregroundColor(GameTheme.Colors.blockGreen)
                 }
+                .accessibilityIdentifier("settings_button")
             }
         }
         .padding(.horizontal, GameTheme.Layout.largePadding)

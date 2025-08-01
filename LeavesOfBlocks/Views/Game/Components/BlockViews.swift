@@ -92,6 +92,7 @@ struct CurrentBlocksView: View {
                 )
         )
         .scaleEffect(isHoveringOverOrigin ? 1.02 : 1.0)
+        .accessibilityIdentifier("block_container")
     }
     
     // Calculate optimal cell size for each block to fit in its slot
@@ -193,6 +194,7 @@ private struct DraggableBlockView: View {
         }
         .frame(width: getBlockWidth(), height: getBlockHeight())
         .contentShape(Rectangle()) // Ensure entire frame is tappable
+        .accessibilityIdentifier("draggable_block")
         .gesture(
             DragGesture(minimumDistance: 5, coordinateSpace: .global)
                 .onChanged { value in

@@ -91,6 +91,7 @@ struct GameGridView: View {
                     }
                 }
             )
+            .accessibilityIdentifier("game_grid")
     }
     
     private func isPreviewCell(row: Int, col: Int) -> Bool {
