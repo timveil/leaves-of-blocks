@@ -5,18 +5,19 @@
 
 version: 2
 updates:
-  # Enable version updates for Swift dependencies
-  - package-ecosystem: "swift"
-    directory: "/"
-    schedule:
-      interval: "weekly"
-    
   # Enable version updates for GitHub Actions
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
-    # Auto-merge minor and patch updates for actions
     labels:
       - "dependencies"
       - "github-actions"
+      - "security"
+    open-pull-requests-limit: 5
+    # Enable security-focused updates
+    allow:
+      - dependency-type: "direct"
+        update-type: "version-update:semver-patch"
+      - dependency-type: "direct"
+        update-type: "version-update:semver-minor"
