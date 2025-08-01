@@ -116,7 +116,7 @@ extension BlockGenerator {
         return finalBlocks
     }
     
-    /// Generates blocks according to tier configuration
+    /// Generates blocks according to tier configuration with enhanced duplicate prevention
     private static func generateBlocksForTier(
         count: Int,
         difficulty: DifficultyMode,
@@ -126,9 +126,10 @@ extension BlockGenerator {
         var blocks: [BlockShape] = []
         var usedShapeTypes: [String] = []
         var usedOrientations: [ShapeOrientation] = []
+        var usedExactShapes: [String] = [] // Track exact shape signatures to prevent identical blocks
         var hasSpecialShape = false
         
-        for _ in 0..<count {
+        for blockIndex in 0..<count {
             // Check for special shape generation
             let shouldGenerateSpecial = Double.random(in: 0...1) < config.specialShapeChance && !hasSpecialShape
             
@@ -136,14 +137,20 @@ extension BlockGenerator {
                 let specialBlock = SpecialBlockType.allCases.randomElement()!.blockShape
                 blocks.append(specialBlock)
                 hasSpecialShape = true
+                
+                // Track special shape to prevent exact duplicates
+                let shapeSignature = getShapeSignature(specialBlock)
+                usedExactShapes.append(shapeSignature)
             } else {
-                // Generate normal block with tier constraints
-                let newBlock = generateTierConstrainedBlock(
+                // Generate normal block with tier constraints and duplicate prevention
+                let newBlock = generateTierConstrainedBlockWithDuplicatePrevention(
                     difficulty: difficulty,
                     config: config,
                     excludeShapeTypes: usedShapeTypes,
                     excludeOrientations: usedOrientations,
-                    grid: grid
+                    excludeExactShapes: usedExactShapes,
+                    grid: grid,
+                    attempt: blockIndex
                 )
                 
                 blocks.append(newBlock)
@@ -151,16 +158,43 @@ extension BlockGenerator {
                 // Track variety for next blocks
                 let shapeType = getShapeType(newBlock)
                 let orientation = getShapeOrientation(newBlock)
+                let shapeSignature = getShapeSignature(newBlock)
                 
                 usedShapeTypes.append(shapeType)
                 usedOrientations.append(orientation)
+                usedExactShapes.append(shapeSignature)
             }
         }
         
         return blocks
     }
     
-    /// Generates a block constrained by tier configuration
+    /// Generates a block constrained by tier configuration with enhanced duplicate prevention
+    private static func generateTierConstrainedBlockWithDuplicatePrevention(
+        difficulty: DifficultyMode,
+        config: TierConfiguration,
+        excludeShapeTypes: [String],
+        excludeOrientations: [ShapeOrientation],
+        excludeExactShapes: [String],
+        grid: [[GridCell]],
+        attempt: Int
+    ) -> BlockShape {
+        let preventionConfig = DuplicatePreventionConfig.tiered(
+            config: config,
+            excludeExactShapes: excludeExactShapes,
+            excludeShapeTypes: excludeShapeTypes,
+            excludeOrientations: excludeOrientations
+        )
+        
+        return generateBlockWithDuplicatePrevention(
+            difficulty: difficulty,
+            preventionConfig: preventionConfig,
+            grid: grid,
+            attempt: attempt
+        )
+    }
+    
+    /// Generates a block constrained by tier configuration (legacy method for fallbacks)
     private static func generateTierConstrainedBlock(
         difficulty: DifficultyMode,
         config: TierConfiguration,
@@ -452,6 +486,15 @@ extension BlockGenerator {
 
 struct BlockGenerator {
     
+    // MARK: - Configuration Constants
+    
+    /// Special shape generation probabilities by difficulty
+    private static let specialShapeProbability: [DifficultyMode: Double] = [
+        .easy: 0.15,      // 15% chance in easy mode
+        .moderate: 0.10,  // 10% chance in moderate mode
+        .hard: 0.05       // 5% chance in hard mode
+    ]
+    
     // MARK: - Special Block Types
     
     /// Enumeration of available special block types for cleaner generation logic
@@ -470,20 +513,64 @@ struct BlockGenerator {
         }
     }
     
-    // MARK: - Difficulty-Based Block Generation
+    // MARK: - Core Data Structures
     
-    // Special shape generation probabilities by difficulty
-    private static let specialShapeProbability: [DifficultyMode: Double] = [
-        .easy: 0.15,      // 15% chance in easy mode
-        .moderate: 0.10,  // 10% chance in moderate mode
-        .hard: 0.05       // 5% chance in hard mode
-    ]
-    
-    // MARK: - Shape Variety Helpers
-    
+    /// Shape orientation categories for variety tracking
     enum ShapeOrientation: CaseIterable {
         case horizontal, vertical, square, lShape, tShape, irregular
     }
+    
+    /// Cached block metadata for performance optimization
+    private struct BlockMetadata {
+        let block: BlockShape
+        let shapeType: String
+        let orientation: ShapeOrientation
+        let signature: String
+        let complexity: Double
+    }
+    
+    /// Configuration for duplicate prevention behavior
+    private struct DuplicatePreventionConfig {
+        let excludeExactShapes: [String]
+        let excludeShapeTypes: [String] 
+        let excludeOrientations: [ShapeOrientation]
+        let maxBlockSize: Int?
+        let varietyBonus: Double
+        let complexityPreference: Double
+        
+        static func standard(
+            excludeExactShapes: [String] = [],
+            excludeShapeTypes: [String] = [],
+            excludeOrientations: [ShapeOrientation] = []
+        ) -> DuplicatePreventionConfig {
+            return DuplicatePreventionConfig(
+                excludeExactShapes: excludeExactShapes,
+                excludeShapeTypes: excludeShapeTypes,
+                excludeOrientations: excludeOrientations,
+                maxBlockSize: nil,
+                varietyBonus: 1.5,
+                complexityPreference: 0.0
+            )
+        }
+        
+        static func tiered(
+            config: TierConfiguration,
+            excludeExactShapes: [String] = [],
+            excludeShapeTypes: [String] = [],
+            excludeOrientations: [ShapeOrientation] = []
+        ) -> DuplicatePreventionConfig {
+            return DuplicatePreventionConfig(
+                excludeExactShapes: excludeExactShapes,
+                excludeShapeTypes: excludeShapeTypes,
+                excludeOrientations: excludeOrientations,
+                maxBlockSize: config.maxBlockSize,
+                varietyBonus: config.varietyBonus,
+                complexityPreference: config.complexityPreference
+            )
+        }
+    }
+    
+    // MARK: - Block Analysis Helpers
     
     private static func getShapeType(_ block: BlockShape) -> String {
         // Handle special shapes
@@ -526,53 +613,167 @@ struct BlockGenerator {
         }
     }
     
+    /// Creates a unique signature for a block shape to prevent exact duplicates
+    private static func getShapeSignature(_ block: BlockShape) -> String {
+        let normalizedPositions = block.positions
+            .sorted { ($0.row, $0.col) < ($1.row, $1.col) }
+            .map { "\($0.row),\($0.col)" }
+            .joined(separator: "|")
+        return "\(normalizedPositions)_\(String(describing: block.color))"
+    }
+    
+    /// Creates block metadata with cached calculations for performance
+    private static func createBlockMetadata(_ block: BlockShape) -> BlockMetadata {
+        return BlockMetadata(
+            block: block,
+            shapeType: getShapeType(block),
+            orientation: getShapeOrientation(block),
+            signature: getShapeSignature(block),
+            complexity: calculateBlockComplexity(block)
+        )
+    }
+    
+    // MARK: - Core Block Generation Engine
+    
+    /// Unified block generation with duplicate prevention
+    /// This is the core engine that handles all block generation logic
+    private static func generateBlockWithDuplicatePrevention(
+        difficulty: DifficultyMode,
+        preventionConfig: DuplicatePreventionConfig,
+        grid: [[GridCell]] = [[GridCell]](),
+        attempt: Int = 0
+    ) -> BlockShape {
+        let baseWeights = getBlockWeights(for: difficulty)
+        
+        // Pre-compute block metadata for performance
+        let blockMetadata = baseWeights.keys.map(createBlockMetadata)
+        
+        // Create efficient lookup sets and counting dictionaries for O(1) performance
+        let excludeExactSet = Set(preventionConfig.excludeExactShapes)
+        
+        // Create counting dictionaries for efficient duplicate detection
+        let typeCounts = Dictionary(preventionConfig.excludeShapeTypes.map { ($0, 1) }, uniquingKeysWith: +)
+        let orientationCounts = Dictionary(preventionConfig.excludeOrientations.map { ($0, 1) }, uniquingKeysWith: +)
+        
+        var filteredWeights: [BlockShape: Double] = [:]
+        
+        for metadata in blockMetadata {
+            let block = metadata.block
+            let originalWeight = baseWeights[block] ?? 0.0
+            
+            // Check size constraints
+            if let maxSize = preventionConfig.maxBlockSize,
+               block.positions.count > maxSize {
+                continue
+            }
+            
+            // Completely exclude exact duplicates
+            if excludeExactSet.contains(metadata.signature) {
+                continue
+            }
+            
+            // Count duplicates efficiently using pre-computed dictionaries
+            let typeCount = typeCounts[metadata.shapeType] ?? 0
+            let orientationCount = orientationCounts[metadata.orientation] ?? 0
+            
+            // Apply duplicate prevention rules
+            var adjustedWeight = originalWeight
+            
+            // Stronger duplicate prevention - completely exclude if we have 2+ of same type
+            if typeCount >= 2 || orientationCount >= 2 {
+                continue // Don't allow 3rd of same type/orientation
+            } else if typeCount >= 1 || orientationCount >= 1 {
+                // Reduce probability for 2nd of same type, but allow it
+                adjustedWeight *= 0.15
+            } else {
+                // Boost new varieties
+                adjustedWeight *= preventionConfig.varietyBonus
+            }
+            
+            // Apply complexity preference if specified
+            if preventionConfig.complexityPreference != 0.0 {
+                let complexityMultiplier = 1.0 + (metadata.complexity - 0.5) * preventionConfig.complexityPreference
+                adjustedWeight *= complexityMultiplier
+            }
+            
+            filteredWeights[block] = max(0.1, adjustedWeight)
+        }
+        
+        // Handle empty filter results
+        if filteredWeights.isEmpty {
+            BuildConfiguration.logSolvability("All blocks excluded by duplicate prevention (attempt \(attempt)), using fallback", level: .info)
+            return generateFallbackBlock(difficulty: difficulty, grid: grid, excludeExactShapes: preventionConfig.excludeExactShapes)
+        }
+        
+        // Select block using weighted random
+        return selectWeightedBlock(from: filteredWeights)
+    }
+    
+    /// Generates a fallback block when duplicate prevention is too restrictive
+    private static func generateFallbackBlock(
+        difficulty: DifficultyMode,
+        grid: [[GridCell]],
+        excludeExactShapes: [String]
+    ) -> BlockShape {
+        let baseWeights = getBlockWeights(for: difficulty)
+        let excludeSet = Set(excludeExactShapes)
+        
+        // Try to find any block that's not an exact duplicate and can be placed
+        let availableBlocks = baseWeights.keys.filter { block in
+            let shapeSignature = getShapeSignature(block)
+            return !excludeSet.contains(shapeSignature) &&
+                   !GameLogic.findValidPositions(for: block, in: grid).isEmpty
+        }
+        
+        if let selectedBlock = availableBlocks.randomElement() {
+            let randomColor = BlockColor.allCases.randomElement()!
+            return BlockShape(positions: selectedBlock.positions, color: randomColor)
+        }
+        
+        // Ultimate fallback: single block with different color
+        return createSingleBlock()
+    }
+    
+    // MARK: - Wrapper Functions for Legacy Compatibility
+    
+    /// Enhanced varied block generation with stronger duplicate prevention
+    private static func generateVariedBlockWithDuplicatePrevention(
+        difficulty: DifficultyMode,
+        excludeShapeTypes: [String],
+        excludeOrientations: [ShapeOrientation],
+        excludeExactShapes: [String],
+        attempt: Int
+    ) -> BlockShape {
+        let preventionConfig = DuplicatePreventionConfig.standard(
+            excludeExactShapes: excludeExactShapes,
+            excludeShapeTypes: excludeShapeTypes,
+            excludeOrientations: excludeOrientations
+        )
+        
+        return generateBlockWithDuplicatePrevention(
+            difficulty: difficulty,
+            preventionConfig: preventionConfig,
+            grid: [[GridCell]](),
+            attempt: attempt
+        )
+    }
+    
+    /// Legacy varied block generation (kept for compatibility)
     private static func generateVariedBlock(
         difficulty: DifficultyMode,
         excludeShapeTypes: [String],
         excludeOrientations: [ShapeOrientation]
     ) -> BlockShape {
-        let blockWeights = getBlockWeights(for: difficulty)
-        var filteredWeights: [BlockShape: Double] = [:]
-        
-        // Filter out shapes we want to avoid for variety
-        for (block, weight) in blockWeights {
-            let shapeType = getShapeType(block)
-            let orientation = getShapeOrientation(block)
-            
-            // Avoid 3 of the same type
-            let typeCount = excludeShapeTypes.filter { $0 == shapeType }.count
-            let orientationCount = excludeOrientations.filter { $0 == orientation }.count
-            
-            if typeCount < 2 && orientationCount < 2 {
-                filteredWeights[block] = weight
-            } else {
-                // Drastically reduce probability but don't eliminate entirely
-                filteredWeights[block] = weight * 0.1
-            }
-        }
-        
-        // If we filtered too aggressively, fall back to full weights
-        if filteredWeights.isEmpty {
-            filteredWeights = blockWeights
-        }
-        
-        let totalWeight = filteredWeights.values.reduce(0, +)
-        let randomValue = Double.random(in: 0...totalWeight)
-        
-        var currentWeight: Double = 0
-        
-        for (block, weight) in filteredWeights {
-            currentWeight += weight
-            if randomValue <= currentWeight {
-                let randomColor = BlockColor.allCases.randomElement()!
-                return BlockShape(positions: block.positions, color: randomColor)
-            }
-        }
-        
-        // Fallback
-        let randomColor = BlockColor.allCases.randomElement()!
-        return BlockShape(positions: BlockShape.allShapes[0].positions, color: randomColor)
+        return generateVariedBlockWithDuplicatePrevention(
+            difficulty: difficulty,
+            excludeShapeTypes: excludeShapeTypes,
+            excludeOrientations: excludeOrientations,
+            excludeExactShapes: [],
+            attempt: 0
+        )
     }
+    
+    // MARK: - Block Weight System
     
     private static func getBlockWeights(for difficulty: DifficultyMode) -> [BlockShape: Double] {
         var weights: [BlockShape: Double] = [:]
@@ -636,19 +837,23 @@ struct BlockGenerator {
         }
     }
     
+    // MARK: - Public API
+    
+    /// Main entry point for block generation - uses tiered system for optimal balance
     static func generateWeightedBlocks(count: Int = 3, difficulty: DifficultyMode = .easy, grid: [[GridCell]]) -> [BlockShape] {
         // Use the new tiered generation system that balances challenge with solvability
         return generateTieredBlocks(count: count, difficulty: difficulty, grid: grid)
     }
     
-    /// Generates initial blocks using the current weighted algorithm
+    /// Generates initial blocks using enhanced duplicate prevention
     private static func generateInitialBlocks(count: Int, difficulty: DifficultyMode) -> [BlockShape] {
         var blocks: [BlockShape] = []
         var usedShapeTypes: [String] = []
         var usedOrientations: [ShapeOrientation] = []
+        var usedExactShapes: [String] = []
         var hasSpecialShape = false
         
-        for _ in 0..<count {
+        for blockIndex in 0..<count {
             // Check if we should generate a special shape
             let specialProbability = specialShapeProbability[difficulty] ?? 0.1
             let shouldGenerateSpecial = Double.random(in: 0...1) < specialProbability && !hasSpecialShape
@@ -658,12 +863,18 @@ struct BlockGenerator {
                 let specialBlock = SpecialBlockType.allCases.randomElement()!.blockShape
                 blocks.append(specialBlock)
                 hasSpecialShape = true
+                
+                // Track exact shape to prevent duplicates
+                let shapeSignature = getShapeSignature(specialBlock)
+                usedExactShapes.append(shapeSignature)
             } else {
-                // Generate a normal block
-                let newBlock = generateVariedBlock(
+                // Generate a normal block with enhanced variety
+                let newBlock = generateVariedBlockWithDuplicatePrevention(
                     difficulty: difficulty,
                     excludeShapeTypes: usedShapeTypes,
-                    excludeOrientations: usedOrientations
+                    excludeOrientations: usedOrientations,
+                    excludeExactShapes: usedExactShapes,
+                    attempt: blockIndex
                 )
                 
                 blocks.append(newBlock)
@@ -671,9 +882,11 @@ struct BlockGenerator {
                 // Track what we've used to ensure variety
                 let shapeType = getShapeType(newBlock)
                 let orientation = getShapeOrientation(newBlock)
+                let shapeSignature = getShapeSignature(newBlock)
                 
                 usedShapeTypes.append(shapeType)
                 usedOrientations.append(orientation)
+                usedExactShapes.append(shapeSignature)
             }
         }
         
