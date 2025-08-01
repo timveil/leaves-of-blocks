@@ -19,7 +19,15 @@ struct HistoryView: View {
                 blocksPlaced: gameState.blocksPlaced,
                 linesCleared: gameState.linesCleared,
                 difficulty: gameState.currentDifficulty,
-                gameTime: gameState.currentGameTime
+                gameTime: gameState.currentGameTime,
+                averageGridEfficiency: nil, // Current session metrics not yet finalized
+                averageFragmentation: nil,
+                strategicPlayRating: nil,
+                challengeMaintained: nil,
+                fallbackActivations: nil,
+                efficiencyGrade: nil,
+                strategicGrade: nil,
+                tierUsageDistribution: nil
             ))
         }
         
@@ -34,7 +42,15 @@ struct HistoryView: View {
                     blocksPlaced: Int(record.blocksPlaced),
                     linesCleared: Int(record.linesCleared),
                     difficulty: difficulty,
-                    gameTime: record.gameTime
+                    gameTime: record.gameTime,
+                    averageGridEfficiency: record.averageGridEfficiency > 0 ? record.averageGridEfficiency : nil,
+                    averageFragmentation: record.averageFragmentation > 0 ? record.averageFragmentation : nil,
+                    strategicPlayRating: record.strategicPlayRating > 0 ? record.strategicPlayRating : nil,
+                    challengeMaintained: record.challengeMaintained > 0 ? record.challengeMaintained : nil,
+                    fallbackActivations: record.fallbackActivations > 0 ? Int(record.fallbackActivations) : nil,
+                    efficiencyGrade: record.efficiencyGrade?.isEmpty == false ? record.efficiencyGrade : nil,
+                    strategicGrade: record.strategicGrade?.isEmpty == false ? record.strategicGrade : nil,
+                    tierUsageDistribution: record.tierUsageDistribution?.isEmpty == false ? record.tierUsageDistribution : nil
                 ))
             }
         }
@@ -106,6 +122,24 @@ struct GameSession: Equatable {
     /// Total time spent playing the session
     let gameTime: TimeInterval
     
+    // New efficiency metrics
+    /// Average grid efficiency throughout the game (0.0 to 1.0)
+    let averageGridEfficiency: Double?
+    /// Average grid fragmentation throughout the game (0.0 to 1.0)
+    let averageFragmentation: Double?
+    /// Strategic play rating (0.0 to 1.0)
+    let strategicPlayRating: Double?
+    /// Percentage of game spent in higher challenge tiers (0.0 to 1.0)
+    let challengeMaintained: Double?
+    /// Number of times fallback system activated
+    let fallbackActivations: Int?
+    /// Letter grade for efficiency (A+, A, B+, etc.)
+    let efficiencyGrade: String?
+    /// Descriptive grade for strategic play (Master, Expert, etc.)
+    let strategicGrade: String?
+    /// JSON string of tier usage distribution
+    let tierUsageDistribution: String?
+    
     /// Formats the game time as MM:SS for display.
     ///
     /// - Returns: A string in "M:SS" or "MM:SS" format (e.g., "3:45", "12:30")
@@ -152,13 +186,30 @@ struct GameSession: Equatable {
                 ]
                 
                 for session in sessions {
+                    // Create mock session metrics for preview
+                    let mockMetrics = PlayerBehaviorTracker.SessionMetrics(
+                        score: session.score,
+                        blocksPlaced: session.blocks,
+                        linesCleared: session.lines,
+                        longestCombo: session.combo,
+                        gameTime: session.time,
+                        difficulty: session.difficulty,
+                        averageGridEfficiency: Double.random(in: 0.4...0.9),
+                        averageFragmentation: Double.random(in: 0.2...0.6),
+                        strategicPlayRating: Double.random(in: 0.3...0.8),
+                        tierUsageDistribution: ["diverse": 10, "constrained": 15, "minimal": 5],
+                        fallbackActivations: Int.random(in: 0...3),
+                        challengeMaintained: Double.random(in: 0.3...0.8)
+                    )
+                    
                     CoreDataManager.shared.saveGameRecord(
                         score: session.score,
                         difficulty: session.difficulty,
                         blocksPlaced: session.blocks,
                         linesCleared: session.lines,
                         longestCombo: session.combo,
-                        gameTime: session.time
+                        gameTime: session.time,
+                        sessionMetrics: mockMetrics
                     )
                 }
             }

@@ -37,6 +37,7 @@ class GameState: ObservableObject {
     // MARK: - Services
     
     private let gameService = GameService()
+    private let behaviorTracker = PlayerBehaviorTracker()
     
     // MARK: - Computed Properties
     
@@ -49,7 +50,8 @@ class GameState: ObservableObject {
     }
     
     var statistics: GameSessionStatistics {
-        return GameSessionStatistics(
+        return GameSessionStatistics.withEfficiencyMetrics(
+            from: behaviorTracker,
             score: score,
             blocksPlaced: blocksPlaced,
             linesCleared: linesCleared,
@@ -79,7 +81,7 @@ class GameState: ObservableObject {
     /// - Note: This method is called automatically when all current blocks have been placed,
     ///   or when starting/resetting a game.
     func generateNewBlocks() {
-        currentBlocks = BlockGenerator.generateWeightedBlocks(count: 3, difficulty: currentDifficulty, grid: grid)
+        currentBlocks = BlockGenerator.generateTieredBlocks(count: 3, difficulty: currentDifficulty, grid: grid, behaviorTracker: behaviorTracker)
         checkGameOver()
     }
     
@@ -164,6 +166,9 @@ class GameState: ObservableObject {
             generateNewBlocks()
         }
         
+        // Record grid state for behavior tracking after each move
+        behaviorTracker.recordGridState(grid)
+        
         // Always check for game over after placing a block
         // This ensures immediate detection when no moves are available
         checkGameOver()
@@ -228,14 +233,24 @@ class GameState: ObservableObject {
                 gameService.gameOverFeedback()
             }
             
-            // Save game record
+            // Save game record with efficiency metrics
+            let sessionMetrics = behaviorTracker.finalizeSession(
+                score: score,
+                blocksPlaced: blocksPlaced,
+                linesCleared: linesCleared,
+                longestCombo: longestCombo,
+                gameTime: currentGameTime,
+                difficulty: currentDifficulty
+            )
+            
             gameService.saveGameRecord(
                 score: score,
                 linesCleared: linesCleared,
                 blocksPlaced: blocksPlaced,
                 gameTime: currentGameTime,
                 difficulty: currentDifficulty,
-                longestCombo: longestCombo
+                longestCombo: longestCombo,
+                sessionMetrics: sessionMetrics
             )
         } else if !gameOverState {
             // Game is still active
@@ -291,8 +306,14 @@ class GameState: ObservableObject {
         isNewHighScore = false
         specialShapesUsed = 0
         
+        // Start behavior tracking session
+        behaviorTracker.startSession()
+        
         // Randomly pre-fill the grid with shapes
         GameLogic.randomlyFillGrid(&grid)
+        
+        // Record initial grid state for tracking
+        behaviorTracker.recordGridState(grid)
         
         generateNewBlocks()
         

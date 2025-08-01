@@ -90,7 +90,8 @@ class CoreDataManager {
     // MARK: - Game History Operations
     
     func saveGameRecord(score: Int, difficulty: DifficultyMode, blocksPlaced: Int, 
-                       linesCleared: Int, longestCombo: Int, gameTime: TimeInterval) {
+                       linesCleared: Int, longestCombo: Int, gameTime: TimeInterval,
+                       sessionMetrics: PlayerBehaviorTracker.SessionMetrics? = nil) {
         let context = persistentContainer.viewContext
         let gameRecord = GameRecord(context: context)
         
@@ -103,8 +104,26 @@ class CoreDataManager {
         gameRecord.gameTime = gameTime
         gameRecord.date = Date()
         
+        // Store efficiency metrics if available
+        if let metrics = sessionMetrics {
+            gameRecord.averageGridEfficiency = metrics.averageGridEfficiency
+            gameRecord.averageFragmentation = metrics.averageFragmentation
+            gameRecord.strategicPlayRating = metrics.strategicPlayRating
+            gameRecord.challengeMaintained = metrics.challengeMaintained
+            gameRecord.fallbackActivations = Int32(metrics.fallbackActivations)
+            gameRecord.efficiencyGrade = metrics.efficiencyGrade
+            gameRecord.strategicGrade = metrics.strategicGrade
+            
+            // Serialize tier usage distribution to JSON string
+            if let tierData = try? JSONSerialization.data(withJSONObject: metrics.tierUsageDistribution),
+               let tierString = String(data: tierData, encoding: .utf8) {
+                gameRecord.tierUsageDistribution = tierString
+            }
+        }
+        
         #if DEBUG
-        print("💾 Saving game record: Score=\(score), Difficulty=\(difficulty.rawValue), Time=\(Int(gameTime))s")
+        let metricsInfo = sessionMetrics != nil ? ", Efficiency: \(String(format: "%.2f", sessionMetrics?.averageGridEfficiency ?? 0.0))" : ""
+        print("💾 Saving game record: Score=\(score), Difficulty=\(difficulty.rawValue), Time=\(Int(gameTime))s\(metricsInfo)")
         #endif
         
         saveContext()

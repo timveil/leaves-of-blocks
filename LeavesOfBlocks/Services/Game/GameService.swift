@@ -104,7 +104,8 @@ class GameService: ObservableObject {
         blocksPlaced: Int,
         gameTime: TimeInterval,
         difficulty: DifficultyMode,
-        longestCombo: Int
+        longestCombo: Int,
+        sessionMetrics: PlayerBehaviorTracker.SessionMetrics? = nil
     ) {
         // High score is automatically tracked in Core Data
         
@@ -115,7 +116,8 @@ class GameService: ObservableObject {
             blocksPlaced: blocksPlaced,
             linesCleared: linesCleared,
             longestCombo: longestCombo,
-            gameTime: gameTime
+            gameTime: gameTime,
+            sessionMetrics: sessionMetrics
         )
     }
     

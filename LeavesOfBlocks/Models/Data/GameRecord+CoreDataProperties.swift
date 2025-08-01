@@ -15,6 +15,16 @@ extension GameRecord {
     @NSManaged public var longestCombo: Int32
     @NSManaged public var gameTime: Double
     @NSManaged public var date: Date?
+    
+    // New efficiency metrics
+    @NSManaged public var averageGridEfficiency: Double
+    @NSManaged public var averageFragmentation: Double
+    @NSManaged public var strategicPlayRating: Double
+    @NSManaged public var challengeMaintained: Double
+    @NSManaged public var fallbackActivations: Int32
+    @NSManaged public var efficiencyGrade: String?
+    @NSManaged public var strategicGrade: String?
+    @NSManaged public var tierUsageDistribution: String?
 
 }
 

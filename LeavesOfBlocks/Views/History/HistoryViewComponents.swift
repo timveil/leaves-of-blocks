@@ -210,6 +210,50 @@ struct GameSessionRow: View {
                         borderWidth: 0
                     )
             }
+            
+            // Efficiency metrics row (if available)
+            if let efficiencyGrade = session.efficiencyGrade,
+               let strategicGrade = session.strategicGrade {
+                Divider()
+                    .overlay(GameTheme.Colors.gridBorder.opacity(0.2))
+                    .padding(.vertical, GameTheme.Layout.smallSpacing)
+                
+                HStack {
+                    HStack(spacing: GameTheme.Layout.mediumSpacing) {
+                        GameStatChip(
+                            title: "efficiency".localized,
+                            value: efficiencyGrade,
+                            icon: "speedometer",
+                            color: gradeColor(for: efficiencyGrade),
+                            style: .compact
+                        )
+                        .fixedSize(horizontal: true, vertical: false)
+                        
+                        GameStatChip(
+                            title: "strategy".localized,
+                            value: strategicGrade,
+                            icon: "brain.head.profile",
+                            color: strategicGradeColor(for: strategicGrade),
+                            style: .compact
+                        )
+                        .fixedSize(horizontal: true, vertical: false)
+                    }
+                    
+                    Spacer()
+                    
+                    // Fallback count if available
+                    if let fallbacks = session.fallbackActivations, fallbacks > 0 {
+                        Text("fallbacks".localized(with: fallbacks))
+                            .font(.system(size: 10, weight: .medium))
+                            .foregroundColor(GameTheme.Colors.secondaryText)
+                            .gameBadgeStyle(
+                                backgroundColor: GameTheme.Colors.blockBackground.opacity(0.3),
+                                borderColor: GameTheme.Colors.gridBorder.opacity(0.3),
+                                borderWidth: 1
+                            )
+                    }
+                }
+            }
         }
         .padding(GameTheme.Layout.mediumPadding)
         .gameContainerStyle(
@@ -218,6 +262,38 @@ struct GameSessionRow: View {
             borderColor: isHighScore ? GameTheme.Colors.accent.opacity(0.5) : GameTheme.Colors.gridBorder.opacity(0.3),
             borderWidth: isHighScore ? 2 : 1
         )
+    }
+    
+    // MARK: - Helper Functions
+    
+    /// Returns color based on efficiency grade
+    private func gradeColor(for grade: String) -> Color {
+        switch grade {
+        case "A+", "A":
+            return GameTheme.Colors.blockGreen
+        case "B+", "B":
+            return GameTheme.Colors.blockBlue
+        case "C+", "C":
+            return GameTheme.Colors.blockOrange
+        default:
+            return GameTheme.Colors.blockRed
+        }
+    }
+    
+    /// Returns color based on strategic grade
+    private func strategicGradeColor(for grade: String) -> Color {
+        switch grade {
+        case "Master":
+            return GameTheme.Colors.blockPurple
+        case "Expert":
+            return GameTheme.Colors.blockGreen
+        case "Skilled":
+            return GameTheme.Colors.blockBlue
+        case "Learning":
+            return GameTheme.Colors.blockOrange
+        default:
+            return GameTheme.Colors.blockRed
+        }
     }
 }
 

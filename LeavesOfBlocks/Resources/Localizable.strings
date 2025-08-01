@@ -45,6 +45,11 @@
 "past_game_summary" = "Past Game Summary";
 "best_score" = "Best Score";
 
+// MARK: - Efficiency Metrics
+"efficiency" = "Efficiency";
+"strategy" = "Strategy";
+"fallbacks" = "%d Fallbacks";
+
 // MARK: - Settings
 "settings_description" = "Manage your game data and preferences";
 "clear_game_history" = "Clear Game History";
