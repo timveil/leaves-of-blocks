@@ -16,6 +16,16 @@ struct HowToPlayView: View {
                     
                     // Content sections
                     VStack(alignment: .leading, spacing: GameTheme.Layout.largePadding) {
+                        // Getting Started
+                        VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
+                            Text("getting_started".localized)
+                                .sectionHeaderStyle()
+                            
+                            Text("getting_started_description".localized)
+                                .sectionTextStyle(color: GameTheme.Colors.secondaryText)
+                                .lineSpacing(6)
+                        }
+                        
                         // The Grid
                         VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
                             Text("the_grid".localized)
@@ -56,17 +66,58 @@ struct HowToPlayView: View {
                                 .lineSpacing(6)
                         }
                         
+                        // Advanced Features
+                        VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
+                            Text("advanced_features".localized)
+                                .sectionHeaderStyle()
+                            
+                            Text("advanced_features_description".localized)
+                                .sectionTextStyle(color: GameTheme.Colors.secondaryText)
+                                .lineSpacing(6)
+                        }
+                        
+                        // Performance Tracking
+                        VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
+                            Text("efficiency_system".localized)
+                                .sectionHeaderStyle()
+                            
+                            Text("efficiency_system_description".localized)
+                                .sectionTextStyle(color: GameTheme.Colors.secondaryText)
+                                .lineSpacing(6)
+                        }
+                        
+                        // Strategic Play
+                        VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
+                            Text("strategic_grading".localized)
+                                .sectionHeaderStyle()
+                            
+                            Text("strategic_grading_description".localized)
+                                .sectionTextStyle(color: GameTheme.Colors.secondaryText)
+                                .lineSpacing(6)
+                        }
+                        
+                        // Smart Block Generation
+                        VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
+                            Text("adaptive_difficulty".localized)
+                                .sectionHeaderStyle()
+                            
+                            Text("adaptive_difficulty_description".localized)
+                                .sectionTextStyle(color: GameTheme.Colors.secondaryText)
+                                .lineSpacing(6)
+                        }
+                        
                         // Pro Tips
                         VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
                             Text("pro_tips".localized)
                                 .sectionHeaderStyle()
                             
                             VStack(alignment: .leading, spacing: GameTheme.Layout.smallSpacing) {
-                                TipRow(text: "tip_keep_empty".localized)
+                                TipRow(text: "tip_keep_organized".localized)
                                 TipRow(text: "tip_multiple_lines".localized)
-                                TipRow(text: "tip_dont_rush".localized)
-                                TipRow(text: "tip_corners_edges".localized)
                                 TipRow(text: "tip_plan_ahead".localized)
+                                TipRow(text: "tip_corners_edges".localized)
+                                TipRow(text: "tip_save_small_blocks".localized)
+                                TipRow(text: "tip_efficiency_matters".localized)
                             }
                         }
                         

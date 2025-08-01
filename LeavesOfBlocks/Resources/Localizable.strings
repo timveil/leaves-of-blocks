@@ -66,22 +66,42 @@
 "all_data_reset_message" = "All game data has been reset successfully.";
 
 // MARK: - How to Play
-"the_grid" = "The Grid";
-"the_grid_description" = "You have an 8×8 grid where you'll place block shapes. Fill complete rows or columns to clear them and earn points.";
-"drag_drop" = "Drag & Drop";
-"drag_drop_description" = "Drag block shapes from the bottom area onto the grid. Blocks must fit completely within the grid boundaries.";
-"clear_lines" = "Clear Lines";
-"clear_lines_description" = "Complete horizontal rows or vertical columns disappear, earning you 100 points per line. Clear multiple lines at once for combo bonuses!";
+"getting_started" = "Getting Started";
+"getting_started_description" = "Welcome to Leaves of Blocks! This relaxing puzzle game is easy to learn but rewarding to master. Start by selecting your preferred difficulty level and diving right in.";
+
+"the_grid" = "The Playing Field";
+"the_grid_description" = "Your game board is an 8×8 grid with 64 spaces. Your goal is to fill complete horizontal rows or vertical columns to clear them and earn points. The grid starts with some random blocks already placed to create interesting challenges.";
+
+"drag_drop" = "How to Play";
+"drag_drop_description" = "You'll see up to 3 block shapes at the bottom of the screen. Simply drag any shape onto the grid where it fits completely. Blocks cannot overlap existing pieces or extend beyond the grid edges. When you use all 3 blocks, you'll get 3 new ones automatically.";
+
+"clear_lines" = "Clearing Lines";
+"clear_lines_description" = "When you completely fill a horizontal row or vertical column, it disappears and you earn points! Clear multiple lines at once for bonus points. The more lines you clear simultaneously, the bigger your combo bonus.";
+
 "game_over_rules" = "Game Over";
-"game_over_description" = "The game ends when none of your current blocks can be placed on the grid. Plan ahead to keep playing longer!";
-"pro_tips" = "Pro Tips";
+"game_over_description" = "The game ends when none of your current 3 blocks can fit anywhere on the grid. Don't worry - the game includes smart features to help prevent this by adjusting the types of blocks you receive based on your grid situation.";
+
+"advanced_features" = "Advanced Features";
+"advanced_features_description" = "Leaves of Blocks includes sophisticated systems that adapt to your play style and help you improve over time.";
+
+"efficiency_system" = "Performance Tracking";
+"efficiency_system_description" = "The game tracks how efficiently you use the grid space and provides grades from A+ to D. Higher efficiency comes from keeping the grid organized and minimizing wasted space.";
+
+"strategic_grading" = "Strategic Play";
+"strategic_grading_description" = "Your strategic skills are rated from Beginner to Master based on how well you set up line clears and plan ahead. Look for opportunities to clear multiple lines with a single block placement.";
+
+"adaptive_difficulty" = "Smart Block Generation";
+"adaptive_difficulty_description" = "The game analyzes your grid and adjusts the blocks you receive to maintain challenge while preventing impossible situations. When you're struggling, it provides more helpful shapes automatically.";
+
+"pro_tips" = "Tips for Success";
 
 // MARK: - Pro Tips
-"tip_keep_empty" = "Try to keep the grid as empty as possible";
-"tip_multiple_lines" = "Look for opportunities to clear multiple lines";
-"tip_dont_rush" = "Don't rush - take time to find the best placement";
-"tip_corners_edges" = "Focus on corners and edges when the grid gets full";
-"tip_plan_ahead" = "Plan ahead by considering all three available blocks";
+"tip_keep_organized" = "Keep your grid organized - avoid creating scattered holes";
+"tip_multiple_lines" = "Look for opportunities to clear multiple lines with one placement";
+"tip_plan_ahead" = "Consider all three available blocks before placing any one";
+"tip_corners_edges" = "Use corners and edges strategically when the grid fills up";
+"tip_save_small_blocks" = "Save smaller blocks for tight spaces and finishing moves";
+"tip_efficiency_matters" = "Your efficiency grade improves with organized, strategic play";
 
 // MARK: - Scoring Table
 "points" = "Points";
@@ -95,19 +115,19 @@
 "scoring_combo_bonus" = "Combo bonus for each additional line";
 
 // MARK: - Difficulty Descriptions
-"difficulty_easy_desc" = "Smaller blocks appear more often";
-"difficulty_moderate_desc" = "Balanced block distribution";
-"difficulty_hard_desc" = "Larger, complex blocks are more common";
+"difficulty_easy_desc" = "Perfect for beginners - you'll get more small, manageable blocks that are easier to place";
+"difficulty_moderate_desc" = "A balanced challenge with a good mix of small and large blocks for engaging gameplay";
+"difficulty_hard_desc" = "For experienced players - expect more large, complex blocks that require strategic thinking";
 
 // MARK: - Shape Descriptions
 "shape_normal_blocks" = "Normal\nBlocks";
 "shape_row_clear" = "Row Clear";
 "shape_column_clear" = "Column Clear";
 "shape_area_clear" = "Area Clear";
-"shape_normal_desc" = "Standard blocks with various shapes and sizes (1-9 cells). Place them to fill the grid and clear lines.";
-"shape_horizontal_desc" = "Special red block that clears an entire horizontal row when placed. Worth 100 points.";
-"shape_vertical_desc" = "Special blue block that clears an entire vertical column when placed. Worth 100 points.";
-"shape_area_desc" = "Special purple block that clears a 3×3 area around placement. Worth 200 points - the most powerful!";
+"shape_normal_desc" = "These are your main building blocks! They come in many shapes and sizes (1-9 squares each). Use them to fill rows and columns, then watch them disappear when complete.";
+"shape_horizontal_desc" = "A powerful red block that instantly clears an entire horizontal row when placed, regardless of what's in that row. Great for breaking through difficult situations!";
+"shape_vertical_desc" = "A powerful blue block that instantly clears an entire vertical column when placed, regardless of what's in that column. Perfect for creating space!";
+"shape_area_desc" = "The ultimate power block! This purple block clears a large 3×3 area around wherever you place it. Use wisely for maximum impact and points!";
 
 // MARK: - About Page
 "about_game_description" = "Leaves of Blocks is a relaxing puzzle game that combines the joy of autumn with strategic block placement. Clear lines by filling rows and columns completely, and watch as your score grows with each successful move.\n\nFeatures beautiful block shapes, smooth animations, and progressively challenging gameplay across three difficulty modes.";
