@@ -22,7 +22,7 @@ struct DifficultySelectionView: View {
                         }) {
                             VStack(spacing: GameTheme.Layout.smallSpacing) {
                                 Image(systemName: difficulty.icon)
-                                    .font(.system(size: 28, weight: .semibold))
+                                    .font(GameTheme.Typography.fontLargeSemibold)
                                     .foregroundColor(selectedDifficulty == difficulty ? difficulty.color : GameTheme.Colors.secondaryText)
                                     .frame(width: 60, height: 60)
                             }

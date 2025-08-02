@@ -59,7 +59,7 @@ struct FullWidthActionButton: View {
         Button(action: onTap) {
             HStack(spacing: GameTheme.Layout.smallSpacing) {
                 Image(systemName: icon)
-                    .font(.system(size: 16, weight: .semibold))
+                    .font(GameTheme.Typography.fontSmallSemibold)
                 
                 Text(title)
                     .font(GameTheme.Typography.fontSmall)

@@ -51,7 +51,7 @@ struct ScoreDisplayView: View {
         VStack(spacing: 0) {
             // Header with gradient background (like Statistics widget)
             Text(title)
-                .font(.system(size: 20, weight: .bold))
+                .font(GameTheme.Typography.fontMediumSmall)
                 .foregroundColor(GameTheme.Colors.buttonText)
                 .frame(maxWidth: .infinity)
             .padding(.horizontal, GameTheme.Layout.largePadding)

@@ -139,7 +139,7 @@ struct DifficultyTableRowView: View {
             // Mode icon and name column (home screen style)
             VStack(spacing: GameTheme.Layout.smallSpacing) {
                 Image(systemName: mode.icon)
-                    .font(.system(size: 24, weight: .semibold))
+                    .font(GameTheme.Typography.font24Semibold)
                     .foregroundColor(mode.color)
                     .frame(height: 30)
                 
@@ -302,7 +302,7 @@ enum ShapeType {
                     
                     Image(systemName: "arrow.left.and.right")
                         .foregroundColor(.white)
-                        .font(.system(size: 14, weight: .bold))
+                        .font(GameTheme.Typography.font14Semibold)
                 }
             )
         case .verticalClear:
@@ -317,7 +317,7 @@ enum ShapeType {
                     
                     Image(systemName: "arrow.up.and.down")
                         .foregroundColor(.white)
-                        .font(.system(size: 14, weight: .bold))
+                        .font(GameTheme.Typography.font14Semibold)
                 }
             )
         case .areaClear:
@@ -332,7 +332,7 @@ enum ShapeType {
                     
                     Image(systemName: "square.3.layers.3d")
                         .foregroundColor(.white)
-                        .font(.system(size: 14, weight: .bold))
+                        .font(GameTheme.Typography.font14Semibold)
                 }
             )
         }

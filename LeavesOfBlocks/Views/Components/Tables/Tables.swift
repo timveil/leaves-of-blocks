@@ -149,7 +149,7 @@ struct DifficultyTable: View {
                 // Difficulty badge
                 HStack(spacing: 6) {
                     Image(systemName: level.difficulty.icon)
-                        .font(.system(size: 14, weight: .semibold))
+                        .font(GameTheme.Typography.font14Semibold)
                         .foregroundColor(level.difficulty.color)
                     
                     Text(level.difficulty.rawValue)
@@ -213,7 +213,7 @@ struct KeyValueTable: View {
                         HStack(spacing: 8) {
                             if let icon = item.icon {
                                 Image(systemName: icon)
-                                    .font(.system(size: 14, weight: .medium))
+                                    .font(GameTheme.Typography.font14Medium)
                                     .foregroundColor(item.color ?? GameTheme.Colors.accent)
                                     .frame(width: 20)
                             }

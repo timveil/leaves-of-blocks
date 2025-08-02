@@ -242,7 +242,7 @@ private struct StatisticCard: View {
     var body: some View {
         VStack(spacing: isCondensed ? GameTheme.Layout.tinySpacing : GameTheme.Layout.smallSpacing) {
             Image(systemName: icon)
-                .font(.system(size: isCondensed ? 16 : 20, weight: .medium))
+                .font(isCondensed ? GameTheme.Typography.fontSmall : GameTheme.Typography.fontMediumSmallMedium)
                 .foregroundColor(color)
             
             Text(value)

@@ -50,7 +50,7 @@ struct GameStatChip: View {
         HStack(spacing: 6) {
             if let icon = icon {
                 Image(systemName: icon)
-                    .font(.system(size: style == .compact ? 12 : 14, weight: .semibold))
+                    .font(style == .compact ? GameTheme.Typography.fontXXSmallSemibold : GameTheme.Typography.font14Semibold)
                     .foregroundColor(color)
             }
             
@@ -135,7 +135,7 @@ struct GameStatisticCard: View {
             // Header with icon and title
             HStack {
                 Image(systemName: icon)
-                    .font(.system(size: 20, weight: .semibold))
+                    .font(GameTheme.Typography.fontMediumSmallSemibold)
                     .foregroundColor(color)
                 
                 Text(title)
@@ -164,7 +164,7 @@ struct GameStatisticCard: View {
                 if let trend = trend {
                     HStack(spacing: 4) {
                         Image(systemName: trend.icon)
-                            .font(.system(size: 12, weight: .semibold))
+                            .font(GameTheme.Typography.fontXXSmallSemibold)
                         
                         Text(trend.text)
                             .font(GameTheme.Typography.fontXSmall)
@@ -296,7 +296,7 @@ struct StatComparison: View {
         HStack(spacing: GameTheme.Layout.mediumSpacing) {
             // Icon
             Image(systemName: icon)
-                .font(.system(size: 16, weight: .semibold))
+                .font(GameTheme.Typography.fontSmallSemibold)
                 .foregroundColor(GameTheme.Colors.accent)
                 .frame(width: 24)
             
@@ -317,7 +317,7 @@ struct StatComparison: View {
                 
                 // Arrow
                 Image(systemName: isImprovement ? "arrow.right" : "arrow.right")
-                    .font(.system(size: 12, weight: .medium))
+                    .font(GameTheme.Typography.fontXXSmall)
                     .foregroundColor(isImprovement ? improvementColor : GameTheme.Colors.secondaryText)
                 
                 // Current value

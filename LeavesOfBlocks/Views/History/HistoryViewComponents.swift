@@ -28,11 +28,11 @@ struct StatsSummaryView: View {
             // Header with gradient background
             HStack(spacing: GameTheme.Layout.smallSpacing) {
                 Image(systemName: "chart.bar.fill")
-                    .font(.system(size: 18, weight: .semibold))
+                    .font(GameTheme.Typography.fontSmallLargeSemibold)
                     .foregroundColor(GameTheme.Colors.buttonText)
                 
                 Text("statistics".localized)
-                    .font(.system(size: 20, weight: .bold))
+                    .font(GameTheme.Typography.fontMediumSmall)
                     .foregroundColor(GameTheme.Colors.buttonText)
             }
             .frame(maxWidth: .infinity)
@@ -123,16 +123,16 @@ private struct StatItemView: View {
         VStack(alignment: alignment, spacing: 8) {
             HStack(spacing: 6) {
                 Image(systemName: icon)
-                    .font(.system(size: 16, weight: .semibold))
+                    .font(GameTheme.Typography.fontSmallSemibold)
                     .foregroundColor(color)
                 
                 Text(value)
-                    .font(.system(size: 24, weight: .bold, design: .rounded))
+                    .font(GameTheme.Typography.font24Bold)
                     .foregroundColor(GameTheme.Colors.primaryText)
             }
             
             Text(title)
-                .font(.system(size: 12, weight: .medium))
+                .font(GameTheme.Typography.fontXXSmall)
                 .foregroundColor(GameTheme.Colors.secondaryText)
                 .multilineTextAlignment(.center)
         }
@@ -166,7 +166,7 @@ struct GameSessionRow: View {
                         if isHighScore {
                             Image(systemName: "crown.fill")
                                 .foregroundColor(GameTheme.Colors.accent)
-                                .font(.system(size: 12))
+                                .font(GameTheme.Typography.fontXXSmall)
                         }
                         Text(session.score.formattedScore)
                             .font(GameTheme.Typography.fontMediumLarge)
@@ -174,7 +174,7 @@ struct GameSessionRow: View {
                     }
                     
                     Text("score".localizedUppercase)
-                        .font(.system(size: 10, weight: .medium))
+                        .font(GameTheme.Typography.fontTiny)
                         .foregroundColor(GameTheme.Colors.secondaryText)
                 }
             }
@@ -192,7 +192,7 @@ struct GameSessionRow: View {
                 
                 // Difficulty badge using new badge style
                 Text(session.difficulty.rawValue.uppercased())
-                    .font(.system(size: 10, weight: .bold))
+                    .font(GameTheme.Typography.fontTinyBold)
                     .foregroundColor(GameTheme.Colors.primaryBackground)
                     .gameBadgeStyle(
                         backgroundColor: session.difficulty.color,
@@ -234,7 +234,7 @@ struct GameSessionRow: View {
                     // Fallback count if available
                     if let fallbacks = session.fallbackActivations, fallbacks > 0 {
                         Text("fallbacks".localized(with: fallbacks))
-                            .font(.system(size: 10, weight: .medium))
+                            .font(GameTheme.Typography.fontTiny)
                             .foregroundColor(GameTheme.Colors.secondaryText)
                             .gameBadgeStyle(
                                 backgroundColor: GameTheme.Colors.blockBackground.opacity(0.3),

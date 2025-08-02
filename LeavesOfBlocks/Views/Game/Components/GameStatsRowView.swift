@@ -18,7 +18,7 @@ struct GameStatsRowView: View {
                 // Blocks Placed Counter
                 HStack(spacing: 10) {
                     Image(systemName: "cube.fill")
-                        .font(.system(size: 16, weight: .semibold))
+                        .font(GameTheme.Typography.fontSmallSemibold)
                         .foregroundColor(GameTheme.Colors.blockYellow)
                     Text(gameState.blocksPlaced.formattedScore)
                         .font(GameTheme.Typography.fontXSmall)
@@ -27,13 +27,13 @@ struct GameStatsRowView: View {
                 
                 // Separator
                 Text("•")
-                    .font(.system(size: 12, weight: .bold))
+                    .font(GameTheme.Typography.fontXXSmallBold)
                     .foregroundColor(GameTheme.Colors.accent.opacity(0.8))
                 
                 // Timer
                 HStack(spacing: 10) {
                     Image(systemName: "clock.fill")
-                        .font(.system(size: 16, weight: .semibold))
+                        .font(GameTheme.Typography.fontSmallSemibold)
                         .foregroundColor(GameTheme.Colors.blockBlue)
                     Text(formatGameTime(gameState.currentGameTime))
                         .font(GameTheme.Typography.fontXSmall)
@@ -42,13 +42,13 @@ struct GameStatsRowView: View {
                 
                 // Separator
                 Text("•")
-                    .font(.system(size: 12, weight: .bold))
+                    .font(GameTheme.Typography.fontXXSmallBold)
                     .foregroundColor(GameTheme.Colors.accent.opacity(0.8))
                 
                 // Difficulty Level
                 HStack(spacing: 10) {
                     Image(systemName: gameState.currentDifficulty.icon)
-                        .font(.system(size: 16, weight: .semibold))
+                        .font(GameTheme.Typography.fontSmallSemibold)
                         .foregroundColor(gameState.currentDifficulty.color)
                     Text(gameState.currentDifficulty.rawValue)
                         .font(GameTheme.Typography.fontXSmall)
