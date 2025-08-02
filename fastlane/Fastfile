@@ -19,6 +19,47 @@ platform :ios do
   before_all do
     ensure_xcode_version(version: "16.4")
   end
+  
+  # Helper function to extract latest changelog entry for TestFlight
+  def get_latest_changelog
+    changelog_path = "../CHANGELOG.md"
+    unless File.exist?(changelog_path)
+      return "Latest improvements and bug fixes for testing."
+    end
+    
+    content = File.read(changelog_path)
+    
+    # Extract content between [Unreleased] and the next version
+    unreleased_match = content.match(/## \[Unreleased\](.*?)(?=## \[[\d\.]+\])/m)
+    
+    if unreleased_match && !unreleased_match[1].strip.empty?
+      # Use unreleased changes if they exist
+      changelog_content = unreleased_match[1].strip
+    else
+      # Fall back to latest released version
+      latest_version_match = content.match(/## \[[\d\.]+\] - [\d-]+\n(.*?)(?=## \[|$)/m)
+      changelog_content = latest_version_match ? latest_version_match[1].strip : "Latest improvements and bug fixes."
+    end
+    
+    # Clean up the content and format for TestFlight
+    lines = changelog_content.split("\n").reject(&:empty?)
+    formatted_lines = []
+    current_section = ""
+    
+    lines.each do |line|
+      if line.start_with?("### ")
+        current_section = line.gsub("### ", "").strip
+        unless current_section.empty? || %w[Changed Deprecated Removed Security].include?(current_section)
+          formatted_lines << "\n#{current_section}:" unless formatted_lines.empty?
+        end
+      elsif line.start_with?("- ")
+        formatted_lines << line if %w[Added Fixed].include?(current_section)
+      end
+    end
+    
+    result = formatted_lines.join("\n").strip
+    result.empty? ? "Latest improvements and bug fixes for testing." : result
+  end
 
   desc "Run tests"
   lane :test do
@@ -74,7 +115,8 @@ platform :ios do
     )
     upload_to_testflight(
       api_key: api_key,
-      skip_waiting_for_build_processing: true
+      skip_waiting_for_build_processing: true,
+      changelog: get_latest_changelog
     )
   end
 
@@ -276,6 +318,46 @@ platform :ios do
       scheme: "LeavesOfBlocksAppClip",
       export_method: "app-store"
     )
+  end
+
+  desc "Update changelog for new release"
+  lane :update_changelog do |options|
+    version = options[:version] || prompt(text: "Enter version (e.g., 1.0.4):")
+    date = options[:date] || Time.now.strftime("%Y-%m-%d")
+    
+    changelog_path = "../CHANGELOG.md"
+    unless File.exist?(changelog_path)
+      UI.error("CHANGELOG.md not found!")
+      next
+    end
+    
+    content = File.read(changelog_path)
+    
+    # Replace [Unreleased] with the new version
+    updated_content = content.gsub(
+      "## [Unreleased]",
+      "## [Unreleased]\n\n### Added\n\n### Changed\n\n### Deprecated\n\n### Removed\n\n### Fixed\n\n### Security\n\n## [#{version}] - #{date}"
+    )
+    
+    # Update the links at the bottom
+    if updated_content.include?("[Unreleased]: https://github.com/timveil/leaves-of-blocks/compare/")
+      # Find the current latest version for the unreleased link
+      latest_version_match = updated_content.match(/\[Unreleased\]: https:\/\/github\.com\/timveil\/leaves-of-blocks\/compare\/v([\d\.]+)\.\.\.HEAD/)
+      if latest_version_match
+        old_version = latest_version_match[1]
+        updated_content = updated_content.gsub(
+          "[Unreleased]: https://github.com/timveil/leaves-of-blocks/compare/v#{old_version}...HEAD",
+          "[Unreleased]: https://github.com/timveil/leaves-of-blocks/compare/v#{version}...HEAD\n[#{version}]: https://github.com/timveil/leaves-of-blocks/compare/v#{old_version}...v#{version}"
+        )
+      end
+    end
+    
+    File.write(changelog_path, updated_content)
+    UI.success("✅ Changelog updated for version #{version}")
+    UI.message("📝 Don't forget to:")
+    UI.message("1. Fill in the [Unreleased] section before your next release")
+    UI.message("2. Move items from [Unreleased] to [#{version}] section")
+    UI.message("3. Commit the changelog changes")
   end
 
   after_all do |lane|
