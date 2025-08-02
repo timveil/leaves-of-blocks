@@ -28,11 +28,11 @@ struct StatsSummaryView: View {
             // Header with gradient background
             HStack(spacing: GameTheme.Layout.smallSpacing) {
                 Image(systemName: "chart.bar.fill")
-                    .font(GameTheme.Typography.fontSmallLargeSemibold)
+                    .font(GameTheme.Typography.body)
                     .foregroundColor(GameTheme.Colors.buttonText)
                 
                 Text("statistics".localized)
-                    .font(GameTheme.Typography.fontMediumSmall)
+                    .font(GameTheme.Typography.headline)
                     .foregroundColor(GameTheme.Colors.buttonText)
             }
             .frame(maxWidth: .infinity)
@@ -123,16 +123,16 @@ private struct StatItemView: View {
         VStack(alignment: alignment, spacing: 8) {
             HStack(spacing: 6) {
                 Image(systemName: icon)
-                    .font(GameTheme.Typography.fontSmallSemibold)
+                    .font(GameTheme.Typography.body)
                     .foregroundColor(color)
                 
                 Text(value)
-                    .font(GameTheme.Typography.font24Bold)
+                    .font(GameTheme.Typography.headline)
                     .foregroundColor(GameTheme.Colors.primaryText)
             }
             
             Text(title)
-                .font(GameTheme.Typography.fontXXSmall)
+                .font(GameTheme.Typography.caption)
                 .foregroundColor(GameTheme.Colors.secondaryText)
                 .multilineTextAlignment(.center)
         }
@@ -151,11 +151,11 @@ struct GameSessionRow: View {
             HStack {
                 VStack(alignment: .leading, spacing: 2) {
                     Text(session.formattedDate)
-                        .font(GameTheme.Typography.fontSmall)
+                        .font(GameTheme.Typography.body)
                         .foregroundColor(GameTheme.Colors.primaryText)
                     
                     Text(session.formattedGameTime)
-                        .font(GameTheme.Typography.fontXSmall)
+                        .font(GameTheme.Typography.caption)
                         .foregroundColor(GameTheme.Colors.secondaryText)
                 }
                 
@@ -166,15 +166,15 @@ struct GameSessionRow: View {
                         if isHighScore {
                             Image(systemName: "crown.fill")
                                 .foregroundColor(GameTheme.Colors.accent)
-                                .font(GameTheme.Typography.fontXXSmall)
+                                .font(GameTheme.Typography.caption)
                         }
                         Text(session.score.formattedScore)
-                            .font(GameTheme.Typography.fontMediumLarge)
+                            .font(GameTheme.Typography.title)
                             .foregroundColor(GameTheme.Colors.primaryText)
                     }
                     
                     Text("score".localizedUppercase)
-                        .font(GameTheme.Typography.fontTiny)
+                        .font(GameTheme.Typography.tiny)
                         .foregroundColor(GameTheme.Colors.secondaryText)
                 }
             }
@@ -192,7 +192,7 @@ struct GameSessionRow: View {
                 
                 // Difficulty badge using new badge style
                 Text(session.difficulty.rawValue.uppercased())
-                    .font(GameTheme.Typography.fontTinyBold)
+                    .font(GameTheme.Typography.tiny)
                     .foregroundColor(GameTheme.Colors.primaryBackground)
                     .gameBadgeStyle(
                         backgroundColor: session.difficulty.color,
@@ -234,7 +234,7 @@ struct GameSessionRow: View {
                     // Fallback count if available
                     if let fallbacks = session.fallbackActivations, fallbacks > 0 {
                         Text("fallbacks".localized(with: fallbacks))
-                            .font(GameTheme.Typography.fontTiny)
+                            .font(GameTheme.Typography.tiny)
                             .foregroundColor(GameTheme.Colors.secondaryText)
                             .gameBadgeStyle(
                                 backgroundColor: GameTheme.Colors.blockBackground.opacity(0.3),

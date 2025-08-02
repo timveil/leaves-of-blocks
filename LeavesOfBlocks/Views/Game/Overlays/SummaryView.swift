@@ -60,7 +60,7 @@ struct SummaryView: View {
                     // Header section
                     VStack(spacing: GameTheme.Layout.mediumSpacing) {
                         Text(historicalSession != nil ? "past_game_summary".localized : "game_summary".localized)
-                            .font(GameTheme.Typography.fontXLarge)
+                            .font(GameTheme.Typography.title)
                             .foregroundColor(GameTheme.Colors.primaryText)
                             .tracking(1)
                         
@@ -68,7 +68,7 @@ struct SummaryView: View {
                             // Show date for historical sessions
                             if let session = historicalSession {
                                 Text(session.formattedDate)
-                                    .font(GameTheme.Typography.fontXSmall)
+                                    .font(GameTheme.Typography.caption)
                                     .foregroundColor(GameTheme.Colors.secondaryText)
                             }
                         }
@@ -242,17 +242,17 @@ private struct StatisticCard: View {
     var body: some View {
         VStack(spacing: isCondensed ? GameTheme.Layout.tinySpacing : GameTheme.Layout.smallSpacing) {
             Image(systemName: icon)
-                .font(isCondensed ? GameTheme.Typography.fontSmall : GameTheme.Typography.fontMediumSmallMedium)
+                .font(isCondensed ? GameTheme.Typography.body : GameTheme.Typography.headline)
                 .foregroundColor(color)
             
             Text(value)
-                .font(isCondensed ? GameTheme.Typography.fontMedium : GameTheme.Typography.fontLarge)
+                .font(isCondensed ? GameTheme.Typography.headline : GameTheme.Typography.title)
                 .foregroundColor(GameTheme.Colors.primaryText)
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
             
             Text(title)
-                .font(GameTheme.Typography.fontXSmall)
+                .font(GameTheme.Typography.caption)
                 .foregroundColor(GameTheme.Colors.secondaryText)
                 .multilineTextAlignment(.center)
                 .lineLimit(isCondensed ? 1 : 2)

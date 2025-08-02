@@ -17,9 +17,9 @@ struct GameStatChip: View {
         
         var fontSize: Font {
             switch self {
-            case .compact: return GameTheme.Typography.fontXSmall
-            case .standard: return GameTheme.Typography.fontSmall
-            case .featured: return GameTheme.Typography.fontMediumSmall
+            case .compact: return GameTheme.Typography.caption
+            case .standard: return GameTheme.Typography.body
+            case .featured: return GameTheme.Typography.headline
             }
         }
         
@@ -50,14 +50,14 @@ struct GameStatChip: View {
         HStack(spacing: 6) {
             if let icon = icon {
                 Image(systemName: icon)
-                    .font(style == .compact ? GameTheme.Typography.fontXXSmallSemibold : GameTheme.Typography.font14Semibold)
+                    .font(style == .compact ? GameTheme.Typography.caption : GameTheme.Typography.body)
                     .foregroundColor(color)
             }
             
             VStack(alignment: .leading, spacing: 2) {
                 if style != .compact {
                     Text(title)
-                        .font(GameTheme.Typography.fontXSmall)
+                        .font(GameTheme.Typography.caption)
                         .foregroundColor(GameTheme.Colors.secondaryText)
                 }
                 
@@ -135,11 +135,11 @@ struct GameStatisticCard: View {
             // Header with icon and title
             HStack {
                 Image(systemName: icon)
-                    .font(GameTheme.Typography.fontMediumSmallSemibold)
+                    .font(GameTheme.Typography.headline)
                     .foregroundColor(color)
                 
                 Text(title)
-                    .font(GameTheme.Typography.fontMediumSmall)
+                    .font(GameTheme.Typography.headline)
                     .foregroundColor(GameTheme.Colors.primaryText)
                 
                 Spacer()
@@ -147,7 +147,7 @@ struct GameStatisticCard: View {
             
             // Main value
             Text(value)
-                .font(GameTheme.Typography.fontXXLarge)
+                .font(GameTheme.Typography.display)
                 .fontWeight(.bold)
                 .foregroundColor(GameTheme.Colors.primaryText)
             
@@ -155,7 +155,7 @@ struct GameStatisticCard: View {
             HStack {
                 if let subtitle = subtitle {
                     Text(subtitle)
-                        .font(GameTheme.Typography.fontXSmall)
+                        .font(GameTheme.Typography.caption)
                         .foregroundColor(GameTheme.Colors.secondaryText)
                 }
                 
@@ -164,10 +164,10 @@ struct GameStatisticCard: View {
                 if let trend = trend {
                     HStack(spacing: 4) {
                         Image(systemName: trend.icon)
-                            .font(GameTheme.Typography.fontXXSmallSemibold)
+                            .font(GameTheme.Typography.caption)
                         
                         Text(trend.text)
-                            .font(GameTheme.Typography.fontXSmall)
+                            .font(GameTheme.Typography.caption)
                     }
                     .foregroundColor(trend.color)
                 }
@@ -216,14 +216,14 @@ struct GameProgressIndicator: View {
         VStack(alignment: .leading, spacing: 8) {
             HStack {
                 Text(title)
-                    .font(GameTheme.Typography.fontSmall)
+                    .font(GameTheme.Typography.body)
                     .foregroundColor(GameTheme.Colors.primaryText)
                 
                 Spacer()
                 
                 if showPercentage {
                     Text("\(percentage)%")
-                        .font(GameTheme.Typography.fontXSmall)
+                        .font(GameTheme.Typography.caption)
                         .foregroundColor(GameTheme.Colors.secondaryText)
                 }
             }
@@ -250,12 +250,12 @@ struct GameProgressIndicator: View {
             // Current/Max display
             HStack {
                 Text("\(current)")
-                    .font(GameTheme.Typography.fontXSmall)
+                    .font(GameTheme.Typography.caption)
                     .foregroundColor(color)
                     .fontWeight(.semibold)
                 
                 Text("/ \(maximum)")
-                    .font(GameTheme.Typography.fontXSmall)
+                    .font(GameTheme.Typography.caption)
                     .foregroundColor(GameTheme.Colors.secondaryText)
             }
         }
@@ -296,13 +296,13 @@ struct StatComparison: View {
         HStack(spacing: GameTheme.Layout.mediumSpacing) {
             // Icon
             Image(systemName: icon)
-                .font(GameTheme.Typography.fontSmallSemibold)
+                .font(GameTheme.Typography.body)
                 .foregroundColor(GameTheme.Colors.accent)
                 .frame(width: 24)
             
             // Title
             Text(title)
-                .font(GameTheme.Typography.fontSmall)
+                .font(GameTheme.Typography.body)
                 .foregroundColor(GameTheme.Colors.primaryText)
             
             Spacer()
@@ -311,18 +311,18 @@ struct StatComparison: View {
             HStack(spacing: 8) {
                 // Previous value
                 Text(previousValue)
-                    .font(GameTheme.Typography.fontXSmall)
+                    .font(GameTheme.Typography.caption)
                     .foregroundColor(GameTheme.Colors.secondaryText)
                     .strikethrough()
                 
                 // Arrow
                 Image(systemName: isImprovement ? "arrow.right" : "arrow.right")
-                    .font(GameTheme.Typography.fontXXSmall)
+                    .font(GameTheme.Typography.tiny)
                     .foregroundColor(isImprovement ? improvementColor : GameTheme.Colors.secondaryText)
                 
                 // Current value
                 Text(currentValue)
-                    .font(GameTheme.Typography.fontSmall)
+                    .font(GameTheme.Typography.body)
                     .fontWeight(.semibold)
                     .foregroundColor(isImprovement ? improvementColor : GameTheme.Colors.primaryText)
             }

@@ -26,7 +26,7 @@ struct GameTable<Data: Identifiable, Content: View>: View {
             // Table title
             if !title.isEmpty {
                 Text(title)
-                    .font(GameTheme.Typography.fontLarge)
+                    .font(GameTheme.Typography.title)
                     .foregroundColor(GameTheme.Colors.primaryText)
                     .padding(.bottom, GameTheme.Layout.mediumSpacing)
             }
@@ -35,7 +35,7 @@ struct GameTable<Data: Identifiable, Content: View>: View {
             HStack {
                 ForEach(headers, id: \.self) { header in
                     Text(header)
-                        .font(GameTheme.Typography.fontMediumSmall)
+                        .font(GameTheme.Typography.headline)
                         .fontWeight(.semibold)
                         .foregroundColor(GameTheme.Colors.primaryText)
                         .frame(maxWidth: .infinity)
@@ -106,21 +106,21 @@ struct ScoringTable: View {
             HStack {
                 // Action
                 Text(rule.action)
-                    .font(GameTheme.Typography.fontSmall)
+                    .font(GameTheme.Typography.body)
                     .fontWeight(.medium)
                     .foregroundColor(GameTheme.Colors.primaryText)
                     .frame(maxWidth: .infinity, alignment: .leading)
                 
                 // Points
                 Text(rule.points)
-                    .font(GameTheme.Typography.fontSmall)
+                    .font(GameTheme.Typography.body)
                     .fontWeight(.bold)
                     .foregroundColor(GameTheme.Colors.accent)
                     .frame(maxWidth: .infinity)
                 
                 // Description
                 Text(rule.description)
-                    .font(GameTheme.Typography.fontXSmall)
+                    .font(GameTheme.Typography.caption)
                     .foregroundColor(GameTheme.Colors.secondaryText)
                     .frame(maxWidth: .infinity, alignment: .leading)
             }
@@ -149,11 +149,11 @@ struct DifficultyTable: View {
                 // Difficulty badge
                 HStack(spacing: 6) {
                     Image(systemName: level.difficulty.icon)
-                        .font(GameTheme.Typography.font14Semibold)
+                        .font(GameTheme.Typography.body)
                         .foregroundColor(level.difficulty.color)
                     
                     Text(level.difficulty.rawValue)
-                        .font(GameTheme.Typography.fontSmall)
+                        .font(GameTheme.Typography.body)
                         .fontWeight(.medium)
                         .foregroundColor(GameTheme.Colors.primaryText)
                 }
@@ -161,13 +161,13 @@ struct DifficultyTable: View {
                 
                 // Description
                 Text(level.description)
-                    .font(GameTheme.Typography.fontXSmall)
+                    .font(GameTheme.Typography.caption)
                     .foregroundColor(GameTheme.Colors.secondaryText)
                     .frame(maxWidth: .infinity)
                 
                 // Block frequency
                 Text(level.blockFrequency)
-                    .font(GameTheme.Typography.fontXSmall)
+                    .font(GameTheme.Typography.caption)
                     .foregroundColor(GameTheme.Colors.accent)
                     .frame(maxWidth: .infinity, alignment: .trailing)
             }
@@ -200,7 +200,7 @@ struct KeyValueTable: View {
             // Title
             if !title.isEmpty {
                 Text(title)
-                    .font(GameTheme.Typography.fontLarge)
+                    .font(GameTheme.Typography.title)
                     .foregroundColor(GameTheme.Colors.primaryText)
                     .padding(.bottom, GameTheme.Layout.mediumSpacing)
             }
@@ -213,13 +213,13 @@ struct KeyValueTable: View {
                         HStack(spacing: 8) {
                             if let icon = item.icon {
                                 Image(systemName: icon)
-                                    .font(GameTheme.Typography.font14Medium)
+                                    .font(GameTheme.Typography.body)
                                     .foregroundColor(item.color ?? GameTheme.Colors.accent)
                                     .frame(width: 20)
                             }
                             
                             Text(item.key)
-                                .font(GameTheme.Typography.fontSmall)
+                                .font(GameTheme.Typography.body)
                                 .foregroundColor(GameTheme.Colors.primaryText)
                         }
                         
@@ -227,7 +227,7 @@ struct KeyValueTable: View {
                         
                         // Value
                         Text(item.value)
-                            .font(GameTheme.Typography.fontSmall)
+                            .font(GameTheme.Typography.body)
                             .fontWeight(.medium)
                             .foregroundColor(item.color ?? GameTheme.Colors.accent)
                     }

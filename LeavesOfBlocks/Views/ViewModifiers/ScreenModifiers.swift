@@ -169,21 +169,21 @@ extension View {
     /// Applies title text styling
     func pageTitleStyle(color: Color = GameTheme.Colors.primaryText) -> some View {
         self
-            .font(GameTheme.Typography.fontLarge)
+            .font(GameTheme.Typography.title)
             .foregroundColor(color)
     }
     
     /// Applies section header text styling
     func sectionHeaderStyle(color: Color = GameTheme.Colors.primaryText) -> some View {
         self
-            .font(GameTheme.Typography.fontMedium)
+            .font(GameTheme.Typography.headline)
             .foregroundColor(color)
     }
     
     /// Applies headline text styling
     func sectionTextStyle(color: Color = GameTheme.Colors.primaryText) -> some View {
         self
-            .font(GameTheme.Typography.fontSmallLarge)
+            .font(GameTheme.Typography.body)
             .foregroundColor(color)
     }
     
@@ -191,21 +191,21 @@ extension View {
     /// Applies headline text styling
     func gameHeadlineStyle(color: Color = GameTheme.Colors.primaryText) -> some View {
         self
-            .font(GameTheme.Typography.fontMediumSmall)
+            .font(GameTheme.Typography.headline)
             .foregroundColor(color)
     }
     
     /// Applies body text styling
     func gameBodyStyle(color: Color = GameTheme.Colors.primaryText) -> some View {
         self
-            .font(GameTheme.Typography.fontSmall)
+            .font(GameTheme.Typography.body)
             .foregroundColor(color)
     }
     
     /// Applies caption text styling
     func gameCaptionStyle(color: Color = GameTheme.Colors.secondaryText) -> some View {
         self
-            .font(GameTheme.Typography.fontXSmall)
+            .font(GameTheme.Typography.caption)
             .foregroundColor(color)
     }
     

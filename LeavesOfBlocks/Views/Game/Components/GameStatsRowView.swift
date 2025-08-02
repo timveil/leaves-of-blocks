@@ -18,40 +18,40 @@ struct GameStatsRowView: View {
                 // Blocks Placed Counter
                 HStack(spacing: 10) {
                     Image(systemName: "cube.fill")
-                        .font(GameTheme.Typography.fontSmallSemibold)
+                        .font(GameTheme.Typography.body)
                         .foregroundColor(GameTheme.Colors.blockYellow)
                     Text(gameState.blocksPlaced.formattedScore)
-                        .font(GameTheme.Typography.fontXSmall)
+                        .font(GameTheme.Typography.caption)
                         .foregroundColor(GameTheme.Colors.secondaryText)
                 }
                 
                 // Separator
                 Text("•")
-                    .font(GameTheme.Typography.fontXXSmallBold)
+                    .font(GameTheme.Typography.caption)
                     .foregroundColor(GameTheme.Colors.accent.opacity(0.8))
                 
                 // Timer
                 HStack(spacing: 10) {
                     Image(systemName: "clock.fill")
-                        .font(GameTheme.Typography.fontSmallSemibold)
+                        .font(GameTheme.Typography.body)
                         .foregroundColor(GameTheme.Colors.blockBlue)
                     Text(formatGameTime(gameState.currentGameTime))
-                        .font(GameTheme.Typography.fontXSmall)
+                        .font(GameTheme.Typography.caption)
                         .foregroundColor(GameTheme.Colors.secondaryText)
                 }
                 
                 // Separator
                 Text("•")
-                    .font(GameTheme.Typography.fontXXSmallBold)
+                    .font(GameTheme.Typography.caption)
                     .foregroundColor(GameTheme.Colors.accent.opacity(0.8))
                 
                 // Difficulty Level
                 HStack(spacing: 10) {
                     Image(systemName: gameState.currentDifficulty.icon)
-                        .font(GameTheme.Typography.fontSmallSemibold)
+                        .font(GameTheme.Typography.body)
                         .foregroundColor(gameState.currentDifficulty.color)
                     Text(gameState.currentDifficulty.rawValue)
-                        .font(GameTheme.Typography.fontXSmall)
+                        .font(GameTheme.Typography.caption)
                         .foregroundColor(GameTheme.Colors.secondaryText)
                 }
             }

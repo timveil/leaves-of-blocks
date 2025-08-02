@@ -34,7 +34,7 @@ struct ComboNotificationView: View {
         VStack(spacing: 0) {
             // Header with combo text (similar to ScoreDisplayView header style)
             Text(comboText)
-                .font(GameTheme.Typography.fontMedium)
+                .font(GameTheme.Typography.headline)
                 .fontWeight(.bold)
                 .foregroundColor(GameTheme.Colors.buttonText)
                 .frame(maxWidth: .infinity)
@@ -46,13 +46,13 @@ struct ComboNotificationView: View {
             VStack(spacing: GameTheme.Layout.smallSpacing) {
                 // Lines cleared indicator
                 Text("lines_cleared_format".localized(with: comboCount))
-                    .font(GameTheme.Typography.fontSmall)
+                    .font(GameTheme.Typography.body)
                     .foregroundColor(GameTheme.Colors.secondaryText)
                     .padding(.top, GameTheme.Layout.mediumPadding)
                 
                 // Bonus points with larger, prominent display
                 Text("+\(bonusPoints)")
-                    .font(GameTheme.Typography.fontLarge)
+                    .font(GameTheme.Typography.title)
                     .fontWeight(.bold)
                     .foregroundColor(GameTheme.Colors.primaryText)
                     .padding(.bottom, GameTheme.Layout.mediumPadding)
@@ -169,7 +169,7 @@ struct ComboNotificationPreviewContainer: View {
             VStack(spacing: 30) {
                 // Title
                 Text("combo_notifications_preview".localized)
-                    .font(GameTheme.Typography.fontLarge)
+                    .font(GameTheme.Typography.title)
                     .foregroundColor(GameTheme.Colors.primaryText)
                     .padding(.top)
                 
@@ -197,7 +197,7 @@ struct ComboNotificationPreviewContainer: View {
                 // Control buttons
                 VStack(spacing: 15) {
                     Text("tap_to_trigger_combos".localized)
-                        .font(GameTheme.Typography.fontSmall)
+                        .font(GameTheme.Typography.body)
                         .foregroundColor(GameTheme.Colors.secondaryText)
                     
                     VStack(spacing: 12) {

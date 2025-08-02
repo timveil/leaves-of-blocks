@@ -2,51 +2,41 @@ import SwiftUI
 
 extension GameTheme {
     struct Typography {
-        // MARK: - Font Definitions (Size-Based)
+        // MARK: - Simplified Typography System
         
-        // Extra Large Fonts (48pt+)
-        static let fontXXLarge = Font.system(size: 48, weight: .bold, design: .default)
+        /// Display text for large, prominent numbers and titles (48pt, bold)
+        /// Use for: game scores, game over text, large numbers
+        static let display = Font.system(size: 48, weight: .bold, design: .default)
         
-        // Large Fonts (28pt-32pt)
-        static let fontXLarge = Font.system(size: 32, weight: .bold, design: .default)
-        static let fontLarge = Font.system(size: 28, weight: .bold, design: .default)
-        static let fontLargeSemibold = Font.system(size: 28, weight: .semibold, design: .default)
+        /// Title text for screen and section headers (28pt, bold)
+        /// Use for: screen titles, major section headers
+        static let title = Font.system(size: 28, weight: .bold, design: .default)
         
-        // Medium Fonts (20pt-26pt)
-        static let fontMediumLarge = Font.system(size: 26, weight: .bold, design: .default)
-        static let font24Bold = Font.system(size: 24, weight: .bold, design: .rounded)
-        static let font24Semibold = Font.system(size: 24, weight: .semibold, design: .default)
-        static let fontMedium = Font.system(size: 22, weight: .bold, design: .default)
-        static let fontMediumSmall = Font.system(size: 20, weight: .bold, design: .default)
-        static let fontMediumSmallSemibold = Font.system(size: 20, weight: .semibold, design: .default)
-        static let fontMediumSmallMedium = Font.system(size: 20, weight: .medium, design: .default)
+        /// Headline text for sub-headers and important labels (20pt, semibold)
+        /// Use for: card headers, section sub-titles, prominent labels
+        static let headline = Font.system(size: 20, weight: .semibold, design: .default)
         
-        // Small Fonts (12pt-18pt)
-        static let fontSmallLarge = Font.system(size: 18, weight: .medium, design: .default)
-        static let fontSmallLargeSemibold = Font.system(size: 18, weight: .semibold, design: .default)
-        static let fontSmall = Font.system(size: 16, weight: .medium, design: .default)
-        static let fontSmallSemibold = Font.system(size: 16, weight: .semibold, design: .default)
-        static let font14Medium = Font.system(size: 14, weight: .medium, design: .default)
-        static let font14Semibold = Font.system(size: 14, weight: .semibold, design: .default)
-        static let fontXSmall = Font.system(size: 13, weight: .medium, design: .default)
-        static let fontXXSmall = Font.system(size: 12, weight: .medium, design: .default)
-        static let fontXXSmallSemibold = Font.system(size: 12, weight: .semibold, design: .default)
-        static let fontXXSmallBold = Font.system(size: 12, weight: .bold, design: .default)
+        /// Body text for main content (16pt, medium)
+        /// Use for: general text, button labels, descriptions
+        static let body = Font.system(size: 16, weight: .medium, design: .default)
         
-        // Tiny Fonts (10pt)
-        static let fontTiny = Font.system(size: 10, weight: .medium, design: .default)
-        static let fontTinyBold = Font.system(size: 10, weight: .bold, design: .default)
+        /// Caption text for secondary information (13pt, medium)
+        /// Use for: small labels, hints, secondary details
+        static let caption = Font.system(size: 13, weight: .medium, design: .default)
         
-        // MARK: - Serif Fonts (for Quotes/Decorative Text)
+        /// Tiny text for minimal UI elements (10pt, medium)
+        /// Use for: timestamps, small badges, tertiary information
+        static let tiny = Font.system(size: 10, weight: .medium, design: .default)
         
-        static let fontSerifMedium = Font.system(size: 18, weight: .medium, design: .serif)
-        static let fontSerifRegular = Font.system(size: 18, weight: .regular, design: .serif)
-        static let fontSerifSmall = Font.system(size: 14, weight: .medium, design: .serif)
+        /// Serif text for decorative quotes (18pt, regular, serif)
+        /// Use for: quotes in about screen, decorative text
+        static let serif = Font.system(size: 18, weight: .regular, design: .serif)
         
-        // MARK: - Dynamic Font Helper
+        // MARK: - Dynamic Font Helper (for special cases only)
         
-        /// Creates a dynamic font based on size
-        static func dynamicFont(size: CGFloat, weight: Font.Weight = .medium) -> Font {
+        /// Creates a dynamic font for special cases that need custom sizing
+        /// Avoid using this unless absolutely necessary (e.g., dynamic icon sizing)
+        static func dynamic(size: CGFloat, weight: Font.Weight = .medium) -> Font {
             Font.system(size: size, weight: weight, design: .default)
         }
         

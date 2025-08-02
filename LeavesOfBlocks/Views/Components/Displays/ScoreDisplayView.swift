@@ -51,7 +51,7 @@ struct ScoreDisplayView: View {
         VStack(spacing: 0) {
             // Header with gradient background (like Statistics widget)
             Text(title)
-                .font(GameTheme.Typography.fontMediumSmall)
+                .font(GameTheme.Typography.headline)
                 .foregroundColor(GameTheme.Colors.buttonText)
                 .frame(maxWidth: .infinity)
             .padding(.horizontal, GameTheme.Layout.largePadding)
@@ -62,13 +62,13 @@ struct ScoreDisplayView: View {
             VStack(spacing: GameTheme.Layout.mediumSpacing) {
                 if showIcon, let iconName = iconName {
                     Image(systemName: iconName)
-                        .font(GameTheme.Typography.fontSmall)
+                        .font(GameTheme.Typography.body)
                         .foregroundColor(GameTheme.Colors.accent)
                         .padding(.top, GameTheme.Layout.mediumPadding)
                 }
                 
                 Text(score.formattedScore)
-                    .font(GameTheme.Typography.fontXXLarge)
+                    .font(GameTheme.Typography.display)
                     .foregroundColor(GameTheme.Colors.primaryText)
                     .lineLimit(1)
                     .minimumScaleFactor(0.7)

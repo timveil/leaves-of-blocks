@@ -13,14 +13,14 @@ struct SaveGameOverlayView: View {
             VStack(spacing: GameTheme.Layout.mediumSpacing) {
                 
                 Text("save_game_title".localized)
-                    .font(GameTheme.Typography.fontXLarge)
+                    .font(GameTheme.Typography.title)
                     .foregroundColor(GameTheme.Colors.primaryText)
                     .tracking(1)
                     .shadow(color: Color.black.opacity(0.2), radius: 2, x: 0, y: 1)
                 
                 // Body text
                 Text("save_game_message".localized)
-                    .font(GameTheme.Typography.fontSmall)
+                    .font(GameTheme.Typography.body)
                     .foregroundColor(GameTheme.Colors.secondaryText)
                     .multilineTextAlignment(.center)
                     .padding(.horizontal, GameTheme.Layout.mediumPadding)

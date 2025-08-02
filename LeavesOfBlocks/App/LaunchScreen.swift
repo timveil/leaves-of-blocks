@@ -63,7 +63,7 @@ struct LaunchScreen: View {
                     // App title
                     VStack(spacing: 8) {
                         Text("app_title".localized)
-                            .font(GameTheme.Typography.fontXLarge)
+                            .font(GameTheme.Typography.title)
                             .foregroundStyle(GameTheme.Gradients.text)
                             .scaleEffect(isAnimated ? 1.0 : 0.8)
                             .opacity(isAnimated ? 1.0 : 0.0)
@@ -74,7 +74,7 @@ struct LaunchScreen: View {
                             )
                         
                         Text("app_subtitle".localized)
-                            .font(GameTheme.Typography.fontXXSmall)
+                            .font(GameTheme.Typography.caption)
                             .foregroundColor(GameTheme.Colors.secondaryText)
                             .opacity(isAnimated ? 0.8 : 0.0)
                             .animation(
@@ -105,7 +105,7 @@ struct LaunchScreen: View {
                     }
                     
                     Text("loading".localized)
-                        .font(GameTheme.Typography.fontXSmall)
+                        .font(GameTheme.Typography.caption)
                         .foregroundColor(GameTheme.Colors.tertiaryText)
                         .opacity(isAnimated ? 0.6 : 0.0)
                         .animation(

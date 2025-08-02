@@ -45,18 +45,18 @@ struct AboutView: View {
                             // Quote text
                             VStack(alignment: .leading, spacing: GameTheme.Layout.smallSpacing) {
                                 Text("answer".localized)
-                                    .font(GameTheme.Typography.fontSerifMedium)
+                                    .font(GameTheme.Typography.serif)
                                     .foregroundColor(GameTheme.Colors.primaryText)
                                     .italic()
                                 
                                 Text("whitman_quote_1".localized)
-                                    .font(GameTheme.Typography.fontSerifRegular)
+                                    .font(GameTheme.Typography.serif)
                                     .foregroundColor(GameTheme.Colors.primaryText)
                                     .italic()
                                     .lineSpacing(4)
                                 
                                 Text("whitman_quote_2".localized)
-                                    .font(GameTheme.Typography.fontSerifRegular)
+                                    .font(GameTheme.Typography.serif)
                                     .foregroundColor(GameTheme.Colors.primaryText)
                                     .italic()
                                     .lineSpacing(4)
@@ -66,7 +66,7 @@ struct AboutView: View {
                             HStack {
                                 Spacer()
                                 Text("whitman_attribution".localized)
-                                    .font(GameTheme.Typography.fontSerifSmall)
+                                    .font(GameTheme.Typography.serif)
                                     .foregroundColor(GameTheme.Colors.secondaryText)
                             }
                             .padding(.top, GameTheme.Layout.smallSpacing)

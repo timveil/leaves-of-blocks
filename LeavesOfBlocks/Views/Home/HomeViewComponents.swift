@@ -9,7 +9,7 @@ struct DifficultySelectionView: View {
     var body: some View {
         VStack(spacing: GameTheme.Layout.extraLargeSpacing) {
             Text("select_difficulty".localized)
-                .font(GameTheme.Typography.fontLarge)
+                .font(GameTheme.Typography.title)
                 .foregroundColor(GameTheme.Colors.primaryText)
                 .tracking(0.5)
             
@@ -22,7 +22,7 @@ struct DifficultySelectionView: View {
                         }) {
                             VStack(spacing: GameTheme.Layout.smallSpacing) {
                                 Image(systemName: difficulty.icon)
-                                    .font(GameTheme.Typography.fontLargeSemibold)
+                                    .font(GameTheme.Typography.title)
                                     .foregroundColor(selectedDifficulty == difficulty ? difficulty.color : GameTheme.Colors.secondaryText)
                                     .frame(width: 60, height: 60)
                             }
@@ -36,7 +36,7 @@ struct DifficultySelectionView: View {
                         .accessibilityIdentifier("\(difficulty.rawValue.lowercased())_button")
                         
                         Text(difficulty.rawValue)
-                            .font(GameTheme.Typography.fontXSmall)
+                            .font(GameTheme.Typography.caption)
                             .fontWeight(.medium)
                             .foregroundColor(selectedDifficulty == difficulty ? difficulty.color : GameTheme.Colors.secondaryText)
                     }

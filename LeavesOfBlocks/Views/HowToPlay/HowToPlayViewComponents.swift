@@ -9,11 +9,11 @@ struct InstructionSection: View {
     var body: some View {
         VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
             Text(title)
-                .font(GameTheme.Typography.fontMediumSmall)
+                .font(GameTheme.Typography.headline)
                 .foregroundColor(GameTheme.Colors.primaryText)
             
             Text(content)
-                .font(GameTheme.Typography.fontSmall)
+                .font(GameTheme.Typography.body)
                 .foregroundColor(GameTheme.Colors.secondaryText)
                 .lineSpacing(4)
                 .fixedSize(horizontal: false, vertical: true)
@@ -30,11 +30,11 @@ struct TipRow: View {
     var body: some View {
         HStack(alignment: .top, spacing: GameTheme.Layout.mediumSpacing) {
             Text("•")
-                .font(GameTheme.Typography.fontSmallLarge)
+                .font(GameTheme.Typography.body)
                 .foregroundColor(GameTheme.Colors.accent)
             
             Text(text)
-                .font(GameTheme.Typography.fontSmallLarge)
+                .font(GameTheme.Typography.body)
                 .foregroundColor(GameTheme.Colors.secondaryText)
                 .fixedSize(horizontal: false, vertical: true)
             
@@ -54,14 +54,14 @@ struct ScoringTableRowView: View {
         HStack(spacing: GameTheme.Layout.largePadding) {
             // Points column
             Text(points)
-                .font(GameTheme.Typography.fontMediumSmall)
+                .font(GameTheme.Typography.headline)
                 .fontWeight(.bold)
                 .foregroundColor(color)
                 .frame(width: 100, alignment: .center)
             
             // Description column
             Text(description)
-                .font(GameTheme.Typography.fontSmall)
+                .font(GameTheme.Typography.body)
                 .foregroundColor(GameTheme.Colors.secondaryText)
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
@@ -87,14 +87,14 @@ struct ScoringTableHeaderView: View {
         HStack(spacing: GameTheme.Layout.largePadding) {
             // Points header
             Text("points".localized)
-                .font(GameTheme.Typography.fontSmallLarge)
+                .font(GameTheme.Typography.body)
                 .fontWeight(.bold)
                 .foregroundColor(GameTheme.Colors.primaryText)
                 .frame(width: 100, alignment: .leading)
             
             // Description header
             Text("description".localized)
-                .font(GameTheme.Typography.fontSmallLarge)
+                .font(GameTheme.Typography.body)
                 .fontWeight(.bold)
                 .foregroundColor(GameTheme.Colors.primaryText)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -110,14 +110,14 @@ struct DifficultyTableHeaderView: View {
         HStack(spacing: GameTheme.Layout.largePadding) {
             // Mode header
             Text("mode".localized)
-                .font(GameTheme.Typography.fontSmallLarge)
+                .font(GameTheme.Typography.body)
                 .fontWeight(.bold)
                 .foregroundColor(GameTheme.Colors.primaryText)
                 .frame(width: 100, alignment: .leading)
             
             // Description header
             Text("description".localized)
-                .font(GameTheme.Typography.fontSmallLarge)
+                .font(GameTheme.Typography.body)
                 .fontWeight(.bold)
                 .foregroundColor(GameTheme.Colors.primaryText)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -139,12 +139,12 @@ struct DifficultyTableRowView: View {
             // Mode icon and name column (home screen style)
             VStack(spacing: GameTheme.Layout.smallSpacing) {
                 Image(systemName: mode.icon)
-                    .font(GameTheme.Typography.font24Semibold)
+                    .font(GameTheme.Typography.headline)
                     .foregroundColor(mode.color)
                     .frame(height: 30)
                 
                 Text(mode.rawValue.capitalized)
-                    .font(GameTheme.Typography.fontXSmall)
+                    .font(GameTheme.Typography.caption)
                     .fontWeight(.medium)
                     .foregroundColor(GameTheme.Colors.primaryText)
             }
@@ -152,7 +152,7 @@ struct DifficultyTableRowView: View {
             
             // Description column
             Text(description)
-                .font(GameTheme.Typography.fontSmall)
+                .font(GameTheme.Typography.body)
                 .foregroundColor(GameTheme.Colors.secondaryText)
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
@@ -180,14 +180,14 @@ struct ShapesTableHeaderView: View {
         HStack(spacing: GameTheme.Layout.largePadding) {
             // Shape header
             Text("shape".localized)
-                .font(GameTheme.Typography.fontSmallLarge)
+                .font(GameTheme.Typography.body)
                 .fontWeight(.bold)
                 .foregroundColor(GameTheme.Colors.primaryText)
                 .frame(width: 100, alignment: .leading)
             
             // Description header
             Text("description".localized)
-                .font(GameTheme.Typography.fontSmallLarge)
+                .font(GameTheme.Typography.body)
                 .fontWeight(.bold)
                 .foregroundColor(GameTheme.Colors.primaryText)
                 .frame(maxWidth: .infinity, alignment: .leading)
@@ -212,7 +212,7 @@ struct ShapesTableRowView: View {
                     .frame(height: 40)
                 
                 Text(shapeType.displayName)
-                    .font(GameTheme.Typography.fontXSmall)
+                    .font(GameTheme.Typography.caption)
                     .fontWeight(.medium)
                     .foregroundColor(GameTheme.Colors.primaryText)
                     .multilineTextAlignment(.center)
@@ -221,7 +221,7 @@ struct ShapesTableRowView: View {
             
             // Description column
             Text(description)
-                .font(GameTheme.Typography.fontSmall)
+                .font(GameTheme.Typography.body)
                 .foregroundColor(GameTheme.Colors.secondaryText)
                 .frame(maxWidth: .infinity, alignment: .leading)
         }
@@ -302,7 +302,7 @@ enum ShapeType {
                     
                     Image(systemName: "arrow.left.and.right")
                         .foregroundColor(.white)
-                        .font(GameTheme.Typography.font14Semibold)
+                        .font(GameTheme.Typography.body)
                 }
             )
         case .verticalClear:
@@ -317,7 +317,7 @@ enum ShapeType {
                     
                     Image(systemName: "arrow.up.and.down")
                         .foregroundColor(.white)
-                        .font(GameTheme.Typography.font14Semibold)
+                        .font(GameTheme.Typography.body)
                 }
             )
         case .areaClear:
@@ -332,7 +332,7 @@ enum ShapeType {
                     
                     Image(systemName: "square.3.layers.3d")
                         .foregroundColor(.white)
-                        .font(GameTheme.Typography.font14Semibold)
+                        .font(GameTheme.Typography.body)
                 }
             )
         }
