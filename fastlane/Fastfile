@@ -52,6 +52,20 @@ platform :ios do
 
   desc "Upload to TestFlight"
   lane :beta do
+    # Configure App Store Connect API key
+    api_key = app_store_connect_api_key(
+      key_id: ENV["APP_STORE_CONNECT_API_KEY_ID"],
+      issuer_id: ENV["APP_STORE_CONNECT_ISSUER_ID"],
+      key_filepath: ENV["APP_STORE_CONNECT_API_KEY_PATH"] || "./AuthKey.p8",
+      duration: 1200,
+      in_house: false
+    )
+    
+    # Increment marketing version to create new release train
+    increment_version_number(
+      xcodeproj: "LeavesOfBlocks.xcodeproj",
+      version_number: "1.0.3"  # Explicitly set new version to resolve closed train
+    )
     increment_build_number(xcodeproj: "LeavesOfBlocks.xcodeproj")
     build_app(
       project: "LeavesOfBlocks.xcodeproj",
@@ -59,12 +73,22 @@ platform :ios do
       export_method: "app-store"
     )
     upload_to_testflight(
+      api_key: api_key,
       skip_waiting_for_build_processing: true
     )
   end
 
   desc "Upload to App Store"
   lane :release do
+    # Configure App Store Connect API key
+    api_key = app_store_connect_api_key(
+      key_id: ENV["APP_STORE_CONNECT_API_KEY_ID"],
+      issuer_id: ENV["APP_STORE_CONNECT_ISSUER_ID"],
+      key_filepath: ENV["APP_STORE_CONNECT_API_KEY_PATH"] || "./AuthKey.p8",
+      duration: 1200,
+      in_house: false
+    )
+    
     increment_build_number(xcodeproj: "LeavesOfBlocks.xcodeproj")
     build_app(
       project: "LeavesOfBlocks.xcodeproj",
@@ -72,6 +96,7 @@ platform :ios do
       export_method: "app-store"
     )
     upload_to_app_store(
+      api_key: api_key,
       force: true,
       submit_for_review: false
     )
@@ -79,7 +104,17 @@ platform :ios do
 
   desc "Upload metadata and screenshots only (no binary)"
   lane :metadata_only do
+    # Configure App Store Connect API key
+    api_key = app_store_connect_api_key(
+      key_id: ENV["APP_STORE_CONNECT_API_KEY_ID"],
+      issuer_id: ENV["APP_STORE_CONNECT_ISSUER_ID"],
+      key_filepath: ENV["APP_STORE_CONNECT_API_KEY_PATH"] || "./AuthKey.p8",
+      duration: 1200,
+      in_house: false
+    )
+    
     deliver(
+      api_key: api_key,
       skip_binary_upload: true,
       skip_screenshots: false,
       skip_metadata: false,
@@ -89,7 +124,17 @@ platform :ios do
 
   desc "Upload screenshots only"
   lane :screenshots_only do
+    # Configure App Store Connect API key
+    api_key = app_store_connect_api_key(
+      key_id: ENV["APP_STORE_CONNECT_API_KEY_ID"],
+      issuer_id: ENV["APP_STORE_CONNECT_ISSUER_ID"],
+      key_filepath: ENV["APP_STORE_CONNECT_API_KEY_PATH"] || "./AuthKey.p8",
+      duration: 1200,
+      in_house: false
+    )
+    
     deliver(
+      api_key: api_key,
       skip_binary_upload: true,
       skip_screenshots: false,
       skip_metadata: true,
@@ -99,6 +144,15 @@ platform :ios do
 
   desc "Complete App Store deployment with metadata and binary"
   lane :deploy do
+    # Configure App Store Connect API key
+    api_key = app_store_connect_api_key(
+      key_id: ENV["APP_STORE_CONNECT_API_KEY_ID"],
+      issuer_id: ENV["APP_STORE_CONNECT_ISSUER_ID"],
+      key_filepath: ENV["APP_STORE_CONNECT_API_KEY_PATH"] || "./AuthKey.p8",
+      duration: 1200,
+      in_house: false
+    )
+    
     # Increment build number
     increment_build_number(xcodeproj: "LeavesOfBlocks.xcodeproj")
     
@@ -111,6 +165,7 @@ platform :ios do
     
     # Upload everything using deliver
     deliver(
+      api_key: api_key,
       submit_for_review: false,
       automatic_release: false,
       force: true,
@@ -124,7 +179,17 @@ platform :ios do
 
   desc "Submit for App Store review (use after deploy)"
   lane :submit do
+    # Configure App Store Connect API key
+    api_key = app_store_connect_api_key(
+      key_id: ENV["APP_STORE_CONNECT_API_KEY_ID"],
+      issuer_id: ENV["APP_STORE_CONNECT_ISSUER_ID"],
+      key_filepath: ENV["APP_STORE_CONNECT_API_KEY_PATH"] || "./AuthKey.p8",
+      duration: 1200,
+      in_house: false
+    )
+    
     deliver(
+      api_key: api_key,
       submit_for_review: true,
       automatic_release: false,
       force: true,
@@ -138,6 +203,15 @@ platform :ios do
 
   desc "Full deployment pipeline: build, upload, and submit for review"
   lane :deploy_and_submit do
+    # Configure App Store Connect API key
+    api_key = app_store_connect_api_key(
+      key_id: ENV["APP_STORE_CONNECT_API_KEY_ID"],
+      issuer_id: ENV["APP_STORE_CONNECT_ISSUER_ID"],
+      key_filepath: ENV["APP_STORE_CONNECT_API_KEY_PATH"] || "./AuthKey.p8",
+      duration: 1200,
+      in_house: false
+    )
+    
     # Increment build number
     increment_build_number(xcodeproj: "LeavesOfBlocks.xcodeproj")
     
@@ -150,6 +224,7 @@ platform :ios do
     
     # Upload everything and submit for review
     deliver(
+      api_key: api_key,
       submit_for_review: true,
       automatic_release: false,
       force: true,
