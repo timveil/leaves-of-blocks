@@ -5,9 +5,6 @@ devices([
   "iPhone 16 Pro Max"
 ])
 
-# Specify destination to avoid architecture ambiguity
-destination("platform=iOS Simulator,name=iPhone 16 Pro Max,arch=arm64")
-
 # Languages for localized screenshots
 languages([
   "en-US"
@@ -30,6 +27,9 @@ launch_arguments([
   "-ui-testing",
   "-screenshot-mode"
 ])
+
+# Skip HTML report generation if it's causing issues
+skip_open_summary(false)
 
 # For more information about all available options run
 # fastlane action snapshot

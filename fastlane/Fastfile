@@ -87,11 +87,13 @@ platform :ios do
       scheme: "LeavesOfBlocks",
       output_directory: "./fastlane/screenshots",
       clear_previous_screenshots: true,
-      override_status_bar: true
+      override_status_bar: true,
+      number_of_retries: 0
     )
     
     UI.success("✅ Screenshots captured successfully!")
     UI.message("📱 Find your screenshots in: fastlane/screenshots/")
+    UI.message("📄 HTML report: fastlane/screenshots/screenshots.html")
   end
 
   desc "Generate manual screenshots (simulator only)"
