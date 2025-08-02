@@ -58,7 +58,7 @@ struct Main: App {
             // Clear existing data first
             let fetchRequest: NSFetchRequest<NSFetchRequestResult> = GameRecord.fetchRequest()
             let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
-            try? context.execute(deleteRequest)
+            _ = try? context.execute(deleteRequest)
             
             // Create high score game (941 points) with specific date
             let highScoreGame = GameRecord(context: context)
@@ -88,7 +88,7 @@ struct Main: App {
             highScoreGame.strategicGrade = "A+"
             
             // Save the context
-            try? context.save()
+            _ = try? context.save()
             
             #if DEBUG
             print("📱 Sample game history created for screenshots")

@@ -22,10 +22,9 @@ clear_previous_screenshots(true)
 # Set the status bar to 9:41 AM, and show full battery and reception
 override_status_bar(true)
 
-# Launch arguments - enable screenshot mode to show demo content
+# Launch arguments - enable screenshot mode to show demo content  
 launch_arguments([
-  "-ui-testing",
-  "-screenshot-mode"
+  "-ui-testing -screenshot-mode"
 ])
 
 # Skip HTML report generation if it's causing issues

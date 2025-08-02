@@ -82,12 +82,8 @@ platform :ios do
     # Build for testing first
     build_for_testing
     
-    # Capture screenshots using snapshot
+    # Capture screenshots using snapshot (configuration from Snapfile)
     capture_screenshots(
-      scheme: "LeavesOfBlocks",
-      output_directory: "./fastlane/screenshots",
-      clear_previous_screenshots: true,
-      override_status_bar: true,
       number_of_retries: 0
     )
     
