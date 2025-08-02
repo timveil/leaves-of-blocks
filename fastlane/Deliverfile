@@ -60,7 +60,7 @@ app_review_information({
   email_address: "timveil@mac.com",  # Replace with your email
   demo_user: "",
   demo_password: "",
-  notes: "Leaves of Blocks is a Block Blast-style puzzle game with autumn theming. The game is fully self-contained with no external dependencies or network connectivity required."
+  notes: "Leaves of Blocks is a Whitman-inspired block puzzle game. The app is completely offline with no network requests, no ads, no tracking, and no in-app purchases. All features are available immediately upon download. The game includes comprehensive statistics tracking and game history stored locally using Core Data."
 })
 
 # Skip binary upload (we'll handle this separately)
