@@ -68,11 +68,7 @@ struct ToolbarView: View {
         .padding(.horizontal, GameTheme.Layout.largePadding)
         .padding(.vertical, GameTheme.Layout.mediumPadding)
         .background(
-            LinearGradient(
-                colors: [GameTheme.Colors.cardBackground, GameTheme.Colors.cardBackground.opacity(0.9)],
-                startPoint: .top,
-                endPoint: .bottom
-            )
+            GameTheme.Gradients.verticalFade(from: GameTheme.Colors.cardBackground, to: GameTheme.Colors.cardBackground.opacity(0.9))
             .ignoresSafeArea(edges: .top)
         )
         .overlay(

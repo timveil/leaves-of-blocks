@@ -73,14 +73,7 @@ struct AboutView: View {
                         }
                         .padding(GameTheme.Layout.mediumPadding)
                         .gameGradientCardStyle(
-                            gradient: LinearGradient(
-                                colors: [
-                                    GameTheme.Colors.accent.opacity(0.3),
-                                    GameTheme.Colors.accent.opacity(0.1)
-                                ],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            ),
+                            gradient: GameTheme.Gradients.cardBorder,
                             borderWidth: 1
                         )
                     }

@@ -295,11 +295,7 @@ enum ShapeType {
                 ZStack {
                     RoundedRectangle(cornerRadius: 6)
                         .fill(
-                            LinearGradient(
-                                colors: [GameTheme.Colors.blockRed, GameTheme.Colors.blockRed.opacity(0.7)],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            )
+                            GameTheme.Gradients.blockVisual(from: GameTheme.Colors.blockRed, to: GameTheme.Colors.blockRed.opacity(0.7))
                         )
                         .frame(width: 30, height: 30)
                         .shadow(color: GameTheme.Colors.blockRed.opacity(0.4), radius: 3)
@@ -314,11 +310,7 @@ enum ShapeType {
                 ZStack {
                     RoundedRectangle(cornerRadius: 6)
                         .fill(
-                            LinearGradient(
-                                colors: [GameTheme.Colors.blockBlue, GameTheme.Colors.blockBlue.opacity(0.7)],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            )
+                            GameTheme.Gradients.blockVisual(from: GameTheme.Colors.blockBlue, to: GameTheme.Colors.blockBlue.opacity(0.7))
                         )
                         .frame(width: 30, height: 30)
                         .shadow(color: GameTheme.Colors.blockBlue.opacity(0.4), radius: 3)
@@ -333,11 +325,7 @@ enum ShapeType {
                 ZStack {
                     RoundedRectangle(cornerRadius: 6)
                         .fill(
-                            LinearGradient(
-                                colors: [GameTheme.Colors.blockPurple, GameTheme.Colors.blockPurple.opacity(0.7)],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            )
+                            GameTheme.Gradients.blockVisual(from: GameTheme.Colors.blockPurple, to: GameTheme.Colors.blockPurple.opacity(0.7))
                         )
                         .frame(width: 30, height: 30)
                         .shadow(color: GameTheme.Colors.blockPurple.opacity(0.4), radius: 3)

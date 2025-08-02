@@ -5,6 +5,7 @@ team_id("85U9MWUBJL") # Your Developer Portal Team ID
 
 # Uncomment and set your Apple ID for App Store Connect operations
 # apple_id("your.email@example.com")
+# Note: You'll need to set this or use environment variable FASTLANE_USER
 
 # For more information about the Appfile, see:
 #     https://docs.fastlane.tools/advanced/#appfile

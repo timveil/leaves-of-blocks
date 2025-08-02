@@ -239,11 +239,7 @@ struct GameProgressIndicator: View {
                     // Progress fill
                     RoundedRectangle(cornerRadius: 4)
                         .fill(
-                            LinearGradient(
-                                colors: [color, color.opacity(0.8)],
-                                startPoint: .leading,
-                                endPoint: .trailing
-                            )
+                            GameTheme.Gradients.horizontalProgress(from: color, to: color.opacity(0.8))
                         )
                         .frame(width: geometry.size.width * progress, height: 8)
                         .animation(.easeInOut(duration: 0.3), value: progress)

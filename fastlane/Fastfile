@@ -77,6 +77,90 @@ platform :ios do
     )
   end
 
+  desc "Upload metadata and screenshots only (no binary)"
+  lane :metadata_only do
+    deliver(
+      skip_binary_upload: true,
+      skip_screenshots: false,
+      skip_metadata: false,
+      force: true
+    )
+  end
+
+  desc "Upload screenshots only"
+  lane :screenshots_only do
+    deliver(
+      skip_binary_upload: true,
+      skip_screenshots: false,
+      skip_metadata: true,
+      force: true
+    )
+  end
+
+  desc "Complete App Store deployment with metadata and binary"
+  lane :deploy do
+    # Increment build number
+    increment_build_number(xcodeproj: "LeavesOfBlocks.xcodeproj")
+    
+    # Build the app
+    build_app(
+      project: "LeavesOfBlocks.xcodeproj",
+      scheme: "LeavesOfBlocks",
+      export_method: "app-store"
+    )
+    
+    # Upload everything using deliver
+    deliver(
+      submit_for_review: false,
+      automatic_release: false,
+      force: true,
+      skip_waiting_for_build_processing: false
+    )
+    
+    UI.success("🚀 App deployed to App Store Connect!")
+    UI.message("📱 Binary, metadata, and screenshots uploaded")
+    UI.message("⏳ Check App Store Connect for build processing status")
+  end
+
+  desc "Submit for App Store review (use after deploy)"
+  lane :submit do
+    deliver(
+      submit_for_review: true,
+      automatic_release: false,
+      force: true,
+      skip_binary_upload: true,
+      skip_metadata: true,
+      skip_screenshots: true
+    )
+    
+    UI.success("📝 App submitted for App Store review!")
+  end
+
+  desc "Full deployment pipeline: build, upload, and submit for review"
+  lane :deploy_and_submit do
+    # Increment build number
+    increment_build_number(xcodeproj: "LeavesOfBlocks.xcodeproj")
+    
+    # Build the app
+    build_app(
+      project: "LeavesOfBlocks.xcodeproj",
+      scheme: "LeavesOfBlocks",
+      export_method: "app-store"
+    )
+    
+    # Upload everything and submit for review
+    deliver(
+      submit_for_review: true,
+      automatic_release: false,
+      force: true,
+      skip_waiting_for_build_processing: false
+    )
+    
+    UI.success("🎉 Complete deployment finished!")
+    UI.message("📱 Binary uploaded and submitted for review")
+    UI.message("⏳ Apple will review your app within 24-48 hours")
+  end
+
   desc "Generate new localized screenshots"
   lane :screenshots do
     # Build for testing first

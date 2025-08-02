@@ -22,23 +22,11 @@ struct ComboNotificationView: View {
     
     private var comboHeaderGradient: LinearGradient {
         if comboCount >= 5 {
-            return LinearGradient(
-                colors: [GameTheme.Colors.lineCompletionPrimary, GameTheme.Colors.lineCompletionSecondary],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
+            return GameTheme.Gradients.comboHigh
         } else if comboCount >= 3 {
-            return LinearGradient(
-                colors: [GameTheme.Colors.secondaryAccent, GameTheme.Colors.secondaryAccent.opacity(0.8)],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
+            return GameTheme.Gradients.comboMedium
         } else {
-            return LinearGradient(
-                colors: [GameTheme.Colors.primaryAccent, GameTheme.Colors.primaryAccent.opacity(0.8)],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
+            return GameTheme.Gradients.comboLow
         }
     }
     
@@ -77,11 +65,7 @@ struct ComboNotificationView: View {
         .overlay(
             RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
                 .stroke(
-                    LinearGradient(
-                        colors: [GameTheme.Colors.accent.opacity(0.4), GameTheme.Colors.accent.opacity(0.2)],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    ),
+                    GameTheme.Gradients.cardBorder,
                     lineWidth: 2
                 )
         )

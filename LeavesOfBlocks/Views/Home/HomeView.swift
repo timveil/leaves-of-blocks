@@ -37,7 +37,7 @@ struct HomeView: View {
                 //Spacer(minLength: 100)
             }
             .padding(.horizontal, GameTheme.Layout.extraLargePadding)
-            .padding(.bottom, GameTheme.Layout.extraLargePadding)
+            .padding(.bottom, 80)
         }
     }
 }

@@ -70,11 +70,7 @@ struct GameGridView: View {
                     .overlay(
                         RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
                             .stroke(
-                                LinearGradient(
-                                    colors: GameTheme.Colors.cardBorderGradient,
-                                    startPoint: .topLeading,
-                                    endPoint: .bottomTrailing
-                                ),
+                                GameTheme.Gradients.cardBorder,
                                 lineWidth: GameTheme.Layout.strokeWidth
                             )
                     )

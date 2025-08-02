@@ -91,14 +91,7 @@ extension View {
                     .overlay(
                         RoundedRectangle(cornerRadius: cornerRadius)
                             .stroke(
-                                LinearGradient(
-                                    colors: [
-                                        GameTheme.Colors.accent.opacity(0.3),
-                                        GameTheme.Colors.accent.opacity(0.1)
-                                    ],
-                                    startPoint: .topLeading,
-                                    endPoint: .bottomTrailing
-                                ),
+                                GameTheme.Gradients.cardBorder,
                                 lineWidth: 2
                             )
                     )
@@ -112,14 +105,7 @@ extension View {
         gradient: LinearGradient? = nil,
         borderWidth: CGFloat = 2
     ) -> some View {
-        let defaultGradient = LinearGradient(
-            gradient: Gradient(colors: [
-                GameTheme.Colors.accent.opacity(0.3),
-                GameTheme.Colors.accent.opacity(0.1)
-            ]),
-            startPoint: .topLeading,
-            endPoint: .bottomTrailing
-        )
+        let defaultGradient = GameTheme.Gradients.cardBorder
         
         return self
             .background(

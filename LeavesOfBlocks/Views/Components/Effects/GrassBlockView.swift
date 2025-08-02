@@ -10,11 +10,7 @@ struct GrassBlockView: View {
     var body: some View {
         RoundedRectangle(cornerRadius: 6)
             .fill(
-                LinearGradient(
-                    colors: [color, color.opacity(0.6)],
-                    startPoint: .top,
-                    endPoint: .bottom
-                )
+                GameTheme.Gradients.verticalFade(from: color, to: color.opacity(0.6))
             )
             .frame(width: width, height: height)
             .overlay(

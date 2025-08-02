@@ -55,6 +55,46 @@ Upload to TestFlight
 
 Upload to App Store
 
+### ios metadata_only
+
+```sh
+[bundle exec] fastlane ios metadata_only
+```
+
+Upload metadata and screenshots only (no binary)
+
+### ios screenshots_only
+
+```sh
+[bundle exec] fastlane ios screenshots_only
+```
+
+Upload screenshots only
+
+### ios deploy
+
+```sh
+[bundle exec] fastlane ios deploy
+```
+
+Complete App Store deployment with metadata and binary
+
+### ios submit
+
+```sh
+[bundle exec] fastlane ios submit
+```
+
+Submit for App Store review (use after deploy)
+
+### ios deploy_and_submit
+
+```sh
+[bundle exec] fastlane ios deploy_and_submit
+```
+
+Full deployment pipeline: build, upload, and submit for review
+
 ### ios screenshots
 
 ```sh

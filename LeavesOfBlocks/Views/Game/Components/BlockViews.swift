@@ -69,16 +69,8 @@ struct CurrentBlocksView: View {
                     RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
                         .stroke(
                             isHoveringOverOrigin ?
-                            LinearGradient(
-                                colors: [GameTheme.Colors.accent, GameTheme.Colors.accent],
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            ) :
-                            LinearGradient(
-                                colors: GameTheme.Colors.cardBorderGradient,
-                                startPoint: .topLeading,
-                                endPoint: .bottomTrailing
-                            ),
+                            GameTheme.Gradients.blockVisual(from: GameTheme.Colors.accent, to: GameTheme.Colors.accent) :
+                            GameTheme.Gradients.cardBorder,
                             lineWidth: isHoveringOverOrigin ? 3 : GameTheme.Layout.strokeWidth
                         )
                 )

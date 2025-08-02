@@ -56,13 +56,7 @@ struct ScoreDisplayView: View {
                 .frame(maxWidth: .infinity)
             .padding(.horizontal, GameTheme.Layout.largePadding)
             .padding(.vertical, GameTheme.Layout.mediumPadding)
-            .background(
-                LinearGradient(
-                    colors: [GameTheme.Colors.accent, GameTheme.Colors.accent.opacity(0.8)],
-                    startPoint: .topLeading,
-                    endPoint: .bottomTrailing
-                )
-            )
+            .background(GameTheme.Colors.accent)
             
             // Content area with brown background
             VStack(spacing: GameTheme.Layout.mediumSpacing) {
@@ -100,11 +94,7 @@ struct ScoreDisplayView: View {
         .overlay(
             RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
                 .stroke(
-                    LinearGradient(
-                        colors: [GameTheme.Colors.accent.opacity(0.3), GameTheme.Colors.accent.opacity(0.1)],
-                        startPoint: .topLeading,
-                        endPoint: .bottomTrailing
-                    ),
+                    GameTheme.Gradients.cardBorder,
                     lineWidth: 1
                 )
         )

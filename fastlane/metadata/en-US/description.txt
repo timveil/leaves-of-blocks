@@ -1,0 +1,23 @@
+Immerse yourself in the beautiful world of Leaves of Blocks, an autumn-themed puzzle game that combines strategic thinking with stunning visuals.
+
+KEY FEATURES:
+• Block Blast-style gameplay with drag-and-drop mechanics
+• Beautiful autumn theming with rich colors and seasonal ambiance
+• 8x8 grid with challenging block placement puzzles
+• Progressive difficulty with three modes: Easy, Moderate, and Hard
+• Smart scoring system with combo bonuses for clearing multiple lines
+• Comprehensive statistics tracking your progress and achievements
+• Local high score persistence - compete with yourself
+• Smooth animations and satisfying haptic feedback
+• Full SwiftUI implementation optimized for iOS
+
+GAMEPLAY:
+Drop randomly generated block shapes onto the 8x8 grid to clear horizontal and vertical lines. The more lines you clear simultaneously, the higher your combo bonus! With 21 different block configurations and weighted generation based on difficulty, every game presents a unique challenge.
+
+PRIVACY & SECURITY:
+Leaves of Blocks respects your privacy completely. All data stays on your device - no internet connection required, no data collection, no tracking. Perfect for offline play anywhere, anytime.
+
+ACCESSIBILITY:
+Designed with accessibility in mind, featuring clear visual indicators, intuitive touch controls, and support for assistive technologies.
+
+Whether you're looking for a quick mental break or an extended puzzle session, Leaves of Blocks offers the perfect blend of strategy, beauty, and autumn charm. Download now and start your puzzle adventure!

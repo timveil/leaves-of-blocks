@@ -1,0 +1,13 @@
+🍂 Welcome to Leaves of Blocks v1.0!
+
+This is the initial release of our autumn-themed block puzzle game featuring:
+
+✨ Beautiful autumn visuals and theming
+🎯 Block Blast-style drag-and-drop gameplay  
+🎮 Three difficulty modes with progressive challenge
+📊 Comprehensive statistics and high score tracking
+🔄 Smooth animations and haptic feedback
+🔒 Complete privacy - all data stays on your device
+♿ Full accessibility support
+
+Thank you for downloading Leaves of Blocks! We hope you enjoy this cozy puzzle experience.

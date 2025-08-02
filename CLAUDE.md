@@ -64,12 +64,23 @@ This is a SwiftUI iOS game called "Leaves of Blocks" - a Block Blast-style puzzl
 - **Test App Clip**: `xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "LeavesOfBlocksAppClip" test -destination 'platform=iOS Simulator,name=iPhone 16'`
 
 ### Fastlane Commands
-- **Generate Screenshots**: `bundle exec fastlane ios screenshots`
+
+#### Core Development Commands
 - **Run Tests**: `bundle exec fastlane ios test`
 - **Build for Testing**: `bundle exec fastlane ios build_for_testing`
-- **Deploy Beta**: `bundle exec fastlane ios beta`
-- **Deploy Release**: `bundle exec fastlane ios release`
+- **Generate Screenshots**: `bundle exec fastlane ios screenshots`
 - **Build App Clip**: `bundle exec fastlane ios build_app_clip`
+
+#### App Store Deployment Commands
+- **Deploy to App Store** (recommended): `bundle exec fastlane ios deploy` - Builds and uploads binary with metadata
+- **Submit for Review**: `bundle exec fastlane ios submit` - Submits already uploaded build for review
+- **Complete Pipeline**: `bundle exec fastlane ios deploy_and_submit` - Build, upload, and submit in one command
+- **Upload Metadata Only**: `bundle exec fastlane ios metadata_only` - Updates app store listing without binary
+- **Upload Screenshots Only**: `bundle exec fastlane ios screenshots_only` - Updates screenshots only
+
+#### Legacy Commands
+- **Deploy Beta**: `bundle exec fastlane ios beta` - Upload to TestFlight
+- **Deploy Release**: `bundle exec fastlane ios release` - Basic App Store upload
 
 ### Build Troubleshooting
 - **Available Simulators**: Current system has iPhone 16, iPhone 16 Plus, iPhone 16 Pro Max, iPhone 16e, and various iPad simulators
