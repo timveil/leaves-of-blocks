@@ -1,1 +1,1 @@
-puzzle,blocks,block blast,walt whitman,tetris,strategy,brain,games,offline,puzzle game,block puzzle,drag drop,grid,lines,combo,score
+puzzle,blocks,block blast,walt whitman,tetris,strategy,brain,no ads,offline,puzzle game,block puzzle
