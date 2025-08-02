@@ -2,6 +2,60 @@ import Foundation
 
 // MARK: - Game Logic Service
 
+// MARK: - Difficulty Pattern Configuration
+
+/// Configuration for geometric pattern placement based on difficulty mode
+private struct DifficultyPatternConfig {
+    let targetFillPercentage: Double
+    let allowedPatterns: [GeometricPattern]
+    let patternWeights: [GeometricPattern: Double]
+    
+    static func forDifficulty(_ difficulty: DifficultyMode) -> DifficultyPatternConfig {
+        switch difficulty {
+        case .easy:
+            return DifficultyPatternConfig(
+                targetFillPercentage: 0.09, // 8-10% fill - fewer obstacles
+                allowedPatterns: [.line2, .diagonal, .corner], // Simple patterns only
+                patternWeights: [
+                    .line2: 3.0,    // Favor simple 2-cell lines
+                    .diagonal: 2.5, // Moderate diagonal preference
+                    .corner: 2.0    // Some L-corners
+                ]
+            )
+            
+        case .moderate:
+            return DifficultyPatternConfig(
+                targetFillPercentage: 0.135, // 12-15% fill - balanced
+                allowedPatterns: GeometricPattern.allCases, // All patterns available
+                patternWeights: [
+                    .line2: 2.0,
+                    .line3: 2.0,
+                    .corner: 2.0,
+                    .diagonal: 1.5,
+                    .square2x2: 1.5,
+                    .triangle: 1.5,
+                    .zigzag: 1.0,
+                    .cross: 1.0     // Cross patterns less common
+                ]
+            )
+            
+        case .hard:
+            return DifficultyPatternConfig(
+                targetFillPercentage: 0.175, // 15-20% fill - more obstacles
+                allowedPatterns: [.line3, .square2x2, .cross, .triangle, .zigzag, .corner], // Complex patterns
+                patternWeights: [
+                    .cross: 3.0,     // Favor complex 5-cell crosses
+                    .square2x2: 2.5, // 2x2 squares common
+                    .zigzag: 2.5,    // Zigzag patterns
+                    .triangle: 2.0,  // Triangle shapes
+                    .line3: 1.5,     // 3-cell lines
+                    .corner: 1.0     // Some L-corners
+                ]
+            )
+        }
+    }
+}
+
 /// Handles all game logic operations separate from state management
 class GameLogic {
     
@@ -200,35 +254,166 @@ class GameLogic {
         return Array(repeating: Array(repeating: GridCell(), count: GameTheme.GameConfig.gridSize), count: GameTheme.GameConfig.gridSize)
     }
     
-    /// Randomly fills grid for testing purposes
-    static func randomlyFillGrid(_ grid: inout [[GridCell]], targetPercentage: Double = 0.15) {
+    /// Fills grid with geometric patterns based on difficulty mode
+    ///
+    /// This method provides structured, visually appealing initial grid states by placing
+    /// geometric patterns instead of random individual blocks. The strategy varies by difficulty:
+    ///
+    /// - **Easy**: Fewer, simpler patterns (8-10% fill) with smaller shapes
+    /// - **Moderate**: Balanced patterns (12-15% fill) with mixed complexity
+    /// - **Hard**: More, complex patterns (15-20% fill) with larger shapes
+    ///
+    /// - Parameter grid: The grid to fill with patterns (modified in place)
+    /// - Parameter difficulty: The difficulty mode determining pattern strategy
+    /// - Parameter targetPercentage: Optional override for target fill percentage
+    ///
+    /// ## Available Patterns by Difficulty
+    /// - **Easy**: Lines, diagonals, small corners
+    /// - **Moderate**: All patterns with balanced distribution  
+    /// - **Hard**: Complex crosses, squares, zigzags, triangles
+    ///
+    /// - Note: Patterns avoid line completion and ensure solvability regardless of difficulty.
+    static func randomlyFillGrid(_ grid: inout [[GridCell]], difficulty: DifficultyMode = .easy, targetPercentage: Double? = nil) {
+        let difficultyConfig = DifficultyPatternConfig.forDifficulty(difficulty)
+        let finalPercentage = targetPercentage ?? difficultyConfig.targetFillPercentage
+        
+        fillGridWithGeometricPatterns(&grid, 
+                                    targetPercentage: finalPercentage,
+                                    allowedPatterns: difficultyConfig.allowedPatterns,
+                                    patternWeights: difficultyConfig.patternWeights)
+    }
+    
+    /// Fills grid with geometric patterns for a more structured initial state
+    static func fillGridWithGeometricPatterns(
+        _ grid: inout [[GridCell]], 
+        targetPercentage: Double = 0.15,
+        allowedPatterns: [GeometricPattern] = GeometricPattern.allCases,
+        patternWeights: [GeometricPattern: Double] = [:]
+    ) {
         let totalCells = GameTheme.GameConfig.gridSize * GameTheme.GameConfig.gridSize
         let targetCells = Int(Double(totalCells) * targetPercentage)
         
         var cellsPlaced = 0
         var attemptCount = 0
-        let maxAttempts = targetCells * 3
+        let maxAttempts = 25 // Increased attempts for more complex difficulty constraints
         
         while cellsPlaced < targetCells && attemptCount < maxAttempts {
-            let randomRow = Int.random(in: 0..<GameTheme.GameConfig.gridSize)
-            let randomCol = Int.random(in: 0..<GameTheme.GameConfig.gridSize)
+            // Select a pattern based on weights and allowed patterns
+            let pattern = selectWeightedPattern(from: allowedPatterns, weights: patternWeights)
             
-            if !grid[randomRow][randomCol].isFilled {
-                // Test placing a single block to ensure it doesn't create complete lines
-                var tempGrid = grid
-                tempGrid[randomRow][randomCol].isFilled = true
-                tempGrid[randomRow][randomCol].color = BlockColor.allCases.randomElement() ?? .blue
+            // Try to place the pattern at a random valid location
+            if let placementResult = tryPlacePattern(pattern, in: &grid) {
+                cellsPlaced += placementResult.cellsAdded
                 
-                // Only place if it doesn't create complete lines
-                if !wouldCreateCompleteLines(in: tempGrid) {
-                    grid[randomRow][randomCol].isFilled = true
-                    grid[randomRow][randomCol].color = BlockColor.allCases.randomElement() ?? .blue
-                    cellsPlaced += 1
-                }
+                #if DEBUG
+                print("🔷 Placed \(pattern.rawValue) pattern (\(pattern.size) cells) at (\(placementResult.position.row), \(placementResult.position.col))")
+                #endif
             }
             
             attemptCount += 1
         }
+        
+        #if DEBUG
+        let fillPercentage = Double(cellsPlaced) / Double(totalCells) * 100
+        print("🎨 Pattern placement complete: \(cellsPlaced) cells placed (\(String(format: "%.1f", fillPercentage))% fill)")
+        #endif
+    }
+    
+    /// Selects a pattern based on weights, falling back to random selection
+    private static func selectWeightedPattern(
+        from allowedPatterns: [GeometricPattern], 
+        weights: [GeometricPattern: Double]
+    ) -> GeometricPattern {
+        // If no weights provided, use random selection
+        guard !weights.isEmpty else {
+            return allowedPatterns.randomElement() ?? .line2
+        }
+        
+        // Filter weights to only allowed patterns
+        let filteredWeights = weights.filter { allowedPatterns.contains($0.key) }
+        
+        // If no valid weights after filtering, fall back to random
+        guard !filteredWeights.isEmpty else {
+            return allowedPatterns.randomElement() ?? .line2
+        }
+        
+        // Weighted random selection
+        let totalWeight = filteredWeights.values.reduce(0, +)
+        let randomValue = Double.random(in: 0...totalWeight)
+        
+        var currentWeight: Double = 0
+        for (pattern, weight) in filteredWeights {
+            currentWeight += weight
+            if randomValue <= currentWeight {
+                return pattern
+            }
+        }
+        
+        // Fallback (shouldn't reach here)
+        return allowedPatterns.randomElement() ?? .line2
+    }
+    
+    /// Attempts to place a geometric pattern at a random valid location
+    private static func tryPlacePattern(_ pattern: GeometricPattern, in grid: inout [[GridCell]]) -> (position: GridPosition, cellsAdded: Int)? {
+        let patternPositions = pattern.positions
+        let maxAttempts = 10
+        
+        for _ in 0..<maxAttempts {
+            // Generate random placement position
+            let baseRow = Int.random(in: 0..<GameTheme.GameConfig.gridSize)
+            let baseCol = Int.random(in: 0..<GameTheme.GameConfig.gridSize)
+            let basePosition = GridPosition(row: baseRow, col: baseCol)
+            
+            // Check if pattern can be placed without going out of bounds or overlapping
+            var canPlace = true
+            var testPositions: [GridPosition] = []
+            
+            for patternPos in patternPositions {
+                let finalRow = basePosition.row + patternPos.row
+                let finalCol = basePosition.col + patternPos.col
+                
+                // Check bounds
+                if finalRow < 0 || finalRow >= GameTheme.GameConfig.gridSize ||
+                   finalCol < 0 || finalCol >= GameTheme.GameConfig.gridSize {
+                    canPlace = false
+                    break
+                }
+                
+                let finalPosition = GridPosition(row: finalRow, col: finalCol)
+                
+                // Check if cell is already filled
+                if grid[finalRow][finalCol].isFilled {
+                    canPlace = false
+                    break
+                }
+                
+                testPositions.append(finalPosition)
+            }
+            
+            if canPlace {
+                // Test if placing this pattern would create complete lines
+                var tempGrid = grid
+                let patternColor = BlockColor.allCases.randomElement() ?? .blue
+                
+                for position in testPositions {
+                    tempGrid[position.row][position.col].isFilled = true
+                    tempGrid[position.row][position.col].color = patternColor
+                }
+                
+                // Only place if it doesn't create complete lines
+                if !wouldCreateCompleteLines(in: tempGrid) {
+                    // Place the pattern
+                    for position in testPositions {
+                        grid[position.row][position.col].isFilled = true
+                        grid[position.row][position.col].color = patternColor
+                    }
+                    
+                    return (position: basePosition, cellsAdded: testPositions.count)
+                }
+            }
+        }
+        
+        return nil
     }
     
     /// Checks if placing cells would create complete lines

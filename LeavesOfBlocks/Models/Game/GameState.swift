@@ -310,8 +310,8 @@ class GameState: ObservableObject {
         // Start behavior tracking session
         behaviorTracker.startSession()
         
-        // Randomly pre-fill the grid with shapes
-        GameLogic.randomlyFillGrid(&grid)
+        // Pre-fill the grid with geometric patterns based on difficulty
+        GameLogic.randomlyFillGrid(&grid, difficulty: currentDifficulty)
         
         // Record initial grid state for tracking
         behaviorTracker.recordGridState(grid)

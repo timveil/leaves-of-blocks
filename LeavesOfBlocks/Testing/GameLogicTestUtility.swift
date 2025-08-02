@@ -49,6 +49,78 @@ struct GameLogicTestUtility {
         expect(true, "Grid creation completed (may have random pre-fill)")
     }
     
+    /// Test: Geometric pattern placement
+    static func testGeometricPatterns() {
+        print("Testing geometric pattern placement...")
+        
+        // Test all pattern types are defined
+        let patterns = GeometricPattern.allCases
+        expect(patterns.count > 0, "Should have geometric patterns defined")
+        
+        // Test each pattern has valid positions
+        for pattern in patterns {
+            let positions = pattern.positions
+            expect(positions.count > 0, "Pattern \(pattern.rawValue) should have positions")
+            expect(positions.count == pattern.size, "Pattern \(pattern.rawValue) size should match position count")
+            
+            // Verify positions are reasonable (within a 3x3 area for most patterns)
+            for position in positions {
+                expect(position.row >= 0 && position.row < 5, "Pattern \(pattern.rawValue) row should be reasonable")
+                expect(position.col >= 0 && position.col < 5, "Pattern \(pattern.rawValue) col should be reasonable")
+            }
+        }
+        
+        // Test difficulty-specific pattern placement
+        testDifficultySpecificPatterns()
+        
+        print("🎨 Geometric pattern tests completed")
+    }
+    
+    /// Test: Difficulty-specific pattern behaviors
+    static func testDifficultySpecificPatterns() {
+        print("Testing difficulty-specific pattern behaviors...")
+        
+        let difficulties: [DifficultyMode] = [.easy, .moderate, .hard]
+        var fillResults: [DifficultyMode: Int] = [:]
+        
+        for difficulty in difficulties {
+            var testGrid = GameLogic.createEmptyGrid()
+            GameLogic.randomlyFillGrid(&testGrid, difficulty: difficulty)
+            
+            // Count filled cells for this difficulty
+            var filledCells = 0
+            for row in testGrid {
+                for cell in row {
+                    if cell.isFilled {
+                        filledCells += 1
+                    }
+                }
+            }
+            
+            fillResults[difficulty] = filledCells
+            
+            // Test expected ranges for each difficulty
+            switch difficulty {
+            case .easy:
+                expect(filledCells <= 8, "Easy mode should have fewer cells (≤8), got \(filledCells)")
+            case .moderate:
+                expect(filledCells >= 6 && filledCells <= 12, "Moderate mode should have balanced cells (6-12), got \(filledCells)")
+            case .hard:
+                expect(filledCells >= 8, "Hard mode should have more cells (≥8), got \(filledCells)")
+            }
+        }
+        
+        // Test that different difficulties produce different fill amounts
+        let easyFill = fillResults[.easy] ?? 0
+        let moderateFill = fillResults[.moderate] ?? 0
+        let hardFill = fillResults[.hard] ?? 0
+        
+        expect(easyFill <= moderateFill, "Easy (\(easyFill)) should have ≤ moderate (\(moderateFill)) fill")
+        expect(moderateFill <= hardFill || hardFill >= easyFill, "Hard (\(hardFill)) should generally have ≥ easy (\(easyFill)) fill")
+        
+        print("📊 Fill results - Easy: \(easyFill), Moderate: \(moderateFill), Hard: \(hardFill)")
+    }
+    
     // MARK: - Block Placement Validation Tests
     
     /// Test: Single block placement validation - valid position
@@ -439,6 +511,7 @@ struct GameLogicTestUtility {
         
         // Original tests
         testCreateEmptyGrid()
+        testGeometricPatterns()
         testCanPlaceSingleBlockValid()
         testCanPlaceBlockOutOfBounds()
         testCanPlaceBlockNegativePosition()

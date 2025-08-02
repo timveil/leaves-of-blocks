@@ -49,6 +49,99 @@ enum BlockType: Codable, Hashable {
     }
 }
 
+// MARK: - Geometric Patterns
+
+/// Defines geometric patterns used for structured grid initialization.
+///
+/// These patterns provide structured placement alternatives to random block placement,
+/// creating more visually appealing and strategically interesting initial grid states.
+/// Pattern usage varies by difficulty mode:
+///
+/// - **Easy**: Simple patterns (line2, diagonal, corner) with 8-10% grid fill
+/// - **Moderate**: All patterns available with balanced weights and 12-15% fill  
+/// - **Hard**: Complex patterns (cross, square2x2, zigzag) with 15-20% fill
+///
+/// Each pattern defines relative positions from a base coordinate, allowing flexible
+/// placement anywhere on the grid while maintaining geometric structure.
+enum GeometricPattern: String, CaseIterable {
+    case line2 = "line_2"           // 2-cell horizontal line
+    case line3 = "line_3"           // 3-cell horizontal line
+    case corner = "corner"          // L-shaped corner (3 cells)
+    case diagonal = "diagonal"      // 2-cell diagonal
+    case square2x2 = "square_2x2"   // 2x2 square
+    case cross = "cross"            // Plus/cross shape (5 cells)
+    case triangle = "triangle"      // Triangle shape (3 cells)
+    case zigzag = "zigzag"          // Zigzag pattern (4 cells)
+    
+    /// Returns the relative positions that make up this geometric pattern
+    var positions: [GridPosition] {
+        switch self {
+        case .line2:
+            return [
+                GridPosition(row: 0, col: 0),
+                GridPosition(row: 0, col: 1)
+            ]
+            
+        case .line3:
+            return [
+                GridPosition(row: 0, col: 0),
+                GridPosition(row: 0, col: 1),
+                GridPosition(row: 0, col: 2)
+            ]
+            
+        case .corner:
+            return [
+                GridPosition(row: 0, col: 0),
+                GridPosition(row: 0, col: 1),
+                GridPosition(row: 1, col: 0)
+            ]
+            
+        case .diagonal:
+            return [
+                GridPosition(row: 0, col: 0),
+                GridPosition(row: 1, col: 1)
+            ]
+            
+        case .square2x2:
+            return [
+                GridPosition(row: 0, col: 0),
+                GridPosition(row: 0, col: 1),
+                GridPosition(row: 1, col: 0),
+                GridPosition(row: 1, col: 1)
+            ]
+            
+        case .cross:
+            return [
+                GridPosition(row: 0, col: 1),  // Top
+                GridPosition(row: 1, col: 0),  // Left
+                GridPosition(row: 1, col: 1),  // Center
+                GridPosition(row: 1, col: 2),  // Right
+                GridPosition(row: 2, col: 1)   // Bottom
+            ]
+            
+        case .triangle:
+            return [
+                GridPosition(row: 0, col: 1),  // Top
+                GridPosition(row: 1, col: 0),  // Bottom left
+                GridPosition(row: 1, col: 2)   // Bottom right
+            ]
+            
+        case .zigzag:
+            return [
+                GridPosition(row: 0, col: 0),
+                GridPosition(row: 0, col: 1),
+                GridPosition(row: 1, col: 1),
+                GridPosition(row: 1, col: 2)
+            ]
+        }
+    }
+    
+    /// Returns the size (number of cells) of this pattern
+    var size: Int {
+        return positions.count
+    }
+}
+
 // MARK: - Block Shape Model
 
 /// Represents a complete block shape that can be placed on the game grid.
