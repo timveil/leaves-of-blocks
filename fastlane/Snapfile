@@ -1,8 +1,9 @@
 # Fastlane Snapfile Configuration for Leaves of Blocks
 
-# Devices for screenshot capture
+# Devices for screenshot capture - use App Store Connect compatible devices
 devices([
-  "iPhone 16 Pro Max"
+  "iPhone 15 Pro Max",  # 1290x2796 - 6.7" displays (iPhone 14/15 Pro Max)
+  "iPhone 15 Pro"       # 1179x2556 - 6.1" displays (iPhone 14/15 Pro)
 ])
 
 # Languages for localized screenshots
