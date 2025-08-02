@@ -27,10 +27,6 @@ struct StatsSummaryView: View {
         VStack(spacing: 0) {
             // Header with gradient background
             HStack(spacing: GameTheme.Layout.smallSpacing) {
-                Image(systemName: "chart.bar.fill")
-                    .font(GameTheme.Typography.body)
-                    .foregroundColor(GameTheme.Colors.buttonText)
-                
                 Text("statistics".localized)
                     .font(GameTheme.Typography.headline)
                     .foregroundColor(GameTheme.Colors.buttonText)
