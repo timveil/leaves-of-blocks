@@ -60,7 +60,7 @@ struct Main: App {
             let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
             try? context.execute(deleteRequest)
             
-            // Create high score game (941 points)
+            // Create high score game (941 points) with specific date
             let highScoreGame = GameRecord(context: context)
             highScoreGame.id = UUID()
             highScoreGame.score = 941
@@ -69,7 +69,16 @@ struct Main: App {
             highScoreGame.linesCleared = 12
             highScoreGame.longestCombo = 3
             highScoreGame.gameTime = 385.2 // 6:25
-            highScoreGame.date = Calendar.current.date(byAdding: .day, value: -1, to: Date())
+            
+            // Set date to May 31, 1819
+            var dateComponents = DateComponents()
+            dateComponents.year = 1819
+            dateComponents.month = 5
+            dateComponents.day = 31
+            dateComponents.hour = 14
+            dateComponents.minute = 30
+            highScoreGame.date = Calendar.current.date(from: dateComponents)
+            
             highScoreGame.averageGridEfficiency = 0.85
             highScoreGame.averageFragmentation = 0.23
             highScoreGame.strategicPlayRating = 0.92
@@ -77,41 +86,6 @@ struct Main: App {
             highScoreGame.fallbackActivations = 2
             highScoreGame.efficiencyGrade = "A"
             highScoreGame.strategicGrade = "A+"
-            
-            // Create a few more recent games
-            let recentGame1 = GameRecord(context: context)
-            recentGame1.id = UUID()
-            recentGame1.score = 623
-            recentGame1.difficulty = "Moderate"
-            recentGame1.blocksPlaced = 31
-            recentGame1.linesCleared = 8
-            recentGame1.longestCombo = 2
-            recentGame1.gameTime = 245.7 // 4:05
-            recentGame1.date = Calendar.current.date(byAdding: .hour, value: -3, to: Date())
-            recentGame1.averageGridEfficiency = 0.71
-            recentGame1.averageFragmentation = 0.34
-            recentGame1.strategicPlayRating = 0.76
-            recentGame1.challengeMaintained = 0.65
-            recentGame1.fallbackActivations = 5
-            recentGame1.efficiencyGrade = "B+"
-            recentGame1.strategicGrade = "B"
-            
-            let recentGame2 = GameRecord(context: context)
-            recentGame2.id = UUID()
-            recentGame2.score = 450
-            recentGame2.difficulty = "Hard"
-            recentGame2.blocksPlaced = 22
-            recentGame2.linesCleared = 5
-            recentGame2.longestCombo = 1
-            recentGame2.gameTime = 168.3 // 2:48
-            recentGame2.date = Calendar.current.date(byAdding: .hour, value: -1, to: Date())
-            recentGame2.averageGridEfficiency = 0.59
-            recentGame2.averageFragmentation = 0.45
-            recentGame2.strategicPlayRating = 0.63
-            recentGame2.challengeMaintained = 0.52
-            recentGame2.fallbackActivations = 8
-            recentGame2.efficiencyGrade = "C+"
-            recentGame2.strategicGrade = "C"
             
             // Save the context
             try? context.save()

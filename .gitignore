@@ -86,6 +86,10 @@ fastlane/Preview.html
 fastlane/screenshots/**/*.png
 fastlane/test_output
 
+# Ruby/Bundler
+vendor/bundle/
+.bundle/
+
 # Code Injection
 #
 # After new code Injection tools there's a generated folder /iOSInjectionProject

@@ -21,3 +21,21 @@ updates:
         update-type: "version-update:semver-patch"
       - dependency-type: "direct"
         update-type: "version-update:semver-minor"
+
+  # Enable version updates for Ruby/Bundler (Fastlane dependencies)
+  - package-ecosystem: "bundler"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "dependencies"
+      - "ruby"
+      - "fastlane"
+      - "security"
+    open-pull-requests-limit: 5
+    # Enable security-focused updates
+    allow:
+      - dependency-type: "direct"
+        update-type: "version-update:semver-patch"
+      - dependency-type: "direct"
+        update-type: "version-update:semver-minor"

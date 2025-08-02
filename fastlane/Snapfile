@@ -5,6 +5,9 @@ devices([
   "iPhone 16 Pro Max"
 ])
 
+# Specify destination to avoid architecture ambiguity
+destination("platform=iOS Simulator,name=iPhone 16 Pro Max,arch=arm64")
+
 # Languages for localized screenshots
 languages([
   "en-US"

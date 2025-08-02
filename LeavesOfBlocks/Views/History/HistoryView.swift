@@ -83,6 +83,7 @@ struct HistoryView: View {
                                 )
                             }
                             .buttonStyle(PlainButtonStyle())
+                            .accessibilityIdentifier("game_history_button_\(index)")
                         }
                     }
                     .padding(.horizontal, GameTheme.Layout.largePadding)

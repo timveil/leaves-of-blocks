@@ -37,10 +37,8 @@ final class LeavesOfBlocksUITests: XCTestCase {
     func testCaptureScreenshots() throws {
         // Take screenshots for App Store
         captureHomeScreen()
-        captureHowToPlayScreen()
         captureGameplayScreens()
         captureGameHistoryScreen()
-        captureAboutScreen()
     }
     
     @MainActor
@@ -87,7 +85,7 @@ final class LeavesOfBlocksUITests: XCTestCase {
     @MainActor
     private func captureGameplayScreens() {
         // Capture Easy difficulty only (all difficulties show the same screen)
-        captureGameplay(difficulty: "easy_button", screenshotName: "03_Gameplay")
+        captureGameplay(difficulty: "easy_button", screenshotName: "02_Gameplay")
     }
     
     @MainActor
@@ -134,31 +132,36 @@ final class LeavesOfBlocksUITests: XCTestCase {
         sleep(3)
         
         // Capture the history list first
-        takeScreenshot(named: "04_GameHistory")
+        takeScreenshot(named: "03_GameHistory")
         
         // Check if there are any game records to tap on
-        let firstGameRecord = app.otherElements["game_session_row"].firstMatch
-        if firstGameRecord.waitForExistence(timeout: 10) {
+        let firstGameButton = app.buttons["game_history_button_0"]
+        if firstGameButton.waitForExistence(timeout: 10) {
             // Tap on the first game record to see detail
-            firstGameRecord.tap()
+            firstGameButton.tap()
             
             // Wait for detail screen to appear
             sleep(3)
             
             // Capture the game detail screen
-            takeScreenshot(named: "05_GameDetail")
+            takeScreenshot(named: "04_GameDetail")
             
-            // Go back from detail
-            let backButton = app.navigationBars.buttons.firstMatch
-            if backButton.exists {
-                backButton.tap()
-                sleep(1)
+            // Go back from detail - try multiple methods
+            if app.buttons["home_button"].exists {
+                app.buttons["home_button"].tap()
+            } else if app.navigationBars.buttons.firstMatch.exists {
+                app.navigationBars.buttons.firstMatch.tap()
+            } else {
+                // Try swipe back gesture
+                app.swipeRight()
             }
+            sleep(1)
         } else {
-            // If no game record found, let's look for other possible identifiers
-            let anyButton = app.buttons.firstMatch
-            if anyButton.exists {
-                print("DEBUG: Found button but not game_session_row. Button label: \(anyButton.label)")
+            // Debug: print all available buttons
+            print("DEBUG: Could not find game_history_button_0")
+            let allButtons = app.buttons.allElementsBoundByIndex
+            for i in 0..<min(5, allButtons.count) {
+                print("DEBUG: Button \(i): \(allButtons[i].identifier)")
             }
         }
         
