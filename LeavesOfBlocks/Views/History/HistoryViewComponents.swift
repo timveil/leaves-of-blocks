@@ -262,6 +262,7 @@ struct GameSessionRow: View {
             borderColor: isHighScore ? GameTheme.Colors.accent.opacity(0.5) : GameTheme.Colors.gridBorder.opacity(0.3),
             borderWidth: isHighScore ? 2 : 1
         )
+        .accessibilityIdentifier("game_session_row")
     }
     
     // MARK: - Helper Functions

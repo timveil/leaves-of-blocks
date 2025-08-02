@@ -15,12 +15,28 @@ struct SimpleAppTitleView: View {
 struct SimpleScoreView: View {
     @ObservedObject var gameState: GameState
     
+    private var displayScore: Int {
+        // Show demo score in screenshot mode
+        if ProcessInfo.processInfo.arguments.contains("-screenshot-mode") {
+            return 941
+        }
+        return gameState.score
+    }
+    
+    private var displayLinesCleared: Int {
+        // Show demo lines cleared in screenshot mode
+        if ProcessInfo.processInfo.arguments.contains("-screenshot-mode") {
+            return 13
+        }
+        return gameState.linesCleared
+    }
+    
     var body: some View {
         VStack(spacing: GameTheme.Layout.tinySpacing) {
             HStack {
                 // Current Score
                 VStack(alignment: .leading, spacing: 2) {
-                    Text(gameState.score.formattedScore)
+                    Text(displayScore.formattedScore)
                         .font(GameTheme.Typography.fontMediumLarge)
                         .foregroundColor(GameTheme.Colors.primaryText)
                         .accessibilityIdentifier("score_display")
@@ -33,7 +49,7 @@ struct SimpleScoreView: View {
                 
                 // Lines Cleared Counter
                 VStack(alignment: .trailing, spacing: 2) {
-                    Text(gameState.linesCleared.formattedScore)
+                    Text(displayLinesCleared.formattedScore)
                         .font(GameTheme.Typography.fontMediumLarge)
                         .foregroundColor(GameTheme.Colors.accent)
                     Text("lines".localized)

@@ -56,6 +56,9 @@ final class LeavesOfBlocksUITests: XCTestCase {
         
         XCTAssertTrue(isHomeLoaded, "Home screen should be visible")
         
+        // Wait a bit longer for sample data to be created and UI to update
+        sleep(2)
+        
         takeScreenshot(named: "01_HomeScreen")
     }
     
@@ -83,14 +86,8 @@ final class LeavesOfBlocksUITests: XCTestCase {
     
     @MainActor
     private func captureGameplayScreens() {
-        // Capture Easy difficulty
-        captureGameplay(difficulty: "easy_button", screenshotName: "03_GameplayEasy")
-        
-        // Capture Moderate difficulty
-        captureGameplay(difficulty: "moderate_button", screenshotName: "04_GameplayModerate")
-        
-        // Capture Hard difficulty
-        captureGameplay(difficulty: "hard_button", screenshotName: "05_GameplayHard")
+        // Capture Easy difficulty only (all difficulties show the same screen)
+        captureGameplay(difficulty: "easy_button", screenshotName: "03_Gameplay")
     }
     
     @MainActor
@@ -133,12 +130,39 @@ final class LeavesOfBlocksUITests: XCTestCase {
         XCTAssertTrue(historyButton.waitForExistence(timeout: 3), "History button should exist")
         historyButton.tap()
         
-        // Wait for history screen
-        sleep(2)
+        // Wait longer for history screen and data to load
+        sleep(3)
         
-        takeScreenshot(named: "06_GameHistory")
+        // Capture the history list first
+        takeScreenshot(named: "04_GameHistory")
         
-        // Go back
+        // Check if there are any game records to tap on
+        let firstGameRecord = app.otherElements["game_session_row"].firstMatch
+        if firstGameRecord.waitForExistence(timeout: 10) {
+            // Tap on the first game record to see detail
+            firstGameRecord.tap()
+            
+            // Wait for detail screen to appear
+            sleep(3)
+            
+            // Capture the game detail screen
+            takeScreenshot(named: "05_GameDetail")
+            
+            // Go back from detail
+            let backButton = app.navigationBars.buttons.firstMatch
+            if backButton.exists {
+                backButton.tap()
+                sleep(1)
+            }
+        } else {
+            // If no game record found, let's look for other possible identifiers
+            let anyButton = app.buttons.firstMatch
+            if anyButton.exists {
+                print("DEBUG: Found button but not game_session_row. Button label: \(anyButton.label)")
+            }
+        }
+        
+        // Go back to home
         let homeButton = app.buttons["home_button"]
         if homeButton.exists {
             homeButton.tap()
@@ -155,7 +179,7 @@ final class LeavesOfBlocksUITests: XCTestCase {
         // Wait for about screen
         sleep(2)
         
-        takeScreenshot(named: "07_About")
+        takeScreenshot(named: "06_About")
         
         // Go back
         let homeButton = app.buttons["home_button"]
