@@ -8,9 +8,8 @@
 
 // MARK: - App Title and Branding
 "app_title" = "Leaves of Blocks";
-"app_subtitle" = "Block Puzzle Adventure";
 "app_tagline" = "Oh Me! Oh Blocks!";
-"app_description" = "An autumn-themed puzzle game where you clear lines by filling rows and columns";
+"app_description" = "A thoughtful block puzzle sanctuary—no ads, just strategy, beauty and Walt";
 
 // MARK: - Navigation and Screens
 "how_to_play" = "How to Play";
@@ -130,17 +129,19 @@
 "shape_area_desc" = "The ultimate power block! This purple block clears a large 3×3 area around wherever you place it. Use wisely for maximum impact and points!";
 
 // MARK: - About Page
-"about_game_description" = "Leaves of Blocks is a relaxing puzzle game that combines the joy of autumn with strategic block placement. Clear lines by filling rows and columns completely, and watch as your score grows with each successful move.\n\nFeatures beautiful block shapes, smooth animations, and progressively challenging gameplay across three difficulty modes.";
+"about_game_description" = "A block puzzle game inspired by Walt Whitman's poetry and a love of ad-free gameplay. Place blocks thoughtfully, clear lines strategically, and find meaning in simple moments of focus.";
 "inspiration" = "Inspiration";
-"inspiration_quote" = "For Emma, Annie and Grace.  May this game serve as a momentary distraction from life's struggles, big and small.";
+"inspiration_quote" = "Born from a love of block puzzles, frustration with ads, and inspiration from Walt Whitman's timeless poetry.";
+"dedication" = "Dedication";
+"dedication_text" = "For Emma, Annie and Grace. May this game serve as a momentary distraction from life's struggles, big and small.";
 "answer" = "Answer.";
 "whitman_quote_1" = "That you are here—that life exists and identity,";
 "whitman_quote_2" = "That the powerful play goes on, and you may contribute a verse..";
 "whitman_attribution" = "— Walt Whitman";
 "creator" = "Creator";
-"creator_description" = "Developed with passion by Tim Veil, a software engineer and dad who believes in creating beautiful, accessible games that bring moments of joy to everyday life.\n\nBuilt entirely with SwiftUI, this game represents a commitment to crafting polished experiences that feel natural on iOS devices.";
+"creator_description" = "Developed by Tim Veil, a software engineer and dad who believes games should provide a respite not rage.";
 "technical_details" = "Technical Details";
-"technical_description" = "Built with pure SwiftUI and Swift for a native iOS experience. This game supports both iPhone and iPad devices running iOS 18.5 or later.\n\nEnjoy ad-free gameplay with no in-app purchases. Play offline anytime, and your high scores are automatically saved for friendly competition with yourself.";
+"technical_description" = "Built with SwiftUI for iOS 18.5+. No ads, no tracking, no data collection. Play offline, scores stay private.";
 
 // MARK: - Game Over Overlay
 "game_over_quote" = "That the powerful game has ended, and You could not contribute a block.";

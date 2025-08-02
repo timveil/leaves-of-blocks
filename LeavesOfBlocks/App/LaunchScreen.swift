@@ -73,7 +73,7 @@ struct LaunchScreen: View {
                                 value: isAnimated
                             )
                         
-                        Text("app_subtitle".localized)
+                        Text("app_tagline".localized)
                             .font(GameTheme.Typography.caption)
                             .foregroundColor(GameTheme.Colors.secondaryText)
                             .opacity(isAnimated ? 0.8 : 0.0)

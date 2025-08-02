@@ -21,62 +21,59 @@ struct AboutView: View {
                     
                     // Content sections
                     VStack(alignment: .leading, spacing: GameTheme.Layout.largePadding) {
-                // About the Game
-                VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
-                 
-                    Text("about_game_description".localized)
-                        .sectionTextStyle(color: GameTheme.Colors.secondaryText)
-                        .lineSpacing(6)
-                }
                 
-                // Inspiration - Custom styled section
+                // Whitman Quote - Move to top
+                VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
+                    // Quote text
+                    VStack(alignment: .leading, spacing: GameTheme.Layout.smallSpacing) {
+                        Text("answer".localized)
+                            .font(GameTheme.Typography.body)
+                            .foregroundColor(GameTheme.Colors.primaryText)
+                        
+                        Text("whitman_quote_1".localized)
+                            .font(GameTheme.Typography.body)
+                            .foregroundColor(GameTheme.Colors.primaryText)
+                            .lineSpacing(4)
+                        
+                        Text("whitman_quote_2".localized)
+                            .font(GameTheme.Typography.body)
+                            .foregroundColor(GameTheme.Colors.primaryText)
+                            .lineSpacing(4)
+                    }
+                    
+                    // Attribution
+                    HStack {
+                        Spacer()
+                        Text("whitman_attribution".localized)
+                            .font(GameTheme.Typography.body)
+                            .foregroundColor(GameTheme.Colors.primaryText)
+                    }
+                    .padding(.top, GameTheme.Layout.smallSpacing)
+                }
+                .padding(GameTheme.Layout.mediumPadding)
+                .background(
+                    RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
+                        .fill(GameTheme.Colors.blockGreen)
+                )
+                
+                // Inspiration
                 VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
                     Text("inspiration".localized)
                         .sectionHeaderStyle()
                     
-                    VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
-                        Text("inspiration_quote".localized)
-                            .sectionTextStyle(color: GameTheme.Colors.secondaryText)
-                            .lineSpacing(6)
-                            .padding(.bottom, GameTheme.Layout.mediumSpacing)
-                        
-                        // Elegant quote styling
-                        VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
-                            // Quote text
-                            VStack(alignment: .leading, spacing: GameTheme.Layout.smallSpacing) {
-                                Text("answer".localized)
-                                    .font(GameTheme.Typography.serif)
-                                    .foregroundColor(GameTheme.Colors.primaryText)
-                                    .italic()
-                                
-                                Text("whitman_quote_1".localized)
-                                    .font(GameTheme.Typography.serif)
-                                    .foregroundColor(GameTheme.Colors.primaryText)
-                                    .italic()
-                                    .lineSpacing(4)
-                                
-                                Text("whitman_quote_2".localized)
-                                    .font(GameTheme.Typography.serif)
-                                    .foregroundColor(GameTheme.Colors.primaryText)
-                                    .italic()
-                                    .lineSpacing(4)
-                            }
-                            
-                            // Attribution
-                            HStack {
-                                Spacer()
-                                Text("whitman_attribution".localized)
-                                    .font(GameTheme.Typography.serif)
-                                    .foregroundColor(GameTheme.Colors.secondaryText)
-                            }
-                            .padding(.top, GameTheme.Layout.smallSpacing)
-                        }
-                        .padding(GameTheme.Layout.mediumPadding)
-                        .gameGradientCardStyle(
-                            gradient: GameTheme.Gradients.cardBorder,
-                            borderWidth: 1
-                        )
-                    }
+                    Text("inspiration_quote".localized)
+                        .sectionTextStyle(color: GameTheme.Colors.secondaryText)
+                        .lineSpacing(6)
+                }
+                
+                // Dedication - New section
+                VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
+                    Text("dedication".localized)
+                        .sectionHeaderStyle()
+                    
+                    Text("dedication_text".localized)
+                        .sectionTextStyle(color: GameTheme.Colors.secondaryText)
+                        .lineSpacing(6)
                 }
                 
                 // Creator Info
