@@ -119,6 +119,14 @@ Generate manual screenshots (simulator only)
 
 App Clip build
 
+### ios update_changelog
+
+```sh
+[bundle exec] fastlane ios update_changelog
+```
+
+Update changelog for new release
+
 ----
 
 This README.md is auto-generated and will be re-generated every time [_fastlane_](https://fastlane.tools) is run.
