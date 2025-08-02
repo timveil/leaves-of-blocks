@@ -1,23 +1,29 @@
-Immerse yourself in the beautiful world of Leaves of Blocks, an autumn-themed puzzle game that combines strategic thinking with stunning visuals.
+Born from a love of pure puzzle gameplay and inspired by Walt Whitman's timeless reflections on purpose and growth, Leaves of Blocks offers sanctuary from the ad-cluttered chaos of modern mobile gaming.
 
-KEY FEATURES:
-• Block Blast-style gameplay with drag-and-drop mechanics
-• Beautiful autumn theming with rich colors and seasonal ambiance
-• 8x8 grid with challenging block placement puzzles
-• Progressive difficulty with three modes: Easy, Moderate, and Hard
-• Smart scoring system with combo bonuses for clearing multiple lines
-• Comprehensive statistics tracking your progress and achievements
-• Local high score persistence - compete with yourself
-• Smooth animations and satisfying haptic feedback
-• Full SwiftUI implementation optimized for iOS
+Like Whitman's child who "went forth every day" and became part of all he encountered, each puzzle session invites you to absorb strategy, develop patience, and find meaning in the simple act of thoughtful placement. Every block becomes part of your growing mastery.
 
-GAMEPLAY:
-Drop randomly generated block shapes onto the 8x8 grid to clear horizontal and vertical lines. The more lines you clear simultaneously, the higher your combo bonus! With 21 different block configurations and weighted generation based on difficulty, every game presents a unique challenge.
+THE POWERFUL PLAY CONTINUES
+• Drag and drop 21 unique block shapes with precision
+• Clear lines horizontally and vertically to score and create space
+• Choose from Easy, Moderate, or Hard difficulty modes
+• Enjoy intelligent generation ensuring every puzzle is solvable
+• Experience smooth animations and satisfying haptic feedback
 
-PRIVACY & SECURITY:
-Leaves of Blocks respects your privacy completely. All data stays on your device - no internet connection required, no data collection, no tracking. Perfect for offline play anywhere, anytime.
+GROWTH THROUGH REFLECTION
+Track meaningful progress with comprehensive statistics—efficiency ratings, performance grades, and achievement comparisons that reveal your evolving puzzle wisdom, just as Whitman celebrated the growth that comes from mindful observation.
 
-ACCESSIBILITY:
-Designed with accessibility in mind, featuring clear visual indicators, intuitive touch controls, and support for assistive technologies.
+WHAT GOOD AMID THESE?
+In answer to life's overwhelming questions, sometimes the good is found in simple moments of focus and accomplishment. This game offers exactly that: a refuge where your strategic thinking can flourish without the bombardment of ads or data harvesting.
 
-Whether you're looking for a quick mental break or an extended puzzle session, Leaves of Blocks offers the perfect blend of strategy, beauty, and autumn charm. Download now and start your puzzle adventure!
+CONTRIBUTE YOUR VERSE
+• Score 10 points per block, 100 per line cleared
+• Earn combo bonuses for clearing multiple lines at once
+• Plan strategically with block previews and adaptive difficulty
+• Challenge yourself with advanced performance metrics
+• Build lasting strategies that deepen with experience
+
+Whether you need a brief mental break or an extended puzzle journey, Leaves of Blocks honors both your intelligence and your need for genuine, uninterrupted gameplay. Like finding purpose in Whitman's "powerful play," discover how arranging simple shapes can become your own meaningful contribution to the art of thoughtful living.
+
+Download now and experience puzzle gaming as it should be: pure, peaceful, and profoundly satisfying.
+
+Perfect for puzzle enthusiasts, poetry lovers, and anyone seeking respite from the faithless and the foolish.
