@@ -73,7 +73,7 @@ struct SummaryView: View {
                             }
                         }
                     }
-                    .padding(.top, GameTheme.Layout.largePadding)
+                    .padding(.top, GameTheme.Layout.mediumPadding)
                     
                     Spacer().frame(maxHeight: 20)
                     
