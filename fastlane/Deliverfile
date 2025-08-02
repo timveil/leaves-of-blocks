@@ -46,9 +46,6 @@ price_tier(0)  # Free app
 # Reject if binary already exists
 reject_if_possible(true)
 
-# Skip waiting for build processing
-skip_waiting_for_build_processing(false)
-
 # Phased release
 phased_release(false)
 
@@ -56,11 +53,11 @@ phased_release(false)
 reset_ratings(false)
 
 # App review information
-review_information({
+app_review_information({
   first_name: "Timothy",
   last_name: "Veil",
-  phone_number: "+1 XXX XXX XXXX",  # Replace with your phone number
-  email_address: "your.email@example.com",  # Replace with your email
+  phone_number: "+1 678 297 7960",  # Replace with your phone number
+  email_address: "timveil@mac.com",  # Replace with your email
   demo_user: "",
   demo_password: "",
   notes: "Leaves of Blocks is a Block Blast-style puzzle game with autumn theming. The game is fully self-contained with no external dependencies or network connectivity required."
