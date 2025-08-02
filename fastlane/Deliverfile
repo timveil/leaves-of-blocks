@@ -54,9 +54,9 @@ reset_ratings(false)
 
 # App review information
 app_review_information({
-  first_name: "Timothy",
+  first_name: "Tim",
   last_name: "Veil",
-  phone_number: "+1 678 297 7960",  # Replace with your phone number
+  phone_number: "+1 678 296 7960",  # Replace with your phone number
   email_address: "timveil@mac.com",  # Replace with your email
   demo_user: "",
   demo_password: "",
