@@ -10,10 +10,10 @@ app_identifier("timothy.veil.LeavesOfBlocks")
 # username("your.email@example.com")
 
 # App Store metadata configuration
-metadata_path("./metadata")
+metadata_path("./fastlane/metadata")
 
 # Screenshots configuration
-screenshots_path("./screenshots")
+screenshots_path("./fastlane/screenshots")
 
 # App Store release options
 submit_for_review(false)  # Set to true to automatically submit for review
