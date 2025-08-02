@@ -16,15 +16,27 @@ struct HowToPlayView: View {
                     
                     // Content sections
                     VStack(alignment: .leading, spacing: GameTheme.Layout.largePadding) {
-                        // Getting Started
-                        VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
-                            Text("getting_started".localized)
-                                .sectionHeaderStyle()
-                            
-                            Text("getting_started_description".localized)
-                                .sectionTextStyle(color: GameTheme.Colors.secondaryText)
-                                .lineSpacing(6)
-                        }
+                
+                // Whitman Quote
+                VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
+                    Text("how_to_play_quote".localized)
+                        .font(GameTheme.Typography.body)
+                        .foregroundColor(GameTheme.Colors.primaryText)
+                        .lineSpacing(4)
+                    
+                    HStack {
+                        Spacer()
+                        Text("how_to_play_attribution".localized)
+                            .font(GameTheme.Typography.body)
+                            .foregroundColor(GameTheme.Colors.primaryText)
+                    }
+                    .padding(.top, GameTheme.Layout.smallSpacing)
+                }
+                .padding(GameTheme.Layout.mediumPadding)
+                .background(
+                    RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
+                        .fill(GameTheme.Colors.blockGreen)
+                )
                         
                         // The Grid
                         VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {

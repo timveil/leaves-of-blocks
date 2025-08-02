@@ -65,8 +65,8 @@
 "all_data_reset_message" = "All game data has been reset successfully.";
 
 // MARK: - How to Play
-"getting_started" = "Getting Started";
-"getting_started_description" = "Welcome to Leaves of Blocks! This relaxing puzzle game is easy to learn but rewarding to master. Start by selecting your preferred difficulty level and diving right in.";
+"how_to_play_quote" = "To me every hour of the light and dark is a miracle, Every cubic inch of space is a miracle,";
+"how_to_play_attribution" = "— Walt Whitman, \"Miracles\" (1856)";
 
 "the_grid" = "The Playing Field";
 "the_grid_description" = "Your game board is an 8×8 grid with 64 spaces. Your goal is to fill complete horizontal rows or vertical columns to clear them and earn points. The grid starts with some random blocks already placed to create interesting challenges.";
@@ -92,7 +92,7 @@
 "adaptive_difficulty" = "Smart Block Generation";
 "adaptive_difficulty_description" = "The game analyzes your grid and adjusts the blocks you receive to maintain challenge while preventing impossible situations. When you're struggling, it provides more helpful shapes automatically.";
 
-"pro_tips" = "Tips for Success";
+"pro_tips" = "Pro Tips";
 
 // MARK: - Pro Tips
 "tip_keep_organized" = "Keep your grid organized - avoid creating scattered holes";
@@ -137,7 +137,7 @@
 "answer" = "Answer.";
 "whitman_quote_1" = "That you are here—that life exists and identity,";
 "whitman_quote_2" = "That the powerful play goes on, and you may contribute a verse..";
-"whitman_attribution" = "— Walt Whitman";
+"whitman_attribution" = "— Walt Whitman, \"O Me! O Life!\" (1867)";
 "creator" = "Creator";
 "creator_description" = "Developed by Tim Veil, a software engineer and dad who believes games should provide a respite not rage.";
 "technical_details" = "Technical Details";
