@@ -18,24 +18,9 @@ struct HowToPlayView: View {
                     VStack(alignment: .leading, spacing: GameTheme.Layout.largePadding) {
                 
                 // Whitman Quote
-                VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
-                    Text("how_to_play_quote".localized)
-                        .font(GameTheme.Typography.body)
-                        .foregroundColor(GameTheme.Colors.primaryText)
-                        .lineSpacing(4)
-                    
-                    HStack {
-                        Spacer()
-                        Text("how_to_play_attribution".localized)
-                            .font(GameTheme.Typography.body)
-                            .foregroundColor(GameTheme.Colors.primaryText)
-                    }
-                    .padding(.top, GameTheme.Layout.smallSpacing)
-                }
-                .padding(GameTheme.Layout.mediumPadding)
-                .background(
-                    RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
-                        .fill(GameTheme.Colors.blockGreen)
+                QuoteView(
+                    quote: "how_to_play_quote".localized,
+                    attribution: "how_to_play_attribution".localized
                 )
                         
                         // The Grid

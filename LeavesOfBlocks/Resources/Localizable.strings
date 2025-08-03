@@ -23,7 +23,7 @@
 // MARK: - Game UI
 "score" = "Score";
 "lines" = "Lines";
-"loading" = "Loading...";
+"loading" = "\"I do not hurry, I do not wait.\"";
 "game_over" = "Game Over";
 "final_score" = "Final Score";
 "view_summary" = "View Summary";
@@ -52,6 +52,8 @@
 
 // MARK: - Settings
 "settings_description" = "Manage your game data and preferences";
+"settings_quote" = "The day erased, the lesson done";
+"settings_quote_attribution" = "— Walt Whitman, \"A Clear Midnight\" (1880)";
 "clear_game_history" = "Clear Game History";
 "reset_all_data" = "Reset All Data";
 "clear_history_warning" = "This will permanently delete all your saved games and statistics. This action cannot be undone.";

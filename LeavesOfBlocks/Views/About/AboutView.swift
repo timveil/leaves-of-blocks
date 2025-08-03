@@ -23,37 +23,13 @@ struct AboutView: View {
                     VStack(alignment: .leading, spacing: GameTheme.Layout.largePadding) {
                 
                 // Whitman Quote - Move to top
-                VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
-                    // Quote text
-                    VStack(alignment: .leading, spacing: GameTheme.Layout.smallSpacing) {
-                        Text("answer".localized)
-                            .font(GameTheme.Typography.body)
-                            .foregroundColor(GameTheme.Colors.primaryText)
-                        
-                        Text("whitman_quote_1".localized)
-                            .font(GameTheme.Typography.body)
-                            .foregroundColor(GameTheme.Colors.primaryText)
-                            .lineSpacing(4)
-                        
-                        Text("whitman_quote_2".localized)
-                            .font(GameTheme.Typography.body)
-                            .foregroundColor(GameTheme.Colors.primaryText)
-                            .lineSpacing(4)
-                    }
-                    
-                    // Attribution
-                    HStack {
-                        Spacer()
-                        Text("whitman_attribution".localized)
-                            .font(GameTheme.Typography.body)
-                            .foregroundColor(GameTheme.Colors.primaryText)
-                    }
-                    .padding(.top, GameTheme.Layout.smallSpacing)
-                }
-                .padding(GameTheme.Layout.mediumPadding)
-                .background(
-                    RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
-                        .fill(GameTheme.Colors.blockGreen)
+                QuoteView(
+                    quoteLines: [
+                        "answer".localized,
+                        "whitman_quote_1".localized,
+                        "whitman_quote_2".localized
+                    ],
+                    attribution: "whitman_attribution".localized
                 )
                 
                 // Inspiration

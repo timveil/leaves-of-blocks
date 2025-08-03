@@ -24,17 +24,24 @@ struct SettingsView: View {
     
     var body: some View {
         BaseScreenView {
-            VStack(spacing: GameTheme.Layout.extraLargePadding) {
+            VStack(spacing: GameTheme.Layout.largePadding) {
                 // Header
                 VStack(spacing: GameTheme.Layout.smallPadding) {
                     Text("settings".localized)
                         .pageTitleStyle()
                         .padding(.top, GameTheme.Layout.mediumPadding)
-                    
-                    Text("settings_description".localized)
-                        .gameBodyStyle()
-                        .multilineTextAlignment(.center)
+//                    
+//                    Text("settings_description".localized)
+//                        .gameBodyStyle()
+//                        .multilineTextAlignment(.center)
                 }
+                
+                // Walt Whitman Quote Block
+                QuoteView(
+                    quote: "settings_quote".localized,
+                    attribution: "settings_quote_attribution".localized
+                )
+                .padding(.horizontal, GameTheme.Layout.largePadding)
                 
                 // Action Buttons
                 VStack(spacing: GameTheme.Layout.mediumPadding) {
@@ -56,7 +63,7 @@ struct SettingsView: View {
                         showingResetAllConfirmation = true
                     }
                 }
-                .padding(.horizontal, GameTheme.Layout.extraLargePadding)
+                .padding(.horizontal, GameTheme.Layout.largePadding)
                 
                 Spacer()
             }
