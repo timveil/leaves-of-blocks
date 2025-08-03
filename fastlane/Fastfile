@@ -208,6 +208,7 @@ platform :ios do
     # Upload everything using deliver
     deliver(
       api_key: api_key,
+      api_key_path: nil,  # Explicitly set to nil to avoid conflicts
       submit_for_review: false,
       automatic_release: false,
       force: true
