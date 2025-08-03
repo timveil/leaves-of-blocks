@@ -278,12 +278,7 @@ platform :ios do
       number_of_retries: 0
     )
     
-    # Resize screenshots to App Store Connect specifications
-    UI.message("🔧 Resizing screenshots for App Store Connect compatibility...")
-    sh("cd ../fastlane/screenshots/en-US && for file in *'iPhone 15 Pro Max'*.png; do echo \"Resizing $file to 1290x2796\"; sips -z 2796 1290 \"$file\"; done")
-    sh("cd ../fastlane/screenshots/en-US && for file in *'iPhone 15 Pro'*.png; do echo \"Resizing $file to 1179x2556\"; sips -z 2556 1179 \"$file\"; done")
-    
-    UI.success("✅ Screenshots captured and resized successfully!")
+    UI.success("✅ Screenshots captured successfully!")
     UI.message("📱 Find your screenshots in: fastlane/screenshots/")
     UI.message("📄 HTML report: fastlane/screenshots/screenshots.html")
   end
