@@ -41,7 +41,7 @@ submission_information({
 })
 
 # Price and availability
-price_tier(0)  # Free app
+# Note: price_tier is deprecated - pricing is now managed in App Store Connect
 
 # Reject if binary already exists
 reject_if_possible(true)
