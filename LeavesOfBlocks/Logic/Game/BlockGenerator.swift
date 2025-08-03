@@ -41,30 +41,30 @@ extension BlockGenerator {
         
         static let diverse = TierConfiguration(
             maxBlockSize: 9,
-            varietyBonus: 1.5,
-            complexityPreference: 0.8,
-            specialShapeChance: 0.15
+            varietyBonus: 1.3,
+            complexityPreference: 0.9,
+            specialShapeChance: 0.08
         )
         
         static let constrained = TierConfiguration(
-            maxBlockSize: 6,
-            varietyBonus: 1.2,
-            complexityPreference: 0.6,
-            specialShapeChance: 0.10
-        )
-        
-        static let minimal = TierConfiguration(
-            maxBlockSize: 4,
-            varietyBonus: 1.0,
-            complexityPreference: 0.3,
+            maxBlockSize: 7,
+            varietyBonus: 1.1,
+            complexityPreference: 0.7,
             specialShapeChance: 0.05
         )
         
+        static let minimal = TierConfiguration(
+            maxBlockSize: 5,
+            varietyBonus: 0.9,
+            complexityPreference: 0.4,
+            specialShapeChance: 0.03
+        )
+        
         static let emergency = TierConfiguration(
-            maxBlockSize: 2,
-            varietyBonus: 0.8,
-            complexityPreference: 0.1,
-            specialShapeChance: 0.02
+            maxBlockSize: 3,
+            varietyBonus: 0.7,
+            complexityPreference: 0.2,
+            specialShapeChance: 0.01
         )
         
         static func forTier(_ tier: GridAnalysis.DifficultyTier) -> TierConfiguration {
@@ -490,9 +490,9 @@ struct BlockGenerator {
     
     /// Special shape generation probabilities by difficulty
     private static let specialShapeProbability: [DifficultyMode: Double] = [
-        .easy: 0.15,      // 15% chance in easy mode
-        .moderate: 0.10,  // 10% chance in moderate mode
-        .hard: 0.05       // 5% chance in hard mode
+        .easy: 0.10,      // 10% chance in easy mode (reduced from 15%)
+        .moderate: 0.05,  // 5% chance in moderate mode (reduced from 10%)
+        .hard: 0.02       // 2% chance in hard mode (reduced from 5%)
     ]
     
     // MARK: - Special Block Types
@@ -797,43 +797,43 @@ struct BlockGenerator {
     
     private static func getEasyWeight(for cellCount: Int, index: Int) -> Double {
         switch cellCount {
-        case 1: return 3.0  // Single blocks common
-        case 2: return 3.0  // 2-block shapes common
-        case 3: return 2.5  // 3-block shapes moderate
-        case 4: return 2.0  // 4-block shapes less common
-        case 5: return 1.5  // 5-block shapes (new lines & L-shapes)
-        case 6: return 1.0  // 6-block rectangles 
-        case 7: return 0.8  // 7-block L-shapes
-        case 9: return 0.5  // 9-block square rare
-        default: return 1.0
+        case 1: return 1.5  // Single blocks less common
+        case 2: return 2.0  // 2-block shapes moderate
+        case 3: return 2.5  // 3-block shapes common
+        case 4: return 3.0  // 4-block shapes common
+        case 5: return 2.5  // 5-block shapes (new lines & L-shapes) common
+        case 6: return 2.0  // 6-block rectangles moderate
+        case 7: return 1.5  // 7-block L-shapes less common
+        case 9: return 1.0  // 9-block square less common
+        default: return 1.5
         }
     }
     
     private static func getModerateWeight(for cellCount: Int, index: Int) -> Double {
         switch cellCount {
-        case 1: return 2.0  // Single blocks less common
-        case 2: return 2.5  // 2-block shapes moderate
-        case 3: return 3.0  // 3-block shapes common
-        case 4: return 2.5  // 4-block shapes moderate
-        case 5: return 2.0  // 5-block shapes moderate
-        case 6: return 1.5  // 6-block rectangles
-        case 7: return 1.2  // 7-block L-shapes
-        case 9: return 1.0  // 9-block square moderate
-        default: return 1.5
-        }
-    }
-    
-    private static func getHardWeight(for cellCount: Int, index: Int) -> Double {
-        switch cellCount {
         case 1: return 1.0  // Single blocks rare
-        case 2: return 1.5  // 2-block shapes rare
-        case 3: return 2.0  // 3-block shapes less common
+        case 2: return 1.5  // 2-block shapes less common
+        case 3: return 2.0  // 3-block shapes moderate
         case 4: return 3.0  // 4-block shapes common
         case 5: return 3.5  // 5-block shapes very common
         case 6: return 3.0  // 6-block rectangles common
         case 7: return 2.5  // 7-block L-shapes common
         case 9: return 2.0  // 9-block square common
-        default: return 2.0
+        default: return 2.5
+        }
+    }
+    
+    private static func getHardWeight(for cellCount: Int, index: Int) -> Double {
+        switch cellCount {
+        case 1: return 0.5  // Single blocks very rare
+        case 2: return 0.8  // 2-block shapes very rare
+        case 3: return 1.5  // 3-block shapes rare
+        case 4: return 2.5  // 4-block shapes moderate
+        case 5: return 4.0  // 5-block shapes extremely common
+        case 6: return 3.5  // 6-block rectangles very common
+        case 7: return 3.0  // 7-block L-shapes very common
+        case 9: return 2.5  // 9-block square common
+        default: return 3.0
         }
     }
     
