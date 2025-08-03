@@ -1,3 +1,5 @@
+.env
+
 # Fastlane Specific
 *.mobileprovision
 *.p12

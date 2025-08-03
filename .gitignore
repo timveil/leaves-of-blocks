@@ -1,6 +1,9 @@
 icons
 grass_assets
 tmp
+.env
+fastlane/.env
+
 
 # Xcode
 #
