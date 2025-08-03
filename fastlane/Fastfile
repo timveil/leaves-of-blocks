@@ -186,15 +186,6 @@ platform :ios do
 
   desc "Complete App Store deployment with metadata and binary"
   lane :deploy do
-    # Configure App Store Connect API key
-    api_key = app_store_connect_api_key(
-      key_id: ENV["APP_STORE_CONNECT_API_KEY_ID"],
-      issuer_id: ENV["APP_STORE_CONNECT_ISSUER_ID"],
-      key_filepath: ENV["APP_STORE_CONNECT_API_KEY_PATH"] || "./AuthKey.p8",
-      duration: 1200,
-      in_house: false
-    )
-    
     # Increment build number
     increment_build_number(xcodeproj: "LeavesOfBlocks.xcodeproj")
     
@@ -205,10 +196,9 @@ platform :ios do
       export_method: "app-store"
     )
     
-    # Upload everything using deliver
+    # Upload everything using deliver with JSON API key file
     deliver(
-      api_key: api_key,
-      api_key_path: nil,  # Explicitly set to nil to avoid conflicts
+      api_key_path: "fastlane/AuthKey_B8G72J8L8W.json",
       submit_for_review: false,
       automatic_release: false,
       force: true
@@ -363,6 +353,24 @@ platform :ios do
     UI.message("1. Fill in the [Unreleased] section before your next release")
     UI.message("2. Move items from [Unreleased] to [#{version}] section")
     UI.message("3. Commit the changelog changes")
+  end
+
+  desc "Clean build artifacts and temporary files"
+  lane :clean do
+    UI.message("🧹 Cleaning build artifacts...")
+    
+    # Clean Xcode build folder
+    sh("xcodebuild clean -project '../LeavesOfBlocks.xcodeproj' -scheme 'LeavesOfBlocks'")
+    
+    # Remove fastlane build artifacts
+    sh("rm -f ../*.ipa ../*.dSYM.zip")
+    sh("rm -rf ./test_output ./report.xml")
+    sh("rm -rf ./build_output")
+    
+    # Remove derived data if needed (optional, commented out by default)
+    # sh("rm -rf ~/Library/Developer/Xcode/DerivedData/LeavesOfBlocks-*")
+    
+    UI.success("✨ Clean complete!")
   end
 
   after_all do |lane|

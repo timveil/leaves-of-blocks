@@ -107,6 +107,33 @@ Automated builds and testing via GitHub Actions:
 - Comprehensive test suite execution
 - Static analysis and code quality checks
 
+### Fastlane Commands
+```bash
+# Setup Fastlane
+bundle install
+
+# Run tests
+bundle exec fastlane ios test
+
+# Clean build artifacts
+bundle exec fastlane ios clean
+
+# Deploy to TestFlight
+bundle exec fastlane ios beta
+
+# Deploy to App Store
+bundle exec fastlane ios deploy
+
+# Submit for review
+bundle exec fastlane ios submit
+
+# Update changelog
+bundle exec fastlane ios update_changelog version:1.0.4
+
+# Generate screenshots
+bundle exec fastlane ios screenshots
+```
+
 ### TestFlight Distribution
 1. Archive in Xcode: `Product → Archive`
 2. Upload via Xcode Organizer to App Store Connect

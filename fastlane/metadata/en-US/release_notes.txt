@@ -6,8 +6,6 @@ What's New in This Update:
 • Improved app branding and About page content
 • Enhanced How to Play introduction with inspirational content
 • Better app store metadata and presentation
-• Improved screenshot generation and UI testing capabilities
-• Enhanced accessibility with better UI test selectors
 • Updated automation tools and build configuration
 • Various UI refinements and visual improvements
 
