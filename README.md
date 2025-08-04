@@ -1,30 +1,50 @@
-# Leaves of Blocks 🍂
+<div align="center">
+  <img src="docs/app-icon.png" alt="Leaves of Blocks App Icon" width="120" height="120" />
+  
+  # Leaves of Blocks
+  
+  [![iOS Build and Test](https://github.com/timveil/leaves-of-blocks/actions/workflows/ios.yml/badge.svg)](https://github.com/timveil/leaves-of-blocks/actions/workflows/ios.yml)
+  
+  **A SwiftUI iOS puzzle game with autumn-themed visuals and intelligent difficulty balancing**
+  
+  Players drag and drop block shapes onto an 8x8 grid to clear lines while the game adapts to their skill level
+</div>
 
-[![iOS Build and Test](https://github.com/timveil/leaves-of-blocks/actions/workflows/ios.yml/badge.svg)](https://github.com/timveil/leaves-of-blocks/actions/workflows/ios.yml)
+---
 
-A SwiftUI iOS puzzle game inspired by Block Blast, featuring autumn-themed visuals and intelligent difficulty balancing. Players drag and drop block shapes onto an 8x8 grid to clear lines while the game adapts to their skill level.
+## Table of Contents
 
-## ✨ Key Features
+- [Key Features](#key-features)
+- [Quick Start](#quick-start)
+- [Game Mechanics](#game-mechanics)
+- [Architecture](#architecture)
+- [Documentation](#documentation)
+- [Deployment](#deployment)
+- [Configuration](#configuration)
+- [Future Enhancements](#future-enhancements)
+- [License](#license)
 
-### 🎮 Intelligent Gameplay
+## Key Features
+
+### Intelligent Gameplay
 - **Smart Difficulty System**: Advanced tiered block generation that responds to player skill
 - **Player Analytics**: Comprehensive efficiency metrics and performance tracking
 - **Solvability Guarantee**: Advanced algorithms ensure every puzzle is solvable
 - **Progressive Challenge**: Consequence-based difficulty that maintains engagement
 
-### 🍂 Beautiful Design
+### Beautiful Design
 - **Autumn Theme**: Stunning seasonal visuals with custom animations
 - **Intuitive Controls**: Smooth drag-and-drop with haptic feedback
 - **Responsive UI**: Optimized for all iPhone sizes with 60fps performance
 - **Accessibility**: Full accessibility support built-in
 
-### 📊 Rich Analytics
+### Rich Analytics
 - **Performance Grades**: A+ through D efficiency ratings
 - **Strategic Analysis**: Master through Beginner skill classifications
 - **Historical Tracking**: Detailed game history with trend analysis
 - **Achievement System**: Track improvement over time
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Requirements
 - Xcode 16.4+
@@ -49,7 +69,7 @@ Or open `LeavesOfBlocks.xcodeproj` in Xcode and press ⌘+R.
 xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "LeavesOfBlocks" test -destination 'platform=iOS Simulator,name=iPhone 16'
 ```
 
-## 🎯 Game Mechanics
+## Game Mechanics
 
 ### Core Gameplay
 1. **Drag & Drop**: Move block shapes from the bottom panel to the 8x8 grid
@@ -69,7 +89,7 @@ xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "LeavesOfBlocks" test -de
 - **Minimal**: Smaller, simpler shapes for learning
 - **Emergency**: Guaranteed solvable blocks as safety net
 
-## 🏗️ Architecture
+## Architecture
 
 ### Technical Stack
 - **Framework**: Pure SwiftUI (zero external dependencies)
@@ -99,7 +119,7 @@ LeavesOfBlocks/
 - **Solvability Validation**: Recursive backtracking ensures puzzle solvability
 - **Behavior Tracking**: Comprehensive analytics without performance impact
 
-## 📱 Deployment
+## Deployment
 
 ### CI/CD
 Automated builds and testing via GitHub Actions:
@@ -141,13 +161,13 @@ bundle exec fastlane ios screenshots
 
 See [CLAUDE.md](./CLAUDE.md) for detailed build commands and deployment procedures.
 
-## 📚 Documentation
+## Documentation
 
 - **[CLAUDE.md](./CLAUDE.md)**: Comprehensive development guide and coding standards
 - **[IMPLEMENTATION_REPORT.md](./IMPLEMENTATION_REPORT.md)**: Detailed report on player analytics system
 - **[Coding Standards](./LeavesOfBlocks/Documentation/CodingStandards.md)**: Swift style guide and best practices
 
-## 🔧 Configuration
+## Configuration
 
 The game includes a flexible configuration system for:
 - **Feature Flags**: Enable/disable experimental features
@@ -155,7 +175,7 @@ The game includes a flexible configuration system for:
 - **Debug Options**: Enhanced logging and development tools
 - **Difficulty Balance**: Fine-tune tier thresholds and weights
 
-## 🎨 Design Philosophy
+## Design Philosophy
 
 ### Player-Centric Design
 - **Natural Consequences**: Poor decisions lead to harder grids, not easier blocks
@@ -169,7 +189,7 @@ The game includes a flexible configuration system for:
 - **Maintainability**: Modular design enables easy feature additions and modifications
 - **Future-Ready**: Extensible systems support planned enhancements
 
-## 🚀 Future Enhancements
+## Future Enhancements
 
 ### Short-term
 - [ ] Advanced configuration system for difficulty tuning
@@ -183,11 +203,11 @@ The game includes a flexible configuration system for:
 - [ ] AI-powered coaching and suggestions
 - [ ] Cross-platform synchronization
 
-## 📄 License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-## 👨‍💻 Author
+## Author
 
 **Timothy Veil**
 - GitHub: [@timveil](https://github.com/timveil)
@@ -196,6 +216,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ---
 
 <div align="center">
-  <p><strong>Leaves of Blocks</strong> - Where autumn meets intelligent puzzle design 🍂</p>
+  <hr>
+  <img src="docs/app-icon.png" alt="Leaves of Blocks" width="60" height="60" />
+  <p><strong>Leaves of Blocks</strong> - Where autumn meets intelligent puzzle design</p>
   <p><em>Built with SwiftUI • Powered by advanced algorithms • Designed for delight</em></p>
 </div>
