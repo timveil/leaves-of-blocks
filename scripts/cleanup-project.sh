@@ -131,7 +131,7 @@ if [ "$DRY_RUN" = false ]; then
         rm -rf fastlane/report.xml 2>/dev/null || true
         rm -rf fastlane/Preview.html 2>/dev/null || true
         rm -rf fastlane/test_output 2>/dev/null || true
-        rm -rf fastlane/screenshots/*.png 2>/dev/null || true
+        rm -rf fastlane/screenshots/* 2>/dev/null || true
         rm -rf *.ipa 2>/dev/null || true
         rm -rf *.dSYM.zip 2>/dev/null || true
     fi

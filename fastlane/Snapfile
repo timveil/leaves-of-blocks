@@ -2,7 +2,7 @@
 
 # Devices for screenshot capture - use App Store Connect compatible devices
 devices([
-  "iPhone 16 Pro Max"   # 1290x2796 - 6.9" displays (required for App Store Connect)
+  "iPhone 15 Pro Max"   # 1290x2796 - 6.7" displays (required for App Store Connect)
 ])
 
 # Languages for localized screenshots

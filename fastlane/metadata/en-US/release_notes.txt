@@ -1,12 +1,6 @@
 What's New in This Update:
 
-• Enhanced game initialization with improved geometric pattern-based grid setup
-• Refined user interface with updated typography system for better readability
-• Streamlined statistics summary display with cleaner header design
-• Improved app branding and About page content
-• Enhanced How to Play introduction with inspirational content
-• Better app store metadata and presentation
-• Updated automation tools and build configuration
-• Various UI refinements and visual improvements
+• Updated Quote display
+• Updated App Store screenshots
 
 Thank you for playing Leaves of Blocks! We continue to improve your puzzle experience.
