@@ -53,7 +53,9 @@
 // MARK: - Settings
 "settings_description" = "Manage your game data and preferences";
 "settings_quote" = "The day erased, the lesson done";
-"settings_quote_attribution" = "— Walt Whitman, \"A Clear Midnight\" (1880)";
+"settings_author" = "Walt Whitman";
+"settings_title" = "A Clear Midnight";
+"settings_year" = "1880";
 "clear_game_history" = "Clear Game History";
 "reset_all_data" = "Reset All Data";
 "clear_history_warning" = "This will permanently delete all your saved games and statistics. This action cannot be undone.";
@@ -68,7 +70,9 @@
 
 // MARK: - How to Play
 "how_to_play_quote" = "To me every hour of the light and dark is a miracle, Every cubic inch of space is a miracle,";
-"how_to_play_attribution" = "— Walt Whitman, \"Miracles\" (1856)";
+"how_to_play_author" = "Walt Whitman";
+"how_to_play_title" = "Miracles";
+"how_to_play_year" = "1856";
 
 "the_grid" = "The Playing Field";
 "the_grid_description" = "Your game board is an 8×8 grid with 64 spaces. Your goal is to fill complete horizontal rows or vertical columns to clear them and earn points. The grid starts with some random blocks already placed to create interesting challenges.";
@@ -139,7 +143,9 @@
 "answer" = "Answer.";
 "whitman_quote_1" = "That you are here—that life exists and identity,";
 "whitman_quote_2" = "That the powerful play goes on, and you may contribute a verse..";
-"whitman_attribution" = "— Walt Whitman, \"O Me! O Life!\" (1867)";
+"whitman_author" = "Walt Whitman";
+"whitman_title" = "O Me! O Life!";
+"whitman_year" = "1867";
 "creator" = "Creator";
 "creator_description" = "Developed by Tim Veil, a software engineer and dad who believes games should provide a respite not rage.";
 "technical_details" = "Technical Details";

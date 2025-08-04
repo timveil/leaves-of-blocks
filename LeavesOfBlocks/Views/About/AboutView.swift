@@ -29,7 +29,9 @@ struct AboutView: View {
                         "whitman_quote_1".localized,
                         "whitman_quote_2".localized
                     ],
-                    attribution: "whitman_attribution".localized
+                    author: "whitman_author".localized,
+                    title: "whitman_title".localized,
+                    year: "whitman_year".localized
                 )
                 
                 // Inspiration

@@ -20,7 +20,9 @@ struct HowToPlayView: View {
                 // Whitman Quote
                 QuoteView(
                     quote: "how_to_play_quote".localized,
-                    attribution: "how_to_play_attribution".localized
+                    author: "how_to_play_author".localized,
+                    title: "how_to_play_title".localized,
+                    year: "how_to_play_year".localized
                 )
                         
                         // The Grid

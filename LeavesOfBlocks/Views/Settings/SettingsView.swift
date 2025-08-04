@@ -39,7 +39,9 @@ struct SettingsView: View {
                 // Walt Whitman Quote Block
                 QuoteView(
                     quote: "settings_quote".localized,
-                    attribution: "settings_quote_attribution".localized
+                    author: "settings_author".localized,
+                    title: "settings_title".localized,
+                    year: "settings_year".localized
                 )
                 .padding(.horizontal, GameTheme.Layout.largePadding)
                 
