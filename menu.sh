@@ -67,24 +67,22 @@ while true; do
     echo " 10) Update Changelog"
     echo ""
     
-    echo -e "${BLUE}Maintenance & Review:${NC}"
-    echo " 11) Clean Git Ignored Files (Dry Run)"
-    echo " 12) Clean Git Ignored Files (Delete)"
-    echo " 13) Review All Code"
-    echo " 14) Review Recent Changes"
+    echo -e "${BLUE}Maintenance:${NC}"
+    echo " 11) Project Cleanup (Dry Run)"
+    echo " 12) Project Cleanup (Delete)"
     echo ""
     
     echo -e "${BLUE}Asset Generation:${NC}"
-    echo " 15) Generate App Icons"
-    echo " 16) Copy Icons to Project"
-    echo " 17) Generate Grass Images"
-    echo " 18) Create App Clip Header"
+    echo " 13) Generate App Icons"
+    echo " 14) Copy Icons to Project"
+    echo " 15) Generate Grass Images"
+    echo " 16) Create App Clip Header"
     echo ""
     
     echo -e "${BLUE}Other:${NC}"
-    echo " 19) Open in Xcode"
-    echo " 20) View CLAUDE.md"
-    echo " 21) View Coding Standards"
+    echo " 17) Open in Xcode"
+    echo " 18) View CLAUDE.md"
+    echo " 19) View Coding Standards"
     echo ""
     
     echo -e "${RED}  0) Exit${NC}"
@@ -145,63 +143,43 @@ while true; do
                        "Update Changelog for version $version"
             ;;
         11)
-            run_command "./scripts/cleanup-gitignored.sh --dry-run" \
-                       "Preview Git Ignored Files (Dry Run)"
+            run_command "./scripts/cleanup-project.sh --dry-run" \
+                       "Preview Project Cleanup (Dry Run)"
             ;;
         12)
-            echo -e "${RED}This will DELETE ignored files! Continue? (y/N)${NC}"
+            echo -e "${RED}This will perform comprehensive cleanup and DELETE files! Continue? (y/N)${NC}"
             read -n 1 -r confirm
             echo
             if [[ $confirm =~ ^[Yy]$ ]]; then
-                run_command "./scripts/cleanup-gitignored.sh" \
-                           "Clean Git Ignored Files"
+                run_command "./scripts/cleanup-project.sh" \
+                           "Full Project Cleanup"
             fi
             ;;
         13)
-            if [ -f ".claude/commands/code-review-all.md" ]; then
-                run_command "cat '.claude/commands/code-review-all.md' | less" \
-                           "View All Code Review"
-            else
-                echo -e "${RED}Code review file not found${NC}"
-                echo "Press any key to continue..."
-                read -n 1 -s
-            fi
-            ;;
-        14)
-            if [ -f ".claude/commands/code-review-recent.md" ]; then
-                run_command "cat '.claude/commands/code-review-recent.md' | less" \
-                           "View Recent Code Review"
-            else
-                echo -e "${RED}Code review file not found${NC}"
-                echo "Press any key to continue..."
-                read -n 1 -s
-            fi
-            ;;
-        15)
             run_command "./scripts/generate_icons.sh" \
                        "Generate App Icons"
             ;;
-        16)
+        14)
             run_command "./scripts/copy_icons_to_project.sh" \
                        "Copy Icons to Project"
             ;;
-        17)
+        15)
             run_command "python3 ./scripts/generate_grass_images.py" \
                        "Generate Grass Images"
             ;;
-        18)
+        16)
             run_command "python3 ./scripts/create_app_clip_header.py" \
                        "Create App Clip Header"
             ;;
-        19)
+        17)
             echo -e "${BLUE}Opening project in Xcode...${NC}"
             open "LeavesOfBlocks.xcodeproj"
             ;;
-        20)
+        18)
             run_command "cat 'CLAUDE.md' | less" \
                        "View CLAUDE.md"
             ;;
-        21)
+        19)
             run_command "cat 'LeavesOfBlocks/Documentation/CodingStandards.md' | less" \
                        "View Coding Standards"
             ;;

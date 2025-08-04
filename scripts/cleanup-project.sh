@@ -1,9 +1,9 @@
 #!/bin/bash
 #
-# cleanup-gitignored.sh
-# Removes ignored files from the project root directory only
-# Subdirectories are cleaned by Xcode and Fastlane commands
-# Usage: ./cleanup-gitignored.sh [--dry-run]
+# cleanup-project.sh
+# Comprehensive cleanup script for iOS/Xcode projects
+# Cleans build artifacts, caches, and ignored files
+# Usage: ./cleanup-project.sh [--dry-run]
 #
 
 set -euo pipefail
@@ -38,9 +38,13 @@ while [[ $# -gt 0 ]]; do
             echo "  --verbose, -v    Show detailed output"
             echo "  --help, -h       Show this help message"
             echo ""
-            echo "This script removes ignored files from the project root directory only."
-            echo "Subdirectories are cleaned using Xcode and Fastlane commands."
-            echo "It respects your .gitignore patterns and Git's ignore rules."
+            echo "This script performs comprehensive cleanup of your iOS project including:"
+            echo "  - Xcode build artifacts and derived data"
+            echo "  - Fastlane artifacts"
+            echo "  - Swift Package Manager cache"
+            echo "  - Simulator data and caches"
+            echo "  - Git maintenance and optimization"
+            echo "  - Ignored files in project root"
             exit 0
             ;;
         *)
@@ -93,7 +97,7 @@ get_size() {
     fi
 }
 
-echo -e "${BLUE}=== Git Ignored Files Cleanup ===${NC}"
+echo -e "${BLUE}=== Project Cleanup Utility ===${NC}"
 echo ""
 
 if [ "$DRY_RUN" = true ]; then
@@ -112,34 +116,88 @@ fi
 # Run clean commands only if not in dry-run mode
 if [ "$DRY_RUN" = false ]; then
     echo ""
-    echo -e "${BLUE}Running Xcode and Fastlane clean commands...${NC}"
+    echo -e "${BLUE}Running comprehensive cleanup commands...${NC}"
 
-    # Clean Xcode build artifacts
+    # 1. Clean Xcode build artifacts
     if ls *.xcodeproj 1> /dev/null 2>&1 || ls *.xcworkspace 1> /dev/null 2>&1; then
         echo "- Cleaning Xcode build artifacts..."
         xcodebuild clean -quiet 2>/dev/null || true
     fi
 
-    # Clean Fastlane artifacts
+    # 2. Clean Fastlane artifacts
     if [ -f "fastlane/Fastfile" ]; then
         echo "- Cleaning Fastlane artifacts..."
-        if command -v bundle > /dev/null 2>&1 && [ -f "Gemfile" ]; then
-            bundle exec fastlane run clean_build_artifacts skip_package_ipa:true 2>/dev/null || true
-        elif command -v fastlane > /dev/null 2>&1; then
-            fastlane run clean_build_artifacts skip_package_ipa:true 2>/dev/null || true
-        fi
+        # Remove common Fastlane generated files manually since the action has parameter issues
+        rm -rf fastlane/report.xml 2>/dev/null || true
+        rm -rf fastlane/Preview.html 2>/dev/null || true
+        rm -rf fastlane/test_output 2>/dev/null || true
+        rm -rf fastlane/screenshots/*.png 2>/dev/null || true
+        rm -rf *.ipa 2>/dev/null || true
+        rm -rf *.dSYM.zip 2>/dev/null || true
     fi
 
-    # Remove derived data if in project directory
+    # 3. Remove local build directories
     if [ -d "build/" ]; then
         echo "- Removing build directory..."
         rm -rf build/ 2>/dev/null || true
     fi
 
     if [ -d "DerivedData/" ]; then
-        echo "- Removing DerivedData directory..."
+        echo "- Removing local DerivedData directory..."
         rm -rf DerivedData/ 2>/dev/null || true
     fi
+
+    # 4. Clean system-wide Xcode data
+    echo "- Cleaning system Xcode derived data..."
+    rm -rf ~/Library/Developer/Xcode/DerivedData/* 2>/dev/null || true
+    
+    echo "- Cleaning Xcode module cache..."
+    rm -rf ~/Library/Developer/Xcode/DerivedData/ModuleCache.noindex/* 2>/dev/null || true
+    
+    echo "- Cleaning old iOS device support files..."
+    find ~/Library/Developer/Xcode/iOS\ DeviceSupport -name "*.Symbols" -mtime +30 -exec rm -rf {} + 2>/dev/null || true
+
+    # 5. Clean Swift Package Manager cache
+    if [ -d ".build" ]; then
+        echo "- Removing Swift Package Manager build directory..."
+        rm -rf .build 2>/dev/null || true
+    fi
+    
+    echo "- Cleaning Swift Package Manager cache..."
+    rm -rf ~/Library/Caches/org.swift.swiftpm/* 2>/dev/null || true
+    rm -rf ~/Library/Developer/Xcode/DerivedData/*-*/SourcePackages/* 2>/dev/null || true
+
+    # 6. Clean simulator data (old simulators)
+    echo "- Cleaning unavailable simulators..."
+    xcrun simctl delete unavailable 2>/dev/null || true
+    
+    echo "- Cleaning simulator logs..."
+    rm -rf ~/Library/Logs/CoreSimulator/* 2>/dev/null || true
+
+    # 7. Clean Ruby/Bundler cache
+    if [ -f "Gemfile" ] && command -v bundle > /dev/null 2>&1; then
+        echo "- Cleaning bundler cache..."
+        bundle clean --force 2>/dev/null || true
+    fi
+
+    # 8. Clean Python cache
+    echo "- Removing Python cache files..."
+    find . -name "__pycache__" -type d -exec rm -rf {} + 2>/dev/null || true
+    find . -name "*.pyc" -delete 2>/dev/null || true
+
+    # 9. Git maintenance
+    echo "- Running Git garbage collection..."
+    git gc --quiet 2>/dev/null || true
+    
+    echo "- Pruning Git objects..."
+    git prune --quiet 2>/dev/null || true
+
+    # 10. Clean macOS system files
+    echo "- Removing .DS_Store files..."
+    find . -name ".DS_Store" -delete 2>/dev/null || true
+    
+    echo "- Cleaning thumbnail cache..."
+    rm -rf ~/.Trash/.DS_Store 2>/dev/null || true
 fi
 
 echo ""
@@ -263,12 +321,13 @@ else
     echo -e "Run without --dry-run to actually delete these files."
 fi
 
-# Additional cleanup suggestions
+# Additional manual cleanup suggestions
 echo ""
-echo -e "${BLUE}Additional cleanup suggestions:${NC}"
-echo "1. Run 'git gc' to optimize the Git repository"
-echo "2. Clear Xcode derived data: rm -rf ~/Library/Developer/Xcode/DerivedData"
-echo "3. Clear Xcode device support: rm -rf ~/Library/Developer/Xcode/iOS\\ DeviceSupport"
-echo "4. Clear simulator caches: xcrun simctl delete unavailable"
+echo -e "${BLUE}Additional manual cleanup options:${NC}"
+echo "1. Clean Xcode archives: rm -rf ~/Library/Developer/Xcode/Archives"
+echo "2. Reset all simulators: xcrun simctl erase all"
+echo "3. Clear Xcode documentation: rm -rf ~/Library/Developer/Shared/Documentation"
+echo "4. Clear system logs: sudo rm -rf /var/log/system.log*"
+echo "5. Empty Trash completely"
 
 exit 0
