@@ -57,17 +57,31 @@
 git clone https://github.com/timveil/leaves-of-blocks.git
 cd leaves-of-blocks
 
-# Build and run
+# Use the interactive development menu (recommended)
+./menu.sh
+
+# Or build manually
 xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "LeavesOfBlocks" build
 ```
 
 Or open `LeavesOfBlocks.xcodeproj` in Xcode and press ⌘+R.
 
-### Testing
+### Interactive Development Menu
+
+The project includes a comprehensive development menu for streamlined workflow:
+
 ```bash
-# Run all tests
-xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "LeavesOfBlocks" test -destination 'platform=iOS Simulator,name=iPhone 16'
+./menu.sh
 ```
+
+**Features:**
+- **Build & Test Commands** - All Xcode build and test operations
+- **Fastlane Integration** - TestFlight and App Store deployment
+- **Project Cleanup** - Comprehensive cleanup with dry-run preview
+- **Asset Generation** - Complete icon and visual asset workflows
+- **Development Tools** - Quick access to documentation and project files
+
+All utility scripts are organized in the `scripts/` directory for advanced users.
 
 ## Game Mechanics
 
@@ -110,7 +124,16 @@ LeavesOfBlocks/
 │   ├── Game/              # Core game logic
 │   └── Analytics/         # Player behavior analysis
 ├── Services/              # Infrastructure services
-└── Resources/             # Themes, assets, localization
+├── Resources/             # Themes, assets, localization
+└── Documentation/         # Project documentation
+
+scripts/                   # Development utilities
+├── cleanup-project.sh     # Comprehensive project cleanup
+├── generate_icons.sh      # Icon generation and copying
+├── generate_grass_images.py # Grass texture generation
+└── create_app_clip_header.py # App Clip header creation
+
+menu.sh                    # Interactive development menu
 ```
 
 ### Key Innovations
@@ -127,39 +150,31 @@ Automated builds and testing via GitHub Actions:
 - Comprehensive test suite execution
 - Static analysis and code quality checks
 
-### Fastlane Commands
+### Quick Deployment
+
+Use the interactive menu for streamlined deployment:
+
 ```bash
-# Setup Fastlane
-bundle install
-
-# Run tests
-bundle exec fastlane ios test
-
-# Clean build artifacts
-bundle exec fastlane ios clean
-
-# Deploy to TestFlight
-bundle exec fastlane ios beta
-
-# Deploy to App Store
-bundle exec fastlane ios deploy
-
-# Submit for review
-bundle exec fastlane ios submit
-
-# Update changelog
-bundle exec fastlane ios update_changelog version:1.0.4
-
-# Generate screenshots
-bundle exec fastlane ios screenshots
+./menu.sh
+# Select option 7: Deploy Beta (TestFlight)
+# Select option 8: Deploy to App Store
 ```
 
-### TestFlight Distribution
-1. Archive in Xcode: `Product → Archive`
-2. Upload via Xcode Organizer to App Store Connect
-3. Configure TestFlight groups and distribute to testers
+### Manual Deployment Commands
 
-See [CLAUDE.md](./CLAUDE.md) for detailed build commands and deployment procedures.
+For advanced users, direct Fastlane commands are available:
+
+```bash
+# Setup (one-time)
+bundle install
+
+# Core deployment commands
+bundle exec fastlane ios beta          # TestFlight
+bundle exec fastlane ios deploy        # App Store
+bundle exec fastlane ios submit        # Submit for review
+```
+
+See [CLAUDE.md](./CLAUDE.md) for comprehensive build commands and deployment procedures.
 
 ## Documentation
 

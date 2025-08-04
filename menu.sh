@@ -73,16 +73,15 @@ while true; do
     echo ""
     
     echo -e "${BLUE}Asset Generation:${NC}"
-    echo " 13) Generate App Icons"
-    echo " 14) Copy Icons to Project"
-    echo " 15) Generate Grass Images"
-    echo " 16) Create App Clip Header"
+    echo " 13) Generate & Copy App Icons"
+    echo " 14) Generate Grass Images"
+    echo " 15) Create App Clip Header"
     echo ""
     
     echo -e "${BLUE}Other:${NC}"
-    echo " 17) Open in Xcode"
-    echo " 18) View CLAUDE.md"
-    echo " 19) View Coding Standards"
+    echo " 16) Open in Xcode"
+    echo " 17) View CLAUDE.md"
+    echo " 18) View Coding Standards"
     echo ""
     
     echo -e "${RED}  0) Exit${NC}"
@@ -157,29 +156,25 @@ while true; do
             ;;
         13)
             run_command "./scripts/generate_icons.sh" \
-                       "Generate App Icons"
+                       "Generate & Copy App Icons"
             ;;
         14)
-            run_command "./scripts/copy_icons_to_project.sh" \
-                       "Copy Icons to Project"
-            ;;
-        15)
             run_command "python3 ./scripts/generate_grass_images.py" \
                        "Generate Grass Images"
             ;;
-        16)
+        15)
             run_command "python3 ./scripts/create_app_clip_header.py" \
                        "Create App Clip Header"
             ;;
-        17)
+        16)
             echo -e "${BLUE}Opening project in Xcode...${NC}"
             open "LeavesOfBlocks.xcodeproj"
             ;;
-        18)
+        17)
             run_command "cat 'CLAUDE.md' | less" \
                        "View CLAUDE.md"
             ;;
-        19)
+        18)
             run_command "cat 'LeavesOfBlocks/Documentation/CodingStandards.md' | less" \
                        "View Coding Standards"
             ;;

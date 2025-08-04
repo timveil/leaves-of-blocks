@@ -126,7 +126,58 @@ The project uses a comprehensive changelog system following [Keep a Changelog](h
 - Review changelog before each release for clarity and completeness
 - Use semantic versioning aligned with changelog sections
 
-## Build Commands
+## Development Menu System
+
+The project includes an interactive development menu system for streamlined workflow management.
+
+### Quick Start
+```bash
+# Launch the interactive development menu
+./menu.sh
+```
+
+The menu provides organized access to all common development tasks:
+
+#### Build & Test Commands (Options 1-5)
+- Build for Simulator
+- Run All Tests / Unit Tests Only / UI Tests Only
+- Clean Build
+
+#### Fastlane Commands (Options 6-10)
+- Run Tests (Fastlane)
+- Deploy Beta (TestFlight)
+- Deploy to App Store
+- Generate Screenshots
+- Update Changelog
+
+#### Maintenance (Options 11-12)
+- Project Cleanup (Dry Run) - Preview cleanup actions
+- Project Cleanup (Delete) - Comprehensive project cleanup
+
+#### Asset Generation (Options 13-15)
+- Generate & Copy App Icons - Complete icon workflow
+- Generate Grass Images - Autumn-themed background textures
+- Create App Clip Header - App Clip promotional image
+
+#### Other Commands (Options 16-18)
+- Open in Xcode
+- View CLAUDE.md
+- View Coding Standards
+
+### Scripts Directory Structure
+All utility scripts are organized in the `scripts/` directory:
+
+```
+scripts/
+├── cleanup-project.sh      # Comprehensive project cleanup
+├── generate_icons.sh       # Icon generation and copying
+├── generate_grass_images.py # Grass texture generation
+└── create_app_clip_header.py # App Clip header creation
+```
+
+## Build Commands (Manual)
+
+For direct command-line usage without the menu system:
 
 ### Main App Commands
 - **Build**: `xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "LeavesOfBlocks" build`
@@ -136,7 +187,6 @@ The project uses a comprehensive changelog system following [Keep a Changelog](h
 - **UI Tests Only**: `xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "LeavesOfBlocks" test -destination 'platform=iOS Simulator,name=iPhone 16' -only-testing:"LeavesOfBlocksUITests"`
 - **Clean Build**: `xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "LeavesOfBlocks" clean build`
 - **Archive for Release**: `xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "LeavesOfBlocks" -destination "generic/platform=iOS" archive`
-- **Run Single Test**: `xcodebuild test -project "LeavesOfBlocks.xcodeproj" -scheme "LeavesOfBlocks" -destination 'platform=iOS Simulator,name=iPhone 16' -only-testing:"LeavesOfBlocksTests/GameLogicTests/testBlockPlacement"`
 
 ### App Clip Commands
 - **Build App Clip**: `xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "LeavesOfBlocksAppClip" build`
@@ -160,6 +210,50 @@ The project uses a comprehensive changelog system following [Keep a Changelog](h
 #### Legacy Commands
 - **Deploy Beta**: `bundle exec fastlane ios beta` - Upload to TestFlight
 - **Deploy Release**: `bundle exec fastlane ios release` - Basic App Store upload
+
+### Project Cleanup System
+
+The project includes a comprehensive cleanup system via `scripts/cleanup-project.sh`:
+
+#### Cleanup Features
+- **Xcode Build Artifacts**: Cleans derived data, module cache, and build directories
+- **Fastlane Artifacts**: Removes reports, screenshots, and test outputs
+- **Swift Package Manager**: Cleans SPM cache and build directories
+- **Simulator Data**: Removes unavailable simulators and logs
+- **Git Maintenance**: Garbage collection and object pruning
+- **System Files**: Removes .DS_Store files and Python cache
+- **Ruby/Bundler**: Cleans bundler cache
+
+#### Usage
+```bash
+# Preview cleanup (recommended first)
+./scripts/cleanup-project.sh --dry-run
+
+# Perform full cleanup
+./scripts/cleanup-project.sh
+```
+
+### Asset Generation System
+
+#### Icon Generation
+Complete icon workflow with automatic copying:
+```bash
+./scripts/generate_icons.sh
+```
+- Generates all iOS app icon sizes from SVG
+- Creates App Clip icons
+- Generates launch screen icons with dark mode variants
+- Copies to correct Xcode Asset Catalog locations
+- Creates required Contents.json files
+
+#### Visual Asset Scripts
+```bash
+# Generate grass textures for game backgrounds
+python3 ./scripts/generate_grass_images.py
+
+# Create App Clip promotional header
+python3 ./scripts/create_app_clip_header.py
+```
 
 ### Build Troubleshooting
 - **Available Simulators**: Current system has iPhone 16, iPhone 16 Plus, iPhone 16 Pro Max, iPhone 16e, and various iPad simulators
