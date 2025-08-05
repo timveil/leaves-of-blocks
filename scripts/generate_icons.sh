@@ -63,11 +63,6 @@ rsvg-convert -w 16 -h 16 "$SVG_FILE" > tmp/AppIcon-16.png
 # GitHub Pages app icon (for documentation site, transparent background)
 rsvg-convert -w 256 -h 256 --background-color=transparent "$TRANSPARENT_SVG_FILE" > tmp/app-icon.png
 
-# App Clip Icons (with white background, no transparency)
-rsvg-convert -w 180 -h 180 "$SVG_FILE" > tmp/AppClipIcon-60@3x.png
-rsvg-convert -w 120 -h 120 "$SVG_FILE" > tmp/AppClipIcon-60@2x.png
-rsvg-convert -w 1024 -h 1024 "$SVG_FILE" > tmp/AppClipIcon-1024.png
-
 # Launch Screen Icons (transparent background for overlay use)
 rsvg-convert -w 120 -h 120 --background-color=transparent "$TRANSPARENT_SVG_FILE" > tmp/LaunchIcon@1x.png
 rsvg-convert -w 240 -h 240 --background-color=transparent "$TRANSPARENT_SVG_FILE" > tmp/LaunchIcon@2x.png
@@ -89,12 +84,10 @@ echo "📱 Copying icons to iOS project..."
 # Define the Assets directory paths
 ASSETS_DIR="LeavesOfBlocks/Assets.xcassets/AppIcon.appiconset"
 LAUNCH_ICON_DIR="LeavesOfBlocks/Assets.xcassets/LaunchIcon.imageset"
-APP_CLIP_ASSETS_DIR="LeavesOfBlocksAppClip/Assets.xcassets/AppIcon.appiconset"
 
 # Create directories if they don't exist
 mkdir -p "$ASSETS_DIR"
 mkdir -p "$LAUNCH_ICON_DIR"
-mkdir -p "$APP_CLIP_ASSETS_DIR"
 mkdir -p docs
 
 # Copy main app icons
@@ -127,19 +120,6 @@ cp tmp/LaunchIcon-Dark@1x.png "$LAUNCH_ICON_DIR/LaunchIcon-Dark@1x.png"
 cp tmp/LaunchIcon-Dark@2x.png "$LAUNCH_ICON_DIR/LaunchIcon-Dark@2x.png"
 cp tmp/LaunchIcon-Dark@3x.png "$LAUNCH_ICON_DIR/LaunchIcon-Dark@3x.png"
 
-# Copy App Clip icons
-echo "📱 Copying App Clip icons..."
-cp tmp/AppClipIcon-60@3x.png "$APP_CLIP_ASSETS_DIR/Icon-60@3x.png"
-cp tmp/AppClipIcon-60@2x.png "$APP_CLIP_ASSETS_DIR/Icon-60@2x.png"
-cp tmp/AppClipIcon-1024.png "$APP_CLIP_ASSETS_DIR/AppStore.png"
-
-# Copy additional App Clip notification/settings icons from main app icons
-cp tmp/AppIcon-20@2x.png "$APP_CLIP_ASSETS_DIR/Icon-20@2x.png"
-cp tmp/AppIcon-20@3x.png "$APP_CLIP_ASSETS_DIR/Icon-20@3x.png"
-cp tmp/AppIcon-29@2x.png "$APP_CLIP_ASSETS_DIR/Icon-29@2x.png"
-cp tmp/AppIcon-29@3x.png "$APP_CLIP_ASSETS_DIR/Icon-29@3x.png"
-cp tmp/AppIcon-40@2x.png "$APP_CLIP_ASSETS_DIR/Icon-40@2x.png"
-cp tmp/AppIcon-40@3x.png "$APP_CLIP_ASSETS_DIR/Icon-40@3x.png"
 
 # Copy GitHub Pages app icon
 echo "📄 Copying GitHub Pages app icon..."
@@ -316,7 +296,6 @@ EOF
 echo ""
 echo "✅ Icons generated and copied to iOS project successfully!"
 echo "📁 App Icons location: $ASSETS_DIR"
-echo "📁 App Clip Icons location: $APP_CLIP_ASSETS_DIR"
 echo "📁 Launch Icons location: $LAUNCH_ICON_DIR"
 echo "📁 GitHub Pages Icon location: docs/app-icon.png"
 echo ""

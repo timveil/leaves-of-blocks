@@ -16,9 +16,6 @@ on:
       - 'LeavesOfBlocks/**'
       - 'LeavesOfBlocksTests/**'
       - 'LeavesOfBlocksUITests/**'
-      - 'LeavesOfBlocksAppClip/**'
-      - 'LeavesOfBlocksAppClipTests/**'
-      - 'LeavesOfBlocksAppClipUITests/**'
       - '.github/workflows/ios.yml'
   pull_request:
     branches: [ "main" ]
@@ -35,9 +32,6 @@ on:
       - 'LeavesOfBlocks/**'
       - 'LeavesOfBlocksTests/**'
       - 'LeavesOfBlocksUITests/**'
-      - 'LeavesOfBlocksAppClip/**'
-      - 'LeavesOfBlocksAppClipTests/**'
-      - 'LeavesOfBlocksAppClipUITests/**'
       - '.github/workflows/ios.yml'
 
 jobs:

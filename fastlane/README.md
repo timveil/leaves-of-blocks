@@ -111,14 +111,6 @@ Generate new localized screenshots
 
 Generate manual screenshots (simulator only)
 
-### ios build_app_clip
-
-```sh
-[bundle exec] fastlane ios build_app_clip
-```
-
-App Clip build
-
 ### ios test_api_auth
 
 ```sh

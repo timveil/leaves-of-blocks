@@ -4,10 +4,8 @@
 
 # App Configuration
 APP_IDENTIFIER = ENV["LOCAL_FASTLANE_APP_IDENTIFIER"]
-APP_CLIP_IDENTIFIER = "timothy.veil.LeavesOfBlocks.Clip"
 XCODE_PROJECT = "LeavesOfBlocks.xcodeproj"
 MAIN_SCHEME = "LeavesOfBlocks"
-APP_CLIP_SCHEME = "LeavesOfBlocksAppClip"
 
 # Developer Information
 DEVELOPER_NAME = "Tim"

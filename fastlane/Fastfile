@@ -240,15 +240,6 @@ platform :ios do
     UI.message("💡 Pro tip: Use ⌘+1, ⌘+2, ⌘+3 to switch device sizes quickly")
   end
 
-  desc "App Clip build"
-  lane :build_app_clip do
-    build_app(
-      project: XCODE_PROJECT,
-      scheme: APP_CLIP_SCHEME,
-      export_method: EXPORT_METHOD
-    )
-  end
-
   desc "Test App Store Connect API authentication"
   lane :test_api_auth do
     begin
