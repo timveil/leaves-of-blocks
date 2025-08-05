@@ -55,8 +55,8 @@ platform :ios do
 
   desc "Upload to TestFlight"
   lane :beta do
-    # Configure App Store Connect API key
-    api_key = api_key_config
+    # Configure App Store Connect API key for TestFlight
+    api_key = app_store_api_key
     
     # Increment marketing version to create new release train
     increment_version_number(
@@ -77,8 +77,8 @@ platform :ios do
 
   desc "Upload to App Store"
   lane :release do
-    # Configure App Store Connect API key
-    api_key = api_key_config
+    # Configure App Store Connect API key for App Store
+    api_key = app_store_api_key
     
     increment_build_number(xcodeproj: XCODE_PROJECT)
     build_app(
@@ -95,8 +95,8 @@ platform :ios do
 
   desc "Upload metadata and screenshots only (no binary)"
   lane :metadata_only do
-    # Configure App Store Connect API key
-    api_key = api_key_config
+    # Configure App Store Connect API key for App Store
+    api_key = app_store_api_key
     
     deliver(
       api_key: api_key,
@@ -109,8 +109,8 @@ platform :ios do
 
   desc "Upload screenshots only"
   lane :screenshots_only do
-    # Configure App Store Connect API key
-    api_key = api_key_config
+    # Configure App Store Connect API key for App Store
+    api_key = app_store_api_key
     
     deliver(
       api_key: api_key,
@@ -123,6 +123,9 @@ platform :ios do
 
   desc "Complete App Store deployment with metadata and binary"
   lane :deploy do
+    # Set up API key in lane context (automatically used by deliver)
+    app_store_api_key
+
     # Increment build number
     increment_build_number(xcodeproj: XCODE_PROJECT)
     
@@ -133,9 +136,9 @@ platform :ios do
       export_method: EXPORT_METHOD
     )
     
-    # Upload everything using deliver with API key
+    # Upload everything using deliver (automatically uses API key from lane context)
     deliver(
-      api_key: api_key_config,
+      api_key: app_store_api_key,
       submit_for_review: false,
       automatic_release: false,
       force: true
@@ -148,8 +151,8 @@ platform :ios do
 
   desc "Submit for App Store review (use after deploy)"
   lane :submit do
-    # Configure App Store Connect API key
-    api_key = api_key_config
+    # Configure App Store Connect API key for App Store
+    api_key = app_store_api_key
     
     deliver(
       api_key: api_key,
@@ -166,8 +169,8 @@ platform :ios do
 
   desc "Full deployment pipeline: build, upload, and submit for review"
   lane :deploy_and_submit do
-    # Configure App Store Connect API key
-    api_key = api_key_config
+    # Configure App Store Connect API key for App Store
+    api_key = app_store_api_key
     
     # Increment build number
     increment_build_number(xcodeproj: XCODE_PROJECT)
@@ -233,6 +236,31 @@ platform :ios do
       scheme: APP_CLIP_SCHEME,
       export_method: EXPORT_METHOD
     )
+  end
+
+  desc "Test App Store Connect API authentication"
+  lane :test_api_auth do
+    begin
+      # Configure App Store Connect API key
+      api_key = app_store_api_key
+      
+      UI.message("🔑 Testing App Store Connect API authentication...")
+      
+      # Try to fetch latest TestFlight build number to test API connection
+      latest_testflight_build_number(
+        api_key: api_key,
+        app_identifier: APP_IDENTIFIER
+      )
+      
+      UI.success("✅ API authentication successful!")
+      UI.message("🎉 Your App Store Connect API key is working correctly")
+      
+    rescue => exception
+      UI.error("❌ API authentication failed:")
+      UI.error("Error: #{exception.message}")
+      UI.message("💡 Check your API key configuration in fastlane/Constants.rb")
+      raise exception
+    end
   end
 
 

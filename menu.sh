@@ -68,26 +68,27 @@ while true; do
     echo ""
     
     echo -e "${BLUE}Advanced Fastlane:${NC}"
-    echo " 11) Submit for Review (existing build)"
-    echo " 12) Upload Metadata Only"
-    echo " 13) Upload Screenshots Only"
+    echo " 11) Test App Store Connect API Auth"
+    echo " 12) Submit for Review (existing build)"
+    echo " 13) Upload Metadata Only"
+    echo " 14) Upload Screenshots Only"
     echo ""
     
     echo -e "${BLUE}Maintenance:${NC}"
-    echo " 14) Project Cleanup (Dry Run)"
-    echo " 15) Project Cleanup (Delete)"
+    echo " 15) Project Cleanup (Dry Run)"
+    echo " 16) Project Cleanup (Delete)"
     echo ""
     
     echo -e "${BLUE}Asset Generation:${NC}"
-    echo " 16) Generate & Copy App Icons"
-    echo " 17) Generate Grass Images"
-    echo " 18) Create App Clip Header"
+    echo " 17) Generate & Copy App Icons"
+    echo " 18) Generate Grass Images"
+    echo " 19) Create App Clip Header"
     echo ""
     
     echo -e "${BLUE}Other:${NC}"
-    echo " 19) Open in Xcode"
-    echo " 20) View CLAUDE.md"
-    echo " 21) View Coding Standards"
+    echo " 20) Open in Xcode"
+    echo " 21) View CLAUDE.md"
+    echo " 22) View Coding Standards"
     echo ""
     
     echo -e "${RED}  0) Exit${NC}"
@@ -152,6 +153,10 @@ while true; do
                        "Generate Screenshots"
             ;;
         11)
+            run_command "bundle exec fastlane ios test_api_auth" \
+                       "Test App Store Connect API Authentication"
+            ;;
+        12)
             echo -e "${RED}This will submit an existing build for App Store review! Continue? (y/N)${NC}"
             read -n 1 -r confirm
             echo
@@ -160,7 +165,7 @@ while true; do
                            "Submit Existing Build for Review"
             fi
             ;;
-        12)
+        13)
             echo -e "${YELLOW}This will upload metadata only (no binary). Continue? (y/N)${NC}"
             read -n 1 -r confirm
             echo
@@ -169,7 +174,7 @@ while true; do
                            "Upload Metadata Only"
             fi
             ;;
-        13)
+        14)
             echo -e "${YELLOW}This will upload screenshots only. Continue? (y/N)${NC}"
             read -n 1 -r confirm
             echo
@@ -178,11 +183,11 @@ while true; do
                            "Upload Screenshots Only"
             fi
             ;;
-        14)
+        15)
             run_command "./scripts/cleanup-project.sh --dry-run" \
                        "Preview Project Cleanup (Dry Run)"
             ;;
-        15)
+        16)
             echo -e "${RED}This will perform comprehensive cleanup and DELETE files! Continue? (y/N)${NC}"
             read -n 1 -r confirm
             echo
@@ -191,27 +196,27 @@ while true; do
                            "Full Project Cleanup (includes Fastlane clean)"
             fi
             ;;
-        16)
+        17)
             run_command "./scripts/generate_icons.sh" \
                        "Generate & Copy App Icons"
             ;;
-        17)
+        18)
             run_command "python3 ./scripts/generate_grass_images.py" \
                        "Generate Grass Images"
             ;;
-        18)
+        19)
             run_command "python3 ./scripts/create_app_clip_header.py" \
                        "Create App Clip Header"
             ;;
-        19)
+        20)
             echo -e "${BLUE}Opening project in Xcode...${NC}"
             open "LeavesOfBlocks.xcodeproj"
             ;;
-        20)
+        21)
             run_command "cat 'CLAUDE.md' | less" \
                        "View CLAUDE.md"
             ;;
-        21)
+        22)
             run_command "cat 'LeavesOfBlocks/Documentation/CodingStandards.md' | less" \
                        "View Coding Standards"
             ;;

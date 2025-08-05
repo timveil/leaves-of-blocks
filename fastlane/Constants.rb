@@ -74,7 +74,8 @@ def app_review_info
 end
 
 # Helper method for API key configuration
-def api_key_config
+# The in_house parameter may be required for match/sigh actions
+def api_key_config(in_house: false)
   # Check if required environment variables are set
   unless API_KEY_ID && ISSUER_ID
     raise "Missing required environment variables: APP_STORE_CONNECT_API_KEY_ID and APP_STORE_CONNECT_ISSUER_ID must be set"
@@ -88,14 +89,21 @@ def api_key_config
     raise "API key file not found at: #{API_KEY_FILE_PATH}"
   end
   
-  # Read the key content from file
-  key_content = File.read(API_KEY_FILE_PATH)
-  
   app_store_connect_api_key(
     key_id: API_KEY_ID,
     issuer_id: ISSUER_ID,
-    key_content: key_content,
+    key_filepath: API_KEY_FILE_PATH,
     duration: 1200,
-    in_house: false
+    in_house: in_house
   )
+end
+
+# Helper method for App Store/TestFlight operations (standard App Store distribution)
+def app_store_api_key
+  api_key_config(in_house: false)
+end
+
+# Helper method for Enterprise/In-House distribution (if needed for match/sigh)
+def enterprise_api_key
+  api_key_config(in_house: true)
 end

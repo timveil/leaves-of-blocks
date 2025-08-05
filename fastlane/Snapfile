@@ -1,7 +1,12 @@
 # Fastlane Snapfile Configuration for Leaves of Blocks
 
 # Import shared constants using absolute path to avoid context issues
-require File.expand_path('Constants.rb', __dir__)
+begin
+  require_relative 'Constants'
+rescue LoadError
+  # Fallback: try absolute path from fastlane directory
+  require '/Users/timveil/Documents/GitHub/leaves-of-blocks/fastlane/Constants'
+end
 
 # Devices for screenshot capture - use App Store Connect compatible devices
 devices(SCREENSHOT_DEVICES)

@@ -119,6 +119,14 @@ Generate manual screenshots (simulator only)
 
 App Clip build
 
+### ios test_api_auth
+
+```sh
+[bundle exec] fastlane ios test_api_auth
+```
+
+Test App Store Connect API authentication
+
 ### ios clean
 
 ```sh
