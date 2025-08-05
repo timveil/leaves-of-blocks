@@ -130,8 +130,7 @@ LeavesOfBlocks/
 scripts/                   # Development utilities
 ├── cleanup-project.sh     # Comprehensive project cleanup
 ├── generate_icons.sh      # Icon generation and copying
-├── generate_grass_images.py # Grass texture generation
-└── create_app_clip_header.py # App Clip header creation
+└── generate_grass_images.py # Grass texture generation
 
 menu.sh                    # Interactive development menu
 ```

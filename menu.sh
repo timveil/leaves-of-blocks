@@ -82,13 +82,12 @@ while true; do
     echo -e "${BLUE}Asset Generation:${NC}"
     echo " 17) Generate & Copy App Icons"
     echo " 18) Generate Grass Images"
-    echo " 19) Create App Clip Header"
     echo ""
     
     echo -e "${BLUE}Other:${NC}"
-    echo " 20) Open in Xcode"
-    echo " 21) View CLAUDE.md"
-    echo " 22) View Coding Standards"
+    echo " 19) Open in Xcode"
+    echo " 20) View CLAUDE.md"
+    echo " 21) View Coding Standards"
     echo ""
     
     echo -e "${RED}  0) Exit${NC}"
@@ -205,18 +204,14 @@ while true; do
                        "Generate Grass Images"
             ;;
         19)
-            run_command "python3 ./scripts/create_app_clip_header.py" \
-                       "Create App Clip Header"
-            ;;
-        20)
             echo -e "${BLUE}Opening project in Xcode...${NC}"
             open "LeavesOfBlocks.xcodeproj"
             ;;
-        21)
+        20)
             run_command "cat 'CLAUDE.md' | less" \
                        "View CLAUDE.md"
             ;;
-        22)
+        21)
             run_command "cat 'LeavesOfBlocks/Documentation/CodingStandards.md' | less" \
                        "View Coding Standards"
             ;;

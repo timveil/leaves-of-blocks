@@ -75,12 +75,11 @@ The menu provides organized access to all common development tasks:
 - Project Cleanup (Dry Run) - Preview cleanup actions
 - Project Cleanup (Delete) - Comprehensive project cleanup
 
-#### Asset Generation (Options 12-14)
+#### Asset Generation (Options 12-13)
 - Generate & Copy App Icons - Complete icon workflow
 - Generate Grass Images - Autumn-themed background textures
-- Create App Clip Header - App Clip promotional image
 
-#### Other Commands (Options 15-17)
+#### Other Commands (Options 14-16)
 - Open in Xcode
 - View CLAUDE.md
 - View Coding Standards
@@ -92,8 +91,7 @@ All utility scripts are organized in the `scripts/` directory:
 scripts/
 ├── cleanup-project.sh      # Comprehensive project cleanup
 ├── generate_icons.sh       # Icon generation and copying
-├── generate_grass_images.py # Grass texture generation
-└── create_app_clip_header.py # App Clip header creation
+└── generate_grass_images.py # Grass texture generation
 ```
 
 ## Build Commands (Manual)
@@ -109,17 +107,12 @@ For direct command-line usage without the menu system:
 - **Clean Build**: `xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "LeavesOfBlocks" clean build`
 - **Archive for Release**: `xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "LeavesOfBlocks" -destination "generic/platform=iOS" archive`
 
-### App Clip Commands
-- **Build App Clip**: `xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "LeavesOfBlocksAppClip" build`
-- **Test App Clip**: `xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "LeavesOfBlocksAppClip" test -destination 'platform=iOS Simulator,name=iPhone 16'`
-
 ### Fastlane Commands
 
 #### Core Development Commands
 - **Run Tests**: `bundle exec fastlane ios test`
 - **Build for Testing**: `bundle exec fastlane ios build_for_testing`
 - **Generate Screenshots**: `bundle exec fastlane ios screenshots`
-- **Build App Clip**: `bundle exec fastlane ios build_app_clip`
 
 #### App Store Deployment Commands
 - **Deploy to App Store** (recommended): `bundle exec fastlane ios deploy` - Builds and uploads binary with metadata
@@ -162,7 +155,6 @@ Complete icon workflow with automatic copying:
 ./scripts/generate_icons.sh
 ```
 - Generates all iOS app icon sizes from SVG
-- Creates App Clip icons
 - Generates launch screen icons with dark mode variants
 - Copies to correct Xcode Asset Catalog locations
 - Creates required Contents.json files
@@ -171,9 +163,6 @@ Complete icon workflow with automatic copying:
 ```bash
 # Generate grass textures for game backgrounds
 python3 ./scripts/generate_grass_images.py
-
-# Create App Clip promotional header
-python3 ./scripts/create_app_clip_header.py
 ```
 
 ### Build Troubleshooting
@@ -196,12 +185,11 @@ The project uses **Xcode's built-in "Manage Version and Build Number"** feature 
 - **Marketing Version (CFBundleShortVersionString)**: 1.0 (set in project settings)
 - **Build Number (CFBundleVersion/CURRENT_PROJECT_VERSION)**: 1 (set in project settings)
 - **Main App Bundle ID**: `timothy.veil.LeavesOfBlocks`
-- **App Clip Bundle ID**: `timothy.veil.LeavesOfBlocks.Clip`
 
 #### How It Works
 - **Automatic Increment**: During App Store upload, Xcode detects invalid/duplicate build numbers and automatically increments them
 - **Archive-Only Changes**: Build numbers are updated only in the uploaded archive, not in source code
-- **Multi-Target Support**: Automatically syncs build numbers across main app, App Clip, and all embedded content
+- **Multi-Target Support**: Automatically syncs build numbers across main app and all embedded content
 - **No Configuration Required**: Feature is enabled by default during distribution
 
 #### Version Usage in Code
@@ -213,7 +201,7 @@ The app reads version information through `Bundle+Extensions.swift`:
 #### Benefits
 - **Zero maintenance** - No custom scripts or manual increment needed
 - **Error prevention** - Eliminates duplicate build number submission failures
-- **Multi-target compatibility** - Handles App Clip and main app synchronization automatically
+- **Multi-target compatibility** - Handles main app synchronization automatically
 - **CI/CD friendly** - Works seamlessly with GitHub Actions workflow
 
 #### Important Notes
@@ -229,7 +217,6 @@ The app reads version information through `Bundle+Extensions.swift`:
 - **Testing**: Uses both Swift Testing framework (unit tests) and XCTest (UI tests)
 - **Target Deployment**: iOS 18.5+, supports iPhone only (TARGETED_DEVICE_FAMILY = 1)
 - **Bundle ID**: `timothy.veil.LeavesOfBlocks`
-- **App Clip Bundle ID**: `timothy.veil.LeavesOfBlocks.Clip`
 
 ### Key Components
 
@@ -445,24 +432,6 @@ Recent comprehensive refactoring achieved major architectural improvements:
 - Add UI testing target for user interaction testing
 - Integrate tests with CI/CD pipeline for automated validation
 
-## App Clip Support
-
-The project includes a fully integrated App Clip target:
-
-### App Clip Details
-- **Bundle ID**: `timothy.veil.LeavesOfBlocks.Clip`
-- **Entry Point**: `LeavesOfBlocksAppClip/LeavesOfBlocksAppClipApp.swift`
-- **UI**: Currently uses main app's `ContentView.swift` (can be customized)
-- **Info.plist**: Configured with NSAppClip keys for notifications and location
-- **Entitlements**: Parent app association configured
-- **Size Limit**: Must stay under 10MB
-- **Minimum iOS**: 14.0+ (App Clips requirement)
-
-### App Clip Testing
-- App Clip testing can be performed using main app test infrastructure
-- Share code files between main app and App Clip targets as needed
-- Configure associated domains for App Clip invocation
-
 ## GitHub Pages Site
 
 The project hosts documentation at the repository's GitHub Pages URL:
@@ -489,7 +458,6 @@ The project hosts documentation at the repository's GitHub Pages URL:
 - **Main App**: `LeavesOfBlocks/`
   - `Documentation/` - Project documentation and coding standards
   - `Testing/` - Unit test files using Swift Testing framework
-- **App Clip**: `LeavesOfBlocksAppClip/`
 - **GitHub Pages**: `docs/`
 - **CI/CD**: `.github/workflows/`
 
@@ -502,7 +470,6 @@ The project hosts documentation at the repository's GitHub Pages URL:
 ### Key Project Settings
 - Xcode Project: `LeavesOfBlocks.xcodeproj`
 - Main Scheme: "LeavesOfBlocks"
-- App Clip Scheme: "LeavesOfBlocksAppClip"
 - Development Team: 85U9MWUBJL
 - Code Signing: Automatic
 
@@ -513,4 +480,3 @@ The project hosts documentation at the repository's GitHub Pages URL:
 - Configuration system via `Configuration.swift` for feature flags and environment detection
 - High score persistence through Core Data as part of game history
 - Game history persistence through Core Data (`CoreDataManager.swift`)
-- App Clip ready with simplified experience option
