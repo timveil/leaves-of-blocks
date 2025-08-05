@@ -3,7 +3,7 @@
 # Import this file in Deliverfile, Fastfile, and Snapfile with: require_relative 'Constants'
 
 # App Configuration
-APP_IDENTIFIER = ENV["FASTLANE_APP_IDENTIFIER"]
+APP_IDENTIFIER = ENV["LOCAL_FASTLANE_APP_IDENTIFIER"]
 APP_CLIP_IDENTIFIER = "timothy.veil.LeavesOfBlocks.Clip"
 XCODE_PROJECT = "LeavesOfBlocks.xcodeproj"
 MAIN_SCHEME = "LeavesOfBlocks"
@@ -33,9 +33,9 @@ METADATA_PATH = "./fastlane/metadata"
 SCREENSHOTS_PATH = "./fastlane/screenshots"
 
 # Environment Variables
-API_KEY_ID = ENV["APP_STORE_CONNECT_API_KEY_ID"]
-ISSUER_ID = ENV["APP_STORE_CONNECT_ISSUER_ID"]
-API_KEY_FILE_PATH = ENV["APP_STORE_CONNECT_API_KEY_PATH"]
+API_KEY_ID = ENV["LOCAL_APP_STORE_CONNECT_API_KEY_ID"]
+ISSUER_ID = ENV["LOCAL_APP_STORE_CONNECT_ISSUER_ID"]
+API_KEY_FILE_PATH = ENV["LOCAL_APP_STORE_CONNECT_API_KEY_PATH"]
 
 # App Store Configuration
 APP_DESCRIPTION = "Leaves of Blocks is a Whitman-inspired block puzzle game. The app is completely offline with no network requests, no ads, no tracking, and no in-app purchases. All features are available immediately upon download. The game includes comprehensive statistics tracking and game history stored locally using Core Data."

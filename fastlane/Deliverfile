@@ -46,10 +46,10 @@ app_review_information(app_review_info)
 skip_binary_upload(false)
 
 # Skip screenshots upload if they haven't changed
-skip_screenshots(false)
+skip_screenshots(true)
 
 # Skip metadata upload if it hasn't changed  
-skip_metadata(false)
+skip_metadata(true)
 
 # Overwrite screenshots
 overwrite_screenshots(true)
