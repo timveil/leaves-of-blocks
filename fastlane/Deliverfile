@@ -2,18 +2,17 @@
 # Configuration for Fastlane Deliver
 # For more information about available options, run `fastlane deliver --help`
 
-# App identifier
-app_identifier("timothy.veil.LeavesOfBlocks")
+# Import shared constants using absolute path to avoid context issues
+require File.expand_path('Constants.rb', __dir__)
 
-# Username for App Store Connect
-# Uncomment and set your Apple ID for App Store Connect operations
-# username("your.email@example.com")
+# App identifier
+app_identifier(APP_IDENTIFIER)
 
 # App Store metadata configuration
-metadata_path("./fastlane/metadata")
+metadata_path(METADATA_PATH)
 
 # Screenshots configuration
-screenshots_path("./fastlane/screenshots")
+screenshots_path(SCREENSHOTS_PATH)
 
 # App Store release options
 submit_for_review(false)  # Set to true to automatically submit for review
@@ -21,24 +20,7 @@ automatic_release(false)  # Set to true to automatically release after approval
 force(true)              # Skip HTML preview and upload directly
 
 # Submission information (can be overridden in Fastfile)
-submission_information({
-  add_id_info_limits_tracking: true,
-  add_id_info_serves_ads: false,
-  add_id_info_tracks_action: false,
-  add_id_info_tracks_install: false,
-  add_id_info_uses_idfa: false,
-  content_rights_has_rights: true,
-  content_rights_contains_third_party_content: false,
-  export_compliance_platform: 'ios',
-  export_compliance_compliance_required: false,
-  export_compliance_encryption_updated: false,
-  export_compliance_app_type: nil,
-  export_compliance_uses_encryption: false,
-  export_compliance_is_exempt: false,
-  export_compliance_contains_third_party_cryptography: false,
-  export_compliance_contains_proprietary_cryptography: false,
-  export_compliance_available_on_french_store: false
-})
+submission_information(SUBMISSION_INFO)
 
 # Price and availability
 # Note: price_tier is deprecated - pricing is now managed in App Store Connect
@@ -53,15 +35,7 @@ phased_release(false)
 reset_ratings(false)
 
 # App review information
-app_review_information({
-  first_name: "Tim",
-  last_name: "Veil",
-  phone_number: "+1 678 296 7960",  # Replace with your phone number
-  email_address: "timveil@mac.com",  # Replace with your email
-  demo_user: "",
-  demo_password: "",
-  notes: "Leaves of Blocks is a Whitman-inspired block puzzle game. The app is completely offline with no network requests, no ads, no tracking, and no in-app purchases. All features are available immediately upon download. The game includes comprehensive statistics tracking and game history stored locally using Core Data."
-})
+app_review_information(app_review_info)
 
 # Skip binary upload (we'll handle this separately)
 skip_binary_upload(false)

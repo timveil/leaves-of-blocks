@@ -119,14 +119,6 @@ Generate manual screenshots (simulator only)
 
 App Clip build
 
-### ios update_changelog
-
-```sh
-[bundle exec] fastlane ios update_changelog
-```
-
-Update changelog for new release
-
 ### ios clean
 
 ```sh

@@ -127,11 +127,17 @@ if [ "$DRY_RUN" = false ]; then
     # 2. Clean Fastlane artifacts
     if [ -f "fastlane/Fastfile" ]; then
         echo "- Cleaning Fastlane artifacts..."
-        # Remove common Fastlane generated files manually since the action has parameter issues
+        # Use Fastlane's built-in clean command if available
+        if command -v bundle > /dev/null 2>&1 && [ -f "Gemfile" ]; then
+            echo "  - Running Fastlane clean command..."
+            bundle exec fastlane ios clean 2>/dev/null || true
+        fi
+        # Remove additional Fastlane generated files
         rm -rf fastlane/report.xml 2>/dev/null || true
         rm -rf fastlane/Preview.html 2>/dev/null || true
         rm -rf fastlane/test_output 2>/dev/null || true
-        rm -rf fastlane/screenshots/* 2>/dev/null || true
+        rm -rf fastlane/screenshots 2>/dev/null || true
+        rm -rf fastlane/fastlane 2>/dev/null || true
         rm -rf *.ipa 2>/dev/null || true
         rm -rf *.dSYM.zip 2>/dev/null || true
     fi

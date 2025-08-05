@@ -47,84 +47,6 @@ Button("start_game".localized) { }
 
 This is a SwiftUI iOS game called "Leaves of Blocks" - a Block Blast-style puzzle game created with Xcode 16.4. Players drag and drop randomly generated block shapes onto an 8x8 grid to clear horizontal and vertical lines. The game features autumn-themed visuals, progressive difficulty through weighted block generation, scoring system with combo bonuses, and high score persistence.
 
-## Changelog Management
-
-The project uses a comprehensive changelog system following [Keep a Changelog](https://keepachangelog.com/) format.
-
-### Changelog Workflow
-
-#### Daily Development
-1. **Add changes to [Unreleased] section** as you work:
-   ```markdown
-   ## [Unreleased]
-   
-   ### Added
-   - New feature description
-   
-   ### Fixed
-   - Bug fix description
-   ```
-
-2. **Use semantic categories**:
-   - **Added** - New features
-   - **Changed** - Changes in existing functionality  
-   - **Deprecated** - Soon-to-be removed features
-   - **Removed** - Removed features
-   - **Fixed** - Bug fixes
-   - **Security** - Security improvements
-
-#### Before Release
-1. **Update changelog for release**:
-   ```bash
-   bundle exec fastlane ios update_changelog version:1.0.4
-   ```
-
-2. **Move items from [Unreleased] to the new version section**
-
-3. **Review and edit for user-friendly language**
-
-#### Automated Integration
-- **TestFlight**: Automatically uses changelog content for "What to Test"
-- **App Store**: Can be integrated with metadata updates
-- **GitHub**: Version links are automatically maintained
-
-### Changelog Best Practices
-
-#### Writing Guidelines
-- **User-focused language** - Write for app users, not developers
-- **Clear impact** - Explain what the change means for users
-- **Group related changes** - Combine similar fixes/features
-- **Avoid technical jargon** - Use accessible language
-
-#### Good Examples
-```markdown
-### Added
-- New difficulty settings to customize your puzzle challenge
-- Haptic feedback for more satisfying block placement
-
-### Fixed  
-- Resolved issue where game would freeze after clearing multiple lines
-- Improved accuracy of block drop zones
-```
-
-#### Poor Examples
-```markdown
-### Fixed
-- Fixed NPE in GameLogic.swift line 42
-- Refactored BlockGenerator service layer
-```
-
-### Fastlane Integration Commands
-
-- **Beta with changelog**: `bundle exec fastlane ios beta` (automatically includes changelog)
-- **Update changelog**: `bundle exec fastlane ios update_changelog version:1.0.4`
-- **Manual changelog**: Edit `CHANGELOG.md` directly for complex changes
-
-### Maintenance Tips
-- Update changelog with each meaningful commit
-- Keep [Unreleased] section populated during development  
-- Review changelog before each release for clarity and completeness
-- Use semantic versioning aligned with changelog sections
 
 ## Development Menu System
 
@@ -143,23 +65,22 @@ The menu provides organized access to all common development tasks:
 - Run All Tests / Unit Tests Only / UI Tests Only
 - Clean Build
 
-#### Fastlane Commands (Options 6-10)
+#### Fastlane Commands (Options 6-9)
 - Run Tests (Fastlane)
 - Deploy Beta (TestFlight)
 - Deploy to App Store
 - Generate Screenshots
-- Update Changelog
 
-#### Maintenance (Options 11-12)
+#### Maintenance (Options 10-11)
 - Project Cleanup (Dry Run) - Preview cleanup actions
 - Project Cleanup (Delete) - Comprehensive project cleanup
 
-#### Asset Generation (Options 13-15)
+#### Asset Generation (Options 12-14)
 - Generate & Copy App Icons - Complete icon workflow
 - Generate Grass Images - Autumn-themed background textures
 - Create App Clip Header - App Clip promotional image
 
-#### Other Commands (Options 16-18)
+#### Other Commands (Options 15-17)
 - Open in Xcode
 - View CLAUDE.md
 - View Coding Standards

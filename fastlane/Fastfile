@@ -13,69 +13,31 @@
 # Uncomment the line if you want fastlane to automatically update itself
 # update_fastlane
 
+# Import shared constants
+require_relative 'Constants'
+
 default_platform(:ios)
 
 platform :ios do
   before_all do
-    ensure_xcode_version(version: "16.4")
-  end
-  
-  # Helper function to extract latest changelog entry for TestFlight
-  def get_latest_changelog
-    changelog_path = "../CHANGELOG.md"
-    unless File.exist?(changelog_path)
-      return "Latest improvements and bug fixes for testing."
-    end
-    
-    content = File.read(changelog_path)
-    
-    # Extract content between [Unreleased] and the next version
-    unreleased_match = content.match(/## \[Unreleased\](.*?)(?=## \[[\d\.]+\])/m)
-    
-    if unreleased_match && !unreleased_match[1].strip.empty?
-      # Use unreleased changes if they exist
-      changelog_content = unreleased_match[1].strip
-    else
-      # Fall back to latest released version
-      latest_version_match = content.match(/## \[[\d\.]+\] - [\d-]+\n(.*?)(?=## \[|$)/m)
-      changelog_content = latest_version_match ? latest_version_match[1].strip : "Latest improvements and bug fixes."
-    end
-    
-    # Clean up the content and format for TestFlight
-    lines = changelog_content.split("\n").reject(&:empty?)
-    formatted_lines = []
-    current_section = ""
-    
-    lines.each do |line|
-      if line.start_with?("### ")
-        current_section = line.gsub("### ", "").strip
-        unless current_section.empty? || %w[Changed Deprecated Removed Security].include?(current_section)
-          formatted_lines << "\n#{current_section}:" unless formatted_lines.empty?
-        end
-      elsif line.start_with?("- ")
-        formatted_lines << line if %w[Added Fixed].include?(current_section)
-      end
-    end
-    
-    result = formatted_lines.join("\n").strip
-    result.empty? ? "Latest improvements and bug fixes for testing." : result
+    ensure_xcode_version(version: XCODE_VERSION)
   end
 
   desc "Run tests"
   lane :test do
     run_tests(
-      project: "LeavesOfBlocks.xcodeproj",
-      scheme: "LeavesOfBlocks",
-      destination: "platform=iOS Simulator,name=iPhone 16"
+      project: XCODE_PROJECT,
+      scheme: MAIN_SCHEME,
+      destination: "platform=iOS Simulator,name=#{IOS_SIMULATOR}"
     )
   end
 
   desc "Build for testing"
   lane :build_for_testing do
     build_app(
-      project: "LeavesOfBlocks.xcodeproj",
-      scheme: "LeavesOfBlocks",
-      destination: "platform=iOS Simulator,name=iPhone 16",
+      project: XCODE_PROJECT,
+      scheme: MAIN_SCHEME,
+      destination: "platform=iOS Simulator,name=#{IOS_SIMULATOR}",
       skip_archive: true,
       skip_codesigning: true
     )
@@ -83,59 +45,46 @@ platform :ios do
 
   desc "Create a new build for App Store"
   lane :build do
-    increment_build_number(xcodeproj: "LeavesOfBlocks.xcodeproj")
+    increment_build_number(xcodeproj: XCODE_PROJECT)
     build_app(
-      project: "LeavesOfBlocks.xcodeproj",
-      scheme: "LeavesOfBlocks",
-      export_method: "app-store"
+      project: XCODE_PROJECT,
+      scheme: MAIN_SCHEME,
+      export_method: EXPORT_METHOD
     )
   end
 
   desc "Upload to TestFlight"
   lane :beta do
     # Configure App Store Connect API key
-    api_key = app_store_connect_api_key(
-      key_id: ENV["APP_STORE_CONNECT_API_KEY_ID"],
-      issuer_id: ENV["APP_STORE_CONNECT_ISSUER_ID"],
-      key_filepath: ENV["APP_STORE_CONNECT_API_KEY_PATH"] || "./AuthKey.p8",
-      duration: 1200,
-      in_house: false
-    )
+    api_key = api_key_config
     
     # Increment marketing version to create new release train
     increment_version_number(
-      xcodeproj: "LeavesOfBlocks.xcodeproj",
+      xcodeproj: XCODE_PROJECT,
       version_number: "1.0.3"  # Explicitly set new version to resolve closed train
     )
-    increment_build_number(xcodeproj: "LeavesOfBlocks.xcodeproj")
+    increment_build_number(xcodeproj: XCODE_PROJECT)
     build_app(
-      project: "LeavesOfBlocks.xcodeproj",
-      scheme: "LeavesOfBlocks",
-      export_method: "app-store"
+      project: XCODE_PROJECT,
+      scheme: MAIN_SCHEME,
+      export_method: EXPORT_METHOD
     )
     upload_to_testflight(
       api_key: api_key,
-      skip_waiting_for_build_processing: true,
-      changelog: get_latest_changelog
+      skip_waiting_for_build_processing: true
     )
   end
 
   desc "Upload to App Store"
   lane :release do
     # Configure App Store Connect API key
-    api_key = app_store_connect_api_key(
-      key_id: ENV["APP_STORE_CONNECT_API_KEY_ID"],
-      issuer_id: ENV["APP_STORE_CONNECT_ISSUER_ID"],
-      key_filepath: ENV["APP_STORE_CONNECT_API_KEY_PATH"] || "./AuthKey.p8",
-      duration: 1200,
-      in_house: false
-    )
+    api_key = api_key_config
     
-    increment_build_number(xcodeproj: "LeavesOfBlocks.xcodeproj")
+    increment_build_number(xcodeproj: XCODE_PROJECT)
     build_app(
-      project: "LeavesOfBlocks.xcodeproj",
-      scheme: "LeavesOfBlocks",
-      export_method: "app-store"
+      project: XCODE_PROJECT,
+      scheme: MAIN_SCHEME,
+      export_method: EXPORT_METHOD
     )
     upload_to_app_store(
       api_key: api_key,
@@ -147,13 +96,7 @@ platform :ios do
   desc "Upload metadata and screenshots only (no binary)"
   lane :metadata_only do
     # Configure App Store Connect API key
-    api_key = app_store_connect_api_key(
-      key_id: ENV["APP_STORE_CONNECT_API_KEY_ID"],
-      issuer_id: ENV["APP_STORE_CONNECT_ISSUER_ID"],
-      key_filepath: ENV["APP_STORE_CONNECT_API_KEY_PATH"] || "./AuthKey.p8",
-      duration: 1200,
-      in_house: false
-    )
+    api_key = api_key_config
     
     deliver(
       api_key: api_key,
@@ -167,13 +110,7 @@ platform :ios do
   desc "Upload screenshots only"
   lane :screenshots_only do
     # Configure App Store Connect API key
-    api_key = app_store_connect_api_key(
-      key_id: ENV["APP_STORE_CONNECT_API_KEY_ID"],
-      issuer_id: ENV["APP_STORE_CONNECT_ISSUER_ID"],
-      key_filepath: ENV["APP_STORE_CONNECT_API_KEY_PATH"] || "./AuthKey.p8",
-      duration: 1200,
-      in_house: false
-    )
+    api_key = api_key_config
     
     deliver(
       api_key: api_key,
@@ -187,18 +124,18 @@ platform :ios do
   desc "Complete App Store deployment with metadata and binary"
   lane :deploy do
     # Increment build number
-    increment_build_number(xcodeproj: "LeavesOfBlocks.xcodeproj")
+    increment_build_number(xcodeproj: XCODE_PROJECT)
     
     # Build the app
     build_app(
-      project: "LeavesOfBlocks.xcodeproj",
-      scheme: "LeavesOfBlocks",
-      export_method: "app-store"
+      project: XCODE_PROJECT,
+      scheme: MAIN_SCHEME,
+      export_method: EXPORT_METHOD
     )
     
-    # Upload everything using deliver with JSON API key file
+    # Upload everything using deliver with API key
     deliver(
-      api_key_path: "fastlane/AuthKey_B8G72J8L8W.json",
+      api_key: api_key_config,
       submit_for_review: false,
       automatic_release: false,
       force: true
@@ -212,13 +149,7 @@ platform :ios do
   desc "Submit for App Store review (use after deploy)"
   lane :submit do
     # Configure App Store Connect API key
-    api_key = app_store_connect_api_key(
-      key_id: ENV["APP_STORE_CONNECT_API_KEY_ID"],
-      issuer_id: ENV["APP_STORE_CONNECT_ISSUER_ID"],
-      key_filepath: ENV["APP_STORE_CONNECT_API_KEY_PATH"] || "./AuthKey.p8",
-      duration: 1200,
-      in_house: false
-    )
+    api_key = api_key_config
     
     deliver(
       api_key: api_key,
@@ -236,22 +167,16 @@ platform :ios do
   desc "Full deployment pipeline: build, upload, and submit for review"
   lane :deploy_and_submit do
     # Configure App Store Connect API key
-    api_key = app_store_connect_api_key(
-      key_id: ENV["APP_STORE_CONNECT_API_KEY_ID"],
-      issuer_id: ENV["APP_STORE_CONNECT_ISSUER_ID"],
-      key_filepath: ENV["APP_STORE_CONNECT_API_KEY_PATH"] || "./AuthKey.p8",
-      duration: 1200,
-      in_house: false
-    )
+    api_key = api_key_config
     
     # Increment build number
-    increment_build_number(xcodeproj: "LeavesOfBlocks.xcodeproj")
+    increment_build_number(xcodeproj: XCODE_PROJECT)
     
     # Build the app
     build_app(
-      project: "LeavesOfBlocks.xcodeproj",
-      scheme: "LeavesOfBlocks",
-      export_method: "app-store"
+      project: XCODE_PROJECT,
+      scheme: MAIN_SCHEME,
+      export_method: EXPORT_METHOD
     )
     
     # Upload everything and submit for review
@@ -293,7 +218,7 @@ platform :ios do
     UI.success("✅ App built successfully!")
     UI.message("📱 To capture screenshots manually:")
     UI.message("1. Open iOS Simulator")
-    UI.message("2. Launch your app from Xcode or run: xcrun simctl launch booted timothy.veil.LeavesOfBlocks")
+    UI.message("2. Launch your app from Xcode or run: xcrun simctl launch booted #{APP_IDENTIFIER}")
     UI.message("3. Navigate through your app")
     UI.message("4. Press ⌘+S in Simulator to save screenshots")
     UI.message("5. Screenshots will be saved to ~/Desktop")
@@ -304,58 +229,19 @@ platform :ios do
   desc "App Clip build"
   lane :build_app_clip do
     build_app(
-      project: "LeavesOfBlocks.xcodeproj",
-      scheme: "LeavesOfBlocksAppClip",
-      export_method: "app-store"
+      project: XCODE_PROJECT,
+      scheme: APP_CLIP_SCHEME,
+      export_method: EXPORT_METHOD
     )
   end
 
-  desc "Update changelog for new release"
-  lane :update_changelog do |options|
-    version = options[:version] || prompt(text: "Enter version (e.g., 1.0.4):")
-    date = options[:date] || Time.now.strftime("%Y-%m-%d")
-    
-    changelog_path = "../CHANGELOG.md"
-    unless File.exist?(changelog_path)
-      UI.error("CHANGELOG.md not found!")
-      next
-    end
-    
-    content = File.read(changelog_path)
-    
-    # Replace [Unreleased] with the new version
-    updated_content = content.gsub(
-      "## [Unreleased]",
-      "## [Unreleased]\n\n### Added\n\n### Changed\n\n### Deprecated\n\n### Removed\n\n### Fixed\n\n### Security\n\n## [#{version}] - #{date}"
-    )
-    
-    # Update the links at the bottom
-    if updated_content.include?("[Unreleased]: https://github.com/timveil/leaves-of-blocks/compare/")
-      # Find the current latest version for the unreleased link
-      latest_version_match = updated_content.match(/\[Unreleased\]: https:\/\/github\.com\/timveil\/leaves-of-blocks\/compare\/v([\d\.]+)\.\.\.HEAD/)
-      if latest_version_match
-        old_version = latest_version_match[1]
-        updated_content = updated_content.gsub(
-          "[Unreleased]: https://github.com/timveil/leaves-of-blocks/compare/v#{old_version}...HEAD",
-          "[Unreleased]: https://github.com/timveil/leaves-of-blocks/compare/v#{version}...HEAD\n[#{version}]: https://github.com/timveil/leaves-of-blocks/compare/v#{old_version}...v#{version}"
-        )
-      end
-    end
-    
-    File.write(changelog_path, updated_content)
-    UI.success("✅ Changelog updated for version #{version}")
-    UI.message("📝 Don't forget to:")
-    UI.message("1. Fill in the [Unreleased] section before your next release")
-    UI.message("2. Move items from [Unreleased] to [#{version}] section")
-    UI.message("3. Commit the changelog changes")
-  end
 
   desc "Clean build artifacts and temporary files"
   lane :clean do
     UI.message("🧹 Cleaning build artifacts...")
     
     # Clean Xcode build folder
-    sh("xcodebuild clean -project '../LeavesOfBlocks.xcodeproj' -scheme 'LeavesOfBlocks'")
+    sh("xcodebuild clean -project '../#{XCODE_PROJECT}' -scheme '#{MAIN_SCHEME}'")
     
     # Remove fastlane build artifacts
     sh("rm -f ../*.ipa ../*.dSYM.zip")

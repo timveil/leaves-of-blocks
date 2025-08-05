@@ -63,25 +63,31 @@ while true; do
     echo "  6) Run Tests (fastlane)"
     echo "  7) Deploy Beta (TestFlight)"
     echo "  8) Deploy to App Store"
-    echo "  9) Generate Screenshots"
-    echo " 10) Update Changelog"
+    echo "  9) Deploy & Submit for Review"
+    echo " 10) Generate Screenshots"
+    echo ""
+    
+    echo -e "${BLUE}Advanced Fastlane:${NC}"
+    echo " 11) Submit for Review (existing build)"
+    echo " 12) Upload Metadata Only"
+    echo " 13) Upload Screenshots Only"
     echo ""
     
     echo -e "${BLUE}Maintenance:${NC}"
-    echo " 11) Project Cleanup (Dry Run)"
-    echo " 12) Project Cleanup (Delete)"
+    echo " 14) Project Cleanup (Dry Run)"
+    echo " 15) Project Cleanup (Delete)"
     echo ""
     
     echo -e "${BLUE}Asset Generation:${NC}"
-    echo " 13) Generate & Copy App Icons"
-    echo " 14) Generate Grass Images"
-    echo " 15) Create App Clip Header"
+    echo " 16) Generate & Copy App Icons"
+    echo " 17) Generate Grass Images"
+    echo " 18) Create App Clip Header"
     echo ""
     
     echo -e "${BLUE}Other:${NC}"
-    echo " 16) Open in Xcode"
-    echo " 17) View CLAUDE.md"
-    echo " 18) View Coding Standards"
+    echo " 19) Open in Xcode"
+    echo " 20) View CLAUDE.md"
+    echo " 21) View Coding Standards"
     echo ""
     
     echo -e "${RED}  0) Exit${NC}"
@@ -133,48 +139,79 @@ while true; do
             fi
             ;;
         9)
+            echo -e "${RED}This will deploy AND submit for App Store review! Continue? (y/N)${NC}"
+            read -n 1 -r confirm
+            echo
+            if [[ $confirm =~ ^[Yy]$ ]]; then
+                run_command "bundle exec fastlane ios deploy_and_submit" \
+                           "Deploy & Submit for App Store Review"
+            fi
+            ;;
+        10)
             run_command "bundle exec fastlane ios screenshots" \
                        "Generate Screenshots"
             ;;
-        10)
-            read -p "Enter version number (e.g., 1.0.4): " version
-            run_command "bundle exec fastlane ios update_changelog version:$version" \
-                       "Update Changelog for version $version"
-            ;;
         11)
+            echo -e "${RED}This will submit an existing build for App Store review! Continue? (y/N)${NC}"
+            read -n 1 -r confirm
+            echo
+            if [[ $confirm =~ ^[Yy]$ ]]; then
+                run_command "bundle exec fastlane ios submit" \
+                           "Submit Existing Build for Review"
+            fi
+            ;;
+        12)
+            echo -e "${YELLOW}This will upload metadata only (no binary). Continue? (y/N)${NC}"
+            read -n 1 -r confirm
+            echo
+            if [[ $confirm =~ ^[Yy]$ ]]; then
+                run_command "bundle exec fastlane ios metadata_only" \
+                           "Upload Metadata Only"
+            fi
+            ;;
+        13)
+            echo -e "${YELLOW}This will upload screenshots only. Continue? (y/N)${NC}"
+            read -n 1 -r confirm
+            echo
+            if [[ $confirm =~ ^[Yy]$ ]]; then
+                run_command "bundle exec fastlane ios screenshots_only" \
+                           "Upload Screenshots Only"
+            fi
+            ;;
+        14)
             run_command "./scripts/cleanup-project.sh --dry-run" \
                        "Preview Project Cleanup (Dry Run)"
             ;;
-        12)
+        15)
             echo -e "${RED}This will perform comprehensive cleanup and DELETE files! Continue? (y/N)${NC}"
             read -n 1 -r confirm
             echo
             if [[ $confirm =~ ^[Yy]$ ]]; then
                 run_command "./scripts/cleanup-project.sh" \
-                           "Full Project Cleanup"
+                           "Full Project Cleanup (includes Fastlane clean)"
             fi
             ;;
-        13)
+        16)
             run_command "./scripts/generate_icons.sh" \
                        "Generate & Copy App Icons"
             ;;
-        14)
+        17)
             run_command "python3 ./scripts/generate_grass_images.py" \
                        "Generate Grass Images"
             ;;
-        15)
+        18)
             run_command "python3 ./scripts/create_app_clip_header.py" \
                        "Create App Clip Header"
             ;;
-        16)
+        19)
             echo -e "${BLUE}Opening project in Xcode...${NC}"
             open "LeavesOfBlocks.xcodeproj"
             ;;
-        17)
+        20)
             run_command "cat 'CLAUDE.md' | less" \
                        "View CLAUDE.md"
             ;;
-        18)
+        21)
             run_command "cat 'LeavesOfBlocks/Documentation/CodingStandards.md' | less" \
                        "View Coding Standards"
             ;;
