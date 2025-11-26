@@ -44,7 +44,8 @@ jobs:
         uses: actions/checkout@692973e3d937129bcbf40652eb9f2f61becf3332  # v4.1.7
       - name: Select Xcode
         run: |
-          sudo xcode-select -s /Applications/Xcode_16.2.app
+          # Use Xcode 16.4 which has iOS 18.5 SDK (matching project deployment target)
+          sudo xcode-select -s /Applications/Xcode_16.4.app
           xcodebuild -version
       - name: Setup iOS Simulator
         run: |
@@ -53,10 +54,14 @@ jobs:
           xcrun simctl list runtimes
           echo "Available devices:"
           xcrun simctl list devices
-          # Create a simulator if none exist
-          RUNTIME=$(xcrun simctl list runtimes | grep iOS | tail -1 | awk '{print $NF}')
+          # Create a simulator with iOS 18.5 runtime (matching project deployment target)
+          RUNTIME=$(xcrun simctl list runtimes | grep "iOS 18.5" | awk '{print $NF}')
           if [ -z "$RUNTIME" ]; then
-            echo "No iOS runtime found, will try to proceed anyway"
+            echo "iOS 18.5 runtime not found, trying iOS 18.4 as fallback"
+            RUNTIME=$(xcrun simctl list runtimes | grep "iOS 18.4" | awk '{print $NF}')
+          fi
+          if [ -z "$RUNTIME" ]; then
+            echo "No suitable iOS runtime found, will try to proceed anyway"
           else
             echo "Using runtime: $RUNTIME"
             # Create iPhone 16 Pro simulator
