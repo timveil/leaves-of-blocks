@@ -9,7 +9,7 @@ extension View {
     /// Applies standard game screen navigation settings
     func gameScreenNavigation() -> some View {
         self
-            .navigationBarHidden(true)
+            .toolbar(.hidden, for: .navigationBar)
             .ignoresSafeArea(.container, edges: [])
     }
     

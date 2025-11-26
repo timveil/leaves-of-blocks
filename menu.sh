@@ -97,19 +97,19 @@ while true; do
     
     case $choice in
         1)
-            run_command "xcodebuild -project 'LeavesOfBlocks.xcodeproj' -scheme 'LeavesOfBlocks' build -destination 'platform=iOS Simulator,name=iPhone 16'" \
+            run_command "xcodebuild -project 'LeavesOfBlocks.xcodeproj' -scheme 'LeavesOfBlocks' build -destination 'platform=iOS Simulator,name=iPhone 16,OS=18.5'" \
                        "Build for iPhone 16 Simulator"
             ;;
         2)
-            run_command "xcodebuild -project 'LeavesOfBlocks.xcodeproj' -scheme 'LeavesOfBlocks' test -destination 'platform=iOS Simulator,name=iPhone 16'" \
+            run_command "xcodebuild -project 'LeavesOfBlocks.xcodeproj' -scheme 'LeavesOfBlocks' test -destination 'platform=iOS Simulator,name=iPhone 16,OS=18.5'" \
                        "Run All Tests"
             ;;
         3)
-            run_command "xcodebuild -project 'LeavesOfBlocks.xcodeproj' -scheme 'LeavesOfBlocks' test -destination 'platform=iOS Simulator,name=iPhone 16' -only-testing:'LeavesOfBlocksTests'" \
+            run_command "xcodebuild -project 'LeavesOfBlocks.xcodeproj' -scheme 'LeavesOfBlocks' test -destination 'platform=iOS Simulator,name=iPhone 16,OS=18.5' -only-testing:'LeavesOfBlocksTests'" \
                        "Run Unit Tests Only"
             ;;
         4)
-            run_command "xcodebuild -project 'LeavesOfBlocks.xcodeproj' -scheme 'LeavesOfBlocks' test -destination 'platform=iOS Simulator,name=iPhone 16' -only-testing:'LeavesOfBlocksUITests'" \
+            run_command "xcodebuild -project 'LeavesOfBlocks.xcodeproj' -scheme 'LeavesOfBlocks' test -destination 'platform=iOS Simulator,name=iPhone 16,OS=18.5' -only-testing:'LeavesOfBlocksUITests'" \
                        "Run UI Tests Only"
             ;;
         5)
