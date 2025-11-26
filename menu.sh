@@ -84,12 +84,18 @@ while true; do
     echo " 18) Generate Grass Images"
     echo ""
     
-    echo -e "${BLUE}Other:${NC}"
-    echo " 19) Open in Xcode"
-    echo " 20) View CLAUDE.md"
-    echo " 21) View Coding Standards"
+    echo -e "${BLUE}Development Environment:${NC}"
+    echo " 19) Check Environment Status"
+    echo " 20) Setup Ruby (rbenv)"
+    echo " 21) Repair Ruby Gems"
     echo ""
-    
+
+    echo -e "${BLUE}Other:${NC}"
+    echo " 22) Open in Xcode"
+    echo " 23) View CLAUDE.md"
+    echo " 24) View Coding Standards"
+    echo ""
+
     echo -e "${RED}  0) Exit${NC}"
     echo ""
     
@@ -204,14 +210,281 @@ while true; do
                        "Generate Grass Images"
             ;;
         19)
+            # Environment Status Check
+            echo -e "${BLUE}=== Development Environment Status ===${NC}"
+            echo ""
+
+            # macOS version
+            echo -e "${CYAN}macOS Version:${NC}"
+            sw_vers
+            echo ""
+
+            # Xcode version
+            echo -e "${CYAN}Xcode Version:${NC}"
+            if command -v xcodebuild &> /dev/null; then
+                xcodebuild -version
+                echo -e "${GREEN}✓ Xcode installed${NC}"
+            else
+                echo -e "${RED}✗ Xcode not found${NC}"
+            fi
+            echo ""
+
+            # Ruby version and type
+            echo -e "${CYAN}Ruby Environment:${NC}"
+            echo -n "Ruby version: "
+            ruby --version
+            echo -n "Ruby path: "
+            which ruby
+            if [[ "$(which ruby)" == "/usr/bin/ruby" ]]; then
+                echo -e "${YELLOW}⚠ Using system Ruby (not recommended)${NC}"
+                echo -e "${YELLOW}  Consider using rbenv for better compatibility${NC}"
+            elif command -v rbenv &> /dev/null; then
+                echo -e "${GREEN}✓ Using rbenv-managed Ruby${NC}"
+                echo "rbenv version: $(rbenv --version)"
+            else
+                echo -e "${GREEN}✓ Using non-system Ruby${NC}"
+            fi
+            echo ""
+
+            # Bundler
+            echo -e "${CYAN}Bundler:${NC}"
+            if command -v bundle &> /dev/null; then
+                bundle --version
+                echo -e "${GREEN}✓ Bundler installed${NC}"
+            else
+                echo -e "${RED}✗ Bundler not found${NC}"
+            fi
+            echo ""
+
+            # Homebrew
+            echo -e "${CYAN}Homebrew:${NC}"
+            if command -v brew &> /dev/null; then
+                echo "Homebrew $(brew --version | head -1)"
+                echo -e "${GREEN}✓ Homebrew installed${NC}"
+            else
+                echo -e "${YELLOW}⚠ Homebrew not found (optional but recommended)${NC}"
+            fi
+            echo ""
+
+            # Fastlane
+            echo -e "${CYAN}Fastlane:${NC}"
+            if bundle exec fastlane --version &> /dev/null 2>&1; then
+                bundle exec fastlane --version 2>/dev/null | head -3
+                echo -e "${GREEN}✓ Fastlane available via Bundler${NC}"
+            else
+                echo -e "${RED}✗ Fastlane not available (run 'bundle install')${NC}"
+            fi
+            echo ""
+
+            # Check for broken gems
+            echo -e "${CYAN}Ruby Gems Status:${NC}"
+            broken_gems=$(gem list 2>&1 | grep -c "extensions are not built" || true)
+            if [ "$broken_gems" -gt 0 ]; then
+                echo -e "${RED}✗ Found gems with broken extensions${NC}"
+                echo -e "${YELLOW}  Run option 21 'Repair Ruby Gems' to fix${NC}"
+            else
+                echo -e "${GREEN}✓ No broken gem extensions detected${NC}"
+            fi
+            echo ""
+
+            # iOS Simulators
+            echo -e "${CYAN}iOS Simulators (iPhone 16 variants):${NC}"
+            xcrun simctl list devices available 2>/dev/null | grep "iPhone 16" || echo "No iPhone 16 simulators found"
+            echo ""
+
+            echo -e "${GREEN}Press any key to continue...${NC}"
+            read -n 1 -s
+            ;;
+        20)
+            # Setup Ruby with rbenv
+            echo -e "${BLUE}=== Ruby Setup with rbenv ===${NC}"
+            echo ""
+
+            # Check if Homebrew is installed
+            if ! command -v brew &> /dev/null; then
+                echo -e "${RED}Homebrew is required but not installed.${NC}"
+                echo -e "${YELLOW}Install Homebrew first:${NC}"
+                echo '/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'
+                echo ""
+                echo -e "${GREEN}Press any key to continue...${NC}"
+                read -n 1 -s
+                continue
+            fi
+
+            # Check if rbenv is already installed
+            if command -v rbenv &> /dev/null; then
+                echo -e "${GREEN}✓ rbenv is already installed${NC}"
+                rbenv --version
+                echo ""
+                echo "Current Ruby versions installed:"
+                rbenv versions
+                echo ""
+            else
+                echo -e "${YELLOW}rbenv is not installed. Install it now? (y/N)${NC}"
+                read -n 1 -r confirm
+                echo
+                if [[ $confirm =~ ^[Yy]$ ]]; then
+                    echo -e "${BLUE}Installing rbenv and ruby-build...${NC}"
+                    brew install rbenv ruby-build
+
+                    echo ""
+                    echo -e "${YELLOW}Adding rbenv to shell profile...${NC}"
+
+                    # Detect shell and add to appropriate profile
+                    if [[ "$SHELL" == *"zsh"* ]]; then
+                        PROFILE="$HOME/.zshrc"
+                    else
+                        PROFILE="$HOME/.bash_profile"
+                    fi
+
+                    if ! grep -q 'rbenv init' "$PROFILE" 2>/dev/null; then
+                        echo '' >> "$PROFILE"
+                        echo '# rbenv' >> "$PROFILE"
+                        echo 'eval "$(rbenv init -)"' >> "$PROFILE"
+                        echo -e "${GREEN}Added rbenv init to $PROFILE${NC}"
+                    else
+                        echo -e "${GREEN}rbenv init already in $PROFILE${NC}"
+                    fi
+
+                    # Initialize rbenv for current session
+                    eval "$(rbenv init -)"
+                else
+                    echo "Skipping rbenv installation."
+                    echo -e "${GREEN}Press any key to continue...${NC}"
+                    read -n 1 -s
+                    continue
+                fi
+            fi
+
+            # Offer to install Ruby 3.3.x
+            echo -e "${YELLOW}Install Ruby 3.3.6 (recommended for this project)? (y/N)${NC}"
+            read -n 1 -r confirm
+            echo
+            if [[ $confirm =~ ^[Yy]$ ]]; then
+                echo -e "${BLUE}Installing Ruby 3.3.6 (this may take a few minutes)...${NC}"
+                rbenv install 3.3.6 --skip-existing
+
+                echo ""
+                echo -e "${YELLOW}Set Ruby 3.3.6 as the local version for this project? (y/N)${NC}"
+                read -n 1 -r confirm2
+                echo
+                if [[ $confirm2 =~ ^[Yy]$ ]]; then
+                    rbenv local 3.3.6
+                    echo -e "${GREEN}✓ Set Ruby 3.3.6 as local version${NC}"
+                fi
+            fi
+
+            # Rehash and install bundler
+            echo ""
+            echo -e "${BLUE}Rehashing rbenv shims...${NC}"
+            rbenv rehash
+
+            echo ""
+            echo -e "${YELLOW}Install/update Bundler? (y/N)${NC}"
+            read -n 1 -r confirm
+            echo
+            if [[ $confirm =~ ^[Yy]$ ]]; then
+                gem install bundler
+                echo -e "${GREEN}✓ Bundler installed${NC}"
+            fi
+
+            # Run bundle install
+            echo ""
+            echo -e "${YELLOW}Run 'bundle install' to install project dependencies? (y/N)${NC}"
+            read -n 1 -r confirm
+            echo
+            if [[ $confirm =~ ^[Yy]$ ]]; then
+                bundle install
+            fi
+
+            echo ""
+            echo -e "${GREEN}Ruby setup complete!${NC}"
+            echo -e "${YELLOW}Note: You may need to restart your terminal for changes to take effect.${NC}"
+            echo ""
+            echo -e "${GREEN}Press any key to continue...${NC}"
+            read -n 1 -s
+            ;;
+        21)
+            # Repair Ruby Gems
+            echo -e "${BLUE}=== Repair Ruby Gems ===${NC}"
+            echo ""
+            echo -e "${YELLOW}This will attempt to rebuild gems with broken native extensions.${NC}"
+            echo ""
+
+            # List broken gems
+            echo -e "${CYAN}Checking for broken gems...${NC}"
+            broken_output=$(gem list 2>&1)
+            if echo "$broken_output" | grep -q "extensions are not built"; then
+                echo -e "${RED}Found gems with broken extensions:${NC}"
+                echo "$broken_output" | grep "extensions are not built"
+                echo ""
+            else
+                echo -e "${GREEN}No broken gems detected!${NC}"
+                echo ""
+                echo -e "${GREEN}Press any key to continue...${NC}"
+                read -n 1 -s
+                continue
+            fi
+
+            echo -e "${YELLOW}Attempt to repair these gems? (y/N)${NC}"
+            read -n 1 -r confirm
+            echo
+            if [[ $confirm =~ ^[Yy]$ ]]; then
+                echo -e "${BLUE}Repairing gems...${NC}"
+                echo ""
+
+                # Try to repair common problematic gems
+                for gem_info in "digest-crc:0.7.0" "json:2.7.6" "nkf:0.2.0" "sysrandom:1.0.5" "unf:0.2.0"; do
+                    gem_name="${gem_info%%:*}"
+                    gem_version="${gem_info##*:}"
+
+                    if gem list "$gem_name" 2>&1 | grep -q "extensions are not built"; then
+                        echo -e "${YELLOW}Repairing $gem_name $gem_version...${NC}"
+                        gem pristine "$gem_name" --version "$gem_version" 2>/dev/null || true
+                    fi
+                done
+
+                # Also try repairing all gems
+                echo ""
+                echo -e "${YELLOW}Run 'gem pristine --all' to repair all gems? (y/N)${NC}"
+                echo -e "${YELLOW}(This may require sudo for system Ruby)${NC}"
+                read -n 1 -r confirm2
+                echo
+                if [[ $confirm2 =~ ^[Yy]$ ]]; then
+                    if [[ "$(which ruby)" == "/usr/bin/ruby" ]]; then
+                        echo -e "${YELLOW}Using system Ruby - running with sudo...${NC}"
+                        sudo gem pristine --all
+                    else
+                        gem pristine --all
+                    fi
+                fi
+
+                echo ""
+                echo -e "${GREEN}Gem repair complete!${NC}"
+                echo ""
+
+                # Suggest bundle install
+                echo -e "${YELLOW}Run 'bundle install' now? (y/N)${NC}"
+                read -n 1 -r confirm3
+                echo
+                if [[ $confirm3 =~ ^[Yy]$ ]]; then
+                    bundle install
+                fi
+            fi
+
+            echo ""
+            echo -e "${GREEN}Press any key to continue...${NC}"
+            read -n 1 -s
+            ;;
+        22)
             echo -e "${BLUE}Opening project in Xcode...${NC}"
             open "LeavesOfBlocks.xcodeproj"
             ;;
-        20)
+        23)
             run_command "cat 'CLAUDE.md' | less" \
                        "View CLAUDE.md"
             ;;
-        21)
+        24)
             run_command "cat 'LeavesOfBlocks/Documentation/CodingStandards.md' | less" \
                        "View Coding Standards"
             ;;
