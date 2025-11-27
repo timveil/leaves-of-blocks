@@ -1,1 +1,7 @@
-We've fixed include build number increment in release commit. Thank you for playing Leaves of Blocks!
+Hello puzzle lovers! We've gathered up some fresh improvements to make your autumn puzzle experience even cozier.
+
+In this update, we've added more transparency by including version information and developer links right in the About screen, so you can easily see what version you're enjoying and learn more about the team behind your favorite block puzzle game. We've also enhanced how Leaves of Blocks appears in the App Store, making it easier for fellow puzzle enthusiasts to discover this peaceful, ad-free gaming experience.
+
+These thoughtful improvements continue our commitment to providing you with a clean, simple puzzle game that respects your privacy while delivering hours of satisfying gameplay on those crisp autumn evenings.
+
+Thank you for playing Leaves of Blocks!
