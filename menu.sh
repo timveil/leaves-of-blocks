@@ -21,6 +21,17 @@ PROJECT_ROOT="$SCRIPT_DIR"
 # Change to project root
 cd "$PROJECT_ROOT"
 
+# Load environment variables from .env files
+load_env() {
+    # Load fastlane/.env if exists (contains API keys)
+    if [ -f "$PROJECT_ROOT/fastlane/.env" ]; then
+        echo -e "${CYAN}Loading fastlane/.env...${NC}"
+        set -a  # automatically export all variables
+        source "$PROJECT_ROOT/fastlane/.env"
+        set +a
+    fi
+}
+
 # Function to display menu header
 show_header() {
     clear
@@ -72,29 +83,31 @@ while true; do
     echo " 12) Submit for Review (existing build)"
     echo " 13) Upload Metadata Only"
     echo " 14) Upload Screenshots Only"
+    echo " 15) Test AI Release Notes"
     echo ""
     
     echo -e "${BLUE}Maintenance:${NC}"
-    echo " 15) Project Cleanup (Dry Run)"
-    echo " 16) Project Cleanup (Delete)"
+    echo " 16) Project Cleanup (Dry Run)"
+    echo " 17) Project Cleanup (Delete)"
     echo ""
-    
+
     echo -e "${BLUE}Asset Generation:${NC}"
-    echo " 17) Generate & Copy App Icons"
-    echo " 18) Generate Grass Images"
+    echo " 18) Generate & Copy App Icons"
+    echo " 19) Generate Grass Images"
     echo ""
-    
+
     echo -e "${BLUE}Development Environment:${NC}"
-    echo " 19) Check Environment Status"
-    echo " 20) Setup Ruby (rbenv)"
-    echo " 21) Repair Ruby Gems"
+    echo " 20) Check Environment Status"
+    echo " 21) Setup Ruby (rbenv)"
+    echo " 22) Repair Ruby Gems"
+    echo " 23) Configure AI API Key"
     echo ""
 
     echo -e "${BLUE}Other:${NC}"
-    echo " 22) Open in Xcode"
-    echo " 23) Run in Simulator (without Xcode)"
-    echo " 24) View CLAUDE.md"
-    echo " 25) View Coding Standards"
+    echo " 24) Open in Xcode"
+    echo " 25) Run in Simulator (without Xcode)"
+    echo " 26) View CLAUDE.md"
+    echo " 27) View Coding Standards"
     echo ""
 
     echo -e "${RED}  0) Exit${NC}"
@@ -124,6 +137,7 @@ while true; do
                        "Clean Build"
             ;;
         6)
+            load_env
             run_command "bundle exec fastlane ios test" \
                        "Run Tests via Fastlane"
             ;;
@@ -132,6 +146,7 @@ while true; do
             read -n 1 -r confirm
             echo
             if [[ $confirm =~ ^[Yy]$ ]]; then
+                load_env
                 run_command "bundle exec fastlane ios beta" \
                            "Deploy Beta to TestFlight"
             fi
@@ -141,6 +156,7 @@ while true; do
             read -n 1 -r confirm
             echo
             if [[ $confirm =~ ^[Yy]$ ]]; then
+                load_env
                 run_command "bundle exec fastlane ios deploy version:patch" \
                            "Deploy to App Store (version bump: patch)"
             fi
@@ -150,15 +166,18 @@ while true; do
             read -n 1 -r confirm
             echo
             if [[ $confirm =~ ^[Yy]$ ]]; then
+                load_env
                 run_command "bundle exec fastlane ios deploy_and_submit version:patch" \
                            "Deploy & Submit for App Store Review (version bump: patch)"
             fi
             ;;
         10)
+            load_env
             run_command "bundle exec fastlane ios screenshots" \
                        "Generate Screenshots"
             ;;
         11)
+            load_env
             run_command "bundle exec fastlane ios test_api_auth" \
                        "Test App Store Connect API Authentication"
             ;;
@@ -167,6 +186,7 @@ while true; do
             read -n 1 -r confirm
             echo
             if [[ $confirm =~ ^[Yy]$ ]]; then
+                load_env
                 run_command "bundle exec fastlane ios submit" \
                            "Submit Existing Build for Review"
             fi
@@ -176,6 +196,7 @@ while true; do
             read -n 1 -r confirm
             echo
             if [[ $confirm =~ ^[Yy]$ ]]; then
+                load_env
                 run_command "bundle exec fastlane ios metadata_only" \
                            "Upload Metadata Only"
             fi
@@ -185,15 +206,21 @@ while true; do
             read -n 1 -r confirm
             echo
             if [[ $confirm =~ ^[Yy]$ ]]; then
+                load_env
                 run_command "bundle exec fastlane ios screenshots_only" \
                            "Upload Screenshots Only"
             fi
             ;;
         15)
+            load_env
+            run_command "bundle exec fastlane ios test_ai" \
+                       "Test AI Release Notes Generation"
+            ;;
+        16)
             run_command "./scripts/cleanup-project.sh --dry-run" \
                        "Preview Project Cleanup (Dry Run)"
             ;;
-        16)
+        17)
             echo -e "${RED}This will perform comprehensive cleanup and DELETE files! Continue? (y/N)${NC}"
             read -n 1 -r confirm
             echo
@@ -202,15 +229,15 @@ while true; do
                            "Full Project Cleanup (includes Fastlane clean)"
             fi
             ;;
-        17)
+        18)
             run_command "./scripts/generate_icons.sh" \
                        "Generate & Copy App Icons"
             ;;
-        18)
+        19)
             run_command "python3 ./scripts/generate_grass_images.py" \
                        "Generate Grass Images"
             ;;
-        19)
+        20)
             # Environment Status Check
             echo -e "${BLUE}=== Development Environment Status ===${NC}"
             echo ""
@@ -293,10 +320,23 @@ while true; do
             xcrun simctl list devices available 2>/dev/null | grep "iPhone 16" || echo "No iPhone 16 simulators found"
             echo ""
 
+            # AI Release Notes Configuration
+            echo -e "${CYAN}AI Release Notes:${NC}"
+            load_env
+            if [ -n "$ANTHROPIC_API_KEY" ]; then
+                echo -e "${GREEN}✓ ANTHROPIC_API_KEY configured${NC}"
+                echo "  Key prefix: ${ANTHROPIC_API_KEY:0:10}..."
+            else
+                echo -e "${YELLOW}⚠ ANTHROPIC_API_KEY not set${NC}"
+                echo "  AI release notes disabled (using template fallback)"
+                echo "  Run option 23 to configure"
+            fi
+            echo ""
+
             echo -e "${GREEN}Press any key to continue...${NC}"
             read -n 1 -s
             ;;
-        20)
+        21)
             # Setup Ruby with rbenv
             echo -e "${BLUE}=== Ruby Setup with rbenv ===${NC}"
             echo ""
@@ -424,7 +464,7 @@ while true; do
             echo -e "${GREEN}Press any key to continue...${NC}"
             read -n 1 -s
             ;;
-        21)
+        22)
             # Repair Ruby Gems
             echo -e "${BLUE}=== Repair Ruby Gems ===${NC}"
             echo ""
@@ -496,19 +536,101 @@ while true; do
             echo -e "${GREEN}Press any key to continue...${NC}"
             read -n 1 -s
             ;;
-        22)
+        23)
+            # Configure AI API Key
+            echo -e "${BLUE}=== Configure AI API Key ===${NC}"
+            echo ""
+            echo -e "${CYAN}This configures the Anthropic API key for AI-powered release notes.${NC}"
+            echo ""
+
+            ENV_FILE="$PROJECT_ROOT/fastlane/.env"
+
+            # Check current status
+            load_env
+            if [ -n "$ANTHROPIC_API_KEY" ] && [ "$ANTHROPIC_API_KEY" != "your_anthropic_api_key_here" ]; then
+                echo -e "${GREEN}Current status: API key is configured${NC}"
+                echo "  Key prefix: ${ANTHROPIC_API_KEY:0:10}..."
+                echo ""
+                echo -e "${YELLOW}Do you want to update the API key? (y/N)${NC}"
+                read -n 1 -r confirm
+                echo
+                if [[ ! $confirm =~ ^[Yy]$ ]]; then
+                    echo "Keeping existing configuration."
+                    echo -e "${GREEN}Press any key to continue...${NC}"
+                    read -n 1 -s
+                    continue
+                fi
+            else
+                echo -e "${YELLOW}Current status: API key not configured${NC}"
+            fi
+
+            echo ""
+            echo -e "${CYAN}Enter your Anthropic API key:${NC}"
+            echo "(Get one at https://console.anthropic.com/)"
+            echo -n "> "
+            read -r api_key
+
+            if [ -z "$api_key" ]; then
+                echo -e "${RED}No key entered. Configuration cancelled.${NC}"
+                echo -e "${GREEN}Press any key to continue...${NC}"
+                read -n 1 -s
+                continue
+            fi
+
+            # Create or update .env file
+            if [ -f "$ENV_FILE" ]; then
+                # Update existing file
+                if grep -q "^ANTHROPIC_API_KEY=" "$ENV_FILE"; then
+                    # Replace existing key
+                    sed -i '' "s/^ANTHROPIC_API_KEY=.*/ANTHROPIC_API_KEY=$api_key/" "$ENV_FILE"
+                else
+                    # Add new key
+                    echo "" >> "$ENV_FILE"
+                    echo "# Anthropic API Key for AI-powered release notes" >> "$ENV_FILE"
+                    echo "ANTHROPIC_API_KEY=$api_key" >> "$ENV_FILE"
+                fi
+            else
+                # Create new file from example
+                if [ -f "$PROJECT_ROOT/fastlane/.env.example" ]; then
+                    cp "$PROJECT_ROOT/fastlane/.env.example" "$ENV_FILE"
+                    sed -i '' "s/^ANTHROPIC_API_KEY=.*/ANTHROPIC_API_KEY=$api_key/" "$ENV_FILE"
+                else
+                    # Create minimal file
+                    echo "# Anthropic API Key for AI-powered release notes" > "$ENV_FILE"
+                    echo "ANTHROPIC_API_KEY=$api_key" >> "$ENV_FILE"
+                fi
+            fi
+
+            echo ""
+            echo -e "${GREEN}✓ API key saved to fastlane/.env${NC}"
+            echo ""
+
+            # Test the key
+            echo -e "${YELLOW}Test the AI release notes now? (y/N)${NC}"
+            read -n 1 -r confirm
+            echo
+            if [[ $confirm =~ ^[Yy]$ ]]; then
+                load_env
+                run_command "bundle exec fastlane ios test_ai" \
+                           "Test AI Release Notes Generation"
+            fi
+
+            echo -e "${GREEN}Press any key to continue...${NC}"
+            read -n 1 -s
+            ;;
+        24)
             echo -e "${BLUE}Opening project in Xcode...${NC}"
             open "LeavesOfBlocks.xcodeproj"
             ;;
-        23)
+        25)
             run_command "./scripts/build.sh run" \
                        "Run in Simulator (without Xcode)"
             ;;
-        24)
+        26)
             run_command "cat 'CLAUDE.md' | less" \
                        "View CLAUDE.md"
             ;;
-        25)
+        27)
             run_command "cat 'LeavesOfBlocks/Documentation/CodingStandards.md' | less" \
                        "View Coding Standards"
             ;;

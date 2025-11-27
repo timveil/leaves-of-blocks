@@ -131,6 +131,14 @@ Test App Store Connect API authentication
 
 Clean build artifacts and temporary files
 
+### ios test_ai
+
+```sh
+[bundle exec] fastlane ios test_ai
+```
+
+Test AI release notes generation (requires ANTHROPIC_API_KEY)
+
 ----
 
 This README.md is auto-generated and will be re-generated every time [_fastlane_](https://fastlane.tools) is run.

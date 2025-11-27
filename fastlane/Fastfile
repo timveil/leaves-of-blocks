@@ -16,6 +16,9 @@
 # Import shared constants
 require_relative 'Constants'
 
+# Import AI helper for enhanced release notes (optional, graceful fallback)
+require_relative 'AIHelper'
+
 default_platform(:ios)
 
 # Helper function to bump marketing version directly in Xcode project
@@ -67,6 +70,7 @@ end
 # Helper function to generate release notes from CHANGELOG.md
 # Parses the changelog, extracts the section for the given version,
 # and transforms it into a prose summary for App Store
+# Uses AI enhancement when ANTHROPIC_API_KEY is available
 def generate_release_notes(version:)
   changelog_path = File.join(Dir.pwd, '..', 'CHANGELOG.md')
   release_notes_path = File.join(Dir.pwd, 'metadata', 'en-US', 'release_notes.txt')
@@ -92,53 +96,71 @@ def generate_release_notes(version:)
 
   section_content = section[1]
 
-  # Parse the different sections (Added, Changed, Fixed, etc.)
-  added = extract_items(section_content, 'Added')
-  changed = extract_items(section_content, 'Changed')
-  fixed = extract_items(section_content, 'Fixed')
-  improved = extract_items(section_content, 'Improved')
+  # === AI PROSE GENERATION ATTEMPT ===
+  prose = nil
+  if AIHelper.available?
+    UI.message("Attempting AI-generated release notes...")
+    prose = AIHelper.generate_prose(changelog_section: section_content, version: version)
 
-  # Build prose summary
-  sentences = []
-
-  # Added items
-  if added.any?
-    if added.length == 1
-      sentences << "This update brings #{added.first.downcase}."
+    if prose
+      UI.success("AI prose generation successful")
     else
-      sentences << "This update brings #{added.first.downcase}."
-      added[1..-1].each { |item| sentences << "We've also added #{item.downcase}." }
+      UI.message("AI prose generation returned no results, using fallback")
     end
+  else
+    UI.message("ANTHROPIC_API_KEY not set, using template-based release notes")
   end
 
-  # Changed/Improved items
-  all_improvements = changed + improved
-  if all_improvements.any?
-    all_improvements.each { |item| sentences << "We've improved #{item.downcase}." }
-  end
+  # === FALLBACK: Template-based generation ===
+  unless prose
+    # Parse the different sections (Added, Changed, Fixed, etc.)
+    added = extract_items(section_content, 'Added')
+    changed = extract_items(section_content, 'Changed')
+    fixed = extract_items(section_content, 'Fixed')
+    improved = extract_items(section_content, 'Improved')
 
-  # Fixed items
-  if fixed.any?
-    if fixed.length == 1
-      sentences << "We've fixed #{fixed.first.downcase}."
-    else
-      sentences << "We've fixed #{fixed.first.downcase}."
-      fixed[1..-1].each { |item| sentences << "Also fixed: #{item.downcase}." }
+    # Build prose summary
+    sentences = []
+
+    # Added items
+    if added.any?
+      if added.length == 1
+        sentences << "This update brings #{added.first.downcase}."
+      else
+        sentences << "This update brings #{added.first.downcase}."
+        added[1..-1].each { |item| sentences << "We've also added #{item.downcase}." }
+      end
     end
+
+    # Changed/Improved items
+    all_improvements = changed + improved
+    if all_improvements.any?
+      all_improvements.each { |item| sentences << "We've improved #{item.downcase}." }
+    end
+
+    # Fixed items
+    if fixed.any?
+      if fixed.length == 1
+        sentences << "We've fixed #{fixed.first.downcase}."
+      else
+        sentences << "We've fixed #{fixed.first.downcase}."
+        fixed[1..-1].each { |item| sentences << "Also fixed: #{item.downcase}." }
+      end
+    end
+
+    # If no structured content found, use a generic message
+    if sentences.empty?
+      sentences << "This update includes various improvements and bug fixes."
+    end
+
+    # Add closing
+    sentences << ""
+    sentences << "Thank you for playing Leaves of Blocks!"
+
+    prose = sentences.join(" ").gsub("  ", " ").strip
+    # Fix double periods
+    prose = prose.gsub("..", ".").gsub(". .", ".")
   end
-
-  # If no structured content found, use a generic message
-  if sentences.empty?
-    sentences << "This update includes various improvements and bug fixes."
-  end
-
-  # Add closing
-  sentences << ""
-  sentences << "Thank you for playing Leaves of Blocks!"
-
-  prose = sentences.join(" ").gsub("  ", " ").strip
-  # Fix double periods
-  prose = prose.gsub("..", ".").gsub(". .", ".")
 
   # Ensure we don't exceed App Store's 4000 character limit
   if prose.length > 4000
@@ -200,6 +222,7 @@ end
 
 # Update CHANGELOG.md from git commits since last tag
 # Returns the changelog section content for release notes
+# Uses AI enhancement when ANTHROPIC_API_KEY is available
 def update_changelog_from_commits(new_version:)
   changelog_path = File.join(Dir.pwd, '..', 'CHANGELOG.md')
 
@@ -216,34 +239,60 @@ def update_changelog_from_commits(new_version:)
 
   # Get commits since last tag
   commits = `git log #{range} --pretty=format:"%s"`.split("\n")
-
   UI.message("Found #{commits.length} commits to process")
 
-  # Parse conventional commits into categories
-  added = []
-  changed = []
-  fixed = []
-  removed = []
+  # Filter out release commits before processing
+  filtered_commits = commits.reject { |c| c.match?(/^chore: Release v/i) }
+  UI.message("#{filtered_commits.length} commits after filtering release commits")
 
-  commits.each do |msg|
-    case msg
-    when /^feat(\(.+\))?:\s*(.+)/i
-      added << $2.strip.capitalize
-    when /^fix(\(.+\))?:\s*(.+)/i
-      fixed << $2.strip.capitalize
-    when /^(refactor|perf|style)(\(.+\))?:\s*(.+)/i
-      changed << $3.strip.capitalize
-    when /^(remove|revert)(\(.+\))?:\s*(.+)/i
-      removed << $3.strip.capitalize
-    # Fallback for non-conventional commits - detect intent from message start
-    when /^Add\s+(.+)/i
-      added << $1.strip.capitalize
-    when /^Fix\s+(.+)/i
-      fixed << $1.strip.capitalize
-    when /^(Update|Improve|Enhance|Refactor)\s+(.+)/i
-      changed << $2.strip.capitalize
-    when /^(Remove|Delete|Revert)\s+(.+)/i
-      removed << $1.strip.capitalize
+  # === AI ENHANCEMENT ATTEMPT ===
+  ai_result = nil
+  if AIHelper.available?
+    UI.message("Attempting AI-enhanced changelog generation...")
+    ai_result = AIHelper.enhance_changelog(commits: filtered_commits, new_version: new_version)
+
+    if ai_result
+      UI.success("AI enhancement successful")
+    else
+      UI.message("AI enhancement returned no results, using fallback")
+    end
+  else
+    UI.message("ANTHROPIC_API_KEY not set, using template-based generation")
+  end
+
+  # === CATEGORIZE COMMITS ===
+  if ai_result
+    added = ai_result[:added]
+    changed = ai_result[:changed]
+    fixed = ai_result[:fixed]
+    removed = ai_result[:removed]
+  else
+    # FALLBACK: Existing regex-based parsing
+    added = []
+    changed = []
+    fixed = []
+    removed = []
+
+    filtered_commits.each do |msg|
+      case msg
+      when /^feat(\(.+\))?:\s*(.+)/i
+        added << $2.strip.capitalize
+      when /^fix(\(.+\))?:\s*(.+)/i
+        fixed << $2.strip.capitalize
+      when /^(refactor|perf|style)(\(.+\))?:\s*(.+)/i
+        changed << $3.strip.capitalize
+      when /^(remove|revert)(\(.+\))?:\s*(.+)/i
+        removed << $3.strip.capitalize
+      # Fallback for non-conventional commits - detect intent from message start
+      when /^Add\s+(.+)/i
+        added << $1.strip.capitalize
+      when /^Fix\s+(.+)/i
+        fixed << $1.strip.capitalize
+      when /^(Update|Improve|Enhance|Refactor)\s+(.+)/i
+        changed << $2.strip.capitalize
+      when /^(Remove|Delete|Revert)\s+(.+)/i
+        removed << $1.strip.capitalize
+      end
     end
   end
 
@@ -670,19 +719,72 @@ platform :ios do
   desc "Clean build artifacts and temporary files"
   lane :clean do
     UI.message("🧹 Cleaning build artifacts...")
-    
+
     # Clean Xcode build folder
     sh("xcodebuild clean -project '../#{XCODE_PROJECT}' -scheme '#{MAIN_SCHEME}'")
-    
+
     # Remove fastlane build artifacts
     sh("rm -f ../*.ipa ../*.dSYM.zip")
     sh("rm -rf ./test_output ./report.xml")
     sh("rm -rf ./build_output")
-    
+
     # Remove derived data if needed (optional, commented out by default)
     # sh("rm -rf ~/Library/Developer/Xcode/DerivedData/LeavesOfBlocks-*")
-    
+
     UI.success("✨ Clean complete!")
+  end
+
+  desc "Test AI release notes generation (requires ANTHROPIC_API_KEY)"
+  lane :test_ai do
+    if AIHelper.available?
+      UI.message("Testing AI helper module...")
+
+      # Test changelog enhancement
+      test_commits = [
+        "feat: Add new game statistics dashboard",
+        "fix: Resolve crash when placing L-shaped blocks near edge",
+        "refactor: Improve block generation performance",
+        "chore: Update CI configuration",
+        "feat(ui): Add autumn leaf animation effects"
+      ]
+
+      UI.message("\n=== Testing Changelog Enhancement ===")
+      result = AIHelper.enhance_changelog(commits: test_commits, new_version: "1.2.0")
+      if result
+        UI.success("Changelog result:")
+        UI.message("  Added: #{result[:added].inspect}")
+        UI.message("  Changed: #{result[:changed].inspect}")
+        UI.message("  Fixed: #{result[:fixed].inspect}")
+        UI.message("  Removed: #{result[:removed].inspect}")
+      else
+        UI.error("Changelog enhancement failed")
+      end
+
+      # Test prose generation
+      sample_changelog = <<~CHANGELOG
+        ### Added
+        - New game statistics dashboard with session history
+        - Autumn leaf animation effects during line clears
+
+        ### Fixed
+        - Crash when placing L-shaped blocks near grid edge
+      CHANGELOG
+
+      UI.message("\n=== Testing Prose Generation ===")
+      prose = AIHelper.generate_prose(changelog_section: sample_changelog, version: "1.2.0")
+      if prose
+        UI.success("Generated prose (#{prose.length} chars):")
+        UI.message(prose)
+      else
+        UI.error("Prose generation failed")
+      end
+
+      UI.success("\n✅ AI release notes test complete!")
+    else
+      UI.error("ANTHROPIC_API_KEY not set. Set it to test AI features:")
+      UI.message("  export ANTHROPIC_API_KEY='your-key-here'")
+      UI.message("  Or add to fastlane/.env file")
+    end
   end
 
   after_all do |lane|
