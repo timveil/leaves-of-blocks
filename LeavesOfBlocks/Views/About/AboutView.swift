@@ -1,22 +1,32 @@
 import SwiftUI
 
 struct AboutView: View {
-    
-    // Get app version from bundle extension
-    private var appVersion: String {
-        return "Version \(Bundle.main.versionAndBuild)"
+
+    // MARK: - Constants
+
+    private enum URLs {
+        static let linkedin = URL(string: "https://www.linkedin.com/in/timveil?utm_source=leaves_of_blocks_app&utm_medium=ios_app&utm_campaign=about_screen")!
+        static let website = URL(string: "https://www.leavesofblocks.com/?utm_source=leaves_of_blocks_app&utm_medium=ios_app&utm_campaign=about_screen")!
     }
-    
+
+    // MARK: - Environment
+
+    @Environment(\.openURL) private var openURL
+
     var body: some View {
         BaseScreenView {
             GeometryReader { geometry in
                 ScrollView {
                     VStack(spacing: GameTheme.Layout.largePadding) {
                     // Header
-                    VStack(spacing: GameTheme.Layout.mediumSpacing) {
+                    VStack(spacing: GameTheme.Layout.smallSpacing) {
                         Text("about_the_game".localized)
                             .pageTitleStyle()
                             .padding(.top, GameTheme.Layout.mediumPadding)
+
+                        Text("version_format".localized(with: Bundle.main.appVersion))
+                            .font(GameTheme.Typography.caption)
+                            .foregroundColor(GameTheme.Colors.tertiaryText)
                     }
                     
                     // Content sections
@@ -58,23 +68,32 @@ struct AboutView: View {
                 VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
                     Text("creator".localized)
                         .sectionHeaderStyle()
-                    
-                    Text("creator_description".localized)
-                        .sectionTextStyle(color: GameTheme.Colors.secondaryText)
-                        .lineSpacing(6)
+
+                    creatorDescriptionView
                 }
                 
                 // Technical Details
                 VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
                     Text("technical_details".localized)
                         .sectionHeaderStyle()
-                    
+
                     Text("technical_description".localized)
                         .sectionTextStyle(color: GameTheme.Colors.secondaryText)
                         .lineSpacing(6)
                 }
+
+                // Website
+                VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
+                    Text("website".localized)
+                        .sectionHeaderStyle()
+
+                    Link("company_website".localized, destination: URLs.website)
+                        .font(GameTheme.Typography.body)
+                        .foregroundColor(GameTheme.Colors.primaryAccent)
+                        .underline()
+                }
                     }
-                    
+
                     Spacer(minLength: GameTheme.Layout.extraLargePadding)
                 }
                 .padding(.horizontal, GameTheme.Layout.largePadding)
@@ -83,6 +102,28 @@ struct AboutView: View {
                 .frame(height: geometry.size.height - 100) // Leave space for grass
             }
         }
+    }
+
+    // MARK: - Private Views
+
+    /// Creator description with linked name using tappable text
+    private var creatorDescriptionView: some View {
+        (
+            Text("developed_by_prefix".localized)
+                .font(GameTheme.Typography.body)
+                .foregroundColor(GameTheme.Colors.secondaryText)
+            +
+            Text(.init("[\("creator_name".localized)](\(URLs.linkedin))"))
+                .font(GameTheme.Typography.body)
+                .foregroundColor(GameTheme.Colors.primaryAccent)
+                .underline()
+            +
+            Text("creator_description_suffix".localized)
+                .font(GameTheme.Typography.body)
+                .foregroundColor(GameTheme.Colors.secondaryText)
+        )
+        .lineSpacing(6)
+        .tint(GameTheme.Colors.primaryAccent)
     }
 }
 

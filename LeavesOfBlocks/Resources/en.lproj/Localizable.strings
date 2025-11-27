@@ -136,6 +136,7 @@
 
 // MARK: - About Page
 "about_game_description" = "A block puzzle game inspired by Walt Whitman's poetry and a love of ad-free gameplay. Place blocks thoughtfully, clear lines strategically, and find meaning in simple moments of focus.";
+"version_format" = "Version %@";
 "inspiration" = "Inspiration";
 "inspiration_quote" = "Born from a love of block puzzles, frustration with ads, and inspiration from Walt Whitman's timeless poetry.";
 "dedication" = "Dedication";
@@ -147,9 +148,13 @@
 "whitman_title" = "O Me! O Life!";
 "whitman_year" = "1867";
 "creator" = "Creator";
-"creator_description" = "Developed by Tim Veil, a software engineer and dad who believes games should provide a respite not rage.";
+"developed_by_prefix" = "Developed by ";
+"creator_name" = "Tim Veil";
+"creator_description_suffix" = ", a software engineer and dad who believes games should provide a respite not rage.";
 "technical_details" = "Technical Details";
 "technical_description" = "Built with SwiftUI for iOS 18.5+. No ads, no tracking, no data collection. Play offline, scores stay private.";
+"website" = "Website";
+"company_website" = "leavesofblocks.com";
 
 // MARK: - Game Over Overlay
 "game_over_quote" = "That the powerful game has ended, and You could not contribute a block.";
