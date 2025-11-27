@@ -15,9 +15,6 @@ set -euo pipefail
 PROJECT="LeavesOfBlocks.xcodeproj"
 SCHEME="LeavesOfBlocks"
 
-# Preferred iPhone simulators in order of preference
-PREFERRED_DEVICES=("iPhone 16" "iPhone 15" "iPhone 14" "iPhone SE (3rd generation)")
-
 # Script directory - resolve to project root
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 PROJECT_ROOT="$( cd "$SCRIPT_DIR/.." && pwd )"
@@ -36,24 +33,20 @@ else
     GREEN='' YELLOW='' CYAN='' RED='' NC=''
 fi
 
-# Get test destination - tries preferred iPhones in order, returns destination string
+# Get test destination - finds first available iPhone simulator
 get_test_destination() {
-    local destinations
-    destinations=$(xcodebuild -project "$PROJECT" -scheme "$SCHEME" -showdestinations 2>/dev/null)
+    # Use xcrun simctl which reliably lists available simulators
+    local first_iphone
+    first_iphone=$(xcrun simctl list devices available | grep "iPhone" | head -1 | sed 's/^[[:space:]]*//' | sed 's/ (.*//')
 
-    for device in "${PREFERRED_DEVICES[@]}"; do
-        # Match "name:iPhone 16 }" or "name:iPhone 16," (handles end of line or continuation)
-        if echo "$destinations" | grep -qE "name:${device}[[:space:]]*[},]"; then
-            echo "platform=iOS Simulator,name=$device,OS=latest"
-            return 0
-        fi
-    done
+    if [[ -n "$first_iphone" ]]; then
+        echo "platform=iOS Simulator,name=$first_iphone,OS=latest"
+        return 0
+    fi
 
-    echo -e "${RED}Error: No compatible iPhone simulator found${NC}" >&2
-    echo "Searched for: ${PREFERRED_DEVICES[*]}" >&2
-    echo "" >&2
-    echo "Available iPhone simulators:" >&2
-    echo "$destinations" | grep "iPhone" | head -10 >&2
+    echo -e "${RED}Error: No iPhone simulator found${NC}" >&2
+    echo "Available simulators:" >&2
+    xcrun simctl list devices available | head -20 >&2
     return 1
 }
 
@@ -128,8 +121,7 @@ cmd_info() {
     if destination=$(get_test_destination 2>/dev/null); then
         echo "$destination"
     else
-        echo "No compatible simulator found"
-        echo "Preferred devices: ${PREFERRED_DEVICES[*]}"
+        echo "No iPhone simulator found"
     fi
 }
 
@@ -151,8 +143,6 @@ case "${1:-help}" in
         echo "  test-ui    Run UI tests only"
         echo "  clean      Clean and rebuild"
         echo "  info       Show build environment info"
-        echo ""
-        echo "Preferred simulators: ${PREFERRED_DEVICES[*]}"
         exit 1
         ;;
 esac
