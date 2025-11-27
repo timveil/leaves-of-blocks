@@ -38,18 +38,66 @@ on:
 
 jobs:
   build:
-    name: Build and Test
+    name: Build for Testing
     runs-on: macos-latest
 
     steps:
       - name: Checkout
         uses: actions/checkout@v6
 
+      - name: Cache Derived Data
+        uses: actions/cache@v4
+        with:
+          path: ~/Library/Developer/Xcode/DerivedData
+          key: derived-data-${{ hashFiles('LeavesOfBlocks.xcodeproj/project.pbxproj') }}
+          restore-keys: |
+            derived-data-
+
       - name: Show Environment
         run: ./scripts/build.sh info
 
-      - name: Build
-        run: ./scripts/build.sh build
+      - name: Build for Testing
+        run: ./scripts/build.sh build-for-testing
 
-      - name: Test
-        run: ./scripts/build.sh test
+      - name: Upload Test Build Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-build
+          path: build/DerivedData/Build/Products
+          retention-days: 1
+
+  unit-tests:
+    name: Unit Tests
+    runs-on: macos-latest
+    needs: build
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download Test Build
+        uses: actions/download-artifact@v4
+        with:
+          name: test-build
+          path: build/DerivedData/Build/Products
+
+      - name: Run Unit Tests
+        run: ./scripts/build.sh test-unit-without-building
+
+  ui-tests:
+    name: UI Tests
+    runs-on: macos-latest
+    needs: build
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Download Test Build
+        uses: actions/download-artifact@v4
+        with:
+          name: test-build
+          path: build/DerivedData/Build/Products
+
+      - name: Run UI Tests
+        run: ./scripts/build.sh test-ui-without-building

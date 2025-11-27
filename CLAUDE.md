@@ -100,11 +100,13 @@ scripts/
 The project uses a unified build script (`scripts/build.sh`) that works both locally and in CI. The script automatically detects available iOS simulators.
 
 ### Recommended: Using build.sh
+
+#### Local Development Commands
 ```bash
 # Build the project
 ./scripts/build.sh build
 
-# Run all tests
+# Run all tests (with parallel execution)
 ./scripts/build.sh test
 
 # Run unit tests only
@@ -120,7 +122,25 @@ The project uses a unified build script (`scripts/build.sh`) that works both loc
 ./scripts/build.sh info
 ```
 
+#### CI-Optimized Commands (build once, test separately)
+These commands enable faster CI by building once and running tests from pre-built artifacts:
+```bash
+# Build and generate test artifacts
+./scripts/build.sh build-for-testing
+
+# Run all tests from pre-built artifacts
+./scripts/build.sh test-without-building
+
+# Run unit tests from pre-built artifacts
+./scripts/build.sh test-unit-without-building
+
+# Run UI tests from pre-built artifacts
+./scripts/build.sh test-ui-without-building
+```
+
 The script auto-detects simulators in this order: iPhone 16 Pro > iPhone 16 > iPhone 15 Pro > iPhone 15
+
+All test commands include parallel test execution (`-parallel-testing-enabled YES`) for improved performance.
 
 ### Alternative: Direct xcodebuild Commands
 For cases where you need direct xcodebuild access:
@@ -195,8 +215,13 @@ python3 ./scripts/generate_grass_images.py
 ### CI/CD
 - GitHub Actions workflows in `.github/workflows/`
 - Uses Xcode 26.1 on macOS latest runner
-- Automatically creates iPhone 16 Pro simulator for testing
 - Runs on push to main and pull requests
+- **Optimized 3-job architecture**:
+  - `build` job: Compiles with derived data caching, uploads test artifacts
+  - `unit-tests` job: Runs unit tests in parallel (4 workers) from pre-built artifacts
+  - `ui-tests` job: Runs UI tests in parallel (2 workers) from pre-built artifacts
+- Unit and UI tests run concurrently after build completes
+- Derived data caching reduces subsequent build times by 30-50%
 
 ### Version Management
 The project uses **Xcode's built-in "Manage Version and Build Number"** feature for automatic build number management:

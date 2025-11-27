@@ -2,13 +2,20 @@
 #
 # build.sh - Unified build script for local and CI environments
 #
-# Usage:
+# Local Development Commands:
 #   ./scripts/build.sh build          # Build only
-#   ./scripts/build.sh test           # Build and run all tests
+#   ./scripts/build.sh test           # Build and run all tests (parallel)
 #   ./scripts/build.sh test-unit      # Unit tests only
 #   ./scripts/build.sh test-ui        # UI tests only
 #   ./scripts/build.sh clean          # Clean build
 #   ./scripts/build.sh run            # Build and run in simulator
+#   ./scripts/build.sh info           # Show build environment
+#
+# CI-Optimized Commands (build once, test separately):
+#   ./scripts/build.sh build-for-testing          # Build test artifacts
+#   ./scripts/build.sh test-without-building      # Run all tests from artifacts
+#   ./scripts/build.sh test-unit-without-building # Run unit tests from artifacts
+#   ./scripts/build.sh test-ui-without-building   # Run UI tests from artifacts
 
 set -euo pipefail
 
@@ -66,7 +73,6 @@ get_test_destination() {
 cmd_build() {
     echo -e "${GREEN}Building for iOS Simulator...${NC}"
 
-    # Use generic destination for build - works reliably across all environments
     xcodebuild build \
         -project "$PROJECT" \
         -scheme "$SCHEME" \
@@ -74,42 +80,15 @@ cmd_build() {
         CODE_SIGNING_ALLOWED='NO'
 }
 
-cmd_test() {
-    local destination
-    destination=$(get_test_destination) || exit 1
-    echo -e "${GREEN}Testing on: $destination${NC}"
+cmd_build_for_testing() {
+    echo -e "${GREEN}Building for testing...${NC}"
 
-    xcodebuild test \
+    xcodebuild build-for-testing \
         -project "$PROJECT" \
         -scheme "$SCHEME" \
-        -destination "$destination" \
-        CODE_SIGNING_ALLOWED='NO' || echo "Tests completed or no tests found"
-}
-
-cmd_test_unit() {
-    local destination
-    destination=$(get_test_destination) || exit 1
-    echo -e "${GREEN}Running unit tests on: $destination${NC}"
-
-    xcodebuild test \
-        -project "$PROJECT" \
-        -scheme "$SCHEME" \
-        -destination "$destination" \
-        CODE_SIGNING_ALLOWED='NO' \
-        -only-testing:"LeavesOfBlocksTests" || echo "Unit tests completed or no tests found"
-}
-
-cmd_test_ui() {
-    local destination
-    destination=$(get_test_destination) || exit 1
-    echo -e "${GREEN}Running UI tests on: $destination${NC}"
-
-    xcodebuild test \
-        -project "$PROJECT" \
-        -scheme "$SCHEME" \
-        -destination "$destination" \
-        CODE_SIGNING_ALLOWED='NO' \
-        -only-testing:"LeavesOfBlocksUITests" || echo "UI tests completed or no tests found"
+        -destination 'generic/platform=iOS Simulator' \
+        -derivedDataPath "build/DerivedData" \
+        CODE_SIGNING_ALLOWED='NO'
 }
 
 cmd_clean() {
@@ -120,6 +99,64 @@ cmd_clean() {
         -scheme "$SCHEME" \
         -destination 'generic/platform=iOS Simulator' \
         CODE_SIGNING_ALLOWED='NO'
+}
+
+# Unified test runner
+# Usage: run_tests <test_type> <without_building>
+#   test_type: "all", "unit", or "ui"
+#   without_building: "true" or "false"
+run_tests() {
+    local test_type="${1:-all}"
+    local without_building="${2:-false}"
+    local destination
+    local workers=4
+    local only_testing=""
+    local test_label="tests"
+    local xctestrun_file=""
+
+    destination=$(get_test_destination) || exit 1
+
+    # Configure based on test type
+    case "$test_type" in
+        unit)
+            only_testing="-only-testing:LeavesOfBlocksTests"
+            test_label="unit tests"
+            ;;
+        ui)
+            only_testing="-only-testing:LeavesOfBlocksUITests"
+            workers=2
+            test_label="UI tests"
+            ;;
+    esac
+
+    # Handle test-without-building mode
+    if [[ "$without_building" == "true" ]]; then
+        xctestrun_file=$(find build/DerivedData -name "*.xctestrun" -print -quit 2>/dev/null)
+        if [[ -z "$xctestrun_file" ]]; then
+            echo -e "${RED}Error: No .xctestrun file found. Run 'build-for-testing' first.${NC}"
+            exit 1
+        fi
+        echo -e "${GREEN}Running $test_label without building on: $destination${NC}"
+
+        xcodebuild test-without-building \
+            -xctestrun "$xctestrun_file" \
+            -destination "$destination" \
+            ${only_testing:+"$only_testing"} \
+            -parallel-testing-enabled YES \
+            -maximum-parallel-testing-workers "$workers" \
+            CODE_SIGNING_ALLOWED='NO' || echo "Tests completed"
+    else
+        echo -e "${GREEN}Running $test_label on: $destination${NC}"
+
+        xcodebuild test \
+            -project "$PROJECT" \
+            -scheme "$SCHEME" \
+            -destination "$destination" \
+            ${only_testing:+"$only_testing"} \
+            -parallel-testing-enabled YES \
+            -maximum-parallel-testing-workers "$workers" \
+            CODE_SIGNING_ALLOWED='NO' || echo "Tests completed or no tests found"
+    fi
 }
 
 cmd_run() {
@@ -200,24 +237,34 @@ cmd_info() {
 
 # Main
 case "${1:-help}" in
-    build)      cmd_build ;;
-    test)       cmd_test ;;
-    test-unit)  cmd_test_unit ;;
-    test-ui)    cmd_test_ui ;;
-    clean)      cmd_clean ;;
-    run)        cmd_run ;;
-    info)       cmd_info ;;
+    build)                      cmd_build ;;
+    test)                       run_tests all false ;;
+    test-unit)                  run_tests unit false ;;
+    test-ui)                    run_tests ui false ;;
+    clean)                      cmd_clean ;;
+    run)                        cmd_run ;;
+    info)                       cmd_info ;;
+    build-for-testing)          cmd_build_for_testing ;;
+    test-without-building)      run_tests all true ;;
+    test-unit-without-building) run_tests unit true ;;
+    test-ui-without-building)   run_tests ui true ;;
     *)
-        echo "Usage: $0 {build|test|test-unit|test-ui|clean|run|info}"
+        echo "Usage: $0 <command>"
         echo ""
-        echo "Commands:"
+        echo "Local Development Commands:"
         echo "  build      Build the project for iOS Simulator"
-        echo "  test       Run all tests"
+        echo "  test       Run all tests (with parallel execution)"
         echo "  test-unit  Run unit tests only"
         echo "  test-ui    Run UI tests only"
         echo "  clean      Clean and rebuild"
         echo "  run        Build and run in simulator (without Xcode)"
         echo "  info       Show build environment info"
+        echo ""
+        echo "CI-Optimized Commands (build once, test separately):"
+        echo "  build-for-testing          Build and generate test artifacts"
+        echo "  test-without-building      Run all tests from pre-built artifacts"
+        echo "  test-unit-without-building Run unit tests from pre-built artifacts"
+        echo "  test-ui-without-building   Run UI tests from pre-built artifacts"
         exit 1
         ;;
 esac
