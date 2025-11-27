@@ -10,6 +10,8 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    assignees:
+      - "timveil"
     labels:
       - "dependencies"
       - "github-actions"
@@ -26,6 +28,8 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+    assignees:
+      - "timveil"
     labels:
       - "dependencies"
       - "ruby"
