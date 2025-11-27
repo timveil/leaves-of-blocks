@@ -33,28 +33,38 @@ else
     RED='' GREEN='' YELLOW='' CYAN='' NC=''
 fi
 
-# Find available iOS simulator (returns "name|uuid")
-# Uses xcrun simctl which lists actual available simulators
+# Find available iOS simulator from xcodebuild destinations (returns "name|uuid")
+# This ensures we get UUIDs that xcodebuild actually recognizes
 find_simulator() {
     local simulator_name=""
     local simulator_uuid=""
 
-    # Try preferred simulators in order using simctl (actual installed simulators)
+    # Get available destinations from xcodebuild (authoritative source for xcodebuild)
+    # This is critical: simctl and xcodebuild can have different UUIDs for the same simulator!
+    local destinations
+    destinations=$(xcodebuild -project "$PROJECT" -scheme "$SCHEME" -showdestinations 2>/dev/null)
+
+    # Try preferred simulators in order
     for name in "iPhone 16 Pro" "iPhone 16" "iPhone 15 Pro" "iPhone 15" "iPhone 14 Pro" "iPhone 14" "iPhone SE"; do
         local line
-        line=$(xcrun simctl list devices available 2>/dev/null | grep -F "$name" | head -1)
+        # Find a line with this iPhone name (avoid matching "iPhone 16 Pro Max" when looking for "iPhone 16 Pro")
+        line=$(echo "$destinations" | grep -E "name:$name[[:space:]]*\}" | head -1)
         if [[ -n "$line" ]]; then
             simulator_name="$name"
-            # Extract UUID from the line (format: "    iPhone 16 Pro (UUID) (Shutdown)")
-            simulator_uuid=$(echo "$line" | grep -oE '[A-F0-9-]{36}')
-            break
+            # Extract UUID from the line (format: "{ ..., id:UUID, ... }")
+            simulator_uuid=$(echo "$line" | grep -oE 'id:[A-Fa-f0-9-]{36}' | head -1 | sed 's/id://')
+            if [[ -n "$simulator_uuid" ]]; then
+                break
+            fi
         fi
     done
 
     if [[ -z "$simulator_name" ]] || [[ -z "$simulator_uuid" ]]; then
         echo -e "${RED}Error: No compatible iPhone simulator found${NC}" >&2
-        echo "Available simulators:" >&2
-        xcrun simctl list devices available 2>/dev/null | grep -i iPhone | head -10 >&2
+        echo "Searched for: iPhone 16 Pro, iPhone 16, iPhone 15 Pro, iPhone 15, iPhone 14 Pro, iPhone 14, iPhone SE" >&2
+        echo "" >&2
+        echo "Available iPhone destinations from xcodebuild:" >&2
+        echo "$destinations" | grep -i "name:iPhone" | head -10 >&2
         return 1
     fi
 
@@ -138,8 +148,8 @@ cmd_info() {
     echo -e "${YELLOW}Xcode Version:${NC}"
     xcodebuild -version
     echo ""
-    echo -e "${YELLOW}Available iPhone Simulators:${NC}"
-    xcrun simctl list devices available 2>/dev/null | grep -i "iPhone" | head -10
+    echo -e "${YELLOW}Available iPhone Simulators (from xcodebuild):${NC}"
+    xcodebuild -project "$PROJECT" -scheme "$SCHEME" -showdestinations 2>/dev/null | grep -i "iPhone" | head -10
     echo ""
     echo -e "${YELLOW}Selected Simulator for Testing:${NC}"
     local result
