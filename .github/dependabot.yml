@@ -1,7 +1,5 @@
-# To get started with Dependabot version updates, you'll need to specify which
-# package ecosystems to update and where the package manifests are located.
-# Please see the documentation for all configuration options:
-# https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+# Dependabot configuration for Leaves of Blocks
+# Documentation: https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
 
 version: 2
 updates:
@@ -10,34 +8,57 @@ updates:
     directory: "/"
     schedule:
       interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "America/New_York"
     assignees:
+      - "timveil"
+    reviewers:
       - "timveil"
     labels:
       - "dependencies"
       - "github-actions"
+    commit-message:
+      prefix: "ci"
+      include: "scope"
     open-pull-requests-limit: 5
-    # Only update direct dependencies, ignore major version bumps
-    allow:
-      - dependency-type: "direct"
-    ignore:
-      - dependency-name: "*"
-        update-types: ["version-update:semver-major"]
+    groups:
+      # Group all GitHub Actions updates into a single PR
+      github-actions:
+        patterns:
+          - "*"
 
   # Enable version updates for Ruby/Bundler (Fastlane dependencies)
   - package-ecosystem: "bundler"
     directory: "/"
     schedule:
       interval: "weekly"
+      day: "monday"
+      time: "09:00"
+      timezone: "America/New_York"
     assignees:
+      - "timveil"
+    reviewers:
       - "timveil"
     labels:
       - "dependencies"
       - "ruby"
       - "fastlane"
+    commit-message:
+      prefix: "chore"
+      include: "scope"
     open-pull-requests-limit: 5
-    # Only update direct dependencies, ignore major version bumps
-    allow:
-      - dependency-type: "direct"
-    ignore:
-      - dependency-name: "*"
-        update-types: ["version-update:semver-major"]
+    groups:
+      # Group Fastlane and related tools together
+      fastlane-tools:
+        patterns:
+          - "fastlane"
+          - "xcode-install"
+        update-types:
+          - "minor"
+          - "patch"
+      # Group development tools separately
+      dev-tools:
+        patterns:
+          - "overcommit"
+          - "bundler"
