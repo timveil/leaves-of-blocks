@@ -8,23 +8,37 @@
 import XCTest
 
 final class LeavesOfBlocksUITests: XCTestCase {
-    
+
     var app: XCUIApplication!
+
+    /// Check if running in CI environment
+    private var isCI: Bool {
+        ProcessInfo.processInfo.environment["CI"] != nil
+    }
 
     @MainActor
     override func setUpWithError() throws {
         continueAfterFailure = false
-        
+
         app = XCUIApplication()
-        app.launchArguments = ["-ui-testing", "-screenshot-mode"]
-        
-        // Setup for Fastlane snapshot
-        setupSnapshot(app)
-        
+
+        // Launch arguments for testing
+        var launchArgs = ["-ui-testing"]
+        if !isCI {
+            launchArgs.append("-screenshot-mode")
+        }
+        app.launchArguments = launchArgs
+
+        // Setup for Fastlane snapshot (only when not in CI)
+        if !isCI {
+            setupSnapshot(app)
+        }
+
         app.launch()
-        
-        // Wait for app to fully load (should be immediate now with launch screen skip)
-        sleep(1)
+
+        // Wait for home screen to be ready (replaces arbitrary sleep)
+        let easyButton = app.buttons["easy_button"]
+        _ = easyButton.waitForExistence(timeout: 3)
     }
 
     override func tearDownWithError() throws {
@@ -197,22 +211,22 @@ final class LeavesOfBlocksUITests: XCTestCase {
     func testStartNewGame() throws {
         // Select Easy difficulty
         let easyButton = app.buttons["easy_button"]
-        XCTAssertTrue(easyButton.waitForExistence(timeout: 5), "Easy button should exist")
+        XCTAssertTrue(easyButton.waitForExistence(timeout: 2), "Easy button should exist")
         easyButton.tap()
-        
+
         // Start game
         let startButton = app.buttons["start_game_button"]
-        XCTAssertTrue(startButton.waitForExistence(timeout: 3), "Start button should exist")
+        XCTAssertTrue(startButton.waitForExistence(timeout: 2), "Start button should exist")
         startButton.tap()
-        
+
         // Verify game board appears
         let gameGrid = app.otherElements["game_grid"]
-        XCTAssertTrue(gameGrid.waitForExistence(timeout: 5), "Game grid should appear")
-        
+        XCTAssertTrue(gameGrid.waitForExistence(timeout: 3), "Game grid should appear")
+
         // Verify score display
         let scoreDisplay = app.staticTexts["score_display"]
-        XCTAssertTrue(scoreDisplay.exists, "Score display should exist")
-        
+        XCTAssertTrue(scoreDisplay.waitForExistence(timeout: 2), "Score display should exist")
+
         // Verify block container
         let blockContainer = app.otherElements["block_container"]
         XCTAssertTrue(blockContainer.exists, "Block container should exist")
@@ -221,31 +235,34 @@ final class LeavesOfBlocksUITests: XCTestCase {
     @MainActor
     func testDragAndDropBlock() throws {
         // Start a game
-        app.buttons["easy_button"].tap()
-        app.buttons["start_game_button"].tap()
-        
+        let easyButton = app.buttons["easy_button"]
+        XCTAssertTrue(easyButton.waitForExistence(timeout: 2))
+        easyButton.tap()
+
+        let startButton = app.buttons["start_game_button"]
+        XCTAssertTrue(startButton.waitForExistence(timeout: 2))
+        startButton.tap()
+
         // Wait for game to load
         let gameGrid = app.otherElements["game_grid"]
-        XCTAssertTrue(gameGrid.waitForExistence(timeout: 5))
-        
+        XCTAssertTrue(gameGrid.waitForExistence(timeout: 3))
+
         // Find first draggable block
         let blockContainer = app.otherElements["block_container"]
         let firstBlock = blockContainer.otherElements.matching(identifier: "draggable_block").element(boundBy: 0)
-        
-        if firstBlock.exists {
+
+        if firstBlock.waitForExistence(timeout: 2) {
             // Perform drag from block to grid center
             let startCoordinate = firstBlock.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
             let endCoordinate = gameGrid.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
-            
+
             startCoordinate.press(forDuration: 0.1, thenDragTo: endCoordinate)
-            
-            // Wait a moment for the action to complete
-            sleep(1)
-            
-            // Verify score changed (should be greater than 0)
+
+            // Wait for score to update (use expectation instead of sleep)
             let scoreDisplay = app.staticTexts["score_display"]
+            _ = scoreDisplay.waitForExistence(timeout: 2)
             let scoreText = scoreDisplay.label
-            
+
             // Extract number from score text
             if let score = Int(scoreText.components(separatedBy: CharacterSet.decimalDigits.inverted).joined()) {
                 XCTAssertGreaterThan(score, 0, "Score should increase after placing a block")
@@ -256,63 +273,58 @@ final class LeavesOfBlocksUITests: XCTestCase {
     @MainActor
     func testNavigationFlow() throws {
         // Test navigation through all main screens
-        
+        let homeButton = app.buttons["home_button"]
+        let easyButton = app.buttons["easy_button"]
+
         // How to Play
         let howToPlayButton = app.buttons["how_to_play_button"]
-        XCTAssertTrue(howToPlayButton.waitForExistence(timeout: 5), "How to Play button should exist")
+        XCTAssertTrue(howToPlayButton.waitForExistence(timeout: 2), "How to Play button should exist")
         howToPlayButton.tap()
-        sleep(1)
-        
-        let homeButton = app.buttons["home_button"]
-        if homeButton.exists {
+
+        // Wait for navigation, then go back
+        if homeButton.waitForExistence(timeout: 2) {
             homeButton.tap()
+            _ = easyButton.waitForExistence(timeout: 2)
         }
-        
+
         // History
         let historyButton = app.buttons["history_button"]
-        if historyButton.exists {
+        if historyButton.waitForExistence(timeout: 2) {
             historyButton.tap()
-            sleep(1)
-            if homeButton.exists {
+            if homeButton.waitForExistence(timeout: 2) {
                 homeButton.tap()
+                _ = easyButton.waitForExistence(timeout: 2)
             }
         }
-        
+
         // About
         let aboutButton = app.buttons["about_button"]
-        if aboutButton.exists {
+        if aboutButton.waitForExistence(timeout: 2) {
             aboutButton.tap()
-            sleep(1) 
-            if homeButton.exists {
+            if homeButton.waitForExistence(timeout: 2) {
                 homeButton.tap()
             }
         }
-        
+
         // Verify we can still see home screen elements
-        XCTAssertTrue(app.buttons["easy_button"].exists, "Should be back on home screen")
+        XCTAssertTrue(easyButton.waitForExistence(timeout: 2), "Should be back on home screen")
     }
     
     @MainActor
     func testDifficultySelection() throws {
         // Test all difficulty selections
         let difficulties = ["easy_button", "moderate_button", "hard_button"]
-        
+        let startButton = app.buttons["start_game_button"]
+
         for difficulty in difficulties {
             // Select difficulty
             let difficultyButton = app.buttons[difficulty]
-            XCTAssertTrue(difficultyButton.waitForExistence(timeout: 3), "Difficulty button \(difficulty) should exist")
+            XCTAssertTrue(difficultyButton.waitForExistence(timeout: 2), "Difficulty button \(difficulty) should exist")
             difficultyButton.tap()
-            
+
             // Verify start button appears/is enabled
-            let startButton = app.buttons["start_game_button"]
-            XCTAssertTrue(startButton.waitForExistence(timeout: 2), "Start button should appear")
+            XCTAssertTrue(startButton.waitForExistence(timeout: 1), "Start button should appear")
             XCTAssertTrue(startButton.isEnabled, "Start button should be enabled")
-            
-            // Deselect by tapping again (if toggle behavior)
-            // or select another difficulty to reset
-            if difficulty != difficulties.last {
-                app.buttons[difficulties.first!].tap()
-            }
         }
     }
     
