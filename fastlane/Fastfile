@@ -484,13 +484,12 @@ platform :ios do
     # Generate release notes from the updated changelog
     generate_release_notes(version: new_version)
 
-    # Commit changelog, release notes, and project changes
-    commit_release(version: new_version)
-
-    # Increment build number
+    # Increment build number (before commit so it's included)
     increment_build_number(xcodeproj: XCODE_PROJECT)
-
     UI.success("Build Number Incremented")
+
+    # Commit changelog, release notes, and project changes (including build number)
+    commit_release(version: new_version)
 
     # Build the app
     build_app(
@@ -575,11 +574,11 @@ platform :ios do
     # Generate release notes from the updated changelog
     generate_release_notes(version: new_version)
 
-    # Commit changelog, release notes, and project changes
-    commit_release(version: new_version)
-
-    # Increment build number
+    # Increment build number (before commit so it's included)
     increment_build_number(xcodeproj: XCODE_PROJECT)
+
+    # Commit changelog, release notes, and project changes (including build number)
+    commit_release(version: new_version)
 
     # Build the app
     build_app(
