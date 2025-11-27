@@ -1,1 +1,1 @@
-This update brings changelog system for better release tracking. Thank you for playing Leaves of Blocks!
+This update brings add automated changelog and conventional commit enforcement. Thank you for playing Leaves of Blocks!
