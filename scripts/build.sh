@@ -15,10 +15,8 @@ set -euo pipefail
 PROJECT="LeavesOfBlocks.xcodeproj"
 SCHEME="LeavesOfBlocks"
 
-# Simple destination - let xcodebuild pick the best available simulator
-# Using OS=latest ensures we always use the newest iOS version
-# Not specifying a device name lets xcodebuild choose any compatible iPhone
-DESTINATION="platform=iOS Simulator,OS=latest"
+# Preferred iPhone simulators in order of preference
+PREFERRED_DEVICES=("iPhone 16" "iPhone 15" "iPhone 14" "iPhone SE (3rd generation)")
 
 # Script directory - resolve to project root
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
@@ -32,10 +30,32 @@ if [[ -t 1 ]] && [[ -z "${CI:-}" ]]; then
     GREEN='\033[0;32m'
     YELLOW='\033[0;33m'
     CYAN='\033[0;36m'
+    RED='\033[0;31m'
     NC='\033[0m'
 else
-    GREEN='' YELLOW='' CYAN='' NC=''
+    GREEN='' YELLOW='' CYAN='' RED='' NC=''
 fi
+
+# Get test destination - tries preferred iPhones in order, returns destination string
+get_test_destination() {
+    local destinations
+    destinations=$(xcodebuild -project "$PROJECT" -scheme "$SCHEME" -showdestinations 2>/dev/null)
+
+    for device in "${PREFERRED_DEVICES[@]}"; do
+        # Match "name:iPhone 16 }" or "name:iPhone 16," (handles end of line or continuation)
+        if echo "$destinations" | grep -qE "name:${device}[[:space:]]*[},]"; then
+            echo "platform=iOS Simulator,name=$device,OS=latest"
+            return 0
+        fi
+    done
+
+    echo -e "${RED}Error: No compatible iPhone simulator found${NC}" >&2
+    echo "Searched for: ${PREFERRED_DEVICES[*]}" >&2
+    echo "" >&2
+    echo "Available iPhone simulators:" >&2
+    echo "$destinations" | grep "iPhone" | head -10 >&2
+    return 1
+}
 
 # Commands
 cmd_build() {
@@ -50,33 +70,39 @@ cmd_build() {
 }
 
 cmd_test() {
-    echo -e "${GREEN}Testing on iOS Simulator (latest OS)...${NC}"
+    local destination
+    destination=$(get_test_destination) || exit 1
+    echo -e "${GREEN}Testing on: $destination${NC}"
 
     xcodebuild test \
         -project "$PROJECT" \
         -scheme "$SCHEME" \
-        -destination "$DESTINATION" \
+        -destination "$destination" \
         CODE_SIGNING_ALLOWED='NO' || echo "Tests completed or no tests found"
 }
 
 cmd_test_unit() {
-    echo -e "${GREEN}Running unit tests on iOS Simulator (latest OS)...${NC}"
+    local destination
+    destination=$(get_test_destination) || exit 1
+    echo -e "${GREEN}Running unit tests on: $destination${NC}"
 
     xcodebuild test \
         -project "$PROJECT" \
         -scheme "$SCHEME" \
-        -destination "$DESTINATION" \
+        -destination "$destination" \
         CODE_SIGNING_ALLOWED='NO' \
         -only-testing:"LeavesOfBlocksTests" || echo "Unit tests completed or no tests found"
 }
 
 cmd_test_ui() {
-    echo -e "${GREEN}Running UI tests on iOS Simulator (latest OS)...${NC}"
+    local destination
+    destination=$(get_test_destination) || exit 1
+    echo -e "${GREEN}Running UI tests on: $destination${NC}"
 
     xcodebuild test \
         -project "$PROJECT" \
         -scheme "$SCHEME" \
-        -destination "$DESTINATION" \
+        -destination "$destination" \
         CODE_SIGNING_ALLOWED='NO' \
         -only-testing:"LeavesOfBlocksUITests" || echo "UI tests completed or no tests found"
 }
@@ -98,7 +124,13 @@ cmd_info() {
     xcodebuild -version
     echo ""
     echo -e "${YELLOW}Test Destination:${NC}"
-    echo "$DESTINATION"
+    local destination
+    if destination=$(get_test_destination 2>/dev/null); then
+        echo "$destination"
+    else
+        echo "No compatible simulator found"
+        echo "Preferred devices: ${PREFERRED_DEVICES[*]}"
+    fi
 }
 
 # Main
@@ -120,7 +152,7 @@ case "${1:-help}" in
         echo "  clean      Clean and rebuild"
         echo "  info       Show build environment info"
         echo ""
-        echo "Tests run on: $DESTINATION"
+        echo "Preferred simulators: ${PREFERRED_DEVICES[*]}"
         exit 1
         ;;
 esac
