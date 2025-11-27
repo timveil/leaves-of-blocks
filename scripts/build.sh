@@ -102,16 +102,17 @@ cmd_clean() {
 }
 
 # Unified test runner
-# Usage: run_tests <test_type> <without_building> <skip_screenshots>
+# Usage: run_tests <test_type> <without_building> <is_ci>
 #   test_type: "all", "unit", or "ui"
 #   without_building: "true" or "false"
-#   skip_screenshots: "true" or "false" (only applies to UI tests)
+#   is_ci: "true" or "false" (enables CI-specific optimizations)
 run_tests() {
     local test_type="${1:-all}"
     local without_building="${2:-false}"
-    local skip_screenshots="${3:-false}"
+    local is_ci="${3:-false}"
     local destination
     local workers=4
+    local parallel_testing="YES"
     local only_testing=""
     local skip_testing=""
     local test_label="tests"
@@ -127,11 +128,16 @@ run_tests() {
             ;;
         ui)
             only_testing="-only-testing:LeavesOfBlocksUITests"
-            workers=2
             test_label="UI tests"
-            # Skip screenshot test in CI (it's for Fastlane App Store submissions only)
-            if [[ "$skip_screenshots" == "true" ]]; then
+            # CI-specific optimizations for UI tests
+            if [[ "$is_ci" == "true" ]]; then
+                # Skip screenshot test (it's for Fastlane App Store submissions only)
                 skip_testing="-skip-testing:LeavesOfBlocksUITests/LeavesOfBlocksUITests/testCaptureScreenshots"
+                # Disable parallel testing for UI tests in CI - simulator clones are unstable
+                parallel_testing="NO"
+                workers=1
+            else
+                workers=2
             fi
             ;;
     esac
@@ -143,18 +149,18 @@ run_tests() {
             echo -e "${RED}Error: No .xctestrun file found. Run 'build-for-testing' first.${NC}"
             exit 1
         fi
-        echo -e "${GREEN}Running $test_label without building on: $destination${NC}"
+        echo -e "${GREEN}Running $test_label without building on: $destination (parallel=$parallel_testing, workers=$workers)${NC}"
 
         xcodebuild test-without-building \
             -xctestrun "$xctestrun_file" \
             -destination "$destination" \
             ${only_testing:+"$only_testing"} \
             ${skip_testing:+"$skip_testing"} \
-            -parallel-testing-enabled YES \
+            -parallel-testing-enabled "$parallel_testing" \
             -maximum-parallel-testing-workers "$workers" \
-            CODE_SIGNING_ALLOWED='NO' || echo "Tests completed"
+            CODE_SIGNING_ALLOWED='NO'
     else
-        echo -e "${GREEN}Running $test_label on: $destination${NC}"
+        echo -e "${GREEN}Running $test_label on: $destination (parallel=$parallel_testing, workers=$workers)${NC}"
 
         xcodebuild test \
             -project "$PROJECT" \
@@ -162,9 +168,9 @@ run_tests() {
             -destination "$destination" \
             ${only_testing:+"$only_testing"} \
             ${skip_testing:+"$skip_testing"} \
-            -parallel-testing-enabled YES \
+            -parallel-testing-enabled "$parallel_testing" \
             -maximum-parallel-testing-workers "$workers" \
-            CODE_SIGNING_ALLOWED='NO' || echo "Tests completed or no tests found"
+            CODE_SIGNING_ALLOWED='NO'
     fi
 }
 
