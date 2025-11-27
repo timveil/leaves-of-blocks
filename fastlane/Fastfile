@@ -345,7 +345,11 @@ def commit_release(version:)
   # Create annotated tag
   sh("git tag -a v#{version} -m 'Release version #{version}'")
 
-  UI.success("Created commit and tag v#{version}")
+  # Push commit and tag to remote
+  sh("git push origin HEAD")
+  sh("git push origin v#{version}")
+
+  UI.success("Created and pushed commit and tag v#{version}")
 end
 
 platform :ios do
