@@ -1,1 +1,1 @@
-This update brings add automated changelog and conventional commit enforcement. Thank you for playing Leaves of Blocks!
+We've fixed include build number increment in release commit. Thank you for playing Leaves of Blocks!

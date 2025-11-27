@@ -13,6 +13,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [1.0.9] - 2025-11-27
+
+### Fixed
+- Include build number increment in release commit
+### Added
+
+### Changed
+
+### Fixed
+
 ## [1.0.8] - 2025-11-27
 
 ### Added
@@ -134,7 +144,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - COPPA compliant with no data collection
 - iPhone-optimized experience with portrait orientation
 
-[Unreleased]: https://github.com/timveil/leaves-of-blocks/compare/v1.0.8...HEAD
+[Unreleased]: https://github.com/timveil/leaves-of-blocks/compare/v1.0.9...HEAD
+[1.0.9]: https://github.com/timveil/leaves-of-blocks/compare/v1.0.8...v1.0.9
 [1.0.8]: https://github.com/timveil/leaves-of-blocks/compare/v1.0.7...v1.0.8
 [1.0.7]: https://github.com/timveil/leaves-of-blocks/compare/v1.0.6...v1.0.7
 [1.0.6]: https://github.com/timveil/leaves-of-blocks/compare/v1.0.5...v1.0.6
