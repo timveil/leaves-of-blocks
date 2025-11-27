@@ -1,6 +1,1 @@
-What's New in This Update:
-
-• Updated Quote display
-• Updated App Store screenshots
-
-Thank you for playing Leaves of Blocks! We continue to improve your puzzle experience.
+This update brings changelog system for better release tracking. Thank you for playing Leaves of Blocks!
