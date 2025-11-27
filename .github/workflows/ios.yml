@@ -43,7 +43,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
       - name: Cache Derived Data
         uses: actions/cache@v4
@@ -66,23 +66,25 @@ jobs:
           path: build/DerivedData/Build/Products
           retention-days: 1
 
-  unit-tests:
-    name: Unit Tests
-    runs-on: macos-latest
-    needs: build
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Download Test Build
-        uses: actions/download-artifact@v4
-        with:
-          name: test-build
-          path: build/DerivedData/Build/Products
-
-      - name: Run Unit Tests
-        run: ./scripts/build.sh test-unit-without-building
+  # NOTE: Unit tests job is commented out until LeavesOfBlocksTests target is created
+  # Uncomment this job after adding the unit test target to the Xcode project
+  # unit-tests:
+  #   name: Unit Tests
+  #   runs-on: macos-latest
+  #   needs: build
+  #
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v4
+  #
+  #     - name: Download Test Build
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         name: test-build
+  #         path: build/DerivedData/Build/Products
+  #
+  #     - name: Run Unit Tests
+  #       run: ./scripts/build.sh test-unit-without-building
 
   ui-tests:
     name: UI Tests
