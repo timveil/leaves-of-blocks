@@ -76,7 +76,7 @@ jobs:
           if [ $scheme = default ]; then scheme=$(cat default); fi
           if [ "`ls -A | grep -i \\.xcworkspace\$`" ]; then filetype_parameter="workspace" && file_to_build="`ls -A | grep -i \\.xcworkspace\$`"; else filetype_parameter="project" && file_to_build="`ls -A | grep -i \\.xcodeproj\$`"; fi
           file_to_build=`echo $file_to_build | awk '{$1=$1;print}'`
-          # Build without testing first
-          xcodebuild build -scheme "$scheme" -"$filetype_parameter" "$file_to_build" -destination "generic/platform=iOS Simulator"
+          # Build using explicit iOS Simulator destination with available runtime
+          xcodebuild build -scheme "$scheme" -"$filetype_parameter" "$file_to_build" -destination "platform=iOS Simulator,name=iPhone 16 Pro CI"
           # Then run tests if any exist
           xcodebuild test -scheme "$scheme" -"$filetype_parameter" "$file_to_build" -destination "platform=iOS Simulator,name=iPhone 16 Pro CI" -skip-testing-configuration-validation || echo "Tests completed or no tests found"
