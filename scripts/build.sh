@@ -42,43 +42,40 @@ else
     GREEN='' YELLOW='' CYAN='' RED='' NC=''
 fi
 
-# Get first available iPhone simulator UDID and name
-# Returns: UDID|name format for easy parsing
-get_first_iphone_simulator() {
-    xcrun simctl list devices available | grep "iPhone" | head -1 | sed -E 's/^[[:space:]]*([^(]+) \(([A-F0-9-]+)\).*/\2|\1/'
-}
-
-# Get simulator name (for display purposes)
+# Get first available iPhone simulator name
 get_simulator_name() {
-    local result
-    result=$(get_first_iphone_simulator)
-    echo "${result#*|}" | sed 's/[[:space:]]*$//'
+    xcrun simctl list devices available | grep "iPhone" | head -1 | sed 's/^[[:space:]]*//' | sed 's/ (.*//'
 }
 
-# Get simulator UDID (for destination)
+# Get simulator UDID by name
 get_simulator_udid() {
-    local result
-    result=$(get_first_iphone_simulator)
-    echo "${result%%|*}"
+    local sim_name="$1"
+    xcrun simctl list devices available | grep "$sim_name" | head -1 | sed -E 's/.*\(([A-F0-9-]+)\).*/\1/'
 }
 
-# Get test destination - uses UDID for reliable simulator selection
-# This works consistently across different Xcode/macOS versions
+# Get test destination - adapts strategy based on environment
+# CI: Uses name,OS=latest (works reliably on GitHub Actions runners)
+# Local: Uses UDID (works reliably with Xcode 26.x where OS=latest fails)
 get_test_destination() {
-    local sim_udid sim_name
-    sim_udid=$(get_simulator_udid)
+    local sim_name
     sim_name=$(get_simulator_name)
 
-    if [[ -n "$sim_udid" ]]; then
-        # Use UDID instead of name+OS for reliable selection
-        echo "id=$sim_udid"
-        return 0
+    if [[ -z "$sim_name" ]]; then
+        echo -e "${RED}Error: No iPhone simulator found${NC}" >&2
+        echo "Available simulators:" >&2
+        xcrun simctl list devices available | head -20 >&2
+        return 1
     fi
 
-    echo -e "${RED}Error: No iPhone simulator found${NC}" >&2
-    echo "Available simulators:" >&2
-    xcrun simctl list devices available | head -20 >&2
-    return 1
+    # In CI, use name+OS=latest (works on GitHub Actions)
+    # Locally, use UDID (works with Xcode 26.x where OS=latest fails)
+    if [[ -n "${CI:-}" ]]; then
+        echo "platform=iOS Simulator,name=$sim_name,OS=latest"
+    else
+        local sim_udid
+        sim_udid=$(get_simulator_udid "$sim_name")
+        echo "id=$sim_udid"
+    fi
 }
 
 # Commands
