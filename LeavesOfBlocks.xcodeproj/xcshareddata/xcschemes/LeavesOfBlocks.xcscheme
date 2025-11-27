@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1640"
+   LastUpgradeVersion = "2610"
    version = "1.7">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -40,7 +40,7 @@
             parallelizable = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "3A692C0D2E3460EE00451CB3"
+               BlueprintIdentifier = "3A3C932D2ED8D8B5009DDA6C"
                BuildableName = "LeavesOfBlocksTests.xctest"
                BlueprintName = "LeavesOfBlocksTests"
                ReferencedContainer = "container:LeavesOfBlocks.xcodeproj">
