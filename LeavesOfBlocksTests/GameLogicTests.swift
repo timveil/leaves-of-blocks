@@ -2,7 +2,7 @@
 //  GameLogicTests.swift
 //  LeavesOfBlocksTests
 //
-//  Created by Claude on 11/27/25.
+//  Unit tests for core game logic functions.
 //
 
 import XCTest
