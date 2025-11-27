@@ -172,23 +172,17 @@ class GameService: ObservableObject {
     /// Clears all game history from Core Data
     func clearGameHistory() {
         coreDataManager.deleteAllGameRecords()
-        
-        #if DEBUG
-        print("🗑️ Game history cleared")
-        #endif
+        BuildConfiguration.log("Game history cleared", level: .debug)
     }
-    
+
     /// Resets all game data including history and preferences
     func resetAllData() {
         // Clear Core Data
         clearGameHistory()
-        
+
         // Clear any UserDefaults if we add user preferences later
         // For now, high scores are stored in Core Data, so they're already cleared
-        
-        #if DEBUG
-        print("🔄 All game data reset")
-        #endif
+        BuildConfiguration.log("All game data reset", level: .debug)
     }
     
 }

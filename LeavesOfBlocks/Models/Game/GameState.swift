@@ -131,10 +131,8 @@ class GameState: ObservableObject {
     ///   The method automatically provides haptic feedback and updates all relevant statistics.
     func placeBlock(_ block: BlockShape, at gridPosition: GridPosition) {
         guard canPlaceBlock(block, at: gridPosition) else { return }
-        
-        #if DEBUG
-        print("🧩 Placing block with \(block.positions.count) cells at (\(gridPosition.row), \(gridPosition.col))")
-        #endif
+
+        BuildConfiguration.log("Placing block with \(block.positions.count) cells at (\(gridPosition.row), \(gridPosition.col))", level: .debug)
         
         // Haptic feedback for block placement
         gameService.blockPlacementFeedback()
@@ -209,20 +207,17 @@ class GameState: ObservableObject {
         
         // Use GameLogic to check game over state
         let gameOverState = GameLogic.isGameOver(currentBlocks: currentBlocks, grid: grid)
-        
+
         #if DEBUG
-        print("🎮 Game Over Check: hasBlocks=\(currentBlocks.count), gameOverState=\(gameOverState), currentGameOver=\(isGameOver)")
+        BuildConfiguration.log("Game Over Check: hasBlocks=\(currentBlocks.count), gameOverState=\(gameOverState), currentGameOver=\(isGameOver)", level: .debug)
         if gameOverState {
-            print("🚫 No valid moves found for current blocks:")
-            for (index, block) in currentBlocks.enumerated() {
-                print("   Block \(index): \(block.positions.count) cells")
-            }
+            BuildConfiguration.log("No valid moves found for current blocks: \(currentBlocks.map { $0.positions.count })", level: .debug)
         }
         #endif
-        
+
         if gameOverState && !isGameOver {
             // Game just ended - handle high score
-            print("🏁 GAME OVER DETECTED! Final score: \(score)")
+            BuildConfiguration.log("GAME OVER DETECTED! Final score: \(score)", level: .info)
             isGameOver = true
             gameService.endGameSession()
             

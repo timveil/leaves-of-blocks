@@ -42,24 +42,36 @@ else
     GREEN='' YELLOW='' CYAN='' RED='' NC=''
 fi
 
-# Get first available iPhone simulator name
+# Get first available iPhone simulator UDID and name
+# Returns: UDID|name format for easy parsing
+get_first_iphone_simulator() {
+    xcrun simctl list devices available | grep "iPhone" | head -1 | sed -E 's/^[[:space:]]*([^(]+) \(([A-F0-9-]+)\).*/\2|\1/'
+}
+
+# Get simulator name (for display purposes)
 get_simulator_name() {
-    xcrun simctl list devices available | grep "iPhone" | head -1 | sed 's/^[[:space:]]*//' | sed 's/ (.*//'
+    local result
+    result=$(get_first_iphone_simulator)
+    echo "${result#*|}" | sed 's/[[:space:]]*$//'
 }
 
-# Get simulator UDID by name
+# Get simulator UDID (for destination)
 get_simulator_udid() {
-    local sim_name="$1"
-    xcrun simctl list devices available | grep "$sim_name" | head -1 | sed -E 's/.*\(([A-F0-9-]+)\).*/\1/'
+    local result
+    result=$(get_first_iphone_simulator)
+    echo "${result%%|*}"
 }
 
-# Get test destination - finds first available iPhone simulator
+# Get test destination - uses UDID for reliable simulator selection
+# This works consistently across different Xcode/macOS versions
 get_test_destination() {
-    local first_iphone
-    first_iphone=$(get_simulator_name)
+    local sim_udid sim_name
+    sim_udid=$(get_simulator_udid)
+    sim_name=$(get_simulator_name)
 
-    if [[ -n "$first_iphone" ]]; then
-        echo "platform=iOS Simulator,name=$first_iphone,OS=latest"
+    if [[ -n "$sim_udid" ]]; then
+        # Use UDID instead of name+OS for reliable selection
+        echo "id=$sim_udid"
         return 0
     fi
 
@@ -111,6 +123,7 @@ run_tests() {
     local without_building="${2:-false}"
     local is_ci="${3:-false}"
     local destination
+    local sim_name
     local workers=4
     local parallel_testing="YES"
     local only_testing=""
@@ -119,6 +132,7 @@ run_tests() {
     local xctestrun_file=""
 
     destination=$(get_test_destination) || exit 1
+    sim_name=$(get_simulator_name)
 
     # Configure based on test type
     case "$test_type" in
@@ -155,7 +169,7 @@ run_tests() {
             echo -e "${RED}Error: No .xctestrun file found. Run 'build-for-testing' first.${NC}"
             exit 1
         fi
-        echo -e "${GREEN}Running $test_label without building on: $destination (parallel=$parallel_testing, workers=$workers)${NC}"
+        echo -e "${GREEN}Running $test_label on: $sim_name ($destination) (parallel=$parallel_testing, workers=$workers)${NC}"
 
         xcodebuild test-without-building \
             -xctestrun "$xctestrun_file" \
@@ -166,7 +180,7 @@ run_tests() {
             -maximum-parallel-testing-workers "$workers" \
             CODE_SIGNING_ALLOWED='NO'
     else
-        echo -e "${GREEN}Running $test_label on: $destination (parallel=$parallel_testing, workers=$workers)${NC}"
+        echo -e "${GREEN}Running $test_label on: $sim_name ($destination) (parallel=$parallel_testing, workers=$workers)${NC}"
 
         xcodebuild test \
             -project "$PROJECT" \
@@ -248,9 +262,10 @@ cmd_info() {
     xcodebuild -version
     echo ""
     echo -e "${YELLOW}Test Destination:${NC}"
-    local destination
+    local destination sim_name
     if destination=$(get_test_destination 2>/dev/null); then
-        echo "$destination"
+        sim_name=$(get_simulator_name)
+        echo "$sim_name ($destination)"
     else
         echo "No iPhone simulator found"
     fi

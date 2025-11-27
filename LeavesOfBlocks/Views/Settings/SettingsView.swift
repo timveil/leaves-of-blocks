@@ -30,10 +30,6 @@ struct SettingsView: View {
                     Text("settings".localized)
                         .pageTitleStyle()
                         .padding(.top, GameTheme.Layout.mediumPadding)
-//                    
-//                    Text("settings_description".localized)
-//                        .gameBodyStyle()
-//                        .multilineTextAlignment(.center)
                 }
                 
                 // Walt Whitman Quote Block

@@ -5,7 +5,6 @@ import SwiftUI
 struct ComboNotificationView: View {
     let comboCount: Int
     let bonusPoints: Int
-    @State private var isVisible: Bool = false
     @State private var scale: CGFloat = 0.9
     @State private var opacity: Double = 0.0
     @State private var yOffset: CGFloat = 0
@@ -89,7 +88,6 @@ struct ComboNotificationView: View {
         withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
             scale = 1.0
             opacity = 1.0
-            isVisible = true
         }
 
         // Shorter hold time, then quick fade out

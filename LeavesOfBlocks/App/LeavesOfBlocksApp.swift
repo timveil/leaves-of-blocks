@@ -59,7 +59,11 @@ struct Main: App {
         // Clear existing data first
         let fetchRequest: NSFetchRequest<NSFetchRequestResult> = GameRecord.fetchRequest()
         let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
-        _ = try? context.execute(deleteRequest)
+        do {
+            try context.execute(deleteRequest)
+        } catch {
+            BuildConfiguration.log("Failed to clear existing game records: \(error.localizedDescription)", level: .warning)
+        }
 
         // Create high score game (941 points) with specific date
         let highScoreGame = GameRecord(context: context)
@@ -89,10 +93,11 @@ struct Main: App {
         highScoreGame.strategicGrade = "A+"
 
         // Save the context
-        _ = try? context.save()
-
-        #if DEBUG
-        print("📱 Sample game history created for screenshots")
-        #endif
+        do {
+            try context.save()
+            BuildConfiguration.log("Sample game history created for screenshots", level: .debug)
+        } catch {
+            BuildConfiguration.log("Failed to save sample game history: \(error.localizedDescription)", level: .warning)
+        }
     }
 }

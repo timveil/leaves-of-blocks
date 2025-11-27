@@ -36,7 +36,7 @@ extension View {
             GeometryReader { geometry in
                 Color.clear.onAppear {
                     if AppConfiguration.FeatureFlags.enableDebugMode {
-                        print("\(label): \(geometry.frame(in: .global))")
+                        BuildConfiguration.log("\(label): \(geometry.frame(in: .global))", level: .debug)
                     }
                 }
             }

@@ -33,8 +33,6 @@ struct HomeView: View {
                     selectedDifficulty: $selectedDifficulty,
                     onStartGame: onStartGame
                 )
-                
-                //Spacer(minLength: 100)
             }
             .padding(.horizontal, GameTheme.Layout.extraLargePadding)
             .padding(.bottom, 80)

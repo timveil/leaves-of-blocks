@@ -304,18 +304,18 @@ class GameLogic {
             // Try to place the pattern at a random valid location
             if let placementResult = tryPlacePattern(pattern, in: &grid) {
                 cellsPlaced += placementResult.cellsAdded
-                
+
                 #if DEBUG
-                print("🔷 Placed \(pattern.rawValue) pattern (\(pattern.size) cells) at (\(placementResult.position.row), \(placementResult.position.col))")
+                BuildConfiguration.log("Placed \(pattern.rawValue) pattern (\(pattern.size) cells) at (\(placementResult.position.row), \(placementResult.position.col))", level: .verbose)
                 #endif
             }
-            
+
             attemptCount += 1
         }
-        
+
         #if DEBUG
         let fillPercentage = Double(cellsPlaced) / Double(totalCells) * 100
-        print("🎨 Pattern placement complete: \(cellsPlaced) cells placed (\(String(format: "%.1f", fillPercentage))% fill)")
+        BuildConfiguration.log("Pattern placement complete: \(cellsPlaced) cells placed (\(String(format: "%.1f", fillPercentage))% fill)", level: .debug)
         #endif
     }
     

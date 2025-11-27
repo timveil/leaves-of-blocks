@@ -136,6 +136,7 @@
 
 // MARK: - About Page
 "about_game_description" = "Un juego de rompecabezas de bloques inspirado en la poesía de Walt Whitman y el amor por el juego sin anuncios. Coloca bloques con cuidado, elimina líneas estratégicamente y encuentra significado en simples momentos de concentración.";
+"version_format" = "Versión %@";
 "inspiration" = "Inspiración";
 "inspiration_quote" = "Nacido del amor por los rompecabezas de bloques, la frustración con los anuncios y la inspiración de la poesía atemporal de Walt Whitman.";
 "dedication" = "Dedicatoria";
@@ -147,9 +148,13 @@
 "whitman_title" = "Oh Yo! Oh Vida!";
 "whitman_year" = "1867";
 "creator" = "Creador";
-"creator_description" = "Desarrollado por Tim Veil, un ingeniero de software y padre que cree que los juegos deberían proporcionar un respiro, no rabia.";
+"developed_by_prefix" = "Desarrollado por ";
+"creator_name" = "Tim Veil";
+"creator_description_suffix" = ", un ingeniero de software y padre que cree que los juegos deberían proporcionar un respiro, no rabia.";
 "technical_details" = "Detalles Técnicos";
 "technical_description" = "Construido con SwiftUI para iOS 18.5+. Sin anuncios, sin rastreo, sin recolección de datos. Juega sin conexión, las puntuaciones permanecen privadas.";
+"website" = "Sitio Web";
+"company_website" = "leavesofblocks.com";
 
 // MARK: - Game Over Overlay
 "game_over_quote" = "Que el poderoso juego ha terminado, y Tú no pudiste contribuir un bloque.";
