@@ -8,17 +8,61 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Changelog system for better release tracking
 
 ### Changed
 
-### Deprecated
-
-### Removed
-
 ### Fixed
 
-### Security
+## [1.0.7] - 2025-11-27
+
+### Added
+- Spanish localization support
+- Simulator run script for Xcode-free development
+
+### Changed
+- Improved iPhone simulator selection in build scripts
+
+## [1.0.6] - 2025-11-20
+
+### Added
+- Unified build script for local and CI environments
+- Dependabot auto-merge workflow
+
+### Changed
+- Updated to Xcode 26.1
+- Improved iOS simulator selection for CI/CD
+- Refined simulator selection in build workflow
+
+## [1.0.5] - 2025-10-15
+
+### Added
+- Ruby version file for consistent development environment
+- Interactive development menu system
+- Project cleanup utility script
+
+### Changed
+- Refactored async delays to use Swift concurrency
+- Updated CI to use Xcode 16.4 and iOS 18.5 runtime
+- Refactored Fastlane API key configuration
+
+### Removed
+- App Clip support and related assets
+- Fastlane guide documentation
+
+## [1.0.4] - 2025-09-01
+
+### Added
+- Reusable QuoteView component
+- Icon generation and copy workflow automation
+- Clean lane to Fastlane
+
+### Changed
+- Improved README with enhanced visuals
+- Adjusted block generation parameters for difficulty tiers
+- Updated app review contact information
+
+### Fixed
+- Screenshot upload handling in Deliverfile
 
 ## [1.0.3] - 2025-08-02
 
@@ -80,7 +124,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - COPPA compliant with no data collection
 - iPhone-optimized experience with portrait orientation
 
-[Unreleased]: https://github.com/timveil/leaves-of-blocks/compare/v1.0.3...HEAD
+[Unreleased]: https://github.com/timveil/leaves-of-blocks/compare/v1.0.7...HEAD
+[1.0.7]: https://github.com/timveil/leaves-of-blocks/compare/v1.0.6...v1.0.7
+[1.0.6]: https://github.com/timveil/leaves-of-blocks/compare/v1.0.5...v1.0.6
+[1.0.5]: https://github.com/timveil/leaves-of-blocks/compare/v1.0.4...v1.0.5
+[1.0.4]: https://github.com/timveil/leaves-of-blocks/compare/v1.0.3...v1.0.4
 [1.0.3]: https://github.com/timveil/leaves-of-blocks/compare/v1.0.2...v1.0.3
 [1.0.2]: https://github.com/timveil/leaves-of-blocks/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/timveil/leaves-of-blocks/compare/v1.0.0...v1.0.1

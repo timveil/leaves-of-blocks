@@ -398,6 +398,25 @@ while true; do
                 bundle install
             fi
 
+            # Install Overcommit git hooks
+            echo ""
+            echo -e "${YELLOW}Install Overcommit git hooks for conventional commits? (y/N)${NC}"
+            read -n 1 -r confirm
+            echo
+            if [[ $confirm =~ ^[Yy]$ ]]; then
+                echo -e "${BLUE}Installing Overcommit hooks...${NC}"
+                bundle exec overcommit --install
+                bundle exec overcommit --sign
+                echo -e "${GREEN}✓ Overcommit hooks installed${NC}"
+                echo ""
+                echo -e "${CYAN}Commit messages must now follow Conventional Commits format:${NC}"
+                echo "  feat: Add new feature"
+                echo "  fix: Fix a bug"
+                echo "  docs: Update documentation"
+                echo "  refactor: Refactor code"
+                echo "  chore: Maintenance tasks"
+            fi
+
             echo ""
             echo -e "${GREEN}Ruby setup complete!${NC}"
             echo -e "${YELLOW}Note: You may need to restart your terminal for changes to take effect.${NC}"

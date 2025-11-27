@@ -162,6 +162,192 @@ def extract_items(content, header)
   match[1].scan(/^- (.+)$/).flatten.map(&:strip).reject(&:empty?)
 end
 
+# Calculate new version without applying it
+def calculate_new_version(xcodeproj:, target_name:, bump_type:)
+  require 'xcodeproj'
+
+  project_path = File.join(Dir.pwd, '..', xcodeproj)
+  project = Xcodeproj::Project.open(project_path)
+
+  target = project.targets.find { |t| t.name == target_name }
+  raise "Target '#{target_name}' not found" unless target
+
+  release_config = target.build_configurations.find { |c| c.name == 'Release' }
+  current_version = release_config.build_settings['MARKETING_VERSION'] || '1.0.0'
+
+  parts = current_version.split('.').map(&:to_i)
+  parts << 0 while parts.length < 3
+
+  case bump_type
+  when "patch"
+    "#{parts[0]}.#{parts[1]}.#{parts[2] + 1}"
+  when "minor"
+    "#{parts[0]}.#{parts[1] + 1}.0"
+  when "major"
+    "#{parts[0] + 1}.0.0"
+  else
+    bump_type
+  end
+end
+
+# Format a changelog section with items
+def format_changelog_section(header, items)
+  return "" if items.empty?
+  section = "\n### #{header}\n"
+  items.each { |item| section += "- #{item}\n" }
+  section
+end
+
+# Update CHANGELOG.md from git commits since last tag
+# Returns the changelog section content for release notes
+def update_changelog_from_commits(new_version:)
+  changelog_path = File.join(Dir.pwd, '..', 'CHANGELOG.md')
+
+  # Find last version tag
+  last_tag = `git describe --tags --abbrev=0 2>/dev/null`.strip
+
+  if last_tag.empty?
+    UI.message("No previous tags found, using all commits")
+    range = ""
+  else
+    UI.message("Finding commits since #{last_tag}")
+    range = "#{last_tag}..HEAD"
+  end
+
+  # Get commits since last tag
+  commits = `git log #{range} --pretty=format:"%s"`.split("\n")
+
+  UI.message("Found #{commits.length} commits to process")
+
+  # Parse conventional commits into categories
+  added = []
+  changed = []
+  fixed = []
+  removed = []
+
+  commits.each do |msg|
+    case msg
+    when /^feat(\(.+\))?:\s*(.+)/i
+      added << $2.strip.capitalize
+    when /^fix(\(.+\))?:\s*(.+)/i
+      fixed << $2.strip.capitalize
+    when /^(refactor|perf|style)(\(.+\))?:\s*(.+)/i
+      changed << $3.strip.capitalize
+    when /^(remove|revert)(\(.+\))?:\s*(.+)/i
+      removed << $3.strip.capitalize
+    # Fallback for non-conventional commits - detect intent from message start
+    when /^Add\s+(.+)/i
+      added << $1.strip.capitalize
+    when /^Fix\s+(.+)/i
+      fixed << $1.strip.capitalize
+    when /^(Update|Improve|Enhance|Refactor)\s+(.+)/i
+      changed << $2.strip.capitalize
+    when /^(Remove|Delete|Revert)\s+(.+)/i
+      removed << $1.strip.capitalize
+    end
+  end
+
+  # Remove duplicates
+  added.uniq!
+  changed.uniq!
+  fixed.uniq!
+  removed.uniq!
+
+  # Block if no meaningful changes
+  if added.empty? && changed.empty? && fixed.empty? && removed.empty?
+    UI.user_error!(
+      "No changelog entries found from commits.\n\n" +
+      "Use conventional commits for automatic changelog generation:\n" +
+      "  feat: Add new feature\n" +
+      "  fix: Fix a bug\n" +
+      "  refactor: Refactor code\n" +
+      "  perf: Improve performance\n\n" +
+      "Or use descriptive prefixes: Add, Fix, Update, Improve, Remove"
+    )
+  end
+
+  # Build changelog section
+  date = Time.now.strftime("%Y-%m-%d")
+  section = "## [#{new_version}] - #{date}\n"
+  section += format_changelog_section("Added", added)
+  section += format_changelog_section("Changed", changed)
+  section += format_changelog_section("Fixed", fixed)
+  section += format_changelog_section("Removed", removed)
+
+  # Read existing changelog
+  unless File.exist?(changelog_path)
+    UI.user_error!("CHANGELOG.md not found at #{changelog_path}")
+  end
+
+  content = File.read(changelog_path)
+
+  # Insert new section after [Unreleased] header
+  # Find the [Unreleased] section and insert after it
+  unreleased_pattern = /(## \[Unreleased\].*?(?:\n### \w+\n)*\n*)/m
+
+  if content.match?(unreleased_pattern)
+    # Insert new version section after Unreleased section
+    new_content = content.sub(unreleased_pattern) do |match|
+      # Reset the Unreleased section and add new version
+      "## [Unreleased]\n\n### Added\n\n### Changed\n\n### Fixed\n\n#{section}"
+    end
+  else
+    # No Unreleased section, insert at top after header
+    header_end = content.index("\n## [") || content.length
+    new_content = content[0...header_end] + "\n\n## [Unreleased]\n\n### Added\n\n### Changed\n\n### Fixed\n\n#{section}" + content[header_end..-1].to_s
+  end
+
+  # Update footer links
+  # Add new version link if not present
+  repo_url = "https://github.com/timveil/leaves-of-blocks"
+
+  # Update [Unreleased] link
+  new_content.gsub!(
+    /\[Unreleased\]: .+/,
+    "[Unreleased]: #{repo_url}/compare/v#{new_version}...HEAD"
+  )
+
+  # Add new version link if not present
+  version_link = "[#{new_version}]: #{repo_url}/compare/"
+  unless new_content.include?(version_link)
+    # Find previous version from existing links
+    prev_version_match = new_content.match(/\[(\d+\.\d+\.\d+)\]: /)
+    if prev_version_match
+      prev_version = prev_version_match[1]
+      new_link = "[#{new_version}]: #{repo_url}/compare/v#{prev_version}...v#{new_version}\n"
+      # Insert after Unreleased link
+      new_content.sub!(/(\[Unreleased\]: .+\n)/, "\\1#{new_link}")
+    else
+      # No previous version, link to tag
+      new_link = "[#{new_version}]: #{repo_url}/releases/tag/v#{new_version}\n"
+      new_content.sub!(/(\[Unreleased\]: .+\n)/, "\\1#{new_link}")
+    end
+  end
+
+  # Write updated changelog
+  File.write(changelog_path, new_content)
+  UI.success("CHANGELOG.md updated with version #{new_version}")
+
+  # Return the section for release notes generation
+  section
+end
+
+# Commit changelog and project changes, then create git tag
+def commit_release(version:)
+  # Stage changelog and metadata
+  sh("git add ../CHANGELOG.md")
+  sh("git add metadata/en-US/release_notes.txt")
+  sh("git add ../LeavesOfBlocks.xcodeproj/project.pbxproj")
+
+  # Commit with conventional commit format
+  sh("git commit -m 'chore: Release v#{version}'")
+
+  # Create annotated tag
+  sh("git tag -a v#{version} -m 'Release version #{version}'")
+
+  UI.success("Created commit and tag v#{version}")
+end
+
 platform :ios do
   before_all do
     ensure_xcode_version(version: XCODE_VERSION)
@@ -271,19 +457,35 @@ platform :ios do
     # Set up API key in lane context (automatically used by deliver)
     api_key = app_store_api_key
 
-    # Handle version increment if specified
-    new_version = nil
-    if options[:version]
-      new_version = bump_marketing_version(
-        xcodeproj: XCODE_PROJECT,
-        target_name: MAIN_SCHEME,
-        bump_type: options[:version]
-      )
-      UI.success("Marketing Version Updated to #{new_version}")
-
-      # Generate release notes from CHANGELOG.md
-      generate_release_notes(version: new_version)
+    # Ensure we have a version bump specified
+    unless options[:version]
+      UI.user_error!("Version bump required. Use: fastlane deploy version:patch|minor|major")
     end
+
+    # Calculate new version first (don't apply yet)
+    new_version = calculate_new_version(
+      xcodeproj: XCODE_PROJECT,
+      target_name: MAIN_SCHEME,
+      bump_type: options[:version]
+    )
+    UI.message("Preparing release for version #{new_version}")
+
+    # Update changelog from commits (blocks if no meaningful commits)
+    update_changelog_from_commits(new_version: new_version)
+
+    # Now bump version in Xcode project
+    bump_marketing_version(
+      xcodeproj: XCODE_PROJECT,
+      target_name: MAIN_SCHEME,
+      bump_type: options[:version]
+    )
+    UI.success("Marketing Version Updated to #{new_version}")
+
+    # Generate release notes from the updated changelog
+    generate_release_notes(version: new_version)
+
+    # Commit changelog, release notes, and project changes
+    commit_release(version: new_version)
 
     # Increment build number
     increment_build_number(xcodeproj: XCODE_PROJECT)
@@ -318,6 +520,7 @@ platform :ios do
     UI.success("🚀 App delivered to App Store Connect!")
 
     UI.message("📱 Binary, metadata, and screenshots uploaded")
+    UI.message("🏷️  Git tag v#{new_version} created")
     UI.message("⏳ Check App Store Connect for build processing status")
   end
 
@@ -345,19 +548,35 @@ platform :ios do
     # Configure App Store Connect API key for App Store
     api_key = app_store_api_key
 
-    # Handle version increment if specified
-    new_version = nil
-    if options[:version]
-      new_version = bump_marketing_version(
-        xcodeproj: XCODE_PROJECT,
-        target_name: MAIN_SCHEME,
-        bump_type: options[:version]
-      )
-      UI.success("Marketing Version Updated to #{new_version}")
-
-      # Generate release notes from CHANGELOG.md
-      generate_release_notes(version: new_version)
+    # Ensure we have a version bump specified
+    unless options[:version]
+      UI.user_error!("Version bump required. Use: fastlane deploy_and_submit version:patch|minor|major")
     end
+
+    # Calculate new version first (don't apply yet)
+    new_version = calculate_new_version(
+      xcodeproj: XCODE_PROJECT,
+      target_name: MAIN_SCHEME,
+      bump_type: options[:version]
+    )
+    UI.message("Preparing release for version #{new_version}")
+
+    # Update changelog from commits (blocks if no meaningful commits)
+    update_changelog_from_commits(new_version: new_version)
+
+    # Now bump version in Xcode project
+    bump_marketing_version(
+      xcodeproj: XCODE_PROJECT,
+      target_name: MAIN_SCHEME,
+      bump_type: options[:version]
+    )
+    UI.success("Marketing Version Updated to #{new_version}")
+
+    # Generate release notes from the updated changelog
+    generate_release_notes(version: new_version)
+
+    # Commit changelog, release notes, and project changes
+    commit_release(version: new_version)
 
     # Increment build number
     increment_build_number(xcodeproj: XCODE_PROJECT)
@@ -382,6 +601,7 @@ platform :ios do
 
     UI.success("🎉 Complete deployment finished!")
     UI.message("📱 Binary uploaded and submitted for review")
+    UI.message("🏷️  Git tag v#{new_version} created")
     UI.message("⏳ Apple will review your app within 24-48 hours")
   end
 

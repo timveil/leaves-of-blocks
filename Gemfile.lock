@@ -29,6 +29,8 @@ GEM
     babosa (1.0.4)
     base64 (0.2.0)
     bigdecimal (3.3.1)
+    childprocess (5.1.0)
+      logger (~> 1.5)
     claide (1.1.0)
     colored (1.2)
     colored2 (3.1.2)
@@ -162,6 +164,7 @@ GEM
       domain_name (~> 0.5)
     httpclient (2.9.0)
       mutex_m
+    iniparse (1.5.0)
     jmespath (1.6.2)
     json (2.16.0)
     jwt (2.10.2)
@@ -177,6 +180,10 @@ GEM
     nkf (0.2.0)
     optparse (0.8.0)
     os (1.1.4)
+    overcommit (0.68.0)
+      childprocess (>= 0.6.3, < 6)
+      iniparse (~> 1.4)
+      rexml (>= 3.3.9)
     plist (3.7.2)
     public_suffix (7.0.0)
     rake (13.3.1)
@@ -231,6 +238,7 @@ PLATFORMS
 
 DEPENDENCIES
   fastlane
+  overcommit (~> 0.64)
   xcode-install
 
 BUNDLED WITH
