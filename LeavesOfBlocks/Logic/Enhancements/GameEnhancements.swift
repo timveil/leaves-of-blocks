@@ -91,18 +91,16 @@ extension GameState {
         }
         
         // Faster line clearing with minimal delay
-        DispatchQueue.main.asyncAfter(deadline: .now() + GameTheme.GameConfig.lineClearDelay) {
+        Task { @MainActor in
+            try? await Task.sleep(for: .seconds(GameTheme.GameConfig.lineClearDelay))
             let _ = self.clearCompletedLines()
-            
+
             // Generate new blocks if all are used
             if self.currentBlocks.isEmpty {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-                    self.generateNewBlocks()
-                    completion()
-                }
-            } else {
-                completion()
+                try? await Task.sleep(for: .seconds(0.2))
+                self.generateNewBlocks()
             }
+            completion()
         }
     }
 }

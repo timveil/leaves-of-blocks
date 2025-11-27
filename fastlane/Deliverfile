@@ -48,8 +48,8 @@ skip_binary_upload(false)
 # Skip screenshots upload if they haven't changed
 skip_screenshots(true)
 
-# Skip metadata upload if it hasn't changed  
-skip_metadata(true)
+# Include metadata upload (release notes are auto-generated from CHANGELOG.md)
+skip_metadata(false)
 
 # Overwrite screenshots
 overwrite_screenshots(true)

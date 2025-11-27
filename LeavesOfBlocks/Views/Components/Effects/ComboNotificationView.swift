@@ -91,9 +91,10 @@ struct ComboNotificationView: View {
             opacity = 1.0
             isVisible = true
         }
-        
+
         // Shorter hold time, then quick fade out
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+        Task { @MainActor in
+            try? await Task.sleep(for: .seconds(0.5))
             withAnimation(.easeOut(duration: 0.25)) {
                 opacity = 0.0
                 yOffset = -15
@@ -128,11 +129,10 @@ struct ComboNotificationOverlay: View {
                     Spacer()
                 }
                 .id(notificationId) // Force recreation for each new combo
-                .onAppear {
+                .task {
                     // Clear the combo after animation completes - faster dismissal
-                    DispatchQueue.main.asyncAfter(deadline: .now() + 1.0) {
-                        activeCombo = nil
-                    }
+                    try? await Task.sleep(for: .seconds(1.0))
+                    activeCombo = nil
                 }
             }
         }
@@ -244,53 +244,55 @@ struct ComboNotificationPreviewContainer: View {
         showCombo2 = false
         showCombo3 = false
         showCombo5 = false
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+
+        Task { @MainActor in
+            try? await Task.sleep(for: .seconds(0.1))
             comboKey2 = UUID()
             showCombo2 = true
         }
     }
-    
+
     private func triggerCombo3() {
         showCombo2 = false
         showCombo3 = false
         showCombo5 = false
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+
+        Task { @MainActor in
+            try? await Task.sleep(for: .seconds(0.1))
             comboKey3 = UUID()
             showCombo3 = true
         }
     }
-    
+
     private func triggerCombo5() {
         showCombo2 = false
         showCombo3 = false
         showCombo5 = false
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+
+        Task { @MainActor in
+            try? await Task.sleep(for: .seconds(0.1))
             comboKey5 = UUID()
             showCombo5 = true
         }
     }
-    
+
     private func triggerAllCombos() {
         showCombo2 = false
         showCombo3 = false
         showCombo5 = false
-        
+
         // Show them in sequence
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+        Task { @MainActor in
+            try? await Task.sleep(for: .seconds(0.1))
             comboKey2 = UUID()
             showCombo2 = true
-        }
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+
+            try? await Task.sleep(for: .seconds(2.9))
             showCombo2 = false
             comboKey3 = UUID()
             showCombo3 = true
-        }
-        
-        DispatchQueue.main.asyncAfter(deadline: .now() + 6.0) {
+
+            try? await Task.sleep(for: .seconds(3.0))
             showCombo3 = false
             comboKey5 = UUID()
             showCombo5 = true

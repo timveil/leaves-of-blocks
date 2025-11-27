@@ -59,7 +59,7 @@ struct ContentView: View {
     // MARK: - View Body
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             VStack(spacing: 0) {
                 // Persistent Top Toolbar
                 ToolbarView(
@@ -163,7 +163,6 @@ struct ContentView: View {
                 }
             }
         }
-        .navigationViewStyle(StackNavigationViewStyle())  // Prevents split view on iPad
     }
     
     // MARK: - Navigation Helpers

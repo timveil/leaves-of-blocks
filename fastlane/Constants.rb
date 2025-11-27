@@ -14,7 +14,7 @@ DEVELOPER_PHONE = "+1 678 296 7960"
 DEVELOPER_EMAIL = "timveil@mac.com"
 
 # Build Configuration
-XCODE_VERSION = "16.4"
+XCODE_VERSION = "26.1.1"
 IOS_SIMULATOR = "iPhone 16"
 EXPORT_METHOD = "app-store"
 

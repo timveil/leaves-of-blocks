@@ -45,7 +45,7 @@ Button("start_game".localized) { }
 
 ## Project Overview
 
-This is a SwiftUI iOS game called "Leaves of Blocks" - a Block Blast-style puzzle game created with Xcode 16.4. Players drag and drop randomly generated block shapes onto an 8x8 grid to clear horizontal and vertical lines. The game features autumn-themed visuals, progressive difficulty through weighted block generation, scoring system with combo bonuses, and high score persistence.
+This is a SwiftUI iOS game called "Leaves of Blocks" - a Block Blast-style puzzle game created with Xcode 26. Players drag and drop randomly generated block shapes onto an 8x8 grid to clear horizontal and vertical lines. The game features autumn-themed visuals, progressive difficulty through weighted block generation, scoring system with combo bonuses, and high score persistence.
 
 
 ## Development Menu System
@@ -174,7 +174,7 @@ python3 ./scripts/generate_grass_images.py
 
 ### CI/CD
 - GitHub Actions workflows in `.github/workflows/`
-- Uses Xcode 16.2 on macOS latest runner
+- Uses Xcode 26.1 on macOS latest runner
 - Automatically creates iPhone 16 Pro simulator for testing
 - Runs on push to main and pull requests
 
