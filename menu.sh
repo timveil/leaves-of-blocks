@@ -136,21 +136,21 @@ while true; do
             fi
             ;;
         8)
-            echo -e "${RED}This will deploy to the App Store! Continue? (y/N)${NC}"
+            echo -e "${RED}This will deploy to the App Store with a new patch version! Continue? (y/N)${NC}"
             read -n 1 -r confirm
             echo
             if [[ $confirm =~ ^[Yy]$ ]]; then
-                run_command "bundle exec fastlane ios deploy" \
-                           "Deploy to App Store"
+                run_command "bundle exec fastlane ios deploy version:patch" \
+                           "Deploy to App Store (version bump: patch)"
             fi
             ;;
         9)
-            echo -e "${RED}This will deploy AND submit for App Store review! Continue? (y/N)${NC}"
+            echo -e "${RED}This will deploy AND submit for App Store review with a new patch version! Continue? (y/N)${NC}"
             read -n 1 -r confirm
             echo
             if [[ $confirm =~ ^[Yy]$ ]]; then
-                run_command "bundle exec fastlane ios deploy_and_submit" \
-                           "Deploy & Submit for App Store Review"
+                run_command "bundle exec fastlane ios deploy_and_submit version:patch" \
+                           "Deploy & Submit for App Store Review (version bump: patch)"
             fi
             ;;
         10)

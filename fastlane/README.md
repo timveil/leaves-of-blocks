@@ -79,6 +79,8 @@ Upload screenshots only
 
 Complete App Store deployment with metadata and binary
 
+Options: version:patch|minor|major or version:1.0.5 to set specific version
+
 ### ios submit
 
 ```sh
@@ -94,6 +96,8 @@ Submit for App Store review (use after deploy)
 ```
 
 Full deployment pipeline: build, upload, and submit for review
+
+Options: version:patch|minor|major or version:1.0.5 to set specific version
 
 ### ios screenshots
 

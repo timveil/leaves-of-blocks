@@ -18,6 +18,150 @@ require_relative 'Constants'
 
 default_platform(:ios)
 
+# Helper function to bump marketing version directly in Xcode project
+# This works around issues with increment_version_number and agvtool
+def bump_marketing_version(xcodeproj:, target_name:, bump_type:)
+  require 'xcodeproj'
+
+  # Fastlane runs from fastlane/ directory, so go up one level
+  project_path = File.join(Dir.pwd, '..', xcodeproj)
+  project = Xcodeproj::Project.open(project_path)
+
+  # Find the target
+  target = project.targets.find { |t| t.name == target_name }
+  raise "Target '#{target_name}' not found" unless target
+
+  # Get current version from Release configuration
+  release_config = target.build_configurations.find { |c| c.name == 'Release' }
+  current_version = release_config.build_settings['MARKETING_VERSION'] || '1.0.0'
+
+  UI.message("Current version: #{current_version}")
+
+  # Calculate new version
+  parts = current_version.split('.').map(&:to_i)
+  parts << 0 while parts.length < 3  # Ensure we have at least 3 parts
+
+  new_version = case bump_type
+  when "patch"
+    "#{parts[0]}.#{parts[1]}.#{parts[2] + 1}"
+  when "minor"
+    "#{parts[0]}.#{parts[1] + 1}.0"
+  when "major"
+    "#{parts[0] + 1}.0.0"
+  else
+    # Assume it's a specific version number
+    bump_type
+  end
+
+  # Update all configurations for the target
+  target.build_configurations.each do |config|
+    config.build_settings['MARKETING_VERSION'] = new_version
+  end
+
+  project.save
+
+  UI.message("Version bumped: #{current_version} → #{new_version}")
+  new_version
+end
+
+# Helper function to generate release notes from CHANGELOG.md
+# Parses the changelog, extracts the section for the given version,
+# and transforms it into a prose summary for App Store
+def generate_release_notes(version:)
+  changelog_path = File.join(Dir.pwd, '..', 'CHANGELOG.md')
+  release_notes_path = File.join(Dir.pwd, 'metadata', 'en-US', 'release_notes.txt')
+
+  unless File.exist?(changelog_path)
+    UI.important("CHANGELOG.md not found, skipping release notes generation")
+    return nil
+  end
+
+  content = File.read(changelog_path)
+
+  # Try to find the section for this version, or fall back to [Unreleased]
+  version_pattern = /## \[#{Regexp.escape(version)}\].*?\n(.*?)(?=\n## \[|\n\[Unreleased\]:|\z)/m
+  unreleased_pattern = /## \[Unreleased\].*?\n(.*?)(?=\n## \[|\z)/m
+
+  section = content.match(version_pattern)
+  section = content.match(unreleased_pattern) if section.nil? || section[1].strip.empty?
+
+  if section.nil? || section[1].strip.empty?
+    UI.important("No changelog entries found for version #{version}")
+    return nil
+  end
+
+  section_content = section[1]
+
+  # Parse the different sections (Added, Changed, Fixed, etc.)
+  added = extract_items(section_content, 'Added')
+  changed = extract_items(section_content, 'Changed')
+  fixed = extract_items(section_content, 'Fixed')
+  improved = extract_items(section_content, 'Improved')
+
+  # Build prose summary
+  sentences = []
+
+  # Added items
+  if added.any?
+    if added.length == 1
+      sentences << "This update brings #{added.first.downcase}."
+    else
+      sentences << "This update brings #{added.first.downcase}."
+      added[1..-1].each { |item| sentences << "We've also added #{item.downcase}." }
+    end
+  end
+
+  # Changed/Improved items
+  all_improvements = changed + improved
+  if all_improvements.any?
+    all_improvements.each { |item| sentences << "We've improved #{item.downcase}." }
+  end
+
+  # Fixed items
+  if fixed.any?
+    if fixed.length == 1
+      sentences << "We've fixed #{fixed.first.downcase}."
+    else
+      sentences << "We've fixed #{fixed.first.downcase}."
+      fixed[1..-1].each { |item| sentences << "Also fixed: #{item.downcase}." }
+    end
+  end
+
+  # If no structured content found, use a generic message
+  if sentences.empty?
+    sentences << "This update includes various improvements and bug fixes."
+  end
+
+  # Add closing
+  sentences << ""
+  sentences << "Thank you for playing Leaves of Blocks!"
+
+  prose = sentences.join(" ").gsub("  ", " ").strip
+  # Fix double periods
+  prose = prose.gsub("..", ".").gsub(". .", ".")
+
+  # Ensure we don't exceed App Store's 4000 character limit
+  if prose.length > 4000
+    prose = prose[0..3950] + "...\n\nThank you for playing Leaves of Blocks!"
+  end
+
+  # Write to release_notes.txt
+  File.write(release_notes_path, prose)
+  UI.success("Release notes generated for version #{version}")
+  UI.message("Preview:\n#{prose}")
+
+  prose
+end
+
+# Helper to extract bullet items from a changelog section
+def extract_items(content, header)
+  pattern = /### #{header}\n((?:- .*\n?)*)/
+  match = content.match(pattern)
+  return [] unless match
+
+  match[1].scan(/^- (.+)$/).flatten.map(&:strip).reject(&:empty?)
+end
+
 platform :ios do
   before_all do
     ensure_xcode_version(version: XCODE_VERSION)
@@ -122,13 +266,28 @@ platform :ios do
   end
 
   desc "Complete App Store deployment with metadata and binary"
-  lane :deploy do
+  desc "Options: version:patch|minor|major or version:1.0.5 to set specific version"
+  lane :deploy do |options|
     # Set up API key in lane context (automatically used by deliver)
     api_key = app_store_api_key
 
+    # Handle version increment if specified
+    new_version = nil
+    if options[:version]
+      new_version = bump_marketing_version(
+        xcodeproj: XCODE_PROJECT,
+        target_name: MAIN_SCHEME,
+        bump_type: options[:version]
+      )
+      UI.success("Marketing Version Updated to #{new_version}")
+
+      # Generate release notes from CHANGELOG.md
+      generate_release_notes(version: new_version)
+    end
+
     # Increment build number
     increment_build_number(xcodeproj: XCODE_PROJECT)
-    
+
     UI.success("Build Number Incremented")
 
     # Build the app
@@ -137,7 +296,7 @@ platform :ios do
       scheme: MAIN_SCHEME,
       export_method: EXPORT_METHOD
     )
-    
+
     UI.success("Build App Complete")
 
     # Log API key info for debugging
@@ -147,13 +306,15 @@ platform :ios do
     UI.message("  Key exists: #{api_key[:key] ? 'Yes' : 'No'}")
 
     # Upload everything using deliver (automatically uses API key from lane context)
+    # Enable metadata upload to include generated release notes
     deliver(
       api_key: api_key,
       submit_for_review: false,
       automatic_release: false,
-      force: true
+      force: true,
+      skip_metadata: false
     )
-    
+
     UI.success("🚀 App delivered to App Store Connect!")
 
     UI.message("📱 Binary, metadata, and screenshots uploaded")
@@ -179,29 +340,46 @@ platform :ios do
   end
 
   desc "Full deployment pipeline: build, upload, and submit for review"
-  lane :deploy_and_submit do
+  desc "Options: version:patch|minor|major or version:1.0.5 to set specific version"
+  lane :deploy_and_submit do |options|
     # Configure App Store Connect API key for App Store
     api_key = app_store_api_key
-    
+
+    # Handle version increment if specified
+    new_version = nil
+    if options[:version]
+      new_version = bump_marketing_version(
+        xcodeproj: XCODE_PROJECT,
+        target_name: MAIN_SCHEME,
+        bump_type: options[:version]
+      )
+      UI.success("Marketing Version Updated to #{new_version}")
+
+      # Generate release notes from CHANGELOG.md
+      generate_release_notes(version: new_version)
+    end
+
     # Increment build number
     increment_build_number(xcodeproj: XCODE_PROJECT)
-    
+
     # Build the app
     build_app(
       project: XCODE_PROJECT,
       scheme: MAIN_SCHEME,
       export_method: EXPORT_METHOD
     )
-    
+
     # Upload everything and submit for review
+    # Enable metadata upload to include generated release notes
     deliver(
       api_key: api_key,
       submit_for_review: true,
       automatic_release: false,
       force: true,
+      skip_metadata: false,
       skip_waiting_for_build_processing: false
     )
-    
+
     UI.success("🎉 Complete deployment finished!")
     UI.message("📱 Binary uploaded and submitted for review")
     UI.message("⏳ Apple will review your app within 24-48 hours")
