@@ -33,28 +33,31 @@ else
     RED='' GREEN='' YELLOW='' CYAN='' NC=''
 fi
 
-# Find available iOS simulator (returns "name|uuid")
+# Find available iOS simulator from xcodebuild destinations (returns "name|uuid")
 find_simulator() {
     local simulator_name=""
     local simulator_uuid=""
 
+    # Get available destinations from xcodebuild (this is the authoritative source)
+    local destinations
+    destinations=$(xcodebuild -project "$PROJECT" -scheme "$SCHEME" -showdestinations 2>/dev/null | grep "iOS Simulator")
+
     # Try preferred simulators in order
-    # Note: simctl output may have leading spaces, so we use flexible grep
     for name in "iPhone 16 Pro" "iPhone 16" "iPhone 15 Pro" "iPhone 15" "iPhone 14 Pro" "iPhone 14"; do
         local line
-        line=$(xcrun simctl list devices available 2>/dev/null | grep -E "^\s*$name\s*\(" | head -1)
+        line=$(echo "$destinations" | grep -F "name:$name }" | head -1)
         if [[ -n "$line" ]]; then
             simulator_name="$name"
-            # Extract UUID from the line (format: "    iPhone 16 Pro (UUID) (Shutdown)")
-            simulator_uuid=$(echo "$line" | sed -E 's/.*\(([A-F0-9-]+)\).*/\1/')
+            # Extract UUID from the line (format: "{ platform:iOS Simulator, ..., id:UUID, ... }")
+            simulator_uuid=$(echo "$line" | sed -E 's/.*id:([A-F0-9-]+).*/\1/')
             break
         fi
     done
 
     if [[ -z "$simulator_name" ]]; then
         echo -e "${RED}Error: No compatible iPhone simulator found${NC}" >&2
-        echo "Available simulators:" >&2
-        xcrun simctl list devices available 2>/dev/null | grep iPhone >&2
+        echo "Available destinations:" >&2
+        echo "$destinations" | grep iPhone >&2
         exit 1
     fi
 
@@ -154,8 +157,8 @@ cmd_info() {
     local simulator_uuid="${result##*|}"
     echo "$simulator_name ($simulator_uuid)"
     echo ""
-    echo -e "${YELLOW}Available iPhone Simulators:${NC}"
-    xcrun simctl list devices available 2>/dev/null | grep "iPhone" | head -10
+    echo -e "${YELLOW}Available iPhone Simulators (from xcodebuild):${NC}"
+    xcodebuild -project "$PROJECT" -scheme "$SCHEME" -showdestinations 2>/dev/null | grep "iOS Simulator" | grep "iPhone" | head -10
 }
 
 # Main
