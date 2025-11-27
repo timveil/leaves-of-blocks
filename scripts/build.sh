@@ -102,15 +102,18 @@ cmd_clean() {
 }
 
 # Unified test runner
-# Usage: run_tests <test_type> <without_building>
+# Usage: run_tests <test_type> <without_building> <skip_screenshots>
 #   test_type: "all", "unit", or "ui"
 #   without_building: "true" or "false"
+#   skip_screenshots: "true" or "false" (only applies to UI tests)
 run_tests() {
     local test_type="${1:-all}"
     local without_building="${2:-false}"
+    local skip_screenshots="${3:-false}"
     local destination
     local workers=4
     local only_testing=""
+    local skip_testing=""
     local test_label="tests"
     local xctestrun_file=""
 
@@ -126,6 +129,10 @@ run_tests() {
             only_testing="-only-testing:LeavesOfBlocksUITests"
             workers=2
             test_label="UI tests"
+            # Skip screenshot test in CI (it's for Fastlane App Store submissions only)
+            if [[ "$skip_screenshots" == "true" ]]; then
+                skip_testing="-skip-testing:LeavesOfBlocksUITests/LeavesOfBlocksUITests/testCaptureScreenshots"
+            fi
             ;;
     esac
 
@@ -142,6 +149,7 @@ run_tests() {
             -xctestrun "$xctestrun_file" \
             -destination "$destination" \
             ${only_testing:+"$only_testing"} \
+            ${skip_testing:+"$skip_testing"} \
             -parallel-testing-enabled YES \
             -maximum-parallel-testing-workers "$workers" \
             CODE_SIGNING_ALLOWED='NO' || echo "Tests completed"
@@ -153,6 +161,7 @@ run_tests() {
             -scheme "$SCHEME" \
             -destination "$destination" \
             ${only_testing:+"$only_testing"} \
+            ${skip_testing:+"$skip_testing"} \
             -parallel-testing-enabled YES \
             -maximum-parallel-testing-workers "$workers" \
             CODE_SIGNING_ALLOWED='NO' || echo "Tests completed or no tests found"
@@ -238,16 +247,16 @@ cmd_info() {
 # Main
 case "${1:-help}" in
     build)                      cmd_build ;;
-    test)                       run_tests all false ;;
-    test-unit)                  run_tests unit false ;;
-    test-ui)                    run_tests ui false ;;
+    test)                       run_tests all false false ;;
+    test-unit)                  run_tests unit false false ;;
+    test-ui)                    run_tests ui false false ;;
     clean)                      cmd_clean ;;
     run)                        cmd_run ;;
     info)                       cmd_info ;;
     build-for-testing)          cmd_build_for_testing ;;
-    test-without-building)      run_tests all true ;;
-    test-unit-without-building) run_tests unit true ;;
-    test-ui-without-building)   run_tests ui true ;;
+    test-without-building)      run_tests all true true ;;
+    test-unit-without-building) run_tests unit true true ;;
+    test-ui-without-building)   run_tests ui true true ;;  # Skips screenshot test in CI
     *)
         echo "Usage: $0 <command>"
         echo ""
