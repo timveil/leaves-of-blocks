@@ -89,22 +89,42 @@ All utility scripts are organized in the `scripts/` directory:
 
 ```
 scripts/
+├── build.sh                # Unified build script (local & CI)
 ├── cleanup-project.sh      # Comprehensive project cleanup
 ├── generate_icons.sh       # Icon generation and copying
 └── generate_grass_images.py # Grass texture generation
 ```
 
-## Build Commands (Manual)
+## Build Commands
 
-For direct command-line usage without the menu system:
+The project uses a unified build script (`scripts/build.sh`) that works both locally and in CI. The script automatically detects available iOS simulators.
 
-### Main App Commands
-- **Build**: `xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "LeavesOfBlocks" build`
-- **Build for Simulator**: `xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "LeavesOfBlocks" build -destination 'platform=iOS Simulator,name=iPhone 16'`
-- **Test All**: `xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "LeavesOfBlocks" test -destination 'platform=iOS Simulator,name=iPhone 16'`
-- **Unit Tests Only**: `xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "LeavesOfBlocks" test -destination 'platform=iOS Simulator,name=iPhone 16' -only-testing:"LeavesOfBlocksTests"`
-- **UI Tests Only**: `xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "LeavesOfBlocks" test -destination 'platform=iOS Simulator,name=iPhone 16' -only-testing:"LeavesOfBlocksUITests"`
-- **Clean Build**: `xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "LeavesOfBlocks" clean build`
+### Recommended: Using build.sh
+```bash
+# Build the project
+./scripts/build.sh build
+
+# Run all tests
+./scripts/build.sh test
+
+# Run unit tests only
+./scripts/build.sh test-unit
+
+# Run UI tests only
+./scripts/build.sh test-ui
+
+# Clean and rebuild
+./scripts/build.sh clean
+
+# Show build environment info
+./scripts/build.sh info
+```
+
+The script auto-detects simulators in this order: iPhone 16 Pro > iPhone 16 > iPhone 15 Pro > iPhone 15
+
+### Alternative: Direct xcodebuild Commands
+For cases where you need direct xcodebuild access:
+- **Build**: `xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "LeavesOfBlocks" build -sdk iphonesimulator`
 - **Archive for Release**: `xcodebuild -project "LeavesOfBlocks.xcodeproj" -scheme "LeavesOfBlocks" -destination "generic/platform=iOS" archive`
 
 ### Fastlane Commands

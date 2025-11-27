@@ -103,23 +103,23 @@ while true; do
     
     case $choice in
         1)
-            run_command "xcodebuild -project 'LeavesOfBlocks.xcodeproj' -scheme 'LeavesOfBlocks' build -destination 'platform=iOS Simulator,name=iPhone 16,OS=18.5'" \
-                       "Build for iPhone 16 Simulator"
+            run_command "./scripts/build.sh build" \
+                       "Build for Simulator"
             ;;
         2)
-            run_command "xcodebuild -project 'LeavesOfBlocks.xcodeproj' -scheme 'LeavesOfBlocks' test -destination 'platform=iOS Simulator,name=iPhone 16,OS=18.5'" \
+            run_command "./scripts/build.sh test" \
                        "Run All Tests"
             ;;
         3)
-            run_command "xcodebuild -project 'LeavesOfBlocks.xcodeproj' -scheme 'LeavesOfBlocks' test -destination 'platform=iOS Simulator,name=iPhone 16,OS=18.5' -only-testing:'LeavesOfBlocksTests'" \
+            run_command "./scripts/build.sh test-unit" \
                        "Run Unit Tests Only"
             ;;
         4)
-            run_command "xcodebuild -project 'LeavesOfBlocks.xcodeproj' -scheme 'LeavesOfBlocks' test -destination 'platform=iOS Simulator,name=iPhone 16,OS=18.5' -only-testing:'LeavesOfBlocksUITests'" \
+            run_command "./scripts/build.sh test-ui" \
                        "Run UI Tests Only"
             ;;
         5)
-            run_command "xcodebuild -project 'LeavesOfBlocks.xcodeproj' -scheme 'LeavesOfBlocks' clean build" \
+            run_command "./scripts/build.sh clean" \
                        "Clean Build"
             ;;
         6)
