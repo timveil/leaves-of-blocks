@@ -1,0 +1,198 @@
+/*
+   Localizable.strings
+   LeavesOfBlocks
+
+   Spanish localization.
+   Copyright © 2025 Tim Veil. All rights reserved.
+*/
+
+// MARK: - App Title and Branding
+"app_title" = "Leaves of Blocks";
+"app_tagline" = "Ay de Mí! Ay Bloques!";
+"app_description" = "Un refugio de rompecabezas de bloques—sin anuncios, solo estrategia, belleza y Walt";
+
+// MARK: - Navigation and Screens
+"how_to_play" = "Cómo Jugar";
+"game_history" = "Historial de Partidas";
+"about_the_game" = "Acerca del Juego";
+"settings" = "Configuración";
+"select_difficulty" = "Seleccionar Dificultad";
+"start_game" = "Iniciar Partida";
+"new_game" = "Nueva Partida";
+
+// MARK: - Game UI
+"score" = "Puntuación";
+"lines" = "Líneas";
+"loading" = "\"No me apresuro, no espero.\"";
+"game_over" = "Fin del Juego";
+"final_score" = "Puntuación Final";
+"view_summary" = "Ver Resumen";
+
+// MARK: - Game Statistics
+"statistics" = "Estadísticas";
+"high_score" = "Puntuación Máxima";
+"games_played" = "Partidas Jugadas";
+"average_score" = "Puntuación Promedio";
+"total_blocks" = "Bloques Totales";
+"blocks" = "Bloques";
+"time_played" = "Tiempo Jugado";
+"blocks_placed" = "Bloques Colocados";
+"lines_cleared" = "Líneas Completadas";
+"longest_combo" = "Combo Más Largo";
+"difficulty" = "Dificultad";
+"best_ever" = "Mejor de Todos";
+"game_summary" = "Resumen de Partida";
+"past_game_summary" = "Resumen de Partida Anterior";
+"best_score" = "Mejor Puntuación";
+
+// MARK: - Efficiency Metrics
+"efficiency" = "Eficiencia";
+"strategy" = "Estrategia";
+"fallbacks" = "%d Respaldos";
+
+// MARK: - Settings
+"settings_description" = "Administra tus datos y preferencias del juego";
+"settings_quote" = "El día borrado, la lección terminada";
+"settings_author" = "Walt Whitman";
+"settings_title" = "Una Medianoche Clara";
+"settings_year" = "1880";
+"clear_game_history" = "Borrar Historial de Partidas";
+"reset_all_data" = "Restablecer Todos los Datos";
+"clear_history_warning" = "Esto eliminará permanentemente todas tus partidas guardadas y estadísticas. Esta acción no se puede deshacer.";
+"reset_data_warning" = "Esto eliminará permanentemente TODOS los datos del juego incluyendo historial, puntuaciones máximas y preferencias. Esta acción no se puede deshacer.";
+"clear_all_game_history" = "Borrar Todo el Historial";
+"cancel" = "Cancelar";
+"reset_everything" = "Restablecer Todo";
+"reset_complete" = "Restablecimiento Completo";
+"ok" = "Aceptar";
+"history_cleared_message" = "El historial de partidas se ha borrado exitosamente.";
+"all_data_reset_message" = "Todos los datos del juego se han restablecido exitosamente.";
+
+// MARK: - How to Play
+"how_to_play_quote" = "Para mí cada hora de luz y oscuridad es un milagro, Cada pulgada cúbica de espacio es un milagro,";
+"how_to_play_author" = "Walt Whitman";
+"how_to_play_title" = "Milagros";
+"how_to_play_year" = "1856";
+
+"the_grid" = "El Campo de Juego";
+"the_grid_description" = "Tu tablero de juego es una cuadrícula de 8×8 con 64 espacios. Tu objetivo es completar filas horizontales o columnas verticales para eliminarlas y ganar puntos. La cuadrícula comienza con algunos bloques aleatorios ya colocados para crear desafíos interesantes.";
+
+"drag_drop" = "Cómo Jugar";
+"drag_drop_description" = "Verás hasta 3 formas de bloques en la parte inferior de la pantalla. Simplemente arrastra cualquier forma a la cuadrícula donde quepa completamente. Los bloques no pueden superponerse a piezas existentes ni extenderse más allá de los bordes de la cuadrícula. Cuando uses los 3 bloques, recibirás 3 nuevos automáticamente.";
+
+"clear_lines" = "Completar Líneas";
+"clear_lines_description" = "Cuando completas una fila horizontal o columna vertical, ¡desaparece y ganas puntos! Elimina múltiples líneas a la vez para obtener puntos de bonificación. Cuantas más líneas elimines simultáneamente, mayor será tu bonificación de combo.";
+
+"game_over_rules" = "Fin del Juego";
+"game_over_description" = "El juego termina cuando ninguno de tus 3 bloques actuales puede caber en ningún lugar de la cuadrícula. No te preocupes - el juego incluye funciones inteligentes para ayudar a prevenir esto ajustando los tipos de bloques que recibes según la situación de tu cuadrícula.";
+
+"advanced_features" = "Funciones Avanzadas";
+"advanced_features_description" = "Leaves of Blocks incluye sistemas sofisticados que se adaptan a tu estilo de juego y te ayudan a mejorar con el tiempo.";
+
+"efficiency_system" = "Seguimiento de Rendimiento";
+"efficiency_system_description" = "El juego rastrea qué tan eficientemente usas el espacio de la cuadrícula y proporciona calificaciones de A+ a D. Mayor eficiencia proviene de mantener la cuadrícula organizada y minimizar el espacio desperdiciado.";
+
+"strategic_grading" = "Juego Estratégico";
+"strategic_grading_description" = "Tus habilidades estratégicas se califican de Principiante a Maestro según qué tan bien preparas las eliminaciones de líneas y planificas con anticipación. Busca oportunidades para eliminar múltiples líneas con una sola colocación de bloque.";
+
+"adaptive_difficulty" = "Generación Inteligente de Bloques";
+"adaptive_difficulty_description" = "El juego analiza tu cuadrícula y ajusta los bloques que recibes para mantener el desafío mientras previene situaciones imposibles. Cuando estás en dificultades, proporciona formas más útiles automáticamente.";
+
+"pro_tips" = "Consejos Pro";
+
+// MARK: - Pro Tips
+"tip_keep_organized" = "Mantén tu cuadrícula organizada - evita crear huecos dispersos";
+"tip_multiple_lines" = "Busca oportunidades para eliminar múltiples líneas con una colocación";
+"tip_plan_ahead" = "Considera los tres bloques disponibles antes de colocar cualquiera";
+"tip_corners_edges" = "Usa las esquinas y bordes estratégicamente cuando la cuadrícula se llene";
+"tip_save_small_blocks" = "Guarda los bloques pequeños para espacios reducidos y movimientos finales";
+"tip_efficiency_matters" = "Tu calificación de eficiencia mejora con juego organizado y estratégico";
+
+// MARK: - Scoring Table
+"points" = "Puntos";
+"description" = "Descripción";
+"mode" = "Modo";
+"shape" = "Forma";
+
+// MARK: - Scoring Descriptions
+"scoring_blocks_placed" = "Colocar bloques en la cuadrícula";
+"scoring_clear_lines" = "Completar líneas completas";
+"scoring_combo_bonus" = "Bonificación de combo por cada línea adicional";
+
+// MARK: - Difficulty Descriptions
+"difficulty_easy_desc" = "Perfecto para principiantes - recibirás más bloques pequeños y manejables que son más fáciles de colocar";
+"difficulty_moderate_desc" = "Un desafío equilibrado con una buena mezcla de bloques pequeños y grandes para un juego atractivo";
+"difficulty_hard_desc" = "Para jugadores experimentados - espera más bloques grandes y complejos que requieren pensamiento estratégico";
+
+// MARK: - Shape Descriptions
+"shape_normal_blocks" = "Bloques\nNormales";
+"shape_row_clear" = "Eliminar Fila";
+"shape_column_clear" = "Eliminar Columna";
+"shape_area_clear" = "Eliminar Área";
+"shape_normal_desc" = "¡Estos son tus bloques de construcción principales! Vienen en muchas formas y tamaños (1-9 cuadros cada uno). Úsalos para llenar filas y columnas, luego míralos desaparecer cuando estén completos.";
+"shape_horizontal_desc" = "Un poderoso bloque rojo que elimina instantáneamente toda una fila horizontal cuando se coloca, sin importar lo que haya en esa fila. ¡Genial para superar situaciones difíciles!";
+"shape_vertical_desc" = "Un poderoso bloque azul que elimina instantáneamente toda una columna vertical cuando se coloca, sin importar lo que haya en esa columna. ¡Perfecto para crear espacio!";
+"shape_area_desc" = "¡El bloque de poder definitivo! Este bloque morado elimina un área grande de 3×3 alrededor de donde lo coloques. ¡Úsalo sabiamente para máximo impacto y puntos!";
+
+// MARK: - About Page
+"about_game_description" = "Un juego de rompecabezas de bloques inspirado en la poesía de Walt Whitman y el amor por el juego sin anuncios. Coloca bloques con cuidado, elimina líneas estratégicamente y encuentra significado en simples momentos de concentración.";
+"inspiration" = "Inspiración";
+"inspiration_quote" = "Nacido del amor por los rompecabezas de bloques, la frustración con los anuncios y la inspiración de la poesía atemporal de Walt Whitman.";
+"dedication" = "Dedicatoria";
+"dedication_text" = "Para Emma, Annie y Grace. Que este juego sirva como una distracción momentánea de las luchas de la vida, grandes y pequeñas.";
+"answer" = "Respuesta.";
+"whitman_quote_1" = "Que estás aquí—que existe la vida y la identidad,";
+"whitman_quote_2" = "Que la poderosa obra continúa, y tú puedes contribuir un verso..";
+"whitman_author" = "Walt Whitman";
+"whitman_title" = "Oh Yo! Oh Vida!";
+"whitman_year" = "1867";
+"creator" = "Creador";
+"creator_description" = "Desarrollado por Tim Veil, un ingeniero de software y padre que cree que los juegos deberían proporcionar un respiro, no rabia.";
+"technical_details" = "Detalles Técnicos";
+"technical_description" = "Construido con SwiftUI para iOS 18.5+. Sin anuncios, sin rastreo, sin recolección de datos. Juega sin conexión, las puntuaciones permanecen privadas.";
+
+// MARK: - Game Over Overlay
+"game_over_quote" = "Que el poderoso juego ha terminado, y Tú no pudiste contribuir un bloque.";
+
+// MARK: - Save Game Overlay
+"save_game_title" = "Guardar Partida";
+"save_game_message" = "¿Te gustaría guardar tu progreso actual o salir sin guardar?";
+"current_score" = "Puntuación Actual";
+"save_game_button" = "Guardar Partida";
+"exit_without_saving" = "Salir Sin Guardar";
+
+// MARK: - Score Display
+"last_score_format" = "Última Puntuación: %@";
+"tap_for_history" = "Toca para Historial";
+
+// MARK: - App Clip Content
+"get_full_game" = "Obtener Juego Completo";
+"free_to_play" = "Gratis • Sin anuncios";
+"get_full_experience" = "Obtén la Experiencia Completa";
+"download_from_app_store" = "Descargar de App Store";
+"free_no_purchases" = "Gratis • Sin anuncios • Sin compras dentro de la app";
+
+// MARK: - App Clip Features
+"feature_8x8_grid" = "Cuadrícula de rompecabezas 8x8";
+"feature_21_shapes" = "21 formas de bloques únicas";
+"feature_3_difficulties" = "3 niveles de dificultad";
+"feature_high_scores" = "Seguimiento de puntuaciones máximas";
+"feature_complete_gameplay" = "Experiencia de juego completa";
+"feature_track_progress" = "Sigue tu progreso";
+"feature_game_history" = "Historial y estadísticas del juego";
+"feature_persistent_scores" = "Puntuaciones máximas persistentes";
+"feature_all_shapes" = "Las 21 formas de bloques";
+
+// MARK: - Combo Notifications
+"combo" = "COMBO";
+"combo_excited" = "COMBO!";
+"mega_combo" = "MEGA COMBO!";
+"lines_cleared_format" = "%d LÍNEAS";
+
+// MARK: - Preview Interface
+"combo_notifications_preview" = "Vista Previa de Notificaciones de Combo";
+"tap_to_trigger_combos" = "Toca para activar animaciones de combo:";
+"two_line_combo_button" = "Combo de 2 Líneas (+50)";
+"three_line_combo_button" = "Combo de 3 Líneas (+100)";
+"five_line_combo_button" = "Mega Combo de 5 Líneas (+200)";
+"show_all_combos" = "Mostrar Todos los Combos";

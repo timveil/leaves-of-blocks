@@ -92,8 +92,9 @@ while true; do
 
     echo -e "${BLUE}Other:${NC}"
     echo " 22) Open in Xcode"
-    echo " 23) View CLAUDE.md"
-    echo " 24) View Coding Standards"
+    echo " 23) Run in Simulator (without Xcode)"
+    echo " 24) View CLAUDE.md"
+    echo " 25) View Coding Standards"
     echo ""
 
     echo -e "${RED}  0) Exit${NC}"
@@ -481,10 +482,14 @@ while true; do
             open "LeavesOfBlocks.xcodeproj"
             ;;
         23)
+            run_command "./scripts/build.sh run" \
+                       "Run in Simulator (without Xcode)"
+            ;;
+        24)
             run_command "cat 'CLAUDE.md' | less" \
                        "View CLAUDE.md"
             ;;
-        24)
+        25)
             run_command "cat 'LeavesOfBlocks/Documentation/CodingStandards.md' | less" \
                        "View Coding Standards"
             ;;
