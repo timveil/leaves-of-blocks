@@ -75,10 +75,11 @@ jobs:
           xcrun simctl list devices available
 
           # Find an available iPhone simulator from the list
-          # Try iPhone 16 Pro first, then iPhone 16, then iPhone 15 Pro, then any iPhone
+          # Try specific models first - just use the name directly since we know these exist
           SIMULATOR_NAME=""
           for name in "iPhone 16 Pro" "iPhone 16" "iPhone 15 Pro" "iPhone 15" "iPhone 14 Pro" "iPhone 14"; do
-            if xcrun simctl list devices available | grep -q "\"$name\""; then
+            # Check if this device name exists in available devices
+            if xcrun simctl list devices available | grep -F "$name" | grep -q "("; then
               SIMULATOR_NAME="$name"
               echo "Found simulator: $SIMULATOR_NAME"
               break
@@ -86,13 +87,9 @@ jobs:
           done
 
           if [ -z "$SIMULATOR_NAME" ]; then
-            # Fall back to any available iPhone
-            SIMULATOR_NAME=$(xcrun simctl list devices available | grep "iPhone" | head -1 | sed 's/.*"\([^"]*\)".*/\1/')
-            echo "Falling back to: $SIMULATOR_NAME"
-          fi
-
-          if [ -z "$SIMULATOR_NAME" ]; then
             echo "ERROR: No iPhone simulator found!"
+            echo "Available devices were:"
+            xcrun simctl list devices available
             exit 1
           fi
 
