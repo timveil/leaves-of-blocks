@@ -15,6 +15,13 @@
     {
       "target" : {
         "containerPath" : "container:LeavesOfBlocks.xcodeproj",
+        "identifier" : "3A3C932D2ED8D8B5009DDA6C",
+        "name" : "LeavesOfBlocksTests"
+      }
+    },
+    {
+      "target" : {
+        "containerPath" : "container:LeavesOfBlocks.xcodeproj",
         "identifier" : "3AF786EE2E3D7C3800B1A3BE",
         "name" : "LeavesOfBlocksUITests"
       }
