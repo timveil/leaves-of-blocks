@@ -125,6 +125,12 @@ run_tests() {
         unit)
             only_testing="-only-testing:LeavesOfBlocksTests"
             test_label="unit tests"
+            # CI-specific optimizations for unit tests
+            if [[ "$is_ci" == "true" ]]; then
+                # Disable parallel testing in CI - avoids xcodebuild crash (Abort trap: 6)
+                parallel_testing="NO"
+                workers=1
+            fi
             ;;
         ui)
             only_testing="-only-testing:LeavesOfBlocksUITests"
