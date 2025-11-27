@@ -44,25 +44,60 @@ jobs:
         uses: actions/checkout@1af3b93b6815bc44a9784bd300feb67ff0d1eeb3  # v6.0.0
       - name: Select Xcode
         run: |
-          # Use Xcode 26.1 (latest stable version)
-          sudo xcode-select -s /Applications/Xcode_26.1.app
+          # Find and use the latest available Xcode version
+          # Try Xcode 26.1 first (stable or RC), then fall back to 16.x
+          if [ -d "/Applications/Xcode_26.1.app" ]; then
+            XCODE_PATH="/Applications/Xcode_26.1.app"
+          elif [ -d "/Applications/Xcode_26.1_Release_Candidate.app" ]; then
+            XCODE_PATH="/Applications/Xcode_26.1_Release_Candidate.app"
+          elif [ -d "/Applications/Xcode_16.1.app" ]; then
+            XCODE_PATH="/Applications/Xcode_16.1.app"
+          elif [ -d "/Applications/Xcode_16.0.app" ]; then
+            XCODE_PATH="/Applications/Xcode_16.0.app"
+          else
+            # List available Xcode installations
+            echo "Available Xcode installations:"
+            ls -la /Applications/ | grep Xcode
+            # Use whatever Xcode is available
+            XCODE_PATH=$(ls -d /Applications/Xcode*.app 2>/dev/null | head -1)
+          fi
+          echo "Using Xcode at: $XCODE_PATH"
+          sudo xcode-select -s "$XCODE_PATH"
           xcodebuild -version
-      - name: Setup iOS Simulator
+      - name: Find Available Simulator
+        id: simulator
         run: |
-          # List available runtimes and devices
+          # List available runtimes and devices for debugging
           echo "Available runtimes:"
           xcrun simctl list runtimes
+          echo ""
           echo "Available devices:"
-          xcrun simctl list devices
-          # Find the latest iOS runtime available (Xcode 26.1 includes iOS 26)
-          RUNTIME=$(xcrun simctl list runtimes | grep "iOS" | tail -1 | awk '{print $NF}')
-          if [ -z "$RUNTIME" ]; then
-            echo "No iOS runtime found, will try to proceed anyway"
-          else
-            echo "Using runtime: $RUNTIME"
-            # Create iPhone 16 Pro simulator
-            xcrun simctl create "iPhone 16 Pro CI" "iPhone 16 Pro" "$RUNTIME" || true
+          xcrun simctl list devices available
+
+          # Find an available iPhone simulator from the list
+          # Try iPhone 16 Pro first, then iPhone 16, then iPhone 15 Pro, then any iPhone
+          SIMULATOR_NAME=""
+          for name in "iPhone 16 Pro" "iPhone 16" "iPhone 15 Pro" "iPhone 15" "iPhone 14 Pro" "iPhone 14"; do
+            if xcrun simctl list devices available | grep -q "\"$name\""; then
+              SIMULATOR_NAME="$name"
+              echo "Found simulator: $SIMULATOR_NAME"
+              break
+            fi
+          done
+
+          if [ -z "$SIMULATOR_NAME" ]; then
+            # Fall back to any available iPhone
+            SIMULATOR_NAME=$(xcrun simctl list devices available | grep "iPhone" | head -1 | sed 's/.*"\([^"]*\)".*/\1/')
+            echo "Falling back to: $SIMULATOR_NAME"
           fi
+
+          if [ -z "$SIMULATOR_NAME" ]; then
+            echo "ERROR: No iPhone simulator found!"
+            exit 1
+          fi
+
+          echo "SIMULATOR_NAME=$SIMULATOR_NAME" >> $GITHUB_OUTPUT
+          echo "Using simulator: $SIMULATOR_NAME"
       - name: Set Default Scheme
         run: |
           scheme_list=$(xcodebuild -list -json | tr -d "\n")
@@ -72,11 +107,13 @@ jobs:
       - name: Build and Test
         env:
           scheme: ${{ 'default' }}
+          SIMULATOR_NAME: ${{ steps.simulator.outputs.SIMULATOR_NAME }}
         run: |
           if [ $scheme = default ]; then scheme=$(cat default); fi
           if [ "`ls -A | grep -i \\.xcworkspace\$`" ]; then filetype_parameter="workspace" && file_to_build="`ls -A | grep -i \\.xcworkspace\$`"; else filetype_parameter="project" && file_to_build="`ls -A | grep -i \\.xcodeproj\$`"; fi
           file_to_build=`echo $file_to_build | awk '{$1=$1;print}'`
-          # Build using explicit iOS Simulator destination with available runtime
-          xcodebuild build -scheme "$scheme" -"$filetype_parameter" "$file_to_build" -destination "platform=iOS Simulator,name=iPhone 16 Pro CI"
+          echo "Building with simulator: $SIMULATOR_NAME"
+          # Build using the discovered simulator
+          xcodebuild build -scheme "$scheme" -"$filetype_parameter" "$file_to_build" -destination "platform=iOS Simulator,name=$SIMULATOR_NAME"
           # Then run tests if any exist
-          xcodebuild test -scheme "$scheme" -"$filetype_parameter" "$file_to_build" -destination "platform=iOS Simulator,name=iPhone 16 Pro CI" -skip-testing-configuration-validation || echo "Tests completed or no tests found"
+          xcodebuild test -scheme "$scheme" -"$filetype_parameter" "$file_to_build" -destination "platform=iOS Simulator,name=$SIMULATOR_NAME" -skip-testing-configuration-validation || echo "Tests completed or no tests found"
