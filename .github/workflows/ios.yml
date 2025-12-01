@@ -43,7 +43,7 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Cache Derived Data
         uses: actions/cache@v4
@@ -60,7 +60,7 @@ jobs:
         run: ./scripts/build.sh build-for-testing
 
       - name: Upload Test Build Artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v5
         with:
           name: test-build
           path: build/DerivedData/Build/Products
@@ -73,10 +73,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Download Test Build
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v6
         with:
           name: test-build
           path: build/DerivedData/Build/Products
@@ -91,10 +91,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Download Test Build
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v6
         with:
           name: test-build
           path: build/DerivedData/Build/Products
