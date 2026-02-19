@@ -138,7 +138,7 @@ These commands enable faster CI by building once and running tests from pre-buil
 ./scripts/build.sh test-ui-without-building
 ```
 
-The script auto-detects simulators in this order: iPhone 16 Pro > iPhone 16 > iPhone 15 Pro > iPhone 15
+The script auto-detects the first available iPhone simulator via `xcrun simctl list devices available`
 
 All test commands include parallel test execution (`-parallel-testing-enabled YES`) for improved performance.
 
@@ -206,15 +206,15 @@ python3 ./scripts/generate_grass_images.py
 ```
 
 ### Build Troubleshooting
-- **Available Simulators**: Current system has iPhone 16, iPhone 16 Plus, iPhone 16 Pro Max, iPhone 16e, and various iPad simulators
-- **Simulator Issues**: If "iPhone 16 Pro" is not found, use "iPhone 16" instead
+- **Available Simulators**: Current system has iPhone 17, iPhone 17 Pro, iPhone 17 Pro Max, iPhone Air (iOS 26.2), plus older devices on iOS 18.5
+- **Simulator Issues**: Xcode 26 uses a new device lineup; iPhone 16 and earlier only have iOS 18.5 runtimes and are not compatible with iOS 26.x builds
 - **Build Errors**: Always check for missing Typography properties (e.g., `buttonFont` doesn't exist, use `bodyFont` instead)
 - **Quick Error Check**: Use `xcodebuild ... 2>&1 | grep -A 5 -B 5 "error:"` to isolate compilation errors
 - **Success Verification**: Build output should end with "** BUILD SUCCEEDED **"
 
 ### CI/CD
 - GitHub Actions workflows in `.github/workflows/`
-- Uses Xcode 26.1 on macOS latest runner
+- Uses Xcode bundled with macOS latest runner (currently 26.2)
 - Runs on push to main and pull requests
 - **Optimized 3-job architecture**:
   - `build` job: Compiles with derived data caching, uploads test artifacts
