@@ -14,13 +14,13 @@ DEVELOPER_PHONE = "+1 678 296 7960"
 DEVELOPER_EMAIL = "timveil@mac.com"
 
 # Build Configuration
-XCODE_VERSION = "26.1.1"
-IOS_SIMULATOR = "iPhone 16"
+XCODE_VERSION = "26.2"
+IOS_SIMULATOR = "iPhone 17"
 EXPORT_METHOD = "app-store"
 
 # Screenshot Configuration
 SCREENSHOT_DEVICES = [
-  "iPhone 15 Pro Max"   # 1290x2796 - 6.7" displays (required for App Store Connect)
+  "iPhone 17 Pro Max"   # largest iPhone display (required for App Store Connect)
 ]
 SCREENSHOT_LANGUAGES = [
   "en-US"

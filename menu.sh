@@ -98,7 +98,7 @@ while true; do
 
     echo -e "${BLUE}Development Environment:${NC}"
     echo " 20) Check Environment Status"
-    echo " 21) Setup Ruby (rbenv)"
+    echo " 21) Setup Ruby (asdf)"
     echo " 22) Repair Ruby Gems"
     echo " 23) Configure AI API Key"
     echo ""
@@ -265,10 +265,11 @@ while true; do
             which ruby
             if [[ "$(which ruby)" == "/usr/bin/ruby" ]]; then
                 echo -e "${YELLOW}⚠ Using system Ruby (not recommended)${NC}"
-                echo -e "${YELLOW}  Consider using rbenv for better compatibility${NC}"
-            elif command -v rbenv &> /dev/null; then
-                echo -e "${GREEN}✓ Using rbenv-managed Ruby${NC}"
-                echo "rbenv version: $(rbenv --version)"
+                echo -e "${YELLOW}  Consider using asdf for better compatibility${NC}"
+            elif command -v asdf &> /dev/null && asdf current ruby &> /dev/null 2>&1; then
+                echo -e "${GREEN}✓ Using asdf-managed Ruby${NC}"
+                echo "asdf version: $(asdf --version)"
+                echo "Active Ruby: $(asdf current ruby 2>/dev/null)"
             else
                 echo -e "${GREEN}✓ Using non-system Ruby${NC}"
             fi
@@ -337,88 +338,73 @@ while true; do
             read -n 1 -s
             ;;
         21)
-            # Setup Ruby with rbenv
-            echo -e "${BLUE}=== Ruby Setup with rbenv ===${NC}"
+            # Setup Ruby with asdf
+            echo -e "${BLUE}=== Ruby Setup with asdf ===${NC}"
             echo ""
 
-            # Check if Homebrew is installed
-            if ! command -v brew &> /dev/null; then
-                echo -e "${RED}Homebrew is required but not installed.${NC}"
-                echo -e "${YELLOW}Install Homebrew first:${NC}"
-                echo '/bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"'
+            # Check if asdf is installed
+            if ! command -v asdf &> /dev/null; then
+                echo -e "${RED}asdf is not installed.${NC}"
+                echo -e "${YELLOW}Install asdf first:${NC}"
+                echo "  brew install asdf"
+                echo "  Then add 'source \$(brew --prefix asdf)/libexec/asdf.sh' to your shell profile."
                 echo ""
                 echo -e "${GREEN}Press any key to continue...${NC}"
                 read -n 1 -s
                 continue
             fi
 
-            # Check if rbenv is already installed
-            if command -v rbenv &> /dev/null; then
-                echo -e "${GREEN}✓ rbenv is already installed${NC}"
-                rbenv --version
-                echo ""
-                echo "Current Ruby versions installed:"
-                rbenv versions
-                echo ""
-            else
-                echo -e "${YELLOW}rbenv is not installed. Install it now? (y/N)${NC}"
+            echo -e "${GREEN}✓ asdf is installed${NC}"
+            echo "asdf version: $(asdf --version)"
+            echo ""
+
+            # Check if ruby plugin is installed
+            if ! asdf plugin list 2>/dev/null | grep -q "^ruby$"; then
+                echo -e "${YELLOW}asdf ruby plugin not installed. Install it now? (y/N)${NC}"
                 read -n 1 -r confirm
                 echo
                 if [[ $confirm =~ ^[Yy]$ ]]; then
-                    echo -e "${BLUE}Installing rbenv and ruby-build...${NC}"
-                    brew install rbenv ruby-build
-
-                    echo ""
-                    echo -e "${YELLOW}Adding rbenv to shell profile...${NC}"
-
-                    # Detect shell and add to appropriate profile
-                    if [[ "$SHELL" == *"zsh"* ]]; then
-                        PROFILE="$HOME/.zshrc"
-                    else
-                        PROFILE="$HOME/.bash_profile"
-                    fi
-
-                    if ! grep -q 'rbenv init' "$PROFILE" 2>/dev/null; then
-                        echo '' >> "$PROFILE"
-                        echo '# rbenv' >> "$PROFILE"
-                        echo 'eval "$(rbenv init -)"' >> "$PROFILE"
-                        echo -e "${GREEN}Added rbenv init to $PROFILE${NC}"
-                    else
-                        echo -e "${GREEN}rbenv init already in $PROFILE${NC}"
-                    fi
-
-                    # Initialize rbenv for current session
-                    eval "$(rbenv init -)"
+                    asdf plugin add ruby
+                    echo -e "${GREEN}✓ asdf ruby plugin installed${NC}"
                 else
-                    echo "Skipping rbenv installation."
+                    echo "Skipping ruby plugin installation."
                     echo -e "${GREEN}Press any key to continue...${NC}"
                     read -n 1 -s
                     continue
                 fi
+            else
+                echo -e "${GREEN}✓ asdf ruby plugin installed${NC}"
             fi
 
-            # Offer to install Ruby 3.3.x
-            echo -e "${YELLOW}Install Ruby 3.3.6 (recommended for this project)? (y/N)${NC}"
+            echo ""
+            echo "Currently installed Ruby versions:"
+            asdf list ruby 2>/dev/null || echo "  (none)"
+            echo ""
+            echo "Active Ruby: $(asdf current ruby 2>/dev/null)"
+            echo ""
+
+            # Offer to install a Ruby version
+            echo -e "${YELLOW}Install a Ruby version? (y/N)${NC}"
             read -n 1 -r confirm
             echo
             if [[ $confirm =~ ^[Yy]$ ]]; then
-                echo -e "${BLUE}Installing Ruby 3.3.6 (this may take a few minutes)...${NC}"
-                rbenv install 3.3.6 --skip-existing
+                echo -e "${CYAN}Enter Ruby version to install (e.g. 4.0.1, or 'latest'):${NC}"
+                read -r ruby_version
+                if [[ -n "$ruby_version" ]]; then
+                    echo -e "${BLUE}Installing Ruby $ruby_version (this may take a few minutes)...${NC}"
+                    asdf install ruby "$ruby_version"
+                    echo -e "${GREEN}✓ Ruby $ruby_version installed${NC}"
 
-                echo ""
-                echo -e "${YELLOW}Set Ruby 3.3.6 as the local version for this project? (y/N)${NC}"
-                read -n 1 -r confirm2
-                echo
-                if [[ $confirm2 =~ ^[Yy]$ ]]; then
-                    rbenv local 3.3.6
-                    echo -e "${GREEN}✓ Set Ruby 3.3.6 as local version${NC}"
+                    echo ""
+                    echo -e "${YELLOW}Set Ruby $ruby_version as the local version for this project? (y/N)${NC}"
+                    read -n 1 -r confirm2
+                    echo
+                    if [[ $confirm2 =~ ^[Yy]$ ]]; then
+                        asdf set ruby "$ruby_version"
+                        echo -e "${GREEN}✓ Set Ruby $ruby_version as local version${NC}"
+                    fi
                 fi
             fi
-
-            # Rehash and install bundler
-            echo ""
-            echo -e "${BLUE}Rehashing rbenv shims...${NC}"
-            rbenv rehash
 
             echo ""
             echo -e "${YELLOW}Install/update Bundler? (y/N)${NC}"
