@@ -1,4 +1,5 @@
 import SwiftUI
+import SpriteKit
 
 // MARK: - Main Game Board
 
@@ -7,6 +8,9 @@ struct BoardView: View {
     @State private var dragState: DragState = DragState()
     @State private var gridFrame: CGRect = .zero
     @State private var blockSlotsFrame: CGRect = .zero
+
+    /// Bridge for SpriteKit scene communication (lazy-initialized only when needed)
+    @State private var sceneBridge: GameSceneBridge?
     
     // MARK: - Configuration
     private struct DragConfiguration {
@@ -67,19 +71,32 @@ struct BoardView: View {
                         Spacer()
                     }
                     
-                    // Grid Row  
+                    // Grid Row
                     HStack {
                         Spacer()
-                        GameGridView(
-                        gameState: gameState,
-                        cellSize: cellSize,
-                        draggedBlock: dragState.draggedBlock,
-                        previewPosition: dragState.previewPosition,
-                        onGridFrameChange: { frame in
-                            gridFrame = frame
+                        if AppConfiguration.FeatureFlags.useSpriteKitRenderer,
+                           let bridge = sceneBridge {
+                            SpriteKitGameView(bridge: bridge)
+                                .frame(width: gameWidth, height: gameWidth)
+                                .background(
+                                    GeometryReader { geo in
+                                        Color.clear.onAppear {
+                                            gridFrame = geo.frame(in: .global)
+                                        }
+                                    }
+                                )
+                        } else {
+                            GameGridView(
+                                gameState: gameState,
+                                cellSize: cellSize,
+                                draggedBlock: dragState.draggedBlock,
+                                previewPosition: dragState.previewPosition,
+                                onGridFrameChange: { frame in
+                                    gridFrame = frame
+                                }
+                            )
+                            .frame(width: gameWidth)
                         }
-                        )
-                        .frame(width: gameWidth)
                         Spacer()
                     }
                     
@@ -126,6 +143,11 @@ struct BoardView: View {
                 }
                 .zIndex(10) // Game elements above grass
                 .padding(.horizontal, GameTheme.Layout.largePadding)
+                .onAppear {
+                    if AppConfiguration.FeatureFlags.useSpriteKitRenderer && sceneBridge == nil {
+                        sceneBridge = GameSceneBridge(gameState: gameState, cellSize: cellSize)
+                    }
+                }
             
             // Combo Notification Overlay - appears above game elements but below game over
             ComboNotificationOverlay(gameState: gameState)
@@ -202,26 +224,32 @@ struct BoardView: View {
     
     private func handleDragMove(fingerLocation: CGPoint) {
         dragState.dragLocation = fingerLocation
-        
+
         let blockVisualCenter = getDraggedBlockVisualCenter()
         dragState.isHoveringOverOrigin = isBlockOverHoldingArea(visualCenter: blockVisualCenter)
-        
+
         updateDragPreview(blockVisualCenter: blockVisualCenter)
+
+        // Forward preview state to SpriteKit bridge
+        sceneBridge?.updatePreview(block: dragState.draggedBlock, position: dragState.previewPosition)
     }
     
     private func handleDragEnd() {
-        defer { dragState.reset() }
-        
+        defer {
+            dragState.reset()
+            sceneBridge?.clearPreview()
+        }
+
         guard let block = dragState.draggedBlock else { return }
-        
+
         let blockVisualCenter = getDraggedBlockVisualCenter()
-        
+
         // Check cancellation conditions
         if isLocationOffScreen(blockVisualCenter) {
             gameState.blockReturnFeedback()
             return
         }
-        
+
         // Try to place the block
         if let position = dragState.previewPosition,
            gameState.canPlaceBlock(block, at: position) {

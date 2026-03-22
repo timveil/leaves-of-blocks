@@ -32,6 +32,10 @@ struct AppConfiguration {
         static let enableDebugMode = Environment.current == .debug
         static let enablePerformanceMonitoring = Environment.current != .release
         static let enableAnalytics = Environment.current == .release
+
+        /// Enables the SpriteKit-based game grid renderer instead of the SwiftUI renderer.
+        /// When `true`, the game board is rendered using SpriteKit for richer graphics and effects.
+        static let useSpriteKitRenderer = true
     }
     
     // MARK: - Game Settings
