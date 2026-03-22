@@ -7,20 +7,14 @@ import Combine
 ///
 /// `GameSceneBridge` is an `ObservableObject` that coordinates state updates between
 /// `GameState` (the model), SwiftUI views (navigation, overlays), and `GameScene`
-/// (the SpriteKit renderer). It subscribes to relevant `GameState` properties and
-/// forwards rendering-relevant changes to the scene.
+/// (the SpriteKit renderer). It forwards drag previews and triggers visual effects
+/// for block placement, line clearing, and combo events.
 ///
 /// ## Architecture
 /// ```
 /// SwiftUI Views  <-->  GameSceneBridge  <-->  GameScene
-///                           |
-///                       GameState
-/// ```
-///
-/// ## Usage
-/// ```swift
-/// let bridge = GameSceneBridge(gameState: gameState)
-/// bridge.scene  // Pass to SpriteView
+///                           |                    |
+///                       GameState           Effects Layer
 /// ```
 class GameSceneBridge: ObservableObject {
 
@@ -61,7 +55,6 @@ class GameSceneBridge: ObservableObject {
 
     /// Subscribes to preview state changes and forwards them to the scene.
     private func subscribeToPreviewChanges() {
-        // Combine previewBlock and previewPosition into a single stream
         Publishers.CombineLatest($previewBlock, $previewPosition)
             .receive(on: RunLoop.main)
             .sink { [weak self] block, position in
@@ -73,9 +66,6 @@ class GameSceneBridge: ObservableObject {
     // MARK: - Preview Control
 
     /// Updates the preview state during drag operations.
-    ///
-    /// Called by the SwiftUI drag handlers in `BoardView` to show/hide
-    /// the placement preview in the SpriteKit scene.
     ///
     /// - Parameters:
     ///   - block: The block being dragged, or `nil` to clear
@@ -89,5 +79,29 @@ class GameSceneBridge: ObservableObject {
     func clearPreview() {
         previewBlock = nil
         previewPosition = nil
+    }
+
+    // MARK: - Effect Triggers
+
+    /// Triggers the block placement pop animation in the SpriteKit scene.
+    ///
+    /// Called by `BoardView` after a block is successfully placed on the grid.
+    ///
+    /// - Parameters:
+    ///   - block: The block that was placed
+    ///   - position: The grid position where it was placed
+    func triggerBlockPlacementEffect(block: BlockShape, at position: GridPosition) {
+        scene.playBlockPlacementEffect(block: block, at: position)
+    }
+
+    /// Triggers the line-clear sparkle and combo pulse effects.
+    ///
+    /// Called by `BoardView` after lines are cleared from the grid.
+    ///
+    /// - Parameters:
+    ///   - rows: Set of cleared row indices
+    ///   - cols: Set of cleared column indices
+    func triggerLineClearEffect(clearedRows rows: Set<Int>, clearedCols cols: Set<Int>) {
+        scene.playLineClearEffect(clearedRows: rows, clearedCols: cols)
     }
 }

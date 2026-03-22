@@ -13,15 +13,11 @@ import Combine
 /// - Subscribes to `GameState.objectWillChange` to detect state changes
 /// - Uses a dirty flag pattern to only re-render when the model changes
 /// - Delegates all game logic to the existing `GameLogic`/`GameState` system
+/// - Triggers visual effects (placement pop, line-clear particles, combo pulse)
 ///
 /// ## Coordinate System
 /// The scene uses a top-left origin (Y increases downward) to match SwiftUI layout.
 /// The grid is positioned with padding matching `GameTheme.Layout.mediumPadding`.
-///
-/// ## Usage
-/// ```swift
-/// let scene = GameScene(gameState: gameState, size: CGSize(width: 373, height: 373))
-/// ```
 class GameScene: SKScene {
 
     // MARK: - Properties
@@ -49,6 +45,9 @@ class GameScene: SKScene {
 
     /// Previous grid state hash for change detection
     private var lastGridHash: Int = 0
+
+    /// Ghost block node shown during drag (rendered in SpriteKit for visual consistency)
+    private var ghostBlockNode: BlockNode?
 
     // MARK: - Initialization
 
@@ -86,7 +85,6 @@ class GameScene: SKScene {
 
     /// Positions the grid node within the scene.
     private func setupGrid() {
-        // Position grid with padding from the top-left
         gridNode.position = CGPoint(x: gridPadding, y: gridPadding)
         gridNode.zPosition = 0
         addChild(gridNode)
@@ -96,7 +94,6 @@ class GameScene: SKScene {
     private func subscribeToGameState() {
         guard let gameState = gameState else { return }
 
-        // Subscribe to any published property change
         gameState.objectWillChange
             .receive(on: RunLoop.main)
             .sink { [weak self] _ in
@@ -122,7 +119,6 @@ class GameScene: SKScene {
     private func syncGridFromModel() {
         guard let gameState = gameState else { return }
 
-        // Compute a simple hash to detect actual changes
         let currentHash = computeGridHash(gameState.grid)
         guard currentHash != lastGridHash else { return }
         lastGridHash = currentHash
@@ -131,9 +127,6 @@ class GameScene: SKScene {
     }
 
     /// Computes a lightweight hash of the grid state for change detection.
-    ///
-    /// - Parameter grid: The 2D grid array
-    /// - Returns: An integer hash value
     private func computeGridHash(_ grid: [[GridCell]]) -> Int {
         var hasher = Hasher()
         for row in grid {
@@ -160,24 +153,118 @@ class GameScene: SKScene {
     func updatePreview(block: BlockShape?, position: GridPosition?) {
         guard let gameState = gameState else { return }
 
-        // First, sync grid to clean state
+        // Sync grid to clean state
         gridNode.syncGrid(gameState.grid)
 
-        // Then overlay preview if applicable
+        // Update ghost block
+        updateGhostBlock(block: block, position: position)
+
+        // Overlay preview highlighting
         guard let block = block, let position = position else { return }
 
         let canPlace = gameState.canPlaceBlock(block, at: position)
         gridNode.showPreview(block: block, at: position, canPlace: canPlace)
     }
 
+    // MARK: - Ghost Block (Drag Preview in Scene)
+
+    /// Shows or hides a semi-transparent ghost of the dragged block at the preview position.
+    ///
+    /// The ghost block renders directly in the SpriteKit scene at the snapped grid
+    /// position, giving the player a clear view of exactly where the block will land.
+    ///
+    /// - Parameters:
+    ///   - block: The block being dragged, or `nil` to remove the ghost
+    ///   - position: The grid position to show the ghost at, or `nil` to remove
+    private func updateGhostBlock(block: BlockShape?, position: GridPosition?) {
+        // Remove existing ghost
+        ghostBlockNode?.removeFromParent()
+        ghostBlockNode = nil
+
+        guard let block = block, let position = position,
+              let gameState = gameState,
+              gameState.canPlaceBlock(block, at: position) else { return }
+
+        // Create ghost block node
+        let ghost = BlockNode(block: block, cellSize: cellSize)
+        ghost.alpha = 0.4
+        ghost.zPosition = 3
+
+        // Position the ghost at the grid cell location (inside gridNode coordinate space)
+        let cellPos = gridNode.cellPosition(row: position.row, col: position.col)
+        ghost.position = CGPoint(
+            x: cellPos.x + gridPadding,
+            y: cellPos.y + gridPadding
+        )
+
+        addChild(ghost)
+        ghostBlockNode = ghost
+
+        // Subtle pulse animation on the ghost
+        let pulse = SKAction.sequence([
+            SKAction.fadeAlpha(to: 0.5, duration: 0.4),
+            SKAction.fadeAlpha(to: 0.3, duration: 0.4)
+        ])
+        ghost.run(SKAction.repeatForever(pulse))
+    }
+
+    // MARK: - Visual Effects
+
+    /// Plays the block placement pop animation on the grid.
+    ///
+    /// Called by `GameSceneBridge` after a block is successfully placed.
+    ///
+    /// - Parameters:
+    ///   - block: The block that was placed
+    ///   - position: The grid position where it was placed
+    func playBlockPlacementEffect(block: BlockShape, at position: GridPosition) {
+        // Force grid sync first so cells show the placed block
+        lastGridHash = 0
+        syncGridFromModel()
+
+        BlockPlacementEffect.play(
+            block: block,
+            at: position,
+            in: gridNode,
+            cellSize: cellSize,
+            spacing: gridSpacing
+        )
+    }
+
+    /// Plays the line-clear sparkle and flash effect.
+    ///
+    /// Called by `GameSceneBridge` after lines are cleared.
+    ///
+    /// - Parameters:
+    ///   - rows: Set of row indices that were cleared
+    ///   - cols: Set of column indices that were cleared
+    func playLineClearEffect(clearedRows rows: Set<Int>, clearedCols cols: Set<Int>) {
+        let totalLines = rows.count + cols.count
+        guard totalLines > 0 else { return }
+
+        LineClearEffect.play(
+            clearedRows: rows,
+            clearedCols: cols,
+            in: gridNode,
+            cellSize: cellSize,
+            spacing: gridSpacing,
+            gridSize: GameTheme.GameConfig.gridSize
+        )
+
+        ComboPulseEffect.play(
+            comboCount: totalLines,
+            gridWidth: gridNode.gridWidth,
+            in: gridNode
+        )
+
+        // Force grid sync after effects start to show cleared state
+        lastGridHash = 0
+        needsGridSync = true
+    }
+
     // MARK: - Scene Sizing
 
     /// Calculates the required scene size for the grid with padding.
-    ///
-    /// - Parameters:
-    ///   - cellSize: The cell size in points
-    ///   - gridSize: Number of rows/columns
-    /// - Returns: The scene size needed to contain the grid
     static func sceneSize(cellSize: CGFloat = 40, gridSize: Int = 8) -> CGSize {
         let spacing: CGFloat = 3
         let padding: CGFloat = 16

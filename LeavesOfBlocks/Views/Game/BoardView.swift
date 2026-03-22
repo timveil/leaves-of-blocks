@@ -253,7 +253,32 @@ struct BoardView: View {
         // Try to place the block
         if let position = dragState.previewPosition,
            gameState.canPlaceBlock(block, at: position) {
+            // Capture pre-placement line counts to detect clears
+            let linesBefore = gameState.linesCleared
+
             gameState.placeBlock(block, at: position)
+
+            // Trigger SpriteKit visual effects
+            sceneBridge?.triggerBlockPlacementEffect(block: block, at: position)
+
+            // Detect lines cleared during this placement
+            let linesAfter = gameState.linesCleared
+            let newLinesCleared = linesAfter - linesBefore
+            if newLinesCleared > 0 {
+                // Derive cleared rows/cols from lastClearedCells
+                let clearedRows = Set(gameState.lastClearedCells.map { $0.row })
+                let clearedCols = Set(gameState.lastClearedCells.map { $0.col })
+                    .filter { col in
+                        // A column is fully cleared only if all rows for that col are present
+                        let rowsForCol = gameState.lastClearedCells.filter { $0.col == col }.map { $0.row }
+                        return rowsForCol.count >= GameTheme.GameConfig.gridSize
+                    }
+                let confirmedRows = clearedRows.filter { row in
+                    let colsForRow = gameState.lastClearedCells.filter { $0.row == row }.map { $0.col }
+                    return colsForRow.count >= GameTheme.GameConfig.gridSize
+                }
+                sceneBridge?.triggerLineClearEffect(clearedRows: confirmedRows, clearedCols: clearedCols)
+            }
         } else {
             gameState.blockReturnFeedback()
         }
