@@ -23,20 +23,22 @@ enum LineClearEffect {
 
     // MARK: - Configuration
 
-    /// Number of particles emitted per cell in a cleared line
     private static let particlesPerCell: Int = 6
-
-    /// Duration of the burst effect in seconds
     private static let burstDuration: TimeInterval = 0.4
-
-    /// How long particles live after emission
     private static let particleLifetime: TimeInterval = 0.8
-
-    /// Maximum speed of particles
     private static let particleSpeed: CGFloat = 120
-
-    /// Size of each sparkle particle
     private static let particleSize: CGFloat = 6
+
+    /// Cached sparkle texture shared across all emitters to avoid per-emitter image creation
+    private static let sparkleTexture: SKTexture = {
+        let size = particleSize
+        let renderer = UIGraphicsImageRenderer(size: CGSize(width: size, height: size))
+        let image = renderer.image { context in
+            context.cgContext.setFillColor(UIColor.white.cgColor)
+            context.cgContext.fillEllipse(in: CGRect(origin: .zero, size: CGSize(width: size, height: size)))
+        }
+        return SKTexture(image: image)
+    }()
 
     // MARK: - Public API
 
@@ -60,21 +62,8 @@ enum LineClearEffect {
         spacing: CGFloat,
         gridSize: Int
     ) {
-        // Collect all unique cell positions to emit from
-        var positions: Set<GridPosition> = []
+        let positions = collectPositions(rows: rows, cols: cols, gridSize: gridSize)
 
-        for row in rows {
-            for col in 0..<gridSize {
-                positions.insert(GridPosition(row: row, col: col))
-            }
-        }
-        for col in cols {
-            for row in 0..<gridSize {
-                positions.insert(GridPosition(row: row, col: col))
-            }
-        }
-
-        // Stagger the effect along each line for a sweep feel
         for (index, pos) in positions.enumerated() {
             let delay = Double(index) * 0.015
             let cellCenter = CGPoint(
@@ -87,7 +76,6 @@ enum LineClearEffect {
             emitter.zPosition = 10
             parent.addChild(emitter)
 
-            // Start after stagger delay, then remove after lifetime
             let sequence = SKAction.sequence([
                 SKAction.wait(forDuration: delay),
                 SKAction.run { emitter.particleBirthRate = CGFloat(particlesPerCell) / CGFloat(burstDuration) },
@@ -99,75 +87,13 @@ enum LineClearEffect {
             emitter.run(sequence)
         }
 
-        // Also flash the cleared cells white briefly
-        flashCells(rows: rows, cols: cols, in: parent, cellSize: cellSize, spacing: spacing, gridSize: gridSize)
+        flashCells(positions: positions, in: parent, cellSize: cellSize, spacing: spacing)
     }
 
     // MARK: - Private Helpers
 
-    /// Creates a sparkle particle emitter with golden colors.
-    private static func createSparkleEmitter() -> SKEmitterNode {
-        let emitter = SKEmitterNode()
-
-        // Particle texture - small circle
-        let size: CGFloat = particleSize
-        let renderer = UIGraphicsImageRenderer(size: CGSize(width: size, height: size))
-        let image = renderer.image { context in
-            let rect = CGRect(origin: .zero, size: CGSize(width: size, height: size))
-            context.cgContext.setFillColor(UIColor.white.cgColor)
-            context.cgContext.fillEllipse(in: rect)
-        }
-        emitter.particleTexture = SKTexture(image: image)
-
-        // Emission
-        emitter.particleBirthRate = 0 // Started by action sequence
-        emitter.numParticlesToEmit = 0 // Continuous until birth rate set to 0
-        emitter.emissionAngleRange = .pi * 2 // Emit in all directions
-
-        // Motion
-        emitter.particleSpeed = particleSpeed
-        emitter.particleSpeedRange = particleSpeed * 0.5
-
-        // Lifetime
-        emitter.particleLifetime = CGFloat(particleLifetime)
-        emitter.particleLifetimeRange = CGFloat(particleLifetime) * 0.3
-
-        // Size
-        emitter.particleScale = 1.0
-        emitter.particleScaleRange = 0.5
-        emitter.particleScaleSpeed = -0.8
-
-        // Color - golden sparkle
-        emitter.particleColor = SpriteKitColors.lineCompletionPrimary
-        emitter.particleColorBlendFactor = 1.0
-        emitter.particleColorSequence = SKKeyframeSequence(
-            keyframeValues: [
-                SpriteKitColors.lineCompletionAccent,
-                SpriteKitColors.lineCompletionPrimary,
-                SpriteKitColors.lineCompletionPrimary.withAlphaComponent(0)
-            ],
-            times: [0, 0.3, 1.0]
-        )
-
-        // Alpha
-        emitter.particleAlpha = 1.0
-        emitter.particleAlphaSpeed = -1.0
-
-        // Blend mode for glow
-        emitter.particleBlendMode = .add
-
-        return emitter
-    }
-
-    /// Flashes cleared cells white for a brief highlight effect.
-    private static func flashCells(
-        rows: Set<Int>,
-        cols: Set<Int>,
-        in parent: SKNode,
-        cellSize: CGFloat,
-        spacing: CGFloat,
-        gridSize: Int
-    ) {
+    /// Collects unique cell positions from the given cleared rows and columns.
+    private static func collectPositions(rows: Set<Int>, cols: Set<Int>, gridSize: Int) -> Set<GridPosition> {
         var positions: Set<GridPosition> = []
         for row in rows {
             for col in 0..<gridSize {
@@ -179,7 +105,53 @@ enum LineClearEffect {
                 positions.insert(GridPosition(row: row, col: col))
             }
         }
+        return positions
+    }
 
+    /// Creates a sparkle particle emitter using the cached texture.
+    private static func createSparkleEmitter() -> SKEmitterNode {
+        let emitter = SKEmitterNode()
+
+        emitter.particleTexture = sparkleTexture
+        emitter.particleBirthRate = 0
+        emitter.numParticlesToEmit = 0
+        emitter.emissionAngleRange = .pi * 2
+
+        emitter.particleSpeed = particleSpeed
+        emitter.particleSpeedRange = particleSpeed * 0.5
+
+        emitter.particleLifetime = CGFloat(particleLifetime)
+        emitter.particleLifetimeRange = CGFloat(particleLifetime) * 0.3
+
+        emitter.particleScale = 1.0
+        emitter.particleScaleRange = 0.5
+        emitter.particleScaleSpeed = -0.8
+
+        emitter.particleColor = SpriteKitColors.lineCompletionPrimary
+        emitter.particleColorBlendFactor = 1.0
+        emitter.particleColorSequence = SKKeyframeSequence(
+            keyframeValues: [
+                SpriteKitColors.lineCompletionAccent,
+                SpriteKitColors.lineCompletionPrimary,
+                SpriteKitColors.lineCompletionPrimary.withAlphaComponent(0)
+            ],
+            times: [0, 0.3, 1.0]
+        )
+
+        emitter.particleAlpha = 1.0
+        emitter.particleAlphaSpeed = -1.0
+        emitter.particleBlendMode = .add
+
+        return emitter
+    }
+
+    /// Flashes cleared cells white for a brief highlight effect.
+    private static func flashCells(
+        positions: Set<GridPosition>,
+        in parent: SKNode,
+        cellSize: CGFloat,
+        spacing: CGFloat
+    ) {
         for pos in positions {
             let rect = CGRect(x: 0, y: 0, width: cellSize, height: cellSize)
             let flash = SKShapeNode(rect: rect, cornerRadius: 8)

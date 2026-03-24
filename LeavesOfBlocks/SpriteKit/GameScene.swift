@@ -49,11 +49,11 @@ class GameScene: SKScene {
     /// Ghost block node shown during drag (rendered in SpriteKit for visual consistency)
     private var ghostBlockNode: BlockNode?
 
+    /// Tracks the last ghost block identity to avoid recreating on every drag move
+    private var lastGhostBlockId: String?
+
     /// Tracks whether falling leaves have been set up
     private var leavesSetUp = false
-
-    /// Tracks the last known game-over state for edge detection
-    private var lastGameOverState = false
 
     // MARK: - Initialization
 
@@ -194,20 +194,28 @@ class GameScene: SKScene {
     ///   - block: The block being dragged, or `nil` to remove the ghost
     ///   - position: The grid position to show the ghost at, or `nil` to remove
     private func updateGhostBlock(block: BlockShape?, position: GridPosition?) {
-        // Remove existing ghost
-        ghostBlockNode?.removeFromParent()
-        ghostBlockNode = nil
-
         guard let block = block, let position = position,
               let gameState = gameState,
-              gameState.canPlaceBlock(block, at: position) else { return }
+              gameState.canPlaceBlock(block, at: position) else {
+            ghostBlockNode?.removeFromParent()
+            ghostBlockNode = nil
+            lastGhostBlockId = nil
+            return
+        }
 
-        // Create ghost block node
+        // Reuse existing ghost if same block at same position
+        let ghostId = "\(block.positions.count)-\(block.color.hashValue)-\(position.row)-\(position.col)"
+        if ghostId == lastGhostBlockId, ghostBlockNode?.parent != nil {
+            return
+        }
+
+        ghostBlockNode?.removeFromParent()
+        lastGhostBlockId = ghostId
+
         let ghost = BlockNode(block: block, cellSize: cellSize)
         ghost.alpha = 0.4
         ghost.zPosition = 3
 
-        // Position the ghost at the grid cell location (inside gridNode coordinate space)
         let cellPos = gridNode.cellPosition(row: position.row, col: position.col)
         ghost.position = CGPoint(
             x: cellPos.x + gridPadding,
@@ -217,7 +225,6 @@ class GameScene: SKScene {
         addChild(ghost)
         ghostBlockNode = ghost
 
-        // Subtle pulse animation on the ghost
         let pulse = SKAction.sequence([
             SKAction.fadeAlpha(to: 0.5, duration: 0.4),
             SKAction.fadeAlpha(to: 0.3, duration: 0.4)

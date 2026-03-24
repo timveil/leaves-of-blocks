@@ -18,9 +18,13 @@ import SpriteKit
 /// ```
 enum FallingLeavesEffect {
 
+    // MARK: - Constants
+
+    /// Node name for the falling leaves emitter
+    static let nodeName = "fallingLeaves"
+
     // MARK: - Configuration
 
-    /// Birth rate (leaves per second)
     private static let birthRate: CGFloat = 3
 
     /// Leaf particle lifetime in seconds
@@ -28,9 +32,6 @@ enum FallingLeavesEffect {
 
     /// Leaf fall speed in points per second
     private static let fallSpeed: CGFloat = 30
-
-    /// Horizontal drift range
-    private static let driftRange: CGFloat = 20
 
     /// Leaf size in points
     private static let leafSize: CGFloat = 8
@@ -74,15 +75,11 @@ enum FallingLeavesEffect {
         emitter.particleBirthRate = cappedRate
         emitter.numParticlesToEmit = 0 // Continuous
 
-        // Motion - fall downward with gentle drift
-        emitter.emissionAngle = .pi / 2 // Downward (scene Y increases downward)
+        emitter.emissionAngle = .pi / 2
         emitter.emissionAngleRange = .pi / 8
         emitter.particleSpeed = fallSpeed
         emitter.particleSpeedRange = fallSpeed * 0.4
-
-        // Horizontal drift
         emitter.xAcceleration = 0
-        emitter.particleSpeed = fallSpeed
 
         // Lifetime
         emitter.particleLifetime = lifetime
@@ -119,7 +116,7 @@ enum FallingLeavesEffect {
         emitter.particleBlendMode = .alpha
 
         emitter.zPosition = -5 // Behind grid
-        emitter.name = "fallingLeaves"
+        emitter.name = FallingLeavesEffect.nodeName
 
         return emitter
     }
@@ -130,7 +127,7 @@ enum FallingLeavesEffect {
     ///   - paused: `true` to stop emitting new leaves (existing ones finish)
     ///   - parent: The scene containing the emitter
     static func setPaused(_ paused: Bool, in parent: SKNode) {
-        if let emitter = parent.childNode(withName: "fallingLeaves") as? SKEmitterNode {
+        if let emitter = parent.childNode(withName: FallingLeavesEffect.nodeName) as? SKEmitterNode {
             emitter.particleBirthRate = paused ? 0 : min(birthRate, CGFloat(AppConfiguration.Performance.maxFallingLeaves) / lifetime)
         }
     }

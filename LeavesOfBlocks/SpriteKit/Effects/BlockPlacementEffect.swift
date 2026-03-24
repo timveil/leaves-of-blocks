@@ -66,8 +66,7 @@ enum BlockPlacementEffect {
 
             let delay = Double(index) * staggerDelay
 
-            // Find the existing cell node by name and animate it
-            let cellName = "cell_\(row)_\(col)"
+            let cellName = GridNode.cellName(row: row, col: col)
             if let cellNode = parent.childNode(withName: cellName) as? SKShapeNode {
                 animateCellPop(cellNode, delay: delay)
             }

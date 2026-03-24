@@ -54,7 +54,7 @@ enum GameOverEffect {
                     y: CGFloat(row) * (cellSize + spacing)
                 )
                 overlay.zPosition = 15
-                overlay.name = "gameOverOverlay"
+                overlay.name = GridNode.gameOverOverlayName
                 parent.addChild(overlay)
 
                 let fadeIn = SKAction.sequence([
@@ -70,7 +70,7 @@ enum GameOverEffect {
     ///
     /// - Parameter parent: The parent node containing the overlays
     static func clearGameOver(in parent: SKNode) {
-        parent.enumerateChildNodes(withName: "gameOverOverlay") { node, _ in
+        parent.enumerateChildNodes(withName: GridNode.gameOverOverlayName) { node, _ in
             node.run(SKAction.sequence([
                 SKAction.fadeOut(withDuration: 0.15),
                 SKAction.removeFromParent()
@@ -159,7 +159,17 @@ enum GameOverEffect {
 
     // MARK: - Private Helpers
 
-    /// Creates a celebration particle emitter for firework-style bursts.
+    /// Cached circle texture shared across celebration emitters
+    private static let celebrationTexture: SKTexture = {
+        let size: CGFloat = 5
+        let renderer = UIGraphicsImageRenderer(size: CGSize(width: size, height: size))
+        let image = renderer.image { context in
+            context.cgContext.setFillColor(UIColor.white.cgColor)
+            context.cgContext.fillEllipse(in: CGRect(origin: .zero, size: CGSize(width: size, height: size)))
+        }
+        return SKTexture(image: image)
+    }()
+
     private static func createCelebrationEmitter(
         color: UIColor,
         speed: CGFloat,
@@ -167,14 +177,7 @@ enum GameOverEffect {
     ) -> SKEmitterNode {
         let emitter = SKEmitterNode()
 
-        // Small circle texture
-        let size: CGFloat = 5
-        let renderer = UIGraphicsImageRenderer(size: CGSize(width: size, height: size))
-        let image = renderer.image { context in
-            context.cgContext.setFillColor(UIColor.white.cgColor)
-            context.cgContext.fillEllipse(in: CGRect(origin: .zero, size: CGSize(width: size, height: size)))
-        }
-        emitter.particleTexture = SKTexture(image: image)
+        emitter.particleTexture = celebrationTexture
 
         // Emission
         emitter.particleBirthRate = 0 // Controlled by action sequence

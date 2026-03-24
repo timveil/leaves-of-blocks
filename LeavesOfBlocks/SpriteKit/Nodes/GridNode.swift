@@ -23,6 +23,16 @@ import SpriteKit
 /// ```
 class GridNode: SKNode {
 
+    // MARK: - Node Name Constants
+
+    /// Format for cell node names: "cell_{row}_{col}"
+    static func cellName(row: Int, col: Int) -> String {
+        "cell_\(row)_\(col)"
+    }
+
+    /// Name used for game-over overlay nodes
+    static let gameOverOverlayName = "gameOverOverlay"
+
     // MARK: - Properties
 
     /// Size of each grid cell in points
@@ -63,11 +73,9 @@ class GridNode: SKNode {
         self.spacing = spacing
         self.gridSize = gridSize
 
-        // Create background card
-        let padding: CGFloat = 16 // GameTheme.Layout.mediumPadding
+        let padding = GameTheme.Layout.mediumPadding
         let totalWidth = CGFloat(gridSize) * cellSize + CGFloat(gridSize - 1) * spacing + padding * 2
         let totalHeight = totalWidth
-        let cornerRadius: CGFloat = 24 // GameTheme.Layout.cardCornerRadius
 
         let bgRect = CGRect(
             x: -padding,
@@ -75,10 +83,10 @@ class GridNode: SKNode {
             width: totalWidth,
             height: totalHeight
         )
-        backgroundNode = SKShapeNode(rect: bgRect, cornerRadius: cornerRadius)
+        backgroundNode = SKShapeNode(rect: bgRect, cornerRadius: GameTheme.Layout.cardCornerRadius)
         backgroundNode.fillColor = SpriteKitColors.cardBackground
         backgroundNode.strokeColor = SpriteKitColors.cardBorder
-        backgroundNode.lineWidth = 3 // GameTheme.Layout.strokeWidth
+        backgroundNode.lineWidth = GameTheme.Layout.strokeWidth
         backgroundNode.zPosition = -1
 
         super.init()
@@ -101,7 +109,7 @@ class GridNode: SKNode {
             for col in 0..<gridSize {
                 let cellNode = createCellNode()
                 cellNode.position = cellPosition(row: row, col: col)
-                cellNode.name = "cell_\(row)_\(col)"
+                cellNode.name = GridNode.cellName(row: row, col: col)
                 addChild(cellNode)
                 rowNodes.append(cellNode)
             }
@@ -170,10 +178,7 @@ class GridNode: SKNode {
     ///   - position: The grid position where the block would be placed
     ///   - canPlace: Whether the block can legally be placed at this position
     func showPreview(block: BlockShape, at position: GridPosition, canPlace: Bool) {
-        guard canPlace else {
-            clearPreview()
-            return
-        }
+        guard canPlace else { return }
 
         let previewColor = SpriteKitColors.blockColor(for: block.color).withAlphaComponent(0.6)
 
@@ -242,25 +247,6 @@ class GridNode: SKNode {
                 node.fillColor = gold
                 node.strokeColor = SpriteKitColors.lineCompletionAccent
                 node.lineWidth = 3
-            }
-        }
-    }
-
-    /// Clears all preview highlighting, restoring cells to their model state.
-    ///
-    /// This should be called before re-applying previews or when the drag ends.
-    /// Pass the current grid to restore accurate cell colors.
-    func clearPreview() {
-        // Reset all non-filled cells to empty state
-        for row in 0..<gridSize {
-            for col in 0..<gridSize {
-                let node = cellNodes[row][col]
-                // Check if this is currently showing a preview (not a filled cell color)
-                if node.lineWidth != 2 || node.strokeColor == SpriteKitColors.gridCellBorder {
-                    node.fillColor = SpriteKitColors.gridCellEmpty
-                    node.strokeColor = SpriteKitColors.gridCellBorder
-                    node.lineWidth = 1
-                }
             }
         }
     }
