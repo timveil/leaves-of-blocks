@@ -49,6 +49,12 @@ class GameScene: SKScene {
     /// Ghost block node shown during drag (rendered in SpriteKit for visual consistency)
     private var ghostBlockNode: BlockNode?
 
+    /// Tracks whether falling leaves have been set up
+    private var leavesSetUp = false
+
+    /// Tracks the last known game-over state for edge detection
+    private var lastGameOverState = false
+
     // MARK: - Initialization
 
     /// Creates a new game scene bound to the given game state.
@@ -77,6 +83,7 @@ class GameScene: SKScene {
         super.didMove(to: view)
         view.allowsTransparency = true
         setupGrid()
+        setupFallingLeaves()
         subscribeToGameState()
         syncGridFromModel()
     }
@@ -88,6 +95,16 @@ class GameScene: SKScene {
         gridNode.position = CGPoint(x: gridPadding, y: gridPadding)
         gridNode.zPosition = 0
         addChild(gridNode)
+    }
+
+    /// Sets up the ambient falling leaves particle emitter.
+    private func setupFallingLeaves() {
+        guard !leavesSetUp else { return }
+        leavesSetUp = true
+
+        let sceneWidth = GameScene.sceneSize(cellSize: cellSize).width
+        let emitter = FallingLeavesEffect.createEmitter(sceneWidth: sceneWidth)
+        addChild(emitter)
     }
 
     /// Subscribes to `GameState` changes via Combine.
@@ -260,6 +277,38 @@ class GameScene: SKScene {
         // Force grid sync after effects start to show cleared state
         lastGridHash = 0
         needsGridSync = true
+    }
+
+    // MARK: - Game Over Effects
+
+    /// Plays the game-over grid sweep effect.
+    ///
+    /// Cascades a desaturated overlay across each row and pauses falling leaves.
+    func playGameOverEffect() {
+        FallingLeavesEffect.setPaused(true, in: self)
+
+        GameOverEffect.playGameOver(
+            in: gridNode,
+            cellSize: cellSize,
+            spacing: gridSpacing,
+            gridSize: GameTheme.GameConfig.gridSize
+        )
+    }
+
+    /// Plays the new-high-score celebration burst.
+    ///
+    /// Golden firework sparkles and expanding rings radiate from the grid center.
+    func playHighScoreCelebration() {
+        GameOverEffect.playHighScoreCelebration(
+            gridWidth: gridNode.gridWidth,
+            in: gridNode
+        )
+    }
+
+    /// Clears game-over overlays and resumes falling leaves (e.g., on new game).
+    func clearGameOverEffects() {
+        GameOverEffect.clearGameOver(in: gridNode)
+        FallingLeavesEffect.setPaused(false, in: self)
     }
 
     // MARK: - Scene Sizing

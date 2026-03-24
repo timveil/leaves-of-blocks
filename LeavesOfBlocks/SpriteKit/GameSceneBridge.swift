@@ -49,6 +49,7 @@ class GameSceneBridge: ObservableObject {
         let sceneSize = GameScene.sceneSize(cellSize: cellSize)
         self.scene = GameScene(gameState: gameState, size: sceneSize, cellSize: cellSize)
         subscribeToPreviewChanges()
+        subscribeToGameOverState()
     }
 
     // MARK: - Subscriptions
@@ -59,6 +60,28 @@ class GameSceneBridge: ObservableObject {
             .receive(on: RunLoop.main)
             .sink { [weak self] block, position in
                 self?.scene.updatePreview(block: block, position: position)
+            }
+            .store(in: &cancellables)
+    }
+
+    /// Subscribes to game-over state changes for automatic effect triggering.
+    private func subscribeToGameOverState() {
+        gameState.$isGameOver
+            .removeDuplicates()
+            .receive(on: RunLoop.main)
+            .sink { [weak self] isGameOver in
+                guard let self else { return }
+                if isGameOver {
+                    self.scene.playGameOverEffect()
+                    if self.gameState.isNewHighScore {
+                        // Delay celebration slightly so it layers on top of the sweep
+                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+                            self?.scene.playHighScoreCelebration()
+                        }
+                    }
+                } else {
+                    self.scene.clearGameOverEffects()
+                }
             }
             .store(in: &cancellables)
     }
