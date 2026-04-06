@@ -183,7 +183,7 @@ GEM
     optparse (0.8.1)
     os (1.1.4)
     ostruct (0.6.3)
-    overcommit (0.68.0)
+    overcommit (0.69.0)
       childprocess (>= 0.6.3, < 6)
       iniparse (~> 1.4)
       rexml (>= 3.3.9)
@@ -241,7 +241,7 @@ PLATFORMS
 
 DEPENDENCIES
   fastlane
-  overcommit (~> 0.64)
+  overcommit (~> 0.69)
   xcode-install
 
 BUNDLED WITH
