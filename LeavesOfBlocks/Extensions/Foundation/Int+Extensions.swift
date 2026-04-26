@@ -1,12 +1,16 @@
 import Foundation
 
+private let scoreFormatter: NumberFormatter = {
+    let formatter = NumberFormatter()
+    formatter.numberStyle = .decimal
+    return formatter
+}()
+
 extension Int {
-    
+
     /// Returns a formatted string for score display
     var formattedScore: String {
-        let formatter = NumberFormatter()
-        formatter.numberStyle = .decimal
-        return formatter.string(from: NSNumber(value: self)) ?? "\(self)"
+        scoreFormatter.string(from: NSNumber(value: self)) ?? "\(self)"
     }
 
     /// Returns an abbreviated score string (e.g., 87.2K, 1.2M) for compact display

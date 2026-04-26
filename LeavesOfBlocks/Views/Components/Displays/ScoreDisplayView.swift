@@ -8,17 +8,15 @@ struct ScoreDisplayView: View {
     let score: Int
     let lastScore: Int?
     let showHistoryHint: Bool
-    let isHighlighted: Bool
     let showIcon: Bool
     let iconName: String?
     let action: (() -> Void)?
-    
+
     init(
         title: String = "best_score".localized,
         score: Int,
         lastScore: Int? = nil,
         showHistoryHint: Bool = false,
-        isHighlighted: Bool = false,
         showIcon: Bool = false,
         iconName: String? = nil,
         action: (() -> Void)? = nil
@@ -27,7 +25,6 @@ struct ScoreDisplayView: View {
         self.score = score
         self.lastScore = lastScore
         self.showHistoryHint = showHistoryHint
-        self.isHighlighted = isHighlighted
         self.showIcon = showIcon
         self.iconName = iconName
         self.action = action
@@ -49,7 +46,7 @@ struct ScoreDisplayView: View {
     
     private var scoreContent: some View {
         VStack(spacing: 0) {
-            // Header with gradient background (like Statistics widget)
+            // Header
             Text(title)
                 .font(GameTheme.Typography.title)
                 .foregroundColor(GameTheme.Colors.buttonText)
@@ -116,13 +113,12 @@ struct ScoreDisplayView: View {
         )
         
         ScoreDisplayView(
-            title: "Final Score",
-            score: 54321,
-            isHighlighted: true
+            title: "final_score".localized,
+            score: 54321
         )
         
         ScoreDisplayView(
-            title: "Final Score",
+            title: "final_score".localized,
             score: 99999,
             showIcon: true,
             iconName: "crown.fill"

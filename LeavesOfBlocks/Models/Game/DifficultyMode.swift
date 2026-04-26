@@ -14,17 +14,6 @@ enum DifficultyMode: String, CaseIterable, Codable {
         }
     }
 
-    var description: String {
-        switch self {
-        case .easy:
-            return "Lots of small blocks, perfect for beginners"
-        case .moderate:
-            return "Balanced mix of small and large blocks"
-        case .hard:
-            return "Many large blocks, a real challenge!"
-        }
-    }
-    
     var localizedDescription: String {
         switch self {
         case .easy:

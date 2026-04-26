@@ -69,29 +69,8 @@ struct ContentView: View {
 
     private var topBar: some View {
         HStack {
-            // Whitman portrait — always visible, taps home
-            Button(action: {
-                if currentScreen != .home {
-                    handleNavigation(to: .home)
-                }
-            }) {
-                Image("WhitmanPortrait")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 32, height: 40)
-                    .clipShape(RoundedRectangle(cornerRadius: 6))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 6)
-                            .stroke(Color.black, lineWidth: 1.5)
-                    )
-                    .opacity(currentScreen == .home ? 0.5 : 1.0)
-            }
-            .disabled(currentScreen == .home)
-            .accessibilityIdentifier("home_button")
-
             Spacer()
 
-            // Menu pull-down button
             Button(action: {
                 withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) {
                     showMenu.toggle()
