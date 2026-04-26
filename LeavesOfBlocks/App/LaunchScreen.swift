@@ -45,12 +45,12 @@ struct LaunchScreen: View {
                 
                 // Logo area with app icon
                 VStack(spacing: 24) {
-                    // App Icon
-                    Image("LaunchIcon")
+                    // Whitman Portrait
+                    Image("WhitmanPortrait")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
-                        .frame(width: 180, height: 180)
-                        .cornerRadius(40)
+                        .frame(width: 140, height: 170)
+                        .clipShape(RoundedRectangle(cornerRadius: 20))
                         .shadow(color: GameTheme.Colors.cardShadow, radius: 20, x: 0, y: 10)
                         .scaleEffect(showIcon ? 1.0 : 0.5)
                         .opacity(showIcon ? 1.0 : 0.0)

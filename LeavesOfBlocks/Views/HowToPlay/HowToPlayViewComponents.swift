@@ -301,7 +301,7 @@ enum ShapeType {
                         .shadow(color: GameTheme.Colors.blockRed.opacity(0.4), radius: 3)
                     
                     Image(systemName: "arrow.left.and.right")
-                        .foregroundColor(.white)
+                        .foregroundColor(GameTheme.Colors.buttonText)
                         .font(GameTheme.Typography.body)
                 }
             )
@@ -314,9 +314,9 @@ enum ShapeType {
                         )
                         .frame(width: 30, height: 30)
                         .shadow(color: GameTheme.Colors.blockBlue.opacity(0.4), radius: 3)
-                    
+
                     Image(systemName: "arrow.up.and.down")
-                        .foregroundColor(.white)
+                        .foregroundColor(GameTheme.Colors.buttonText)
                         .font(GameTheme.Typography.body)
                 }
             )
@@ -329,9 +329,9 @@ enum ShapeType {
                         )
                         .frame(width: 30, height: 30)
                         .shadow(color: GameTheme.Colors.blockPurple.opacity(0.4), radius: 3)
-                    
+
                     Image(systemName: "square.3.layers.3d")
-                        .foregroundColor(.white)
+                        .foregroundColor(GameTheme.Colors.buttonText)
                         .font(GameTheme.Typography.body)
                 }
             )

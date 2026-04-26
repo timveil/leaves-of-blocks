@@ -43,11 +43,11 @@ enum FallingLeavesEffect {
 
     /// Autumn leaf color palette
     private static let leafColors: [UIColor] = [
-        UIColor(red: 0.9, green: 0.7, blue: 0.1, alpha: 0.6),  // Golden amber
-        UIColor(red: 0.9, green: 0.5, blue: 0.1, alpha: 0.5),  // Burnt orange
-        UIColor(red: 0.8, green: 0.2, blue: 0.1, alpha: 0.4),  // Crimson red
-        UIColor(red: 0.8, green: 0.4, blue: 0.1, alpha: 0.5),  // Deep orange
-        UIColor(red: 0.6, green: 0.4, blue: 0.2, alpha: 0.4)   // Brown
+        UIColor(red: 0.859, green: 0.678, blue: 0.341, alpha: 0.7),  // Sun gold
+        UIColor(red: 0.906, green: 0.530, blue: 0.200, alpha: 0.65), // Warm orange
+        UIColor(red: 0.776, green: 0.384, blue: 0.251, alpha: 0.6),  // Poppy red
+        UIColor(red: 0.239, green: 0.541, blue: 0.310, alpha: 0.55), // Leaf green
+        UIColor(red: 0.016, green: 0.427, blue: 0.420, alpha: 0.5)   // Teal
     ]
 
     // MARK: - Public API

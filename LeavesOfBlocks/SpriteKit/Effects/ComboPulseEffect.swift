@@ -89,7 +89,7 @@ enum ComboPulseEffect {
         // For 3+ combos, add a brief screen flash
         if tier >= 3 {
             let flash = SKShapeNode(rect: CGRect(x: -20, y: -20, width: gridWidth + 40, height: gridWidth + 40))
-            flash.fillColor = UIColor.white.withAlphaComponent(0.15)
+            flash.fillColor = SpriteKitColors.lineCompletionAccent.withAlphaComponent(0.2)
             flash.strokeColor = .clear
             flash.zPosition = 6
             parent.addChild(flash)
@@ -112,7 +112,7 @@ enum ComboPulseEffect {
         case 2:
             return SpriteKitColors.lineCompletionAccent.withAlphaComponent(0.8)
         default:
-            return UIColor.white.withAlphaComponent(0.9)
+            return SpriteKitColors.lineCompletionPrimary.withAlphaComponent(0.9)
         }
     }
 }

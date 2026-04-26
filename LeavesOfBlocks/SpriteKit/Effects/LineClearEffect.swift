@@ -155,7 +155,7 @@ enum LineClearEffect {
         for pos in positions {
             let rect = CGRect(x: 0, y: 0, width: cellSize, height: cellSize)
             let flash = SKShapeNode(rect: rect, cornerRadius: 8)
-            flash.fillColor = UIColor.white.withAlphaComponent(0.7)
+            flash.fillColor = SpriteKitColors.lineCompletionAccent.withAlphaComponent(0.5)
             flash.strokeColor = .clear
             flash.position = CGPoint(
                 x: CGFloat(pos.col) * (cellSize + spacing),

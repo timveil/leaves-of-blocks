@@ -31,19 +31,19 @@ struct FullWidthActionButton: View {
         
         var backgroundColor: Color {
             switch self {
-            case .primary: return GameTheme.Colors.accent
+            case .primary: return GameTheme.Colors.primaryAccent
             case .secondary: return GameTheme.Colors.containerBackground
             case .danger: return GameTheme.Colors.error
-            case .success: return GameTheme.Colors.blockGreen
+            case .success: return GameTheme.Colors.success
             }
         }
         
         var textColor: Color {
             switch self {
             case .primary: return GameTheme.Colors.buttonText
-            case .danger: return .white
+            case .danger: return GameTheme.Colors.buttonText
             case .secondary: return GameTheme.Colors.primaryText
-            case .success: return .white
+            case .success: return GameTheme.Colors.buttonText
             }
         }
         

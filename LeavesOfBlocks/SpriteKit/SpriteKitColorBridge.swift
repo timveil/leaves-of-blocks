@@ -19,53 +19,47 @@ enum SpriteKitColors {
     // MARK: - Block Colors
 
     /// Returns the `UIColor` for a given `BlockColor` case.
-    ///
-    /// Maps each `BlockColor` to its autumn-themed `UIColor` equivalent,
-    /// matching the SwiftUI colors defined in `BlockModels+Extensions.swift`.
-    ///
-    /// - Parameter blockColor: The `BlockColor` to convert
-    /// - Returns: The corresponding `UIColor`
     static func blockColor(for blockColor: BlockColor) -> UIColor {
         switch blockColor {
-        case .blue:   return UIColor(red: 0.4, green: 0.6, blue: 0.8, alpha: 1.0)
-        case .green:  return UIColor(red: 0.3, green: 0.6, blue: 0.2, alpha: 1.0)
-        case .red:    return UIColor(red: 0.8, green: 0.2, blue: 0.1, alpha: 1.0)
-        case .yellow: return UIColor(red: 0.9, green: 0.7, blue: 0.1, alpha: 1.0)
-        case .purple: return UIColor(red: 0.5, green: 0.3, blue: 0.4, alpha: 1.0)
-        case .orange: return UIColor(red: 0.9, green: 0.5, blue: 0.1, alpha: 1.0)
-        case .pink:   return UIColor(red: 0.8, green: 0.4, blue: 0.3, alpha: 1.0)
+        case .blue:   return UIColor(red: 0.278, green: 0.478, blue: 0.729, alpha: 1.0)
+        case .green:  return UIColor(red: 0.133, green: 0.612, blue: 0.251, alpha: 1.0)
+        case .red:    return UIColor(red: 0.776, green: 0.384, blue: 0.251, alpha: 1.0)
+        case .yellow: return UIColor(red: 0.804, green: 0.600, blue: 0.239, alpha: 1.0)
+        case .purple: return UIColor(red: 0.412, green: 0.318, blue: 0.580, alpha: 1.0)
+        case .orange: return UIColor(red: 0.906, green: 0.530, blue: 0.200, alpha: 1.0)
+        case .pink:   return UIColor(red: 0.875, green: 0.592, blue: 0.478, alpha: 1.0)
         }
     }
 
     // MARK: - Grid Colors
 
     /// Empty grid cell background color
-    static let gridCellEmpty = UIColor(red: 0.2, green: 0.15, blue: 0.1, alpha: 0.3)
+    static let gridCellEmpty = UIColor(red: 0.929, green: 0.890, blue: 0.812, alpha: 0.4)
 
     /// Empty grid cell border color
-    static let gridCellBorder = UIColor(red: 0.4, green: 0.25, blue: 0.1, alpha: 0.2)
+    static let gridCellBorder = UIColor(red: 0.706, green: 0.737, blue: 0.792, alpha: 0.25)
 
     /// Filled grid cell border color
-    static let gridCellFilledBorder = UIColor(red: 0.95, green: 0.9, blue: 0.8, alpha: 0.4)
+    static let gridCellFilledBorder = UIColor(red: 0.227, green: 0.267, blue: 0.333, alpha: 0.3)
 
     /// Grid card background color
-    static let cardBackground = UIColor(red: 0.15, green: 0.1, blue: 0.05, alpha: 0.9)
+    static let cardBackground = UIColor(red: 0.961, green: 0.929, blue: 0.871, alpha: 0.9)
 
     /// Card border color
-    static let cardBorder = UIColor(red: 0.6, green: 0.4, blue: 0.2, alpha: 0.4)
+    static let cardBorder = UIColor(red: 0.706, green: 0.737, blue: 0.792, alpha: 0.3)
 
     // MARK: - Preview Colors
 
-    /// Line completion highlight color (golden)
-    static let lineCompletionPrimary = UIColor(red: 1.0, green: 0.8, blue: 0.0, alpha: 1.0)
+    /// Line completion highlight color (warm gold)
+    static let lineCompletionPrimary = UIColor(red: 0.859, green: 0.678, blue: 0.341, alpha: 1.0)
 
     /// Line completion accent color
-    static let lineCompletionAccent = UIColor(red: 1.0, green: 0.9, blue: 0.2, alpha: 1.0)
+    static let lineCompletionAccent = UIColor(red: 0.906, green: 0.757, blue: 0.471, alpha: 1.0)
 
     // MARK: - Block Cell Overlay
 
-    /// Cream overlay used on block cell borders
-    static let blockCellOverlay = UIColor(red: 0.95, green: 0.9, blue: 0.8, alpha: 0.5)
+    /// Border overlay used on block cells
+    static let blockCellOverlay = UIColor(red: 0.227, green: 0.267, blue: 0.333, alpha: 0.25)
 
     // MARK: - Scene Colors
 

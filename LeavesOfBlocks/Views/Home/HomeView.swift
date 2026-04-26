@@ -16,7 +16,15 @@ struct HomeView: View {
                 Text("")
                     .accessibilityIdentifier("home_screen_identifier")
                     .hidden()
-                
+
+                // Whitman Portrait
+                Image("WhitmanPortrait")
+                    .resizable()
+                    .aspectRatio(contentMode: .fit)
+                    .frame(width: 90, height: 110)
+                    .clipShape(RoundedRectangle(cornerRadius: 14))
+                    .shadow(color: GameTheme.Colors.cardShadow, radius: 8, x: 0, y: 4)
+
                 // High Score Display - Now tappable for history
                 ScoreDisplayView(
                     score: gameState.highScore,

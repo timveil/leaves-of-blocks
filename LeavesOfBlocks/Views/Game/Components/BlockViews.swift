@@ -125,7 +125,7 @@ struct BlockView: View {
                 
                 // Icon overlay
                 Image(systemName: block.type.systemIconName)
-                    .foregroundColor(.white)
+                    .foregroundColor(GameTheme.Colors.buttonText)
                     .font(.system(size: cellSize * GameTheme.Layout.specialBlockIconScale, weight: .bold))
             }
         } else {
@@ -149,7 +149,7 @@ struct BlockView: View {
                         .frame(width: cellSize - 2, height: cellSize - 2)
                         .overlay(
                             RoundedRectangle(cornerRadius: 8)
-                                .stroke(Color(red: 0.95, green: 0.9, blue: 0.8).opacity(0.5), lineWidth: 1.5)
+                                .stroke(GameTheme.Colors.gridBorder.opacity(0.4), lineWidth: 1.5)
                         )
                         .shadow(color: block.color.color.opacity(0.3), radius: 3, x: 0, y: 2)
                         .offset(

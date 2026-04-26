@@ -20,9 +20,16 @@ struct AboutView: View {
                     VStack(spacing: GameTheme.Layout.largePadding) {
                     // Header
                     VStack(spacing: GameTheme.Layout.smallSpacing) {
+                        Image("WhitmanPortrait")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(width: 80, height: 97)
+                            .clipShape(RoundedRectangle(cornerRadius: 12))
+                            .shadow(color: GameTheme.Colors.cardShadow, radius: 6, x: 0, y: 3)
+                            .padding(.top, GameTheme.Layout.mediumPadding)
+
                         Text("about_the_game".localized)
                             .pageTitleStyle()
-                            .padding(.top, GameTheme.Layout.mediumPadding)
 
                         Text("version_format".localized(with: Bundle.main.appVersion))
                             .font(GameTheme.Typography.caption)
