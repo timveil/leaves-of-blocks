@@ -47,7 +47,7 @@ struct HomeView: View {
     HomeView(
         gameState: {
             let state = GameState()
-            state.previewHighScore = 1_000_350
+            state.previewHighScore = 10_350
             state.score = 87_200
             return state
         }(),
