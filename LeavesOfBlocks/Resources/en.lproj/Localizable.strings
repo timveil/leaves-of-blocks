@@ -51,6 +51,7 @@
 "game_summary" = "Game Summary";
 "past_game_summary" = "Past Game Summary";
 "best_score" = "Best Score";
+"past_games" = "Past Games";
 
 // MARK: - Efficiency Metrics
 "efficiency" = "Efficiency";

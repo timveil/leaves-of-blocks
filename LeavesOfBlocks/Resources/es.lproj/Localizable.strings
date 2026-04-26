@@ -51,6 +51,7 @@
 "game_summary" = "Resumen de Partida";
 "past_game_summary" = "Resumen de Partida Anterior";
 "best_score" = "Mejor Puntuación";
+"past_games" = "Partidas Anteriores";
 
 // MARK: - Efficiency Metrics
 "efficiency" = "Eficiencia";
