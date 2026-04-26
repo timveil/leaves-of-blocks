@@ -41,10 +41,13 @@ struct GameStatsRowView: View {
                     .font(GameTheme.Typography.caption)
                     .foregroundColor(GameTheme.Colors.primaryText.opacity(0.4))
 
-                HStack(spacing: 6) {
-                    Image(systemName: gameState.currentDifficulty.icon)
-                        .font(GameTheme.Typography.caption)
-                        .foregroundColor(gameState.currentDifficulty.color)
+                HStack(spacing: 4) {
+                    ForEach(0..<gameState.currentDifficulty.acornCount, id: \.self) { _ in
+                        Image("AcornIcon")
+                            .resizable()
+                            .aspectRatio(contentMode: .fit)
+                            .frame(height: 14)
+                    }
                     Text(gameState.currentDifficulty.displayName)
                         .font(GameTheme.Typography.caption)
                         .foregroundColor(GameTheme.Colors.primaryText)

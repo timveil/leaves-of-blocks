@@ -63,7 +63,7 @@
 "settings_author" = "Walt Whitman";
 "settings_title" = "A Clear Midnight";
 "settings_year" = "1880";
-"clear_game_history" = "Clear Game History";
+"clear_game_history" = "Clear History";
 "reset_all_data" = "Reset All Data";
 "clear_history_warning" = "This will permanently delete all your saved games and statistics. This action cannot be undone.";
 "reset_data_warning" = "This will permanently delete ALL game data including history, high scores, and preferences. This action cannot be undone.";
@@ -115,16 +115,20 @@
 "tip_save_small_blocks" = "Save smaller blocks for tight spaces and finishing moves";
 "tip_efficiency_matters" = "Your efficiency grade improves with organized, strategic play";
 
-// MARK: - Scoring Table
+// MARK: - Table Headers
+"scoring_header" = "Scoring";
+"difficulty_header" = "Difficulty";
+"shapes_header" = "Block Shapes";
+"points_suffix" = "pts";
 "points" = "Points";
 "description" = "Description";
 "mode" = "Mode";
 "shape" = "Shape";
 
 // MARK: - Scoring Descriptions
-"scoring_blocks_placed" = "Placing blocks on the grid";
-"scoring_clear_lines" = "Clearing complete lines";
-"scoring_combo_bonus" = "Combo bonus for each additional line";
+"scoring_blocks_placed" = "Points earned for each block placed on the grid";
+"scoring_clear_lines" = "Points earned for each complete line cleared";
+"scoring_combo_bonus" = "Bonus points for each additional line cleared simultaneously";
 
 // MARK: - Difficulty Names
 "difficulty_gentle" = "Gentle";
@@ -132,19 +136,19 @@
 "difficulty_wild" = "Wild";
 
 // MARK: - Difficulty Descriptions
-"difficulty_easy_desc" = "Perfect for beginners - you'll get more small, manageable blocks that are easier to place";
-"difficulty_moderate_desc" = "A balanced challenge with a good mix of small and large blocks for engaging gameplay";
-"difficulty_hard_desc" = "For experienced players - expect more large, complex blocks that require strategic thinking";
+"difficulty_easy_desc" = "Gentle mode is perfect for beginners — more small, manageable blocks that are easier to place";
+"difficulty_moderate_desc" = "Bold mode offers a balanced challenge with a good mix of small and large blocks";
+"difficulty_hard_desc" = "Wild mode is for experienced players — expect more large, complex blocks that require strategic thinking";
 
 // MARK: - Shape Descriptions
 "shape_normal_blocks" = "Normal\nBlocks";
 "shape_row_clear" = "Row Clear";
 "shape_column_clear" = "Column Clear";
 "shape_area_clear" = "Area Clear";
-"shape_normal_desc" = "These are your main building blocks! They come in many shapes and sizes (1-9 squares each). Use them to fill rows and columns, then watch them disappear when complete.";
-"shape_horizontal_desc" = "A powerful red block that instantly clears an entire horizontal row when placed, regardless of what's in that row. Great for breaking through difficult situations!";
-"shape_vertical_desc" = "A powerful blue block that instantly clears an entire vertical column when placed, regardless of what's in that column. Perfect for creating space!";
-"shape_area_desc" = "The ultimate power block! This purple block clears a large 3×3 area around wherever you place it. Use wisely for maximum impact and points!";
+"shape_normal_desc" = "Normal blocks are your main building pieces. They come in many shapes and sizes (1–9 squares each). Fill rows and columns to clear them.";
+"shape_horizontal_desc" = "Row Clear is a powerful red block that instantly clears an entire horizontal row when placed. Great for breaking through tight spots.";
+"shape_vertical_desc" = "Column Clear is a powerful blue block that instantly clears an entire vertical column when placed. Perfect for creating space.";
+"shape_area_desc" = "Area Clear is the ultimate power block. This purple block clears a 3×3 area around wherever you place it. Use wisely for maximum impact.";
 
 // MARK: - About Page
 "about_game_description" = "A block puzzle game inspired by Walt Whitman's poetry and a love of ad-free gameplay. Place blocks thoughtfully, clear lines strategically, and find meaning in simple moments of focus.";

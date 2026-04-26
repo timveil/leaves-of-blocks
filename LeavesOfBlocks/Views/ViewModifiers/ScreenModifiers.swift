@@ -220,10 +220,10 @@ extension View {
             )
     }
     
-    /// Applies table header styling with uneven rounded corners
+    /// Applies table header styling with gold background and black border
     func gameTableHeaderStyle(
-        backgroundColor: Color = GameTheme.Colors.accent.opacity(0.1),
-        borderColor: Color = GameTheme.Colors.accent.opacity(0.3)
+        backgroundColor: Color = GameTheme.Colors.accent,
+        borderColor: Color = Color.black
     ) -> some View {
         self
             .background(
@@ -234,29 +234,26 @@ extension View {
                     topTrailingRadius: GameTheme.Layout.cardCornerRadius
                 )
                 .fill(backgroundColor)
-                .overlay(
-                    UnevenRoundedRectangle(
-                        topLeadingRadius: GameTheme.Layout.cardCornerRadius,
-                        bottomLeadingRadius: 0,
-                        bottomTrailingRadius: 0,
-                        topTrailingRadius: GameTheme.Layout.cardCornerRadius
-                    )
-                    .stroke(borderColor, lineWidth: 1)
-                )
+            )
+            .overlay(
+                Rectangle()
+                    .frame(height: 2.5)
+                    .foregroundColor(borderColor),
+                alignment: .bottom
             )
     }
-    
+
     /// Applies table row styling for middle rows (no rounded corners)
     func gameTableRowStyle(
-        backgroundColor: Color = GameTheme.Colors.cardBackground
+        backgroundColor: Color = Color.white
     ) -> some View {
         self
             .background(backgroundColor)
     }
-    
+
     /// Applies table footer styling with bottom rounded corners
     func gameTableFooterStyle(
-        backgroundColor: Color = GameTheme.Colors.cardBackground
+        backgroundColor: Color = Color.white
     ) -> some View {
         self
             .background(

@@ -1,248 +1,173 @@
 import SwiftUI
 
 struct HowToPlayView: View {
-    
+
     var body: some View {
         BaseScreenView {
-            GeometryReader { geometry in
-                ScrollView {
-                    VStack(spacing: GameTheme.Layout.largePadding) {
-                    // Header
-                    VStack(spacing: GameTheme.Layout.mediumSpacing) {
+            ScrollView {
+                VStack(spacing: GameTheme.Layout.mediumPadding) {
+                    // Main content card
+                    VStack(spacing: 0) {
+                        // Header with gold background
                         Text("how_to_play".localized)
-                            .pageTitleStyle()
-                            .padding(.top, GameTheme.Layout.mediumPadding)
+                            .font(GameTheme.Typography.title)
+                            .foregroundColor(GameTheme.Colors.buttonText)
+                            .frame(maxWidth: .infinity)
+                            .padding(.horizontal, GameTheme.Layout.largePadding)
+                            .padding(.vertical, GameTheme.Layout.mediumPadding)
+                            .background(GameTheme.Colors.accent)
+                            .overlay(
+                                Rectangle()
+                                    .frame(height: 2.5)
+                                    .foregroundColor(.black),
+                                alignment: .bottom
+                            )
+
+                        VStack(alignment: .leading, spacing: GameTheme.Layout.largePadding) {
+                            QuoteView(
+                                quote: "how_to_play_quote".localized,
+                                author: "how_to_play_author".localized,
+                                title: "how_to_play_title".localized,
+                                year: "how_to_play_year".localized
+                            )
+
+                            sectionBlock("the_grid", "the_grid_description")
+                            sectionBlock("drag_drop", "drag_drop_description")
+                            sectionBlock("clear_lines", "clear_lines_description")
+                            sectionBlock("game_over_rules", "game_over_description")
+                            sectionBlock("advanced_features", "advanced_features_description")
+                            sectionBlock("efficiency_system", "efficiency_system_description")
+                            sectionBlock("strategic_grading", "strategic_grading_description")
+                            sectionBlock("adaptive_difficulty", "adaptive_difficulty_description")
+
+                            // Pro Tips
+                            VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
+                                Text("pro_tips".localized)
+                                    .sectionHeaderStyle()
+
+                                VStack(alignment: .leading, spacing: GameTheme.Layout.smallSpacing) {
+                                    TipRow(text: "tip_keep_organized".localized)
+                                    TipRow(text: "tip_multiple_lines".localized)
+                                    TipRow(text: "tip_plan_ahead".localized)
+                                    TipRow(text: "tip_corners_edges".localized)
+                                    TipRow(text: "tip_save_small_blocks".localized)
+                                    TipRow(text: "tip_efficiency_matters".localized)
+                                }
+                            }
+                        }
+                        .padding(GameTheme.Layout.largePadding)
+                        .background(Color.white)
                     }
-                    
-                    // Content sections
-                    VStack(alignment: .leading, spacing: GameTheme.Layout.largePadding) {
-                
-                // Whitman Quote
-                QuoteView(
-                    quote: "how_to_play_quote".localized,
-                    author: "how_to_play_author".localized,
-                    title: "how_to_play_title".localized,
-                    year: "how_to_play_year".localized
-                )
-                        
-                        // The Grid
-                        VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
-                            Text("the_grid".localized)
-                                .sectionHeaderStyle()
-                            
-                            Text("the_grid_description".localized)
-                                .sectionTextStyle(color: GameTheme.Colors.secondaryText)
-                                .lineSpacing(6)
-                        }
-                        
-                        // Drag & Drop
-                        VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
-                            Text("drag_drop".localized)
-                                .sectionHeaderStyle()
-                            
-                            Text("drag_drop_description".localized)
-                                .sectionTextStyle(color: GameTheme.Colors.secondaryText)
-                                .lineSpacing(6)
-                        }
-                        
-                        // Clear Lines
-                        VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
-                            Text("clear_lines".localized)
-                                .sectionHeaderStyle()
-                            
-                            Text("clear_lines_description".localized)
-                                .sectionTextStyle(color: GameTheme.Colors.secondaryText)
-                                .lineSpacing(6)
-                        }
-                        
-                        // Game Over
-                        VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
-                            Text("game_over_rules".localized)
-                                .sectionHeaderStyle()
-                            
-                            Text("game_over_description".localized)
-                                .sectionTextStyle(color: GameTheme.Colors.secondaryText)
-                                .lineSpacing(6)
-                        }
-                        
-                        // Advanced Features
-                        VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
-                            Text("advanced_features".localized)
-                                .sectionHeaderStyle()
-                            
-                            Text("advanced_features_description".localized)
-                                .sectionTextStyle(color: GameTheme.Colors.secondaryText)
-                                .lineSpacing(6)
-                        }
-                        
-                        // Performance Tracking
-                        VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
-                            Text("efficiency_system".localized)
-                                .sectionHeaderStyle()
-                            
-                            Text("efficiency_system_description".localized)
-                                .sectionTextStyle(color: GameTheme.Colors.secondaryText)
-                                .lineSpacing(6)
-                        }
-                        
-                        // Strategic Play
-                        VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
-                            Text("strategic_grading".localized)
-                                .sectionHeaderStyle()
-                            
-                            Text("strategic_grading_description".localized)
-                                .sectionTextStyle(color: GameTheme.Colors.secondaryText)
-                                .lineSpacing(6)
-                        }
-                        
-                        // Smart Block Generation
-                        VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
-                            Text("adaptive_difficulty".localized)
-                                .sectionHeaderStyle()
-                            
-                            Text("adaptive_difficulty_description".localized)
-                                .sectionTextStyle(color: GameTheme.Colors.secondaryText)
-                                .lineSpacing(6)
-                        }
-                        
-                        // Pro Tips
-                        VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
-                            Text("pro_tips".localized)
-                                .sectionHeaderStyle()
-                            
-                            VStack(alignment: .leading, spacing: GameTheme.Layout.smallSpacing) {
-                                TipRow(text: "tip_keep_organized".localized)
-                                TipRow(text: "tip_multiple_lines".localized)
-                                TipRow(text: "tip_plan_ahead".localized)
-                                TipRow(text: "tip_corners_edges".localized)
-                                TipRow(text: "tip_save_small_blocks".localized)
-                                TipRow(text: "tip_efficiency_matters".localized)
-                            }
-                        }
-                        
-                    
-                        // Scoring Section - Table Style
-                        VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
-                            
-                            VStack(spacing: 0) {
-                                // Table Header
-                                ScoringTableHeaderView()
-                                
-                                ScoringTableRowView(
-                                    points: "10",
-                                    description: "scoring_blocks_placed".localized,
-                                    color: GameTheme.Colors.blockBlue,
-                                    isFirst: false,
-                                    isLast: false
-                                )
-                                
-                                ScoringTableRowView(
-                                    points: "100",
-                                    description: "scoring_clear_lines".localized,
-                                    color: GameTheme.Colors.blockGreen,
-                                    isFirst: false,
-                                    isLast: false
-                                )
-                                
-                                ScoringTableRowView(
-                                    points: "+50",
-                                    description: "scoring_combo_bonus".localized,
-                                    color: GameTheme.Colors.blockOrange,
-                                    isFirst: false,
-                                    isLast: true
-                                )
-                            }
-                            .overlay(
-                                RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
-                                    .stroke(GameTheme.Colors.gridBorder.opacity(0.3), lineWidth: 1)
-                            )
-                        }
-                        
-                        // Difficulty Modes
-                        VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
-                            
-                            VStack(spacing: 0) {
-                                // Table Header
-                                DifficultyTableHeaderView()
-                                
-                                DifficultyTableRowView(
-                                    mode: .easy,
-                                    description: "difficulty_easy_desc".localized,
-                                    isFirst: false,
-                                    isLast: false
-                                )
-                                
-                                DifficultyTableRowView(
-                                    mode: .moderate,
-                                    description: "difficulty_moderate_desc".localized,
-                                    isFirst: false,
-                                    isLast: false
-                                )
-                                
-                                DifficultyTableRowView(
-                                    mode: .hard,
-                                    description: "difficulty_hard_desc".localized,
-                                    isFirst: false,
-                                    isLast: true
-                                )
-                            }
-                            .overlay(
-                                RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
-                                    .stroke(GameTheme.Colors.gridBorder.opacity(0.3), lineWidth: 1)
-                            )
-                        }
-                        
-                        // Block Shapes Section - Table Style
-                        VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
-                            
-                            VStack(spacing: 0) {
-                                // Table Header
-                                ShapesTableHeaderView()
-                                
-                                ShapesTableRowView(
-                                    shapeType: .normalBlocks,
-                                    description: "shape_normal_desc".localized,
-                                    isFirst: false,
-                                    isLast: false
-                                )
-                                
-                                ShapesTableRowView(
-                                    shapeType: .horizontalClear,
-                                    description: "shape_horizontal_desc".localized,
-                                    isFirst: false,
-                                    isLast: false
-                                )
-                                
-                                ShapesTableRowView(
-                                    shapeType: .verticalClear,
-                                    description: "shape_vertical_desc".localized,
-                                    isFirst: false,
-                                    isLast: false
-                                )
-                                
-                                ShapesTableRowView(
-                                    shapeType: .areaClear,
-                                    description: "shape_area_desc".localized,
-                                    isFirst: false,
-                                    isLast: true
-                                )
-                            }
-                            .overlay(
-                                RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
-                                    .stroke(GameTheme.Colors.gridBorder.opacity(0.3), lineWidth: 1)
-                            )
-                        }
-                        
+                    .folkArtCard()
+
+                    // Scoring table card
+                    VStack(spacing: 0) {
+                        ScoringTableHeaderView()
+
+                        ScoringTableRowView(
+                            points: "10",
+                            description: "scoring_blocks_placed".localized,
+                            color: GameTheme.Colors.blockBlue
+                        )
+                        ScoringTableRowView(
+                            points: "100",
+                            description: "scoring_clear_lines".localized,
+                            color: GameTheme.Colors.blockGreen
+                        )
+                        ScoringTableRowView(
+                            points: "+50",
+                            description: "scoring_combo_bonus".localized,
+                            color: GameTheme.Colors.blockOrange,
+                            isLast: true
+                        )
                     }
-                    
-                    Spacer(minLength: GameTheme.Layout.extraLargePadding)
+                    .folkArtCard()
+
+                    // Difficulty table card
+                    VStack(spacing: 0) {
+                        DifficultyTableHeaderView()
+
+                        DifficultyTableRowView(
+                            mode: .easy,
+                            description: "difficulty_easy_desc".localized
+                        )
+                        DifficultyTableRowView(
+                            mode: .moderate,
+                            description: "difficulty_moderate_desc".localized
+                        )
+                        DifficultyTableRowView(
+                            mode: .hard,
+                            description: "difficulty_hard_desc".localized,
+                            isLast: true
+                        )
+                    }
+                    .folkArtCard()
+
+                    // Block Shapes table card
+                    VStack(spacing: 0) {
+                        ShapesTableHeaderView()
+
+                        ShapesTableRowView(
+                            shapeType: .normalBlocks,
+                            description: "shape_normal_desc".localized
+                        )
+                        ShapesTableRowView(
+                            shapeType: .horizontalClear,
+                            description: "shape_horizontal_desc".localized
+                        )
+                        ShapesTableRowView(
+                            shapeType: .verticalClear,
+                            description: "shape_vertical_desc".localized
+                        )
+                        ShapesTableRowView(
+                            shapeType: .areaClear,
+                            description: "shape_area_desc".localized,
+                            isLast: true
+                        )
+                    }
+                    .folkArtCard()
                 }
                 .padding(.horizontal, GameTheme.Layout.largePadding)
-                .padding(.bottom, 80)
-                }
-                .frame(height: geometry.size.height - 100) // Leave space for grass
+                .padding(.vertical, GameTheme.Layout.mediumPadding)
+                .padding(.bottom, 120)
             }
+            .scrollIndicators(.hidden)
+            .mask(
+                VStack(spacing: 0) {
+                    Color.black
+                    LinearGradient(
+                        colors: [.black, .clear],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                    .frame(height: 160)
+                }
+            )
         }
+    }
+
+    private func sectionBlock(_ titleKey: String, _ bodyKey: String) -> some View {
+        VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
+            Text(titleKey.localized)
+                .sectionHeaderStyle()
+
+            Text(bodyKey.localized)
+                .sectionTextStyle(color: GameTheme.Colors.secondaryText)
+                .lineSpacing(6)
+        }
+    }
+}
+
+// MARK: - Folk Art Card Modifier
+
+private extension View {
+    func folkArtCard() -> some View {
+        self
+            .clipShape(RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius))
+            .overlay(
+                RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
+                    .stroke(Color.black, lineWidth: 2.5)
+            )
     }
 }
 

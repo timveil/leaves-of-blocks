@@ -24,47 +24,64 @@ struct SettingsView: View {
     
     var body: some View {
         BaseScreenView {
-            VStack(spacing: GameTheme.Layout.largePadding) {
-                // Header
-                VStack(spacing: GameTheme.Layout.smallPadding) {
+            ScrollView {
+                VStack(spacing: 0) {
+                    // Header with gold background
                     Text("settings".localized)
-                        .pageTitleStyle()
-                        .padding(.top, GameTheme.Layout.mediumPadding)
+                        .font(GameTheme.Typography.title)
+                        .foregroundColor(GameTheme.Colors.buttonText)
+                        .frame(maxWidth: .infinity)
+                        .padding(.horizontal, GameTheme.Layout.largePadding)
+                        .padding(.vertical, GameTheme.Layout.mediumPadding)
+                        .background(GameTheme.Colors.accent)
+                        .overlay(
+                            Rectangle()
+                                .frame(height: 2.5)
+                                .foregroundColor(.black),
+                            alignment: .bottom
+                        )
+
+                    VStack(spacing: GameTheme.Layout.largePadding) {
+                        // Walt Whitman Quote Block
+                        QuoteView(
+                            quote: "settings_quote".localized,
+                            author: "settings_author".localized,
+                            title: "settings_title".localized,
+                            year: "settings_year".localized
+                        )
+
+                        Spacer()
+                            .frame(height: GameTheme.Layout.mediumPadding)
+
+                        // Action Buttons
+                        VStack(spacing: GameTheme.Layout.mediumPadding) {
+                            FullWidthActionButton(
+                                title: "clear_game_history".localized,
+                                style: .secondary
+                            ) {
+                                showingClearHistoryConfirmation = true
+                            }
+
+                            FullWidthActionButton(
+                                title: "reset_all_data".localized,
+                                style: .danger
+                            ) {
+                                showingResetAllConfirmation = true
+                            }
+                        }
+                    }
+                    .padding(GameTheme.Layout.largePadding)
+                    .background(Color.white)
                 }
-                
-                // Walt Whitman Quote Block
-                QuoteView(
-                    quote: "settings_quote".localized,
-                    author: "settings_author".localized,
-                    title: "settings_title".localized,
-                    year: "settings_year".localized
+                .clipShape(RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius))
+                .overlay(
+                    RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
+                        .stroke(Color.black, lineWidth: 2.5)
                 )
                 .padding(.horizontal, GameTheme.Layout.largePadding)
-                
-                // Action Buttons
-                VStack(spacing: GameTheme.Layout.mediumPadding) {
-                    // Clear Game History Button
-                    FullWidthActionButton(
-                        title: "clear_game_history".localized,
-                        icon: "clock.arrow.circlepath",
-                        style: .secondary
-                    ) {
-                        showingClearHistoryConfirmation = true
-                    }
-                    
-                    // Reset All Data Button
-                    FullWidthActionButton(
-                        title: "reset_all_data".localized,
-                        icon: "trash.circle",
-                        style: .danger
-                    ) {
-                        showingResetAllConfirmation = true
-                    }
-                }
-                .padding(.horizontal, GameTheme.Layout.largePadding)
-                
-                Spacer()
+                .padding(.vertical, GameTheme.Layout.mediumPadding)
             }
+            .scrollIndicators(.hidden)
         }
         .confirmationDialog("clear_game_history".localized, isPresented: $showingClearHistoryConfirmation, titleVisibility: .visible) {
             Button("clear_all_game_history".localized, role: .destructive) {

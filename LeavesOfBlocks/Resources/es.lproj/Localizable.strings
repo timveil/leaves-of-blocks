@@ -63,7 +63,7 @@
 "settings_author" = "Walt Whitman";
 "settings_title" = "Una Medianoche Clara";
 "settings_year" = "1880";
-"clear_game_history" = "Borrar Historial de Partidas";
+"clear_game_history" = "Borrar Historial";
 "reset_all_data" = "Restablecer Todos los Datos";
 "clear_history_warning" = "Esto eliminará permanentemente todas tus partidas guardadas y estadísticas. Esta acción no se puede deshacer.";
 "reset_data_warning" = "Esto eliminará permanentemente TODOS los datos del juego incluyendo historial, puntuaciones máximas y preferencias. Esta acción no se puede deshacer.";
@@ -115,16 +115,20 @@
 "tip_save_small_blocks" = "Guarda los bloques pequeños para espacios reducidos y movimientos finales";
 "tip_efficiency_matters" = "Tu calificación de eficiencia mejora con juego organizado y estratégico";
 
-// MARK: - Scoring Table
+// MARK: - Table Headers
+"scoring_header" = "Puntuación";
+"difficulty_header" = "Dificultad";
+"shapes_header" = "Formas de Bloques";
+"points_suffix" = "pts";
 "points" = "Puntos";
 "description" = "Descripción";
 "mode" = "Modo";
 "shape" = "Forma";
 
 // MARK: - Scoring Descriptions
-"scoring_blocks_placed" = "Colocar bloques en la cuadrícula";
-"scoring_clear_lines" = "Completar líneas completas";
-"scoring_combo_bonus" = "Bonificación de combo por cada línea adicional";
+"scoring_blocks_placed" = "Puntos ganados por cada bloque colocado en la cuadrícula";
+"scoring_clear_lines" = "Puntos ganados por cada línea completa eliminada";
+"scoring_combo_bonus" = "Puntos extra por cada línea adicional eliminada simultáneamente";
 
 // MARK: - Difficulty Names
 "difficulty_gentle" = "Gentil";
@@ -132,19 +136,19 @@
 "difficulty_wild" = "Salvaje";
 
 // MARK: - Difficulty Descriptions
-"difficulty_easy_desc" = "Perfecto para principiantes - recibirás más bloques pequeños y manejables que son más fáciles de colocar";
-"difficulty_moderate_desc" = "Un desafío equilibrado con una buena mezcla de bloques pequeños y grandes para un juego atractivo";
-"difficulty_hard_desc" = "Para jugadores experimentados - espera más bloques grandes y complejos que requieren pensamiento estratégico";
+"difficulty_easy_desc" = "El modo Gentil es perfecto para principiantes — más bloques pequeños y manejables que son más fáciles de colocar";
+"difficulty_moderate_desc" = "El modo Audaz ofrece un desafío equilibrado con una buena mezcla de bloques pequeños y grandes";
+"difficulty_hard_desc" = "El modo Salvaje es para jugadores experimentados — espera más bloques grandes y complejos que requieren pensamiento estratégico";
 
 // MARK: - Shape Descriptions
 "shape_normal_blocks" = "Bloques\nNormales";
 "shape_row_clear" = "Eliminar Fila";
 "shape_column_clear" = "Eliminar Columna";
 "shape_area_clear" = "Eliminar Área";
-"shape_normal_desc" = "¡Estos son tus bloques de construcción principales! Vienen en muchas formas y tamaños (1-9 cuadros cada uno). Úsalos para llenar filas y columnas, luego míralos desaparecer cuando estén completos.";
-"shape_horizontal_desc" = "Un poderoso bloque rojo que elimina instantáneamente toda una fila horizontal cuando se coloca, sin importar lo que haya en esa fila. ¡Genial para superar situaciones difíciles!";
-"shape_vertical_desc" = "Un poderoso bloque azul que elimina instantáneamente toda una columna vertical cuando se coloca, sin importar lo que haya en esa columna. ¡Perfecto para crear espacio!";
-"shape_area_desc" = "¡El bloque de poder definitivo! Este bloque morado elimina un área grande de 3×3 alrededor de donde lo coloques. ¡Úsalo sabiamente para máximo impacto y puntos!";
+"shape_normal_desc" = "Los bloques normales son tus piezas principales. Vienen en muchas formas y tamaños (1–9 cuadros cada uno). Llena filas y columnas para eliminarlas.";
+"shape_horizontal_desc" = "Eliminar Fila es un poderoso bloque rojo que elimina instantáneamente toda una fila horizontal al colocarlo. Ideal para superar situaciones difíciles.";
+"shape_vertical_desc" = "Eliminar Columna es un poderoso bloque azul que elimina instantáneamente toda una columna vertical al colocarlo. Perfecto para crear espacio.";
+"shape_area_desc" = "Eliminar Área es el bloque de poder definitivo. Este bloque morado elimina un área de 3×3 alrededor de donde lo coloques. Úsalo sabiamente para máximo impacto.";
 
 // MARK: - About Page
 "about_game_description" = "Un juego de rompecabezas de bloques inspirado en la poesía de Walt Whitman y el amor por el juego sin anuncios. Coloca bloques con cuidado, elimina líneas estratégicamente y encuentra significado en simples momentos de concentración.";
