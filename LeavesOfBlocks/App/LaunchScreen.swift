@@ -6,10 +6,9 @@ struct LaunchScreen: View {
     
     var body: some View {
         ZStack {
-            // Background gradient
-            GameTheme.Gradients.background
-                .ignoresSafeArea()
-            
+            // Tree background fills the entire screen
+            GameBackgroundView()
+
             // Animated background pattern
             GeometryReader { geometry in
                 ForEach(0..<8, id: \.self) { index in
@@ -30,14 +29,6 @@ struct LaunchScreen: View {
                         )
                 }
             }
-            
-            // Grass at bottom (lowest z-index)
-            VStack {
-                Spacer()
-                BlockGrassView()
-                    .ignoresSafeArea(.all, edges: .bottom)
-            }
-            .zIndex(0)
             
             // Content layer
             VStack(spacing: 40) {
