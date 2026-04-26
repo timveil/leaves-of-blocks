@@ -9,7 +9,7 @@ struct HistoryStatCard: View {
     var body: some View {
         VStack(spacing: 0) {
             Text(title)
-                .font(GameTheme.Typography.headline)
+                .font(GameTheme.Typography.title)
                 .foregroundColor(GameTheme.Colors.buttonText)
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, GameTheme.Layout.mediumPadding)

@@ -93,7 +93,7 @@ struct HistoryView: View {
 
                     // Section divider
                     Text("past_games".localized)
-                        .font(GameTheme.Typography.headline)
+                        .font(GameTheme.Typography.title)
                         .foregroundColor(GameTheme.Colors.buttonText)
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, GameTheme.Layout.mediumPadding)

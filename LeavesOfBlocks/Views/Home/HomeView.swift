@@ -17,24 +17,42 @@ struct HomeView: View {
 
                 Spacer()
 
-                // Single unified card for all home content
-                VStack(spacing: GameTheme.Layout.largeSpacing) {
-                    // High Score Display - tappable for history
+                VStack(spacing: GameTheme.Layout.largePadding) {
                     ScoreDisplayView(
                         score: gameState.highScore,
                         lastScore: gameState.score > 0 ? gameState.score : nil,
                         showHistoryHint: true,
                         action: onShowHistory
                     )
-                    .frame(maxWidth: 280)
 
-                    // Difficulty buttons - each starts the game directly
-                    DifficultySelectionView(
-                        onStartGame: onStartGame
+                    VStack(spacing: 0) {
+                        Text("ready_to_play".localized)
+                            .font(GameTheme.Typography.title)
+                            .foregroundColor(GameTheme.Colors.buttonText)
+                            .frame(maxWidth: .infinity)
+                            .padding(.horizontal, GameTheme.Layout.largePadding)
+                            .padding(.vertical, GameTheme.Layout.mediumPadding)
+                            .background(GameTheme.Colors.accent)
+                            .overlay(
+                                Rectangle()
+                                    .frame(height: 2.5)
+                                    .foregroundColor(.black),
+                                alignment: .bottom
+                            )
+
+                        DifficultySelectionView(
+                            onStartGame: onStartGame
+                        )
+                        .padding(.horizontal, GameTheme.Layout.largePadding)
+                        .padding(.vertical, GameTheme.Layout.largePadding)
+                        .background(Color.white)
+                    }
+                    .clipShape(RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
+                            .stroke(Color.black, lineWidth: 2.5)
                     )
                 }
-                .padding(GameTheme.Layout.extraLargePadding)
-                .game3DCardStyle(elevation: 10)
 
                 Spacer()
             }

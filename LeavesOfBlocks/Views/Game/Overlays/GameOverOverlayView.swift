@@ -6,60 +6,57 @@ struct GameOverOverlayView: View {
     @ObservedObject var gameState: GameState
     let onViewSummary: () -> Void
     let onNewGame: () -> Void
-    @State private var trophyScale: CGFloat = 1.0
-    
+
     var body: some View {
-        VStack(spacing: GameTheme.Layout.largePadding) {
-            // Header section with new high score celebration
-            VStack(spacing: GameTheme.Layout.mediumSpacing) {
-                
-                Text("game_over".localized)
-                    .font(GameTheme.Typography.title)
-                    .foregroundColor(GameTheme.Colors.primaryText)
-                    .tracking(1)
-                
-                // Body text placeholder
+        VStack(spacing: 0) {
+            Text("game_over".localized)
+                .font(GameTheme.Typography.title)
+                .foregroundColor(GameTheme.Colors.buttonText)
+                .frame(maxWidth: .infinity)
+                .padding(.horizontal, GameTheme.Layout.largePadding)
+                .padding(.vertical, GameTheme.Layout.mediumPadding)
+                .background(GameTheme.Colors.accent)
+                .overlay(
+                    Rectangle()
+                        .frame(height: 2.5)
+                        .foregroundColor(.black),
+                    alignment: .bottom
+                )
+
+            VStack(spacing: GameTheme.Layout.largePadding) {
                 Text("game_over_quote".localized)
-                    .font(GameTheme.Typography.body)
+                    .font(GameTheme.Typography.body.italic())
                     .foregroundColor(GameTheme.Colors.secondaryText)
                     .multilineTextAlignment(.center)
-                    .padding(.horizontal, GameTheme.Layout.mediumPadding)
-            }
-            
-            // Score section with enhanced 3D effect
-            ScoreDisplayView(
-                title: "final_score".localized,
-                score: gameState.score
-            )
-            
-            // Action buttons
-            VStack(spacing: GameTheme.Layout.mediumSpacing) {
-                // New Game button
-                FullWidthActionButton(
-                    title: "new_game".localized,
-                    icon: "play.circle.fill",
-                    style: .success,
-                    onTap: onNewGame
+
+                ScoreDisplayView(
+                    title: "final_score".localized,
+                    score: gameState.score
                 )
-                
-                // View Summary button
-                FullWidthActionButton(
-                    title: "view_summary".localized,
-                    icon: "chart.bar.fill",
-                    style: .secondary,
-                    onTap: onViewSummary
-                )
+
+                VStack(spacing: GameTheme.Layout.mediumSpacing) {
+                    FullWidthActionButton(
+                        title: "new_game".localized,
+                        style: .success,
+                        onTap: onNewGame
+                    )
+
+                    FullWidthActionButton(
+                        title: "view_summary".localized,
+                        style: .secondary,
+                        onTap: onViewSummary
+                    )
+                }
             }
+            .padding(GameTheme.Layout.largePadding)
+            .background(Color.white)
         }
-        .padding(.horizontal, GameTheme.Layout.largePadding)
-        .padding(.vertical, GameTheme.Layout.extraLargePadding)
-        .frame(maxWidth: 2300) // Narrower width for iPhone visibility
-        .game3DCardStyle(
-            cornerRadius: GameTheme.Layout.overlayCornerRadius,
-            elevation: 12
+        .clipShape(RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius))
+        .overlay(
+            RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
+                .stroke(Color.black, lineWidth: 2.5)
         )
-        .padding(.horizontal, 40) // Ensure borders are visible on iPhone
-        .scaleEffect(1.0)
+        .padding(.horizontal, GameTheme.Layout.extraLargePadding)
         .transition(.scale.combined(with: .opacity))
     }
 }
@@ -68,7 +65,7 @@ struct GameOverOverlayView: View {
     ZStack {
         GameTheme.Gradients.background
             .ignoresSafeArea()
-        
+
         GameOverOverlayView(
             gameState: {
                 let state = GameState()
@@ -76,12 +73,8 @@ struct GameOverOverlayView: View {
                 state.isNewHighScore = true
                 return state
             }(),
-            onViewSummary: {
-                print("View Summary tapped")
-            },
-            onNewGame: {
-                print("New Game tapped")
-            }
+            onViewSummary: {},
+            onNewGame: {}
         )
     }
 }

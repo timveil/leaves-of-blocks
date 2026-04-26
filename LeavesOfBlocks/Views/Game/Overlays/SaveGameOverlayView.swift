@@ -6,59 +6,57 @@ struct SaveGameOverlayView: View {
     @ObservedObject var gameState: GameState
     let onSaveGame: () -> Void
     let onExitGame: () -> Void
-    
+
     var body: some View {
-        VStack(spacing: GameTheme.Layout.largePadding) {
-            // Header section
-            VStack(spacing: GameTheme.Layout.mediumSpacing) {
-                
-                Text("save_game_title".localized)
-                    .font(GameTheme.Typography.title)
-                    .foregroundColor(GameTheme.Colors.primaryText)
-                    .tracking(1)
-                
-                // Body text
+        VStack(spacing: 0) {
+            Text("save_game_title".localized)
+                .font(GameTheme.Typography.title)
+                .foregroundColor(GameTheme.Colors.buttonText)
+                .frame(maxWidth: .infinity)
+                .padding(.horizontal, GameTheme.Layout.largePadding)
+                .padding(.vertical, GameTheme.Layout.mediumPadding)
+                .background(GameTheme.Colors.accent)
+                .overlay(
+                    Rectangle()
+                        .frame(height: 2.5)
+                        .foregroundColor(.black),
+                    alignment: .bottom
+                )
+
+            VStack(spacing: GameTheme.Layout.largePadding) {
                 Text("save_game_message".localized)
                     .font(GameTheme.Typography.body)
                     .foregroundColor(GameTheme.Colors.secondaryText)
                     .multilineTextAlignment(.center)
-                    .padding(.horizontal, GameTheme.Layout.mediumPadding)
-            }
-            
-            // Current score section
-            ScoreDisplayView(
-                title: "current_score".localized,
-                score: gameState.score
-            )
-            
-            // Action buttons
-            VStack(spacing: GameTheme.Layout.mediumSpacing) {
-                // Save Game button
-                FullWidthActionButton(
-                    title: "save_game_button".localized,
-                    icon: "checkmark.circle.fill",
-                    style: .success,
-                    onTap: onSaveGame
+
+                ScoreDisplayView(
+                    title: "current_score".localized,
+                    score: gameState.score
                 )
-                
-                // Exit Without Saving button
-                FullWidthActionButton(
-                    title: "exit_without_saving".localized,
-                    icon: "xmark.circle.fill",
-                    style: .danger,
-                    onTap: onExitGame
-                )
+
+                VStack(spacing: GameTheme.Layout.mediumSpacing) {
+                    FullWidthActionButton(
+                        title: "save_game_button".localized,
+                        style: .success,
+                        onTap: onSaveGame
+                    )
+
+                    FullWidthActionButton(
+                        title: "exit_without_saving".localized,
+                        style: .danger,
+                        onTap: onExitGame
+                    )
+                }
             }
+            .padding(GameTheme.Layout.largePadding)
+            .background(Color.white)
         }
-        .padding(.horizontal, GameTheme.Layout.largePadding)
-        .padding(.vertical, GameTheme.Layout.extraLargePadding)
-        .frame(maxWidth: 2300) // Narrower width for iPhone visibility
-        .game3DCardStyle(
-            cornerRadius: GameTheme.Layout.overlayCornerRadius,
-            elevation: 12
+        .clipShape(RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius))
+        .overlay(
+            RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
+                .stroke(Color.black, lineWidth: 2.5)
         )
-        .padding(.horizontal, 40) // Ensure borders are visible on iPhone
-        .scaleEffect(1.0)
+        .padding(.horizontal, GameTheme.Layout.extraLargePadding)
         .transition(.scale.combined(with: .opacity))
     }
 }
@@ -67,19 +65,15 @@ struct SaveGameOverlayView: View {
     ZStack {
         GameTheme.Gradients.background
             .ignoresSafeArea()
-        
+
         SaveGameOverlayView(
             gameState: {
                 let state = GameState()
                 state.score = 875
                 return state
             }(),
-            onSaveGame: {
-                print("Save Game tapped")
-            },
-            onExitGame: {
-                print("Exit Game tapped")
-            }
+            onSaveGame: {},
+            onExitGame: {}
         )
     }
 }
