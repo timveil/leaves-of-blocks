@@ -74,18 +74,9 @@ class BlockNode: SKNode {
             cellNode.strokeColor = SpriteKitColors.blockCellOverlay
             cellNode.lineWidth = 1.5
 
-            // Position relative to the block's bounding box center
             let offsetX = CGFloat(position.col - bounds.minCol) * cellSize
             let offsetY = CGFloat(position.row - bounds.minRow) * cellSize
             cellNode.position = CGPoint(x: offsetX + 1, y: offsetY + 1)
-
-            // Add subtle shadow node behind
-            let shadowRect = CGRect(x: 0, y: 2, width: cellSize - 2, height: cellSize - 2)
-            let shadowNode = SKShapeNode(rect: shadowRect, cornerRadius: 8)
-            shadowNode.fillColor = color.withAlphaComponent(0.3)
-            shadowNode.strokeColor = .clear
-            shadowNode.zPosition = -1
-            cellNode.addChild(shadowNode)
 
             addChild(cellNode)
         }
@@ -96,16 +87,8 @@ class BlockNode: SKNode {
         let cellRect = CGRect(x: 0, y: 0, width: cellSize - 2, height: cellSize - 2)
         let cellNode = SKShapeNode(rect: cellRect, cornerRadius: 12)
         cellNode.fillColor = color
-        cellNode.strokeColor = color.withAlphaComponent(0.6)
-        cellNode.lineWidth = 2
-
-        // Add shadow
-        let shadowRect = CGRect(x: 0, y: 2, width: cellSize - 2, height: cellSize - 2)
-        let shadowNode = SKShapeNode(rect: shadowRect, cornerRadius: 12)
-        shadowNode.fillColor = color.withAlphaComponent(0.2)
-        shadowNode.strokeColor = .clear
-        shadowNode.zPosition = -1
-        cellNode.addChild(shadowNode)
+        cellNode.strokeColor = SpriteKitColors.blockCellOverlay
+        cellNode.lineWidth = 1.5
 
         addChild(cellNode)
 

@@ -91,7 +91,7 @@ struct ScoreDisplayView: View {
             .frame(maxWidth: .infinity)
             .padding(.horizontal, GameTheme.Layout.largePadding)
             .padding(.bottom, GameTheme.Layout.largePadding)
-            .background(Color.white)
+            .background(GameTheme.Colors.primaryBackground)
         }
         .clipShape(RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius))
         .overlay(

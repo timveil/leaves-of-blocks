@@ -32,22 +32,33 @@ struct SimpleScoreView: View {
     }
     
     var body: some View {
-        VStack(spacing: GameTheme.Layout.tinySpacing) {
+        VStack(spacing: 0) {
+            // Gold header
+            Text("score".localized)
+                .font(GameTheme.Typography.headline)
+                .foregroundColor(GameTheme.Colors.buttonText)
+                .frame(maxWidth: .infinity)
+                .padding(.horizontal, GameTheme.Layout.largePadding)
+                .padding(.vertical, GameTheme.Layout.smallPadding)
+                .background(GameTheme.Colors.accent)
+                .overlay(
+                    Rectangle()
+                        .frame(height: 2.5)
+                        .foregroundColor(.black),
+                    alignment: .bottom
+                )
+
+            // Score and lines content
             HStack {
-                // Current Score
                 VStack(alignment: .leading, spacing: 2) {
                     Text(displayScore.formattedScore)
                         .font(GameTheme.Typography.title)
                         .foregroundColor(GameTheme.Colors.primaryText)
                         .accessibilityIdentifier("score_display")
-                    Text("score".localized)
-                        .font(GameTheme.Typography.caption)
-                        .foregroundColor(GameTheme.Colors.secondaryText)
                 }
-                
+
                 Spacer()
-                
-                // Lines Cleared Counter
+
                 VStack(alignment: .trailing, spacing: 2) {
                     Text(displayLinesCleared.formattedScore)
                         .font(GameTheme.Typography.title)
@@ -57,7 +68,14 @@ struct SimpleScoreView: View {
                         .foregroundColor(GameTheme.Colors.secondaryText)
                 }
             }
+            .padding(.horizontal, GameTheme.Layout.largePadding)
+            .padding(.vertical, GameTheme.Layout.mediumPadding)
+            .background(Color.white)
         }
-        .padding(.vertical, GameTheme.Layout.smallPadding)
+        .clipShape(RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius))
+        .overlay(
+            RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
+                .stroke(Color.black, lineWidth: 2.5)
+        )
     }
 }

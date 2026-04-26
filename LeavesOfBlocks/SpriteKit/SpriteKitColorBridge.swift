@@ -37,16 +37,16 @@ enum SpriteKitColors {
     static let gridCellEmpty = UIColor(red: 0.929, green: 0.890, blue: 0.812, alpha: 0.4)
 
     /// Empty grid cell border color
-    static let gridCellBorder = UIColor(red: 0.706, green: 0.737, blue: 0.792, alpha: 0.25)
+    static let gridCellBorder = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.15)
 
     /// Filled grid cell border color
-    static let gridCellFilledBorder = UIColor(red: 0.227, green: 0.267, blue: 0.333, alpha: 0.3)
+    static let gridCellFilledBorder = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.3)
 
-    /// Grid card background color
-    static let cardBackground = UIColor(red: 0.961, green: 0.929, blue: 0.871, alpha: 0.9)
+    /// Grid card background color (white)
+    static let cardBackground = UIColor.white
 
-    /// Card border color
-    static let cardBorder = UIColor(red: 0.706, green: 0.737, blue: 0.792, alpha: 0.3)
+    /// Card border color (solid black)
+    static let cardBorder = UIColor.black
 
     // MARK: - Preview Colors
 
@@ -58,8 +58,8 @@ enum SpriteKitColors {
 
     // MARK: - Block Cell Overlay
 
-    /// Border overlay used on block cells
-    static let blockCellOverlay = UIColor(red: 0.227, green: 0.267, blue: 0.333, alpha: 0.25)
+    /// Border overlay used on block cells (black outline for folk-art style)
+    static let blockCellOverlay = UIColor(red: 0.0, green: 0.0, blue: 0.0, alpha: 0.3)
 
     // MARK: - Scene Colors
 

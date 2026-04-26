@@ -69,12 +69,8 @@ struct GameGridView: View {
                     .fill(GameTheme.Colors.cardBackground)
                     .overlay(
                         RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
-                            .stroke(
-                                GameTheme.Gradients.cardBorder,
-                                lineWidth: GameTheme.Layout.strokeWidth
-                            )
+                            .stroke(Color.black, lineWidth: 2.5)
                     )
-                    .shadow(color: GameTheme.Colors.cardShadow, radius: GameTheme.Layout.shadowRadius, x: 0, y: GameTheme.Layout.shadowOffset)
             )
             .onChange(of: gameState.blocksPlaced) { _, _ in
                 // Invalidate cache when blocks are placed to avoid stale data
@@ -222,16 +218,16 @@ private struct GridCellView: View {
     let isPreview: Bool
     let previewColor: Color
     let isLineComplete: Bool
-    
+
     var body: some View {
         RoundedRectangle(cornerRadius: 8)
             .fill(
-                cell.isFilled ? 
+                cell.isFilled ?
                     cell.color.color :
-                (isLineComplete ? 
+                (isLineComplete ?
                     GameTheme.Colors.lineCompletionPrimary :
-                (isPreview ? 
-                    previewColor.opacity(GameTheme.Layout.mediumHighOpacity) : 
+                (isPreview ?
+                    previewColor.opacity(GameTheme.Layout.mediumHighOpacity) :
                     GameTheme.Colors.blockBackground.opacity(GameTheme.Layout.mediumLowOpacity)
                 ))
             )
@@ -239,30 +235,12 @@ private struct GridCellView: View {
             .overlay(
                 RoundedRectangle(cornerRadius: 8)
                     .stroke(
-                        cell.isFilled ? GameTheme.Colors.primaryText.opacity(GameTheme.Layout.mediumOpacity) :
-                        (isLineComplete ? GameTheme.Colors.lineCompletionPrimary.opacity(GameTheme.Layout.veryHighOpacity) :
-                        (isPreview ? previewColor.opacity(GameTheme.Layout.highOpacity) : GameTheme.Colors.gridBorder.opacity(GameTheme.Layout.lowOpacity))),
-                        lineWidth: cell.isFilled ? 2 : (isLineComplete ? 3 : (isPreview ? 2 : 1))
+                        cell.isFilled ? Color.black.opacity(0.3) :
+                        (isLineComplete ? GameTheme.Colors.lineCompletionAccent :
+                        (isPreview ? previewColor.opacity(GameTheme.Layout.highOpacity) :
+                        Color.black.opacity(0.1))),
+                        lineWidth: cell.isFilled ? 1.5 : (isLineComplete ? 2.5 : (isPreview ? 1.5 : 1))
                     )
-            )
-            .overlay(
-                // Add special effects for line clearing only (avoid preview pulse during drag)
-                Group {
-                    if isLineComplete {
-                        // Static golden glow for line clearing (no pulsing to avoid conflicts)
-                        RoundedRectangle(cornerRadius: 8)
-                            .stroke(GameTheme.Colors.lineCompletionAccent, lineWidth: 3)
-                            .opacity(GameTheme.Layout.highOpacity)
-                            .scaleEffect(GameTheme.Layout.subtleScale)
-                    }
-                }
-            )
-            .shadow(
-                color: cell.isFilled ? cell.color.color.opacity(GameTheme.Layout.lowOpacity) :
-                      (isLineComplete ? GameTheme.Colors.lineCompletionPrimary.opacity(GameTheme.Layout.mediumOpacity) :
-                      (isPreview ? previewColor.opacity(GameTheme.Layout.mediumLowOpacity) : .clear)),
-                radius: cell.isFilled ? 3 : (isLineComplete ? 4 : (isPreview ? 3 : 0)),
-                x: 0, y: cell.isFilled ? 1 : 0
             )
             .scaleEffect(cell.isFilled ? 1.0 : (isLineComplete ? GameTheme.Layout.slightlyReducedScale : (isPreview ? GameTheme.Layout.minorScale : GameTheme.Layout.reducedScale)))
     }

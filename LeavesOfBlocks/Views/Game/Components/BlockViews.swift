@@ -29,18 +29,12 @@ struct CurrentBlocksView: View {
                 ForEach(Array(gameState.currentBlocks.enumerated()), id: \.offset) { index, block in
                     // Fixed-size slot for each block
                     ZStack {
-                        // Background for the slot - highlight if hovering over origin
+                        // Background for the slot
                         RoundedRectangle(cornerRadius: GameTheme.Layout.buttonCornerRadius)
                             .fill(GameTheme.Colors.blockContainerBackground)
                             .overlay(
                                 RoundedRectangle(cornerRadius: GameTheme.Layout.buttonCornerRadius)
-                                    .stroke(GameTheme.Colors.blockContainerBorder, lineWidth: 1)
-                            )
-                            .shadow(
-                                color: GameTheme.Colors.blockContainerShadow,
-                                radius: 6,
-                                x: 2,
-                                y: 3
+                                    .stroke(Color.black.opacity(0.2), lineWidth: 1)
                             )
                         
                         // Scaled block centered in slot - size stays consistent
@@ -61,29 +55,18 @@ struct CurrentBlocksView: View {
         .background(
             RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
                 .fill(
-                    isHoveringOverOrigin ? 
-                    GameTheme.Colors.accent.opacity(0.15) : 
+                    isHoveringOverOrigin ?
+                    GameTheme.Colors.accent.opacity(0.15) :
                     GameTheme.Colors.cardBackground
                 )
                 .overlay(
                     RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
                         .stroke(
-                            isHoveringOverOrigin ?
-                            GameTheme.Gradients.blockVisual(from: GameTheme.Colors.accent, to: GameTheme.Colors.accent) :
-                            GameTheme.Gradients.cardBorder,
-                            lineWidth: isHoveringOverOrigin ? 3 : GameTheme.Layout.strokeWidth
+                            isHoveringOverOrigin ? GameTheme.Colors.accent : Color.black,
+                            lineWidth: 2.5
                         )
                 )
-                .shadow(
-                    color: isHoveringOverOrigin ? 
-                    GameTheme.Colors.accent.opacity(0.4) : 
-                    GameTheme.Colors.cardShadow, 
-                    radius: isHoveringOverOrigin ? 12 : GameTheme.Layout.shadowRadius, 
-                    x: 0, 
-                    y: isHoveringOverOrigin ? 6 : GameTheme.Layout.shadowOffset
-                )
         )
-        .scaleEffect(isHoveringOverOrigin ? 1.02 : 1.0)
         .accessibilityIdentifier("block_container")
     }
     
@@ -121,7 +104,6 @@ struct BlockView: View {
                 RoundedRectangle(cornerRadius: GameTheme.Layout.specialBlockCornerRadius)
                     .fill(block.color.color)
                     .frame(width: cellSize - 2, height: cellSize - 2)
-                    .shadow(color: block.color.color.opacity(0.2), radius: 2)
                 
                 // Icon overlay
                 Image(systemName: block.type.systemIconName)
@@ -149,9 +131,8 @@ struct BlockView: View {
                         .frame(width: cellSize - 2, height: cellSize - 2)
                         .overlay(
                             RoundedRectangle(cornerRadius: 8)
-                                .stroke(GameTheme.Colors.gridBorder.opacity(0.4), lineWidth: 1.5)
+                                .stroke(Color.black.opacity(0.3), lineWidth: 1.5)
                         )
-                        .shadow(color: block.color.color.opacity(0.3), radius: 3, x: 0, y: 2)
                         .offset(
                             x: CGFloat(position.col - bounds.minCol) * cellSize - width/2 + cellSize/2,
                             y: CGFloat(position.row - bounds.minRow) * cellSize - height/2 + cellSize/2

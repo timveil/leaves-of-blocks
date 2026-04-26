@@ -86,7 +86,7 @@ class GridNode: SKNode {
         backgroundNode = SKShapeNode(rect: bgRect, cornerRadius: GameTheme.Layout.cardCornerRadius)
         backgroundNode.fillColor = SpriteKitColors.cardBackground
         backgroundNode.strokeColor = SpriteKitColors.cardBorder
-        backgroundNode.lineWidth = GameTheme.Layout.strokeWidth
+        backgroundNode.lineWidth = 2.5
         backgroundNode.zPosition = -1
 
         super.init()

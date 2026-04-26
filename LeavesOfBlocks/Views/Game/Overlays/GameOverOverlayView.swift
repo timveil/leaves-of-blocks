@@ -17,7 +17,6 @@ struct GameOverOverlayView: View {
                     .font(GameTheme.Typography.title)
                     .foregroundColor(GameTheme.Colors.primaryText)
                     .tracking(1)
-                    .shadow(color: GameTheme.Colors.cardShadow, radius: 2, x: 0, y: 1)
                 
                 // Body text placeholder
                 Text("game_over_quote".localized)

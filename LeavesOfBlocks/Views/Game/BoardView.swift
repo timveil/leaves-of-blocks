@@ -70,7 +70,8 @@ struct BoardView: View {
                             .frame(width: gameWidth)
                         Spacer()
                     }
-                    
+                    .padding(.bottom, GameTheme.Layout.mediumPadding)
+
                     // Grid Row
                     HStack {
                         Spacer()
@@ -205,8 +206,7 @@ struct BoardView: View {
                 .position(getDraggedBlockVisualCenter())
                 .allowsHitTesting(false)
                 .zIndex(1000)
-                .scaleEffect(1.1) // Slightly larger during drag for better visibility
-                .shadow(color: .black.opacity(0.2), radius: 4, x: 0, y: 2)
+                .scaleEffect(1.1)
             }
         }
     }
