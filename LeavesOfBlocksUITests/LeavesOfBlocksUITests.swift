@@ -36,296 +36,211 @@ final class LeavesOfBlocksUITests: XCTestCase {
 
         app.launch()
 
-        // Wait for home screen to be ready (replaces arbitrary sleep)
-        let easyButton = app.buttons["easy_button"]
-        _ = easyButton.waitForExistence(timeout: 3)
+        // Wait for home screen to be ready
+        let startButton = app.buttons["start_game_button"]
+        _ = startButton.waitForExistence(timeout: 3)
     }
 
     override func tearDownWithError() throws {
         app = nil
     }
 
+    // MARK: - Game Grid Helper
+
+    @MainActor
+    private func waitForGameGrid(timeout: TimeInterval = 5) -> Bool {
+        let spriteKitGrid = app.otherElements["spritekit_game_grid"]
+        let swiftUIGrid = app.otherElements["game_grid"]
+        return spriteKitGrid.waitForExistence(timeout: timeout) ||
+               swiftUIGrid.waitForExistence(timeout: timeout)
+    }
+
+    // MARK: - Menu Navigation Helpers
+
+    @MainActor
+    private func openMenu() {
+        let menuButton = app.buttons["menu_button"]
+        XCTAssertTrue(menuButton.waitForExistence(timeout: 2), "Menu button should exist")
+        menuButton.tap()
+    }
+
+    @MainActor
+    private func navigateViaMenu(to accessibilityId: String) {
+        openMenu()
+        let button = app.buttons[accessibilityId]
+        XCTAssertTrue(button.waitForExistence(timeout: 2), "\(accessibilityId) should exist in menu")
+        button.tap()
+    }
+
+    @MainActor
+    private func navigateHome() {
+        navigateViaMenu(to: "home_button")
+        let startButton = app.buttons["start_game_button"]
+        _ = startButton.waitForExistence(timeout: 3)
+    }
+
     // MARK: - Screenshot Tests
-    
+
     @MainActor
     func testCaptureScreenshots() throws {
-        // Take screenshots for App Store
         captureHomeScreen()
         captureGameplayScreens()
         captureGameHistoryScreen()
     }
-    
+
     @MainActor
     private func captureHomeScreen() {
-        // Wait for home screen to load by looking for difficulty buttons or score display
-        let easyButton = app.buttons["easy_button"]
-        let homeScreenIdentifier = app.staticTexts["home_screen_identifier"]
-        
-        // Try multiple ways to verify we're on home screen
-        let isHomeLoaded = easyButton.waitForExistence(timeout: 5) || 
-                          homeScreenIdentifier.waitForExistence(timeout: 5) ||
-                          app.buttons["start_game_button"].waitForExistence(timeout: 5)
-        
-        XCTAssertTrue(isHomeLoaded, "Home screen should be visible")
-        
-        // Wait a bit longer for sample data to be created and UI to update
+        let startButton = app.buttons["start_game_button"]
+        XCTAssertTrue(startButton.waitForExistence(timeout: 5), "Home screen should be visible")
+
         sleep(2)
-        
+
         takeScreenshot(named: "01_HomeScreen")
     }
-    
+
     @MainActor
     private func captureHowToPlayScreen() {
-        // Navigate to How to Play
-        let howToPlayButton = app.buttons["how_to_play_button"]
-        XCTAssertTrue(howToPlayButton.waitForExistence(timeout: 3), "How to Play button should exist")
-        howToPlayButton.tap()
-        
-        // Wait for screen to load
+        navigateViaMenu(to: "how_to_play_button")
+
         sleep(2)
-        
+
         takeScreenshot(named: "02_HowToPlay")
-        
-        // Go back
-        let homeButton = app.buttons["home_button"]
-        if homeButton.exists {
-            homeButton.tap()
-        } else {
-            // Fallback: try back navigation
-            app.navigationBars.buttons.element(boundBy: 0).tap()
-        }
+
+        navigateHome()
     }
-    
+
     @MainActor
     private func captureGameplayScreens() {
-        // Capture Easy difficulty only (all difficulties show the same screen)
-        captureGameplay(difficulty: "easy_button", screenshotName: "02_Gameplay")
+        captureGameplay(screenshotName: "02_Gameplay")
     }
-    
+
     @MainActor
-    private func captureGameplay(difficulty: String, screenshotName: String) {
-        // Select difficulty
-        let difficultyButton = app.buttons[difficulty]
-        XCTAssertTrue(difficultyButton.waitForExistence(timeout: 3), "Difficulty button \(difficulty) should exist")
-        difficultyButton.tap()
-        
-        // Start game
+    private func captureGameplay(screenshotName: String) {
         let startButton = app.buttons["start_game_button"]
         XCTAssertTrue(startButton.waitForExistence(timeout: 3), "Start game button should exist")
         startButton.tap()
-        
-        // Wait for game board to appear
-        let gameGrid = app.otherElements["game_grid"]
-        XCTAssertTrue(gameGrid.waitForExistence(timeout: 5), "Game grid should appear")
-        
-        // Take screenshot
+
+        XCTAssertTrue(waitForGameGrid(), "Game grid should appear")
+
         takeScreenshot(named: screenshotName)
-        
-        // Go back home
-        let homeButton = app.buttons["home_button"]
-        if homeButton.exists {
-            homeButton.tap()
-        } else {
-            // Alternative navigation back
-            app.navigationBars.buttons.element(boundBy: 0).tap()
-        }
-        
-        // Wait to return to home
-        let easyButton = app.buttons["easy_button"]
-        _ = easyButton.waitForExistence(timeout: 5)
+
+        navigateHome()
     }
-    
+
     @MainActor
     private func captureGameHistoryScreen() {
-        // Navigate to History
         let historyButton = app.buttons["history_button"]
         XCTAssertTrue(historyButton.waitForExistence(timeout: 3), "History button should exist")
         historyButton.tap()
-        
-        // Wait longer for history screen and data to load
+
         sleep(3)
-        
-        // Capture the history list first
+
         takeScreenshot(named: "03_GameHistory")
-        
-        // Check if there are any game records to tap on
+
         let firstGameButton = app.buttons["game_history_button_0"]
         if firstGameButton.waitForExistence(timeout: 10) {
-            // Tap on the first game record to see detail
             firstGameButton.tap()
-            
-            // Wait for detail screen to appear
+
             sleep(3)
-            
-            // Capture the game detail screen
+
             takeScreenshot(named: "04_GameDetail")
-            
-            // Go back from detail - try multiple methods
-            if app.buttons["home_button"].exists {
-                app.buttons["home_button"].tap()
-            } else if app.navigationBars.buttons.firstMatch.exists {
-                app.navigationBars.buttons.firstMatch.tap()
-            } else {
-                // Try swipe back gesture
-                app.swipeRight()
-            }
-            sleep(1)
-        } else {
-            // Debug: print all available buttons
-            print("DEBUG: Could not find game_history_button_0")
-            let allButtons = app.buttons.allElementsBoundByIndex
-            for i in 0..<min(5, allButtons.count) {
-                print("DEBUG: Button \(i): \(allButtons[i].identifier)")
-            }
         }
-        
-        // Go back to home
-        let homeButton = app.buttons["home_button"]
-        if homeButton.exists {
-            homeButton.tap()
-        }
+
+        navigateHome()
     }
-    
+
     @MainActor
     private func captureAboutScreen() {
-        // Navigate to About
-        let aboutButton = app.buttons["about_button"]
-        XCTAssertTrue(aboutButton.waitForExistence(timeout: 3), "About button should exist")
-        aboutButton.tap()
-        
-        // Wait for about screen
+        navigateViaMenu(to: "about_button")
+
         sleep(2)
-        
+
         takeScreenshot(named: "06_About")
-        
-        // Go back
-        let homeButton = app.buttons["home_button"]
-        if homeButton.exists {
-            homeButton.tap()
-        }
+
+        navigateHome()
     }
     
     // MARK: - Gameplay Tests
-    
+
     @MainActor
     func testStartNewGame() throws {
-        // Select Easy difficulty
-        let easyButton = app.buttons["easy_button"]
-        XCTAssertTrue(easyButton.waitForExistence(timeout: 2), "Easy button should exist")
-        easyButton.tap()
-
-        // Start game
         let startButton = app.buttons["start_game_button"]
         XCTAssertTrue(startButton.waitForExistence(timeout: 2), "Start button should exist")
         startButton.tap()
 
-        // Verify game board appears
-        let gameGrid = app.otherElements["game_grid"]
-        XCTAssertTrue(gameGrid.waitForExistence(timeout: 3), "Game grid should appear")
+        XCTAssertTrue(waitForGameGrid(timeout: 3), "Game grid should appear")
 
-        // Verify score display
         let scoreDisplay = app.staticTexts["score_display"]
         XCTAssertTrue(scoreDisplay.waitForExistence(timeout: 2), "Score display should exist")
 
-        // Verify block container
         let blockContainer = app.otherElements["block_container"]
         XCTAssertTrue(blockContainer.exists, "Block container should exist")
     }
-    
+
     @MainActor
     func testDragAndDropBlock() throws {
-        // Start a game
-        let easyButton = app.buttons["easy_button"]
-        XCTAssertTrue(easyButton.waitForExistence(timeout: 2))
-        easyButton.tap()
-
         let startButton = app.buttons["start_game_button"]
         XCTAssertTrue(startButton.waitForExistence(timeout: 2))
         startButton.tap()
 
-        // Wait for game to load
-        let gameGrid = app.otherElements["game_grid"]
-        XCTAssertTrue(gameGrid.waitForExistence(timeout: 3))
+        XCTAssertTrue(waitForGameGrid(timeout: 3))
 
-        // Find first draggable block
+        let gridElement = app.otherElements["spritekit_game_grid"].exists
+            ? app.otherElements["spritekit_game_grid"]
+            : app.otherElements["game_grid"]
+
         let blockContainer = app.otherElements["block_container"]
         let firstBlock = blockContainer.otherElements.matching(identifier: "draggable_block").element(boundBy: 0)
 
         if firstBlock.waitForExistence(timeout: 2) {
-            // Perform drag from block to grid center
             let startCoordinate = firstBlock.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
-            let endCoordinate = gameGrid.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+            let endCoordinate = gridElement.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
 
             startCoordinate.press(forDuration: 0.1, thenDragTo: endCoordinate)
 
-            // Wait for score to update (use expectation instead of sleep)
             let scoreDisplay = app.staticTexts["score_display"]
             _ = scoreDisplay.waitForExistence(timeout: 2)
             let scoreText = scoreDisplay.label
 
-            // Extract number from score text
             if let score = Int(scoreText.components(separatedBy: CharacterSet.decimalDigits.inverted).joined()) {
                 XCTAssertGreaterThan(score, 0, "Score should increase after placing a block")
             }
         }
     }
-    
+
     @MainActor
     func testNavigationFlow() throws {
-        // Test navigation through all main screens
-        let homeButton = app.buttons["home_button"]
-        let easyButton = app.buttons["easy_button"]
+        // How to Play (via slide-down menu)
+        navigateViaMenu(to: "how_to_play_button")
+        sleep(1)
+        navigateHome()
 
-        // How to Play
-        let howToPlayButton = app.buttons["how_to_play_button"]
-        XCTAssertTrue(howToPlayButton.waitForExistence(timeout: 2), "How to Play button should exist")
-        howToPlayButton.tap()
-
-        // Wait for navigation, then go back
-        if homeButton.waitForExistence(timeout: 2) {
-            homeButton.tap()
-            _ = easyButton.waitForExistence(timeout: 2)
-        }
-
-        // History
+        // History (via score display on home screen)
         let historyButton = app.buttons["history_button"]
         if historyButton.waitForExistence(timeout: 2) {
             historyButton.tap()
-            if homeButton.waitForExistence(timeout: 2) {
-                homeButton.tap()
-                _ = easyButton.waitForExistence(timeout: 2)
-            }
+            sleep(1)
+            navigateHome()
         }
 
-        // About
-        let aboutButton = app.buttons["about_button"]
-        if aboutButton.waitForExistence(timeout: 2) {
-            aboutButton.tap()
-            if homeButton.waitForExistence(timeout: 2) {
-                homeButton.tap()
-            }
-        }
+        // About (via slide-down menu)
+        navigateViaMenu(to: "about_button")
+        sleep(1)
+        navigateHome()
 
-        // Verify we can still see home screen elements
-        XCTAssertTrue(easyButton.waitForExistence(timeout: 2), "Should be back on home screen")
+        let startButton = app.buttons["start_game_button"]
+        XCTAssertTrue(startButton.waitForExistence(timeout: 2), "Should be back on home screen")
     }
-    
+
     @MainActor
     func testDifficultySelection() throws {
-        // Test all difficulty selections
-        let difficulties = ["easy_button", "moderate_button", "hard_button"]
         let startButton = app.buttons["start_game_button"]
+        XCTAssertTrue(startButton.waitForExistence(timeout: 2), "Start game button should exist")
+        XCTAssertTrue(startButton.isEnabled, "Start game button should be enabled")
 
-        for difficulty in difficulties {
-            // Select difficulty
-            let difficultyButton = app.buttons[difficulty]
-            XCTAssertTrue(difficultyButton.waitForExistence(timeout: 2), "Difficulty button \(difficulty) should exist")
-            difficultyButton.tap()
+        startButton.tap()
 
-            // Verify start button appears/is enabled
-            XCTAssertTrue(startButton.waitForExistence(timeout: 1), "Start button should appear")
-            XCTAssertTrue(startButton.isEnabled, "Start button should be enabled")
-        }
+        XCTAssertTrue(waitForGameGrid(timeout: 3), "Game grid should appear after starting game")
     }
     
     // MARK: - Helper Methods
