@@ -6,51 +6,51 @@ struct HomeView: View {
     @ObservedObject var gameState: GameState
     let onStartGame: (DifficultyMode) -> Void
     let onShowHistory: () -> Void
-    
-    @State private var selectedDifficulty: DifficultyMode = .moderate
-    
+
     var body: some View {
         BaseScreenView(showsStatusBar: false) {
-            VStack(spacing: GameTheme.Layout.extraLargeSpacing) {
+            VStack {
                 // Invisible accessibility element for UI testing
                 Text("")
                     .accessibilityIdentifier("home_screen_identifier")
                     .hidden()
 
-                // Whitman Portrait
-                Image("WhitmanPortrait")
-                    .resizable()
-                    .aspectRatio(contentMode: .fit)
-                    .frame(width: 90, height: 110)
-                    .clipShape(RoundedRectangle(cornerRadius: 14))
-                    .shadow(color: GameTheme.Colors.cardShadow, radius: 8, x: 0, y: 4)
+                Spacer()
 
-                // High Score Display - Now tappable for history
-                ScoreDisplayView(
-                    score: gameState.highScore,
-                    lastScore: gameState.score > 0 ? gameState.score : nil,
-                    showHistoryHint: true,
-                    action: onShowHistory
-                )
-                .frame(maxWidth: 280)
-                
-                Spacer().frame(maxHeight: 10)
-                
-                // Difficulty Selection
-                DifficultySelectionView(
-                    selectedDifficulty: $selectedDifficulty,
-                    onStartGame: onStartGame
-                )
+                // Single unified card for all home content
+                VStack(spacing: GameTheme.Layout.largeSpacing) {
+                    // High Score Display - tappable for history
+                    ScoreDisplayView(
+                        score: gameState.highScore,
+                        lastScore: gameState.score > 0 ? gameState.score : nil,
+                        showHistoryHint: true,
+                        action: onShowHistory
+                    )
+                    .frame(maxWidth: 280)
+
+                    // Difficulty buttons - each starts the game directly
+                    DifficultySelectionView(
+                        onStartGame: onStartGame
+                    )
+                }
+                .padding(GameTheme.Layout.extraLargePadding)
+                .game3DCardStyle(elevation: 10)
+
+                Spacer()
             }
-            .padding(.horizontal, GameTheme.Layout.extraLargePadding)
-            .padding(.bottom, 80)
+            .padding(.horizontal, GameTheme.Layout.largePadding)
         }
     }
 }
 
 #Preview {
     HomeView(
-        gameState: GameState(),
+        gameState: {
+            let state = GameState()
+            state.previewHighScore = 1_000_350
+            state.score = 87_200
+            return state
+        }(),
         onStartGame: { _ in },
         onShowHistory: { }
     )

@@ -30,10 +30,8 @@ extension View {
     /// Applies standard game card styling with customizable parameters
     func gameCardStyle(
         cornerRadius: CGFloat = GameTheme.Layout.cardCornerRadius,
-        borderColor: Color = GameTheme.Colors.gridBorder,
-        borderWidth: CGFloat = 1,
-        shadowRadius: CGFloat = GameTheme.Layout.shadowRadius,
-        shadowOffset: CGFloat = GameTheme.Layout.shadowOffset
+        borderColor: Color = .black,
+        borderWidth: CGFloat = 2.5
     ) -> some View {
         self
             .background(
@@ -43,12 +41,6 @@ extension View {
                         RoundedRectangle(cornerRadius: cornerRadius)
                             .stroke(borderColor, lineWidth: borderWidth)
                     )
-                    .shadow(
-                        color: GameTheme.Colors.cardShadow,
-                        radius: shadowRadius,
-                        x: 0,
-                        y: shadowOffset
-                    )
             )
     }
     
@@ -57,26 +49,19 @@ extension View {
         isSelected: Bool = false,
         cornerRadius: CGFloat = GameTheme.Layout.buttonCornerRadius,
         selectedColor: Color = GameTheme.Colors.accent,
-        unselectedColor: Color = GameTheme.Colors.containerBackground
+        unselectedColor: Color = GameTheme.Colors.primaryBackground
     ) -> some View {
         self
             .background(
                 RoundedRectangle(cornerRadius: cornerRadius)
-                    .fill(isSelected ? selectedColor.opacity(0.2) : unselectedColor)
+                    .fill(isSelected ? selectedColor.opacity(0.8) : unselectedColor)
                     .overlay(
                         RoundedRectangle(cornerRadius: cornerRadius)
-                            .stroke(
-                                isSelected ? selectedColor : GameTheme.Colors.gridBorder.opacity(0.3),
-                                lineWidth: isSelected ? 2 : 1
-                            )
-                    )
-                    .shadow(
-                        color: GameTheme.Colors.cardShadow.opacity(isSelected ? 0.3 : 0.1),
-                        radius: isSelected ? 8 : 4,
-                        x: 0,
-                        y: isSelected ? 4 : 2
+                            .stroke(Color.black, lineWidth: 2.5)
                     )
             )
+            .scaleEffect(isSelected ? 1.08 : 1.0)
+            .animation(.spring(response: 0.3, dampingFraction: 0.6), value: isSelected)
     }
     
     /// Applies 3D elevated card styling for prominent elements
@@ -90,36 +75,23 @@ extension View {
                     .fill(GameTheme.Colors.cardBackground)
                     .overlay(
                         RoundedRectangle(cornerRadius: cornerRadius)
-                            .stroke(
-                                GameTheme.Gradients.cardBorder,
-                                lineWidth: 2
-                            )
+                            .stroke(Color.black, lineWidth: 3)
                     )
-                    .shadow(color: .black.opacity(0.08), radius: elevation * 0.4, x: 0, y: elevation * 0.3)
             )
     }
     
     /// Applies gradient card styling
     func gameGradientCardStyle(
         cornerRadius: CGFloat = GameTheme.Layout.cardCornerRadius,
-        gradient: LinearGradient? = nil,
-        borderWidth: CGFloat = 2
+        borderWidth: CGFloat = 2.5
     ) -> some View {
-        let defaultGradient = GameTheme.Gradients.cardBorder
-        
-        return self
+        self
             .background(
                 RoundedRectangle(cornerRadius: cornerRadius)
                     .fill(GameTheme.Colors.cardBackground)
                     .overlay(
                         RoundedRectangle(cornerRadius: cornerRadius)
-                            .stroke(gradient ?? defaultGradient, lineWidth: borderWidth)
-                    )
-                    .shadow(
-                        color: GameTheme.Colors.cardShadow,
-                        radius: GameTheme.Layout.shadowRadius,
-                        x: 0,
-                        y: GameTheme.Layout.shadowOffset
+                            .stroke(Color.black, lineWidth: borderWidth)
                     )
             )
     }

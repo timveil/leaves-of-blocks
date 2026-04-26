@@ -6,6 +6,14 @@ enum DifficultyMode: String, CaseIterable, Codable {
     case moderate = "Moderate" 
     case hard = "Hard"
     
+    var displayName: String {
+        switch self {
+        case .easy: return "difficulty_gentle".localized
+        case .moderate: return "difficulty_bold".localized
+        case .hard: return "difficulty_wild".localized
+        }
+    }
+
     var description: String {
         switch self {
         case .easy:
@@ -17,6 +25,25 @@ enum DifficultyMode: String, CaseIterable, Codable {
         }
     }
     
+    var localizedDescription: String {
+        switch self {
+        case .easy:
+            return "difficulty_easy_desc".localized
+        case .moderate:
+            return "difficulty_moderate_desc".localized
+        case .hard:
+            return "difficulty_hard_desc".localized
+        }
+    }
+
+    var acornCount: Int {
+        switch self {
+        case .easy: return 1
+        case .moderate: return 2
+        case .hard: return 3
+        }
+    }
+
     var icon: String {
         switch self {
         case .easy:

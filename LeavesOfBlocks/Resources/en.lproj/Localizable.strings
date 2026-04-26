@@ -20,6 +20,13 @@
 "start_game" = "Start Game";
 "new_game" = "New Game";
 
+// MARK: - Menu Labels
+"home" = "Home";
+"new_game_menu" = "New Game";
+"how_to_play_menu" = "How To";
+"about_menu" = "About";
+"settings_menu" = "Settings";
+
 // MARK: - Game UI
 "score" = "Score";
 "lines" = "Lines";
@@ -118,6 +125,11 @@
 "scoring_blocks_placed" = "Placing blocks on the grid";
 "scoring_clear_lines" = "Clearing complete lines";
 "scoring_combo_bonus" = "Combo bonus for each additional line";
+
+// MARK: - Difficulty Names
+"difficulty_gentle" = "Gentle";
+"difficulty_bold" = "Bold";
+"difficulty_wild" = "Wild";
 
 // MARK: - Difficulty Descriptions
 "difficulty_easy_desc" = "Perfect for beginners - you'll get more small, manageable blocks that are easier to place";

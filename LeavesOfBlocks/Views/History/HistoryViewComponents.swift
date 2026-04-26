@@ -187,7 +187,7 @@ struct GameSessionRow: View {
                 Spacer()
                 
                 // Difficulty badge using new badge style
-                Text(session.difficulty.rawValue.uppercased())
+                Text(session.difficulty.displayName.uppercased())
                     .font(GameTheme.Typography.tiny)
                     .foregroundColor(GameTheme.Colors.primaryBackground)
                     .gameBadgeStyle(

@@ -152,7 +152,7 @@ struct DifficultyTable: View {
                         .font(GameTheme.Typography.body)
                         .foregroundColor(level.difficulty.color)
                     
-                    Text(level.difficulty.rawValue)
+                    Text(level.difficulty.displayName)
                         .font(GameTheme.Typography.body)
                         .fontWeight(.medium)
                         .foregroundColor(GameTheme.Colors.primaryText)

@@ -6,7 +6,7 @@ extension GameTheme {
 
         /// Display text for large, prominent numbers and titles (48pt, bold, serif)
         /// Use for: game scores, game over text, large numbers
-        static let display = Font.system(size: 48, weight: .bold, design: .serif)
+        static let display = Font.system(size: 64, weight: .bold, design: .serif)
 
         /// Title text for screen and section headers (28pt, bold, serif)
         /// Use for: screen titles, major section headers
@@ -16,13 +16,13 @@ extension GameTheme {
         /// Use for: card headers, section sub-titles, prominent labels
         static let headline = Font.system(size: 20, weight: .semibold, design: .serif)
 
-        /// Body text for main content (16pt, medium)
+        /// Body text for main content (16pt, medium, serif)
         /// Use for: general text, button labels, descriptions
-        static let body = Font.system(size: 16, weight: .medium, design: .default)
+        static let body = Font.system(size: 16, weight: .medium, design: .serif)
 
-        /// Caption text for secondary information (13pt, medium)
+        /// Caption text for secondary information (14pt, medium, serif)
         /// Use for: small labels, hints, secondary details
-        static let caption = Font.system(size: 13, weight: .medium, design: .default)
+        static let caption = Font.system(size: 14, weight: .medium, design: .serif)
 
         /// Tiny text for minimal UI elements (10pt, medium)
         /// Use for: timestamps, small badges, tertiary information

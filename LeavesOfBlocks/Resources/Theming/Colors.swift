@@ -101,7 +101,7 @@ extension GameTheme {
         static let overlaySecondary = ink100.opacity(0.05)
 
         // Card/Container Colors
-        static let cardBackground = paper100.opacity(0.9)
+        static let cardBackground = Color(red: 0.878, green: 0.918, blue: 0.949)
         static let cardBorderGradient = [
             ink200.opacity(0.25),
             ink300.opacity(0.15),

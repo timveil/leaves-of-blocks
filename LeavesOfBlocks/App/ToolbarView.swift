@@ -1,82 +1,110 @@
-//
-//  ToolbarView.swift
-//  LeavesOfBlocks
-//
-//  Created by Tim Veil on 7/29/25.
-//
-
 import SwiftUI
 
+// MARK: - Slide-Down Menu
+
 struct ToolbarView: View {
-    private static let iconFont = GameTheme.Typography.headline
-    
     let currentScreen: AppScreen
     let onGoHome: () -> Void
     let onShowAbout: () -> Void
     let onShowHowToPlay: () -> Void
     let onShowSettings: () -> Void
     let onNewGame: () -> Void
-    
+    let onDismiss: () -> Void
+
+    private let iconSize: CGFloat = 28
+
     var body: some View {
-        HStack {
-            // Home icon (always visible, but disabled on home screen)
-            Button(action: currentScreen == .home ? {} : onGoHome) {
-                Image(systemName: "house.circle.fill")
-                    .font(Self.iconFont)
-                    .foregroundColor(currentScreen == .home ? GameTheme.Colors.blockGreen.opacity(0.4) : GameTheme.Colors.blockGreen)
+        VStack(spacing: GameTheme.Layout.largeSpacing) {
+            // Menu grid
+            HStack(spacing: GameTheme.Layout.extraLargeSpacing) {
+                menuButton(
+                    icon: "house",
+                    label: "home".localized,
+                    accessibilityId: "home_button",
+                    disabled: currentScreen == .home
+                ) {
+                    onGoHome()
+                    onDismiss()
+                }
+
+                menuButton(
+                    icon: "play",
+                    label: "new_game_menu".localized,
+                    accessibilityId: "new_game_button"
+                ) {
+                    onNewGame()
+                    onDismiss()
+                }
+
+                menuButton(
+                    icon: "questionmark",
+                    label: "how_to_play_menu".localized,
+                    accessibilityId: "how_to_play_button"
+                ) {
+                    onShowHowToPlay()
+                    onDismiss()
+                }
+
+                menuButton(
+                    icon: "info",
+                    label: "about_menu".localized,
+                    accessibilityId: "about_button"
+                ) {
+                    onShowAbout()
+                    onDismiss()
+                }
+
+                menuButton(
+                    icon: "gearshape",
+                    label: "settings_menu".localized,
+                    accessibilityId: "settings_button"
+                ) {
+                    onShowSettings()
+                    onDismiss()
+                }
             }
-            .disabled(currentScreen == .home)
-            .accessibilityIdentifier("home_button")
-            
-            Spacer()
-            
-            // Right side icons with proper spacing
-            HStack(spacing: GameTheme.Layout.largePadding) {
-                // New Game button (always visible)
-                Button(action: onNewGame) {
-                    Image(systemName: "play.circle.fill")
-                        .font(Self.iconFont)
-                        .foregroundColor(GameTheme.Colors.blockGreen)
-                }
-                .accessibilityIdentifier("new_game_button")
-                
-                // Help icon (How to Play)
-                Button(action: onShowHowToPlay) {
-                    Image(systemName: "questionmark.circle.fill")
-                        .font(Self.iconFont)
-                        .foregroundColor(GameTheme.Colors.blockGreen)
-                }
-                .accessibilityIdentifier("how_to_play_button")
-                
-                // Info icon (About)
-                Button(action: onShowAbout) {
-                    Image(systemName: "info.circle.fill")
-                        .font(Self.iconFont)
-                        .foregroundColor(GameTheme.Colors.blockGreen)
-                }
-                .accessibilityIdentifier("about_button")
-                
-                // Settings icon
-                Button(action: onShowSettings) {
-                    Image(systemName: "gearshape.circle.fill")
-                        .font(Self.iconFont)
-                        .foregroundColor(GameTheme.Colors.blockGreen)
-                }
-                .accessibilityIdentifier("settings_button")
-            }
+
+            // Pull handle to dismiss
+            Capsule()
+                .fill(Color.black.opacity(0.3))
+                .frame(width: 40, height: 4)
         }
         .padding(.horizontal, GameTheme.Layout.largePadding)
-        .padding(.vertical, GameTheme.Layout.mediumPadding)
+        .padding(.top, GameTheme.Layout.largePadding)
+        .padding(.bottom, GameTheme.Layout.mediumPadding)
         .background(
-            GameTheme.Gradients.verticalFade(from: GameTheme.Colors.cardBackground, to: GameTheme.Colors.cardBackground.opacity(0.9))
-            .ignoresSafeArea(edges: .top)
+            GameTheme.Colors.cardBackground
+                .ignoresSafeArea(edges: .top)
         )
         .overlay(
             Rectangle()
-                .frame(height: 1)
-                .foregroundColor(GameTheme.Colors.gridBorder.opacity(0.3)),
+                .frame(height: 2.5)
+                .foregroundColor(.black),
             alignment: .bottom
         )
+    }
+
+    private func menuButton(
+        icon: String,
+        label: String,
+        accessibilityId: String,
+        disabled: Bool = false,
+        action: @escaping () -> Void
+    ) -> some View {
+        Button(action: action) {
+            VStack(spacing: 6) {
+                Image(systemName: icon)
+                    .font(.system(size: iconSize, weight: .medium))
+                    .foregroundColor(disabled ? GameTheme.Colors.tertiaryText : GameTheme.Colors.primaryText)
+                    .frame(width: 44, height: 44)
+
+                Text(label)
+                    .font(GameTheme.Typography.tiny)
+                    .foregroundColor(disabled ? GameTheme.Colors.tertiaryText : GameTheme.Colors.secondaryText)
+            }
+        }
+        .disabled(disabled)
+        .accessibilityIdentifier(accessibilityId)
     }
 }
 
@@ -84,13 +112,14 @@ struct ToolbarView: View {
     VStack {
         ToolbarView(
             currentScreen: .home,
-            onGoHome: { print("Go Home") },
-            onShowAbout: { print("Show About") },
-            onShowHowToPlay: { print("Show How to Play") },
-            onShowSettings: { print("Show Settings") },
-            onNewGame: { print("New Game") }
+            onGoHome: {},
+            onShowAbout: {},
+            onShowHowToPlay: {},
+            onShowSettings: {},
+            onNewGame: {},
+            onDismiss: {}
         )
-        
+
         Spacer()
     }
     .background(GameTheme.Colors.primaryBackground)

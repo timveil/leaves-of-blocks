@@ -137,7 +137,7 @@ struct SummaryView: View {
                         } else {
                             StatisticCard(
                                 title: "difficulty".localized,
-                                value: difficulty.rawValue.capitalized,
+                                value: difficulty.displayName,
                                 icon: "target",
                                 color: difficulty.color,
                                 isCondensed: true
@@ -167,7 +167,7 @@ struct SummaryView: View {
                         if efficiencyGrade != nil && strategicGrade != nil {
                             StatisticCard(
                                 title: "difficulty".localized,
-                                value: difficulty.rawValue.capitalized,
+                                value: difficulty.displayName,
                                 icon: "target",
                                 color: difficulty.color,
                                 isCondensed: true

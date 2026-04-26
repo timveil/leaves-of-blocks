@@ -20,6 +20,13 @@
 "start_game" = "Iniciar Partida";
 "new_game" = "Nueva Partida";
 
+// MARK: - Menu Labels
+"home" = "Inicio";
+"new_game_menu" = "Nueva";
+"how_to_play_menu" = "Ayuda";
+"about_menu" = "Info";
+"settings_menu" = "Ajustes";
+
 // MARK: - Game UI
 "score" = "Puntuación";
 "lines" = "Líneas";
@@ -118,6 +125,11 @@
 "scoring_blocks_placed" = "Colocar bloques en la cuadrícula";
 "scoring_clear_lines" = "Completar líneas completas";
 "scoring_combo_bonus" = "Bonificación de combo por cada línea adicional";
+
+// MARK: - Difficulty Names
+"difficulty_gentle" = "Gentil";
+"difficulty_bold" = "Audaz";
+"difficulty_wild" = "Salvaje";
 
 // MARK: - Difficulty Descriptions
 "difficulty_easy_desc" = "Perfecto para principiantes - recibirás más bloques pequeños y manejables que son más fáciles de colocar";

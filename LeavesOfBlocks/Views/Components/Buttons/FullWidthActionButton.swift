@@ -10,12 +10,12 @@ import SwiftUI
 /// A full-width action button component that expands to fill available width
 struct FullWidthActionButton: View {
     let title: String
-    let icon: String
+    let icon: String?
     let style: ActionButtonStyle
     let accessibilityId: String?
     let onTap: () -> Void
-    
-    init(title: String, icon: String, style: ActionButtonStyle, accessibilityId: String? = nil, onTap: @escaping () -> Void) {
+
+    init(title: String, icon: String? = nil, style: ActionButtonStyle, accessibilityId: String? = nil, onTap: @escaping () -> Void) {
         self.title = title
         self.icon = icon
         self.style = style
@@ -57,13 +57,14 @@ struct FullWidthActionButton: View {
     
     var body: some View {
         Button(action: onTap) {
-            HStack(spacing: GameTheme.Layout.smallSpacing) {
-                Image(systemName: icon)
-                    .font(GameTheme.Typography.body)
-                
+            HStack(spacing: GameTheme.Layout.mediumSpacing) {
+                if let icon = icon {
+                    Image(systemName: icon)
+                        .font(GameTheme.Typography.title)
+                }
+
                 Text(title)
-                    .font(GameTheme.Typography.body)
-                    .fontWeight(.medium)
+                    .font(GameTheme.Typography.title)
             }
             .frame(maxWidth: .infinity)
             .foregroundColor(style.textColor)
@@ -74,16 +75,7 @@ struct FullWidthActionButton: View {
                     .fill(style.backgroundColor)
                     .overlay(
                         RoundedRectangle(cornerRadius: GameTheme.Layout.buttonCornerRadius)
-                            .stroke(
-                                style.borderColor ?? Color.clear,
-                                lineWidth: 1
-                            )
-                    )
-                    .shadow(
-                        color: style.backgroundColor.opacity(0.3),
-                        radius: 4,
-                        x: 0,
-                        y: 2
+                            .stroke(Color.black, lineWidth: 2.5)
                     )
             )
         }

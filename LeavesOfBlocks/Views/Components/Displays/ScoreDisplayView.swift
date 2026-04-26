@@ -51,14 +51,20 @@ struct ScoreDisplayView: View {
         VStack(spacing: 0) {
             // Header with gradient background (like Statistics widget)
             Text(title)
-                .font(GameTheme.Typography.headline)
+                .font(GameTheme.Typography.title)
                 .foregroundColor(GameTheme.Colors.buttonText)
                 .frame(maxWidth: .infinity)
             .padding(.horizontal, GameTheme.Layout.largePadding)
             .padding(.vertical, GameTheme.Layout.mediumPadding)
             .background(GameTheme.Colors.accent)
-            
-            // Content area with brown background
+            .overlay(
+                Rectangle()
+                    .frame(height: 2.5)
+                    .foregroundColor(.black),
+                alignment: .bottom
+            )
+
+            // Content area
             VStack(spacing: GameTheme.Layout.mediumSpacing) {
                 if showIcon, let iconName = iconName {
                     Image(systemName: iconName)
@@ -67,7 +73,7 @@ struct ScoreDisplayView: View {
                         .padding(.top, GameTheme.Layout.mediumPadding)
                 }
                 
-                Text(score.formattedScore)
+                Text(score.abbreviatedScore)
                     .font(GameTheme.Typography.display)
                     .foregroundColor(GameTheme.Colors.primaryText)
                     .lineLimit(1)
@@ -81,28 +87,19 @@ struct ScoreDisplayView: View {
                 
                 if showHistoryHint {
                     Text("tap_for_history".localized)
-                        .gameCaptionStyle(color: GameTheme.Colors.accent.opacity(0.7))
+                        .gameCaptionStyle(color: GameTheme.Colors.primaryText.opacity(0.6))
                         .padding(.bottom, GameTheme.Layout.mediumPadding)
                 }
             }
             .frame(maxWidth: .infinity)
             .padding(.horizontal, GameTheme.Layout.largePadding)
             .padding(.bottom, GameTheme.Layout.largePadding)
-            .background(GameTheme.Colors.cardBackground)
+            .background(GameTheme.Colors.primaryBackground)
         }
         .clipShape(RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius))
         .overlay(
             RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
-                .stroke(
-                    GameTheme.Gradients.cardBorder,
-                    lineWidth: 1
-                )
-        )
-        .shadow(
-            color: GameTheme.Colors.cardShadow.opacity(0.15),
-            radius: 12,
-            x: 0,
-            y: 6
+                .stroke(Color.black, lineWidth: 2.5)
         )
     }
 }
