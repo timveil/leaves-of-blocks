@@ -143,5 +143,7 @@ extension GameTheme {
         static let lineCompletionPrimary = sun400
         static let lineCompletionSecondary = sun500
         static let lineCompletionAccent = sun300
+        static let gameOverDesaturation = ink100
+        static let effectBorder = ink600
     }
 }

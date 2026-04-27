@@ -97,7 +97,7 @@ class BlockNode: SKNode {
         if !iconName.isEmpty {
             let iconLabel = SKLabelNode(text: iconSymbol(for: block.type))
             iconLabel.fontSize = cellSize * 0.4
-            iconLabel.fontColor = UIColor(red: 0.984, green: 0.965, blue: 0.925, alpha: 1.0)
+            iconLabel.fontColor = SpriteKitColors.buttonText
             iconLabel.fontName = "Helvetica-Bold"
             iconLabel.verticalAlignmentMode = .center
             iconLabel.horizontalAlignmentMode = .center

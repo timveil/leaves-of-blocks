@@ -36,7 +36,7 @@ enum GameOverEffect {
         spacing: CGFloat,
         gridSize: Int
     ) {
-        let desaturatedColor = UIColor(red: 0.835, green: 0.855, blue: 0.894, alpha: 0.7)
+        let desaturatedColor = SpriteKitColors.gameOverDesaturation.withAlphaComponent(0.7)
 
         for row in 0..<gridSize {
             let delay = Double(row) * 0.06

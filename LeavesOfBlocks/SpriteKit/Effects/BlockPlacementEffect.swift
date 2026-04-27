@@ -108,7 +108,7 @@ enum BlockPlacementEffect {
         let rect = CGRect(x: 0, y: 0, width: cellSize, height: cellSize)
         let glow = SKShapeNode(rect: rect, cornerRadius: 8)
         glow.fillColor = color.withAlphaComponent(glowOpacity)
-        glow.strokeColor = UIColor(red: 0.227, green: 0.267, blue: 0.333, alpha: 0.3)
+        glow.strokeColor = SpriteKitColors.effectBorder.withAlphaComponent(0.3)
         glow.lineWidth = 2
         glow.position = position
         glow.zPosition = 4

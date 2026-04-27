@@ -1,4 +1,5 @@
 import SpriteKit
+import SwiftUI
 
 // MARK: - Falling Leaves Effect
 
@@ -41,13 +42,13 @@ enum FallingLeavesEffect {
 
     // MARK: - Leaf Colors
 
-    /// Autumn leaf color palette
+    /// Autumn leaf color palette (derived from GameTheme.Colors)
     private static let leafColors: [UIColor] = [
-        UIColor(red: 0.859, green: 0.678, blue: 0.341, alpha: 0.7),  // Sun gold
-        UIColor(red: 0.906, green: 0.530, blue: 0.200, alpha: 0.65), // Warm orange
-        UIColor(red: 0.776, green: 0.384, blue: 0.251, alpha: 0.6),  // Poppy red
-        UIColor(red: 0.239, green: 0.541, blue: 0.310, alpha: 0.55), // Leaf green
-        UIColor(red: 0.016, green: 0.427, blue: 0.420, alpha: 0.5)   // Teal
+        UIColor(GameTheme.Colors.lineCompletionPrimary).withAlphaComponent(0.7),
+        UIColor(GameTheme.Colors.blockOrange).withAlphaComponent(0.65),
+        UIColor(GameTheme.Colors.error).withAlphaComponent(0.6),
+        UIColor(GameTheme.Colors.blockGreen).withAlphaComponent(0.55),
+        UIColor(GameTheme.Colors.blockBlue).withAlphaComponent(0.5)
     ]
 
     // MARK: - Public API
