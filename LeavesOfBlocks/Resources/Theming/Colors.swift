@@ -63,7 +63,7 @@ extension GameTheme {
         static let primaryAccent = leaf600
         static let secondaryAccent = leaf700
         static let tertiaryAccent = leaf800
-        static let accent = sun500
+        static let accent = sun600
 
         // Text Colors
         static let primaryText = ink800
@@ -128,7 +128,7 @@ extension GameTheme {
         static let overlayDeepShadow = ink700.opacity(0.12)
 
         // Button Colors
-        static let buttonText = paper50
+        static let buttonText = Color.white
         static let buttonGradient = [
             leaf500,
             leaf600
