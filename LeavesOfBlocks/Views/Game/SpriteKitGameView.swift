@@ -24,6 +24,7 @@ struct SpriteKitGameView: View {
     var body: some View {
         SpriteView(scene: bridge.scene, options: [.allowsTransparency])
             .accessibilityIdentifier("spritekit_game_grid")
+            .accessibilityLabel("ax_game_grid".localized)
     }
 }
 

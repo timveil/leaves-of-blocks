@@ -76,6 +76,8 @@ struct SimpleScoreView: View {
             .background(Color.white)
         }
         .folkArtCard()
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("ax_score_format".localized(with: displayScore.formattedScore, displayLinesCleared.formattedScore))
     }
 }
 

@@ -219,3 +219,22 @@
 "three_line_combo_button" = "3-Line Combo (+100)";
 "five_line_combo_button" = "5-Line Mega Combo (+200)";
 "show_all_combos" = "Show All Combos";
+
+// MARK: - Accessibility
+"ax_difficulty_slider" = "Difficulty";
+"ax_difficulty_hint" = "Swipe up or down to change difficulty";
+"ax_block_format" = "%d-cell %@ block";
+"ax_row_clear_block" = "Row clear power-up";
+"ax_column_clear_block" = "Column clear power-up";
+"ax_area_clear_block" = "Area clear power-up";
+"ax_available_blocks_format" = "%d blocks available";
+"ax_score_format" = "Score %@, %@ lines cleared";
+"ax_combo_format" = "%@, %d lines cleared, %d bonus points";
+"ax_game_grid" = "Game grid, 8 by 8";
+"ax_color_blue" = "blue";
+"ax_color_green" = "green";
+"ax_color_red" = "red";
+"ax_color_yellow" = "yellow";
+"ax_color_purple" = "purple";
+"ax_color_orange" = "orange";
+"ax_color_pink" = "pink";

@@ -10,6 +10,18 @@ import Foundation
 /// - Note: All cases are `Codable` for persistence and `Hashable` for efficient collections.
 enum BlockColor: CaseIterable, Codable, Hashable {
     case blue, green, red, yellow, purple, orange, pink
+
+    var accessibilityName: String {
+        switch self {
+        case .blue:   return "ax_color_blue".localized
+        case .green:  return "ax_color_green".localized
+        case .red:    return "ax_color_red".localized
+        case .yellow: return "ax_color_yellow".localized
+        case .purple: return "ax_color_purple".localized
+        case .orange: return "ax_color_orange".localized
+        case .pink:   return "ax_color_pink".localized
+        }
+    }
 }
 
 /// Defines the functional behavior of game blocks.
@@ -199,6 +211,15 @@ struct BlockShape: Codable, Equatable, Hashable {
         self.type = type
     }
     
+    var accessibilityLabel: String {
+        switch type {
+        case .horizontalClear: return "ax_row_clear_block".localized
+        case .verticalClear:   return "ax_column_clear_block".localized
+        case .areaClear:       return "ax_area_clear_block".localized
+        case .normal:          return "ax_block_format".localized(with: positions.count, color.accessibilityName)
+        }
+    }
+
     // MARK: - Predefined Shapes
     
     /// Collection of all standard block shapes available in the game.

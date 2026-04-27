@@ -56,6 +56,8 @@ struct CurrentBlocksView: View {
                 )
         )
         .accessibilityIdentifier("block_container")
+        .accessibilityElement(children: .contain)
+        .accessibilityLabel("ax_available_blocks_format".localized(with: gameState.currentBlocks.count))
     }
     
     // Calculate optimal cell size for each block to fit in its slot
@@ -153,6 +155,7 @@ private struct DraggableBlockView: View {
         .frame(width: getBlockWidth(), height: getBlockHeight())
         .contentShape(Rectangle()) // Ensure entire frame is tappable
         .accessibilityIdentifier("draggable_block")
+        .accessibilityLabel(block.accessibilityLabel)
         .gesture(
             DragGesture(minimumDistance: 5, coordinateSpace: .global)
                 .onChanged { value in

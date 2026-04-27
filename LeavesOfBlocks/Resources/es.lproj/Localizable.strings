@@ -219,3 +219,22 @@
 "three_line_combo_button" = "Combo de 3 Líneas (+100)";
 "five_line_combo_button" = "Mega Combo de 5 Líneas (+200)";
 "show_all_combos" = "Mostrar Todos los Combos";
+
+// MARK: - Accessibility
+"ax_difficulty_slider" = "Dificultad";
+"ax_difficulty_hint" = "Desliza hacia arriba o abajo para cambiar la dificultad";
+"ax_block_format" = "Bloque %@ de %d celdas";
+"ax_row_clear_block" = "Potenciador de limpieza de fila";
+"ax_column_clear_block" = "Potenciador de limpieza de columna";
+"ax_area_clear_block" = "Potenciador de limpieza de área";
+"ax_available_blocks_format" = "%d bloques disponibles";
+"ax_score_format" = "Puntuación %@, %@ líneas limpiadas";
+"ax_combo_format" = "%@, %d líneas limpiadas, %d puntos de bonificación";
+"ax_game_grid" = "Cuadrícula de juego, 8 por 8";
+"ax_color_blue" = "azul";
+"ax_color_green" = "verde";
+"ax_color_red" = "rojo";
+"ax_color_yellow" = "amarillo";
+"ax_color_purple" = "púrpura";
+"ax_color_orange" = "naranja";
+"ax_color_pink" = "rosa";

@@ -42,6 +42,20 @@ struct DifficultySelectionView: View {
             // Custom slider
             AcornSlider(value: $sliderValue)
                 .frame(height: 36)
+                .accessibilityElement()
+                .accessibilityLabel("ax_difficulty_slider".localized)
+                .accessibilityValue(selectedDifficulty.displayName)
+                .accessibilityHint("ax_difficulty_hint".localized)
+                .accessibilityAdjustableAction { direction in
+                    switch direction {
+                    case .increment:
+                        sliderValue = min(3, sliderValue + 1)
+                    case .decrement:
+                        sliderValue = max(1, sliderValue - 1)
+                    @unknown default:
+                        break
+                    }
+                }
 
             // Play button
             Button(action: {

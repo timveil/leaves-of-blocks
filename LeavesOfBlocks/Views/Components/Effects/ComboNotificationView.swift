@@ -75,11 +75,14 @@ struct ComboNotificationView: View {
             x: 0,
             y: 6
         )
-        .frame(maxWidth: 280) // Consistent width with other overlays
+        .frame(maxWidth: 280)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("ax_combo_format".localized(with: comboText, comboCount, bonusPoints))
         .scaleEffect(scale)
         .opacity(opacity)
         .offset(y: yOffset)
         .onAppear {
+            AccessibilityNotification.Announcement("ax_combo_format".localized(with: comboText, comboCount, bonusPoints)).post()
             withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
                 scale = 1.0
                 opacity = 1.0
