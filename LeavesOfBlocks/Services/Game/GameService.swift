@@ -1,64 +1,54 @@
 import Foundation
 import UIKit
-import Combine
 
 // MARK: - Game Service
 
 /// Handles game-related services like timing, persistence, and haptic feedback
 class GameService: ObservableObject {
-    
+
     // MARK: - Properties
-    
+
     @Published var currentGameTime: TimeInterval = 0
-    private var _gameTimer: Timer?
+    private var timerTask: Task<Void, Never>?
     private var gameStartTime: Date = Date()
     private var isTimerActive: Bool = false
-    
+
     private let coreDataManager = CoreDataManager.shared
-    
-    // MARK: - Timer Property with Safe Management
-    
-    private var gameTimer: Timer? {
-        get { _gameTimer }
-        set {
-            _gameTimer?.invalidate()
-            _gameTimer = newValue
-        }
-    }
-    
+
     // MARK: - Initialization
-    
-    init() {
-        // Timer will be started lazily when needed
-    }
-    
+
+    init() {}
+
     deinit {
         stopGameTimer()
     }
-    
+
     // MARK: - Timer Management
-    
+
     /// Starts the game timer to track elapsed time
     func startGameTimer() {
-        guard !isTimerActive else { return } // Prevent duplicate timers
-        
+        guard !isTimerActive else { return }
+
         gameStartTime = Date()
         currentGameTime = 0
         isTimerActive = true
-        
-        gameTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
-            DispatchQueue.main.async {
+
+        timerTask = Task { @MainActor [weak self] in
+            while !Task.isCancelled {
+                try? await Task.sleep(for: .seconds(1))
+                guard let self, self.isTimerActive else { break }
                 self.currentGameTime = Date().timeIntervalSince(self.gameStartTime)
             }
         }
     }
-    
+
     /// Stops the game timer
     func stopGameTimer() {
-        gameTimer = nil // This will automatically invalidate due to our custom setter
+        timerTask?.cancel()
+        timerTask = nil
         isTimerActive = false
     }
-    
+
     /// Resets the game timer
     func resetGameTimer() {
         stopGameTimer()

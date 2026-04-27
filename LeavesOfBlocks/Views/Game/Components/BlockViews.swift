@@ -139,12 +139,9 @@ private struct DraggableBlockView: View {
     let onDragEnd: () -> Void
     
     @State private var isDragging: Bool = false
-    @State private var lastUpdateTime: Date = Date()
-    @State private var throttleTimer: Timer?
+    @State private var throttleTask: Task<Void, Never>?
     @State private var pendingLocation: CGPoint?
-    
-    // Performance constants from configuration
-    private let targetFPS: Double = AppConfiguration.Performance.animationFrameRate
+
     private let frameInterval: TimeInterval = AppConfiguration.Performance.dragUpdateThrottleInterval
     
     var body: some View {
@@ -161,7 +158,6 @@ private struct DraggableBlockView: View {
                 .onChanged { value in
                     if !isDragging {
                         isDragging = true
-                        lastUpdateTime = Date()
                         onDragStart(value.location)
                         startThrottledUpdates()
                     } else {
@@ -176,23 +172,26 @@ private struct DraggableBlockView: View {
                 }
         )
         .onDisappear {
-            // Clean up timer if view disappears during drag
             stopThrottledUpdates()
         }
     }
     
     private func startThrottledUpdates() {
-        throttleTimer = Timer.scheduledTimer(withTimeInterval: frameInterval, repeats: true) { _ in
-            if let location = pendingLocation {
-                onDragMove(location)
-                pendingLocation = nil
+        throttleTask = Task { @MainActor in
+            while !Task.isCancelled {
+                try? await Task.sleep(for: .seconds(frameInterval))
+                guard !Task.isCancelled else { break }
+                if let location = pendingLocation {
+                    onDragMove(location)
+                    pendingLocation = nil
+                }
             }
         }
     }
-    
+
     private func stopThrottledUpdates() {
-        throttleTimer?.invalidate()
-        throttleTimer = nil
+        throttleTask?.cancel()
+        throttleTask = nil
         pendingLocation = nil
     }
     

@@ -17,15 +17,12 @@ struct BaseScreenView<Content: View>: View {
     }
 
     var body: some View {
-        GeometryReader { geometry in
-            ZStack {
-                GameBackgroundView()
+        ZStack {
+            GameBackgroundView()
 
-                content
-                    .frame(maxWidth: geometry.size.width)
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .zIndex(1)
-            }
+            content
+                .frame(maxWidth: .infinity, alignment: .center)
+                .zIndex(1)
         }
         .ignoresSafeArea(edges: .bottom)
         .statusBarHidden(!showsStatusBar)

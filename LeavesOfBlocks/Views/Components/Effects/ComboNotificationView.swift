@@ -8,6 +8,7 @@ struct ComboNotificationView: View {
     @State private var scale: CGFloat = 0.9
     @State private var opacity: Double = 0.0
     @State private var yOffset: CGFloat = 0
+    @State private var dismissTask: Task<Void, Never>?
     
     private var comboText: String {
         if comboCount >= 5 {
@@ -79,25 +80,23 @@ struct ComboNotificationView: View {
         .opacity(opacity)
         .offset(y: yOffset)
         .onAppear {
-            startAnimation()
-        }
-    }
-    
-    private func startAnimation() {
-        // Entry animation - faster, smoother spring
-        withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
-            scale = 1.0
-            opacity = 1.0
-        }
-
-        // Shorter hold time, then quick fade out
-        Task { @MainActor in
-            try? await Task.sleep(for: .seconds(0.5))
-            withAnimation(.easeOut(duration: 0.25)) {
-                opacity = 0.0
-                yOffset = -15
-                scale = 0.9
+            withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
+                scale = 1.0
+                opacity = 1.0
             }
+
+            dismissTask = Task { @MainActor in
+                try? await Task.sleep(for: .seconds(0.5))
+                guard !Task.isCancelled else { return }
+                withAnimation(.easeOut(duration: 0.25)) {
+                    opacity = 0.0
+                    yOffset = -15
+                    scale = 0.9
+                }
+            }
+        }
+        .onDisappear {
+            dismissTask?.cancel()
         }
     }
 }

@@ -8,6 +8,7 @@ struct BoardView: View {
     @State private var dragState: DragState = DragState()
     @State private var gridFrame: CGRect = .zero
     @State private var blockSlotsFrame: CGRect = .zero
+    @State private var viewBounds: CGRect = .zero
 
     /// Bridge for SpriteKit scene communication
     @State private var sceneBridge: GameSceneBridge?
@@ -79,13 +80,11 @@ struct BoardView: View {
                         if let bridge = sceneBridge {
                             SpriteKitGameView(bridge: bridge)
                                 .frame(width: gameWidth, height: gameWidth)
-                                .background(
-                                    GeometryReader { geo in
-                                        Color.clear.onAppear {
-                                            gridFrame = geo.frame(in: .global)
-                                        }
-                                    }
-                                )
+                                .onGeometryChange(for: CGRect.self) { proxy in
+                                    proxy.frame(in: .global)
+                                } action: { newValue in
+                                    gridFrame = newValue
+                                }
                         }
                         Spacer()
                     }
@@ -111,13 +110,11 @@ struct BoardView: View {
                         }
                         )
                         .frame(width: gameWidth)
-                        .background(
-                            GeometryReader { geo in
-                                Color.clear.onAppear {
-                                    blockSlotsFrame = geo.frame(in: .global)
-                                }
-                            }
-                        )
+                        .onGeometryChange(for: CGRect.self) { proxy in
+                            proxy.frame(in: .global)
+                        } action: { newValue in
+                            blockSlotsFrame = newValue
+                        }
                         Spacer()
                     }
                     
@@ -189,8 +186,13 @@ struct BoardView: View {
             }
         }
     }
+    .onGeometryChange(for: CGRect.self) { proxy in
+        proxy.frame(in: .global)
+    } action: { newValue in
+        viewBounds = newValue
     }
-    
+    }
+
     // MARK: - Drag Lifecycle Methods
     
     private func handleDragStart(block: BlockShape, index: Int, fingerLocation: CGPoint) {
@@ -269,13 +271,12 @@ struct BoardView: View {
     }
     
     private func isLocationOffScreen(_ location: CGPoint) -> Bool {
-        let screenBounds = UIScreen.main.bounds
         let margin = DragConfiguration.offScreenMargin
-        
-        return location.x < -margin ||
-               location.x > screenBounds.width + margin ||
-               location.y < -margin ||
-               location.y > screenBounds.height + margin
+
+        return location.x < viewBounds.minX - margin ||
+               location.x > viewBounds.maxX + margin ||
+               location.y < viewBounds.minY - margin ||
+               location.y > viewBounds.maxY + margin
     }
     
     private func isBlockOverHoldingArea(visualCenter: CGPoint) -> Bool {
