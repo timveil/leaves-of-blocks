@@ -321,3 +321,17 @@ struct SummaryStatsTable: View {
     }
 }
 
+// MARK: - Previews
+
+#Preview("Key Value Table") {
+    KeyValueTable(
+        title: "Game Stats",
+        items: [
+            .init(key: "Score", value: "1,250", icon: "star.fill"),
+            .init(key: "Lines", value: "7", icon: "square.grid.3x3.fill"),
+            .init(key: "Time", value: "3:05", icon: "clock.fill"),
+        ]
+    )
+    .padding()
+}
+

@@ -105,6 +105,18 @@ extension GameState {
     }
 }
 
+// MARK: - Previews
+
+#Preview("Line Cleaning Effect") {
+    LineCleaningEffect(rows: [2, 5], cols: [3], gridSize: 8, cellSize: 40)
+        .frame(width: 320, height: 320)
+}
+
+#Preview("Score Popup") {
+    ScorePopup(score: 150, position: CGPoint(x: 160, y: 160))
+        .frame(width: 320, height: 320)
+}
+
 // MARK: - Improved Block Shapes with More Variety
 
 extension BlockShape {

@@ -21,3 +21,12 @@ struct GrassBlockView: View {
     }
 }
 
+#Preview {
+    HStack(spacing: 8) {
+        GrassBlockView(color: GameTheme.Colors.blockGreen, height: 30)
+        GrassBlockView(color: GameTheme.Colors.blockGreen, height: 40)
+        GrassBlockView(color: GameTheme.Colors.blockGreen, height: 25)
+    }
+    .padding()
+}
+

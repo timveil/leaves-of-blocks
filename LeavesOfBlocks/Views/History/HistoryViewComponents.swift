@@ -76,3 +76,33 @@ struct GameSessionRow: View {
         .accessibilityIdentifier("game_session_row")
     }
 }
+
+#Preview("History Stat Card") {
+    HistoryStatCard(title: "high_score".localized, value: "12,450")
+        .frame(width: 300)
+        .padding()
+}
+
+#Preview("Game Session Row") {
+    GameSessionRow(
+        session: GameSession(
+            date: Date(),
+            score: 8750,
+            blocksPlaced: 42,
+            linesCleared: 12,
+            difficulty: .moderate,
+            gameTime: 185,
+            averageGridEfficiency: nil,
+            averageFragmentation: nil,
+            strategicPlayRating: nil,
+            challengeMaintained: nil,
+            fallbackActivations: nil,
+            efficiencyGrade: nil,
+            strategicGrade: nil,
+            tierUsageDistribution: nil
+        ),
+        isHighScore: true
+    )
+    .frame(width: 300)
+    .padding()
+}

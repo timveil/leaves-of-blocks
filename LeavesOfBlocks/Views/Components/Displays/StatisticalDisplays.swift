@@ -332,3 +332,30 @@ struct StatComparison: View {
     }
 }
 
+// MARK: - Previews
+
+#Preview("Stat Chips") {
+    VStack(spacing: 12) {
+        GameStatChip(title: "Score", value: "1,250", icon: "star.fill", style: .compact)
+        GameStatChip(title: "Score", value: "1,250", icon: "star.fill", style: .standard)
+        GameStatChip(title: "Score", value: "1,250", icon: "star.fill", style: .featured)
+    }
+    .padding()
+}
+
+#Preview("Statistic Card") {
+    GameStatisticCard(
+        title: "High Score",
+        value: "12,450",
+        subtitle: "Personal best",
+        icon: "trophy.fill",
+        trend: .up("+2,300")
+    )
+    .padding()
+}
+
+#Preview("Progress Indicator") {
+    GameProgressIndicator(title: "Lines Cleared", current: 7, maximum: 20)
+        .padding()
+}
+

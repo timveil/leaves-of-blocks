@@ -220,6 +220,46 @@ enum ShapeType {
 
 // MARK: - Table Row Style Modifier
 
+// MARK: - Previews
+
+#Preview("Tip Row") {
+    TipRow(text: "Clear multiple lines at once for combo bonuses!")
+        .padding()
+}
+
+#Preview("Scoring Table Row") {
+    VStack(spacing: 0) {
+        ScoringTableHeaderView()
+        ScoringTableRowView(points: "+10", description: "scoring_block_placement".localized, color: GameTheme.Colors.accent)
+        ScoringTableRowView(points: "+100", description: "scoring_line_clear".localized, color: GameTheme.Colors.success, isLast: true)
+    }
+    .clipShape(RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius))
+    .overlay(RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius).stroke(Color.black, lineWidth: 2.5))
+    .padding()
+}
+
+#Preview("Difficulty Table Row") {
+    VStack(spacing: 0) {
+        DifficultyTableHeaderView()
+        DifficultyTableRowView(mode: .easy, description: "difficulty_easy_desc".localized)
+        DifficultyTableRowView(mode: .moderate, description: "difficulty_moderate_desc".localized, isLast: true)
+    }
+    .clipShape(RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius))
+    .overlay(RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius).stroke(Color.black, lineWidth: 2.5))
+    .padding()
+}
+
+#Preview("Shapes Table Row") {
+    VStack(spacing: 0) {
+        ShapesTableHeaderView()
+        ShapesTableRowView(shapeType: .normalBlocks, description: "shape_normal_desc".localized)
+        ShapesTableRowView(shapeType: .horizontalClear, description: "shape_row_clear_desc".localized, isLast: true)
+    }
+    .clipShape(RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius))
+    .overlay(RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius).stroke(Color.black, lineWidth: 2.5))
+    .padding()
+}
+
 struct ConditionalTableRowStyleModifier: ViewModifier {
     let isLast: Bool
     let backgroundColor: Color

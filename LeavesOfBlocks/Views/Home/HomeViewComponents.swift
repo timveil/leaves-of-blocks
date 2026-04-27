@@ -128,3 +128,11 @@ private struct AcornSlider: View {
         }
     }
 }
+
+// MARK: - Previews
+
+#Preview("Difficulty Selection") {
+    DifficultySelectionView(onStartGame: { _ in })
+        .frame(width: 300)
+        .padding()
+}
