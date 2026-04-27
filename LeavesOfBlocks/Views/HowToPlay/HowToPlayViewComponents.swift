@@ -177,19 +177,19 @@ enum ShapeType {
         switch self {
         case .normalBlocks:
             HStack(spacing: 4) {
-                RoundedRectangle(cornerRadius: 4)
+                RoundedRectangle(cornerRadius: GameTheme.Layout.cellCornerRadius)
                     .fill(GameTheme.Colors.blockBlue)
                     .frame(width: 20, height: 20)
-                RoundedRectangle(cornerRadius: 4)
+                RoundedRectangle(cornerRadius: GameTheme.Layout.cellCornerRadius)
                     .fill(GameTheme.Colors.blockGreen)
                     .frame(width: 20, height: 20)
-                RoundedRectangle(cornerRadius: 4)
+                RoundedRectangle(cornerRadius: GameTheme.Layout.cellCornerRadius)
                     .fill(GameTheme.Colors.blockYellow)
                     .frame(width: 20, height: 20)
             }
         case .horizontalClear:
             ZStack {
-                RoundedRectangle(cornerRadius: 8)
+                RoundedRectangle(cornerRadius: GameTheme.Layout.specialBlockCornerRadius)
                     .fill(GameTheme.Colors.blockRed)
                     .frame(width: 44, height: 44)
                 Image(systemName: "arrow.left.and.right")
@@ -198,7 +198,7 @@ enum ShapeType {
             }
         case .verticalClear:
             ZStack {
-                RoundedRectangle(cornerRadius: 8)
+                RoundedRectangle(cornerRadius: GameTheme.Layout.specialBlockCornerRadius)
                     .fill(GameTheme.Colors.blockBlue)
                     .frame(width: 44, height: 44)
                 Image(systemName: "arrow.up.and.down")
@@ -207,7 +207,7 @@ enum ShapeType {
             }
         case .areaClear:
             ZStack {
-                RoundedRectangle(cornerRadius: 8)
+                RoundedRectangle(cornerRadius: GameTheme.Layout.specialBlockCornerRadius)
                     .fill(GameTheme.Colors.blockPurple)
                     .frame(width: 44, height: 44)
                 Image(systemName: "square.3.layers.3d")

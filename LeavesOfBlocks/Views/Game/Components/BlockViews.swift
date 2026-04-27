@@ -126,12 +126,12 @@ struct BlockView: View {
                 
                 // Individual leaf-like cells of the block
                 ForEach(Array(block.positions.enumerated()), id: \.offset) { index, position in
-                    RoundedRectangle(cornerRadius: 8)
+                    RoundedRectangle(cornerRadius: GameTheme.Layout.cellCornerRadius)
                         .fill(block.color.color)
                         .frame(width: cellSize - 2, height: cellSize - 2)
                         .overlay(
-                            RoundedRectangle(cornerRadius: 8)
-                                .stroke(Color.black.opacity(0.3), lineWidth: 1.5)
+                            RoundedRectangle(cornerRadius: GameTheme.Layout.cellCornerRadius)
+                                .strokeBorder(Color.black.opacity(0.3), lineWidth: 1.5)
                         )
                         .offset(
                             x: CGFloat(position.col - bounds.minCol) * cellSize - width/2 + cellSize/2,

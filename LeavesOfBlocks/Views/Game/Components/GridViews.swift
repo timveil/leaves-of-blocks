@@ -64,13 +64,11 @@ struct GameGridView: View {
                 }
             }
             .padding(GameTheme.Layout.mediumPadding)
-            .background(
-                RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
-                    .fill(GameTheme.Colors.cardBackground)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
-                            .stroke(Color.black, lineWidth: 2.5)
-                    )
+            .background(GameTheme.Colors.cardBackground)
+            .clipShape(RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius, style: .continuous))
+            .overlay(
+                RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius, style: .continuous)
+                    .strokeBorder(Color.black, lineWidth: 2.5)
             )
             .onChange(of: gameState.blocksPlaced) { _, _ in
                 // Invalidate cache when blocks are placed to avoid stale data
@@ -219,8 +217,10 @@ private struct GridCellView: View {
     let previewColor: Color
     let isLineComplete: Bool
 
+    private let cr = GameTheme.Layout.cellCornerRadius
+
     var body: some View {
-        RoundedRectangle(cornerRadius: 8)
+        RoundedRectangle(cornerRadius: cr)
             .fill(
                 cell.isFilled ?
                     cell.color.color :
@@ -233,16 +233,14 @@ private struct GridCellView: View {
             )
             .frame(width: size, height: size)
             .overlay(
-                RoundedRectangle(cornerRadius: 8)
-                    .stroke(
+                RoundedRectangle(cornerRadius: cr)
+                    .strokeBorder(
                         cell.isFilled ? Color.black.opacity(0.3) :
                         (isLineComplete ? GameTheme.Colors.lineCompletionAccent :
-                        (isPreview ? previewColor.opacity(GameTheme.Layout.highOpacity) :
-                        Color.black.opacity(0.1))),
-                        lineWidth: cell.isFilled ? 1.5 : (isLineComplete ? 2.5 : (isPreview ? 1.5 : 1))
+                        Color.black.opacity(0.1)),
+                        lineWidth: cell.isFilled ? 1.5 : (isLineComplete ? 2 : 1)
                     )
             )
-            .scaleEffect(cell.isFilled ? 1.0 : (isLineComplete ? GameTheme.Layout.slightlyReducedScale : (isPreview ? GameTheme.Layout.minorScale : GameTheme.Layout.reducedScale)))
     }
 }
 
@@ -250,9 +248,9 @@ private struct GridCellView: View {
 
 private struct LineCompletePulseView: View {
     @State private var isAnimating: Bool = false
-    
+
     var body: some View {
-        RoundedRectangle(cornerRadius: 8)
+        RoundedRectangle(cornerRadius: GameTheme.Layout.cellCornerRadius)
             .stroke(GameTheme.Colors.lineCompletionAccent, lineWidth: 4)
             .opacity(isAnimating ? 0.8 : 0.4)
             .scaleEffect(isAnimating ? 1.05 : 1.0)
@@ -267,9 +265,9 @@ private struct LineCompletePulseView: View {
 private struct PreviewPulseView: View {
     let previewColor: Color
     @State private var isAnimating: Bool = false
-    
+
     var body: some View {
-        RoundedRectangle(cornerRadius: 8)
+        RoundedRectangle(cornerRadius: GameTheme.Layout.cellCornerRadius)
             .stroke(previewColor, lineWidth: 3)
             .opacity(isAnimating ? 0.6 : 0.3)
             .scaleEffect(isAnimating ? 1.02 : 1.0)

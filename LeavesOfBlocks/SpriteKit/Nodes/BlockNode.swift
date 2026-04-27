@@ -1,4 +1,5 @@
 import SpriteKit
+import SwiftUI
 
 // MARK: - Block Node
 
@@ -69,7 +70,7 @@ class BlockNode: SKNode {
 
         for position in block.positions {
             let cellRect = CGRect(x: 0, y: 0, width: cellSize - 2, height: cellSize - 2)
-            let cellNode = SKShapeNode(rect: cellRect, cornerRadius: 8)
+            let cellNode = SKShapeNode(rect: cellRect, cornerRadius: GameTheme.Layout.cellCornerRadius)
             cellNode.fillColor = color
             cellNode.strokeColor = SpriteKitColors.blockCellOverlay
             cellNode.lineWidth = 1.5
@@ -85,7 +86,7 @@ class BlockNode: SKNode {
     /// Builds a special power-up block with icon overlay.
     private func buildSpecialBlock(color: UIColor) {
         let cellRect = CGRect(x: 0, y: 0, width: cellSize - 2, height: cellSize - 2)
-        let cellNode = SKShapeNode(rect: cellRect, cornerRadius: 12)
+        let cellNode = SKShapeNode(rect: cellRect, cornerRadius: GameTheme.Layout.specialBlockCornerRadius)
         cellNode.fillColor = color
         cellNode.strokeColor = SpriteKitColors.blockCellOverlay
         cellNode.lineWidth = 1.5

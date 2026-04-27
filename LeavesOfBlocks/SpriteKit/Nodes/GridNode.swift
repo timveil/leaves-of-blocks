@@ -1,4 +1,5 @@
 import SpriteKit
+import SwiftUI
 
 // MARK: - Grid Node
 
@@ -120,7 +121,7 @@ class GridNode: SKNode {
     /// Creates a single empty cell shape node.
     private func createCellNode() -> SKShapeNode {
         let rect = CGRect(x: 0, y: 0, width: cellSize, height: cellSize)
-        let node = SKShapeNode(rect: rect, cornerRadius: 8)
+        let node = SKShapeNode(rect: rect, cornerRadius: GameTheme.Layout.cellCornerRadius)
         node.fillColor = SpriteKitColors.gridCellEmpty
         node.strokeColor = SpriteKitColors.gridCellBorder
         node.lineWidth = 1

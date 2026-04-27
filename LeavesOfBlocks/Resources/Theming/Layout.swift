@@ -40,8 +40,11 @@ extension GameTheme {
         static let shadowOffset: CGFloat = 6
         static let shadowOffsetSize = CGSize(width: 0, height: 6)
         
+        // Cell Styling
+        static let cellCornerRadius: CGFloat = 3
+
         // Special Block Styling
-        static let specialBlockCornerRadius: CGFloat = 12
+        static let specialBlockCornerRadius: CGFloat = 6
         static let specialBlockIconScale: CGFloat = 0.5
         
         // Opacity Constants for UI Elements

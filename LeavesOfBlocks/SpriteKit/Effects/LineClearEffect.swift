@@ -1,4 +1,5 @@
 import SpriteKit
+import SwiftUI
 
 // MARK: - Line Clear Effect
 
@@ -154,7 +155,7 @@ enum LineClearEffect {
     ) {
         for pos in positions {
             let rect = CGRect(x: 0, y: 0, width: cellSize, height: cellSize)
-            let flash = SKShapeNode(rect: rect, cornerRadius: 8)
+            let flash = SKShapeNode(rect: rect, cornerRadius: GameTheme.Layout.cellCornerRadius)
             flash.fillColor = SpriteKitColors.lineCompletionAccent.withAlphaComponent(0.5)
             flash.strokeColor = .clear
             flash.position = CGPoint(

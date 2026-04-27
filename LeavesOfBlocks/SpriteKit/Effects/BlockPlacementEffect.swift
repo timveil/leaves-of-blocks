@@ -1,4 +1,5 @@
 import SpriteKit
+import SwiftUI
 
 // MARK: - Block Placement Effect
 
@@ -106,7 +107,7 @@ enum BlockPlacementEffect {
         in parent: SKNode
     ) {
         let rect = CGRect(x: 0, y: 0, width: cellSize, height: cellSize)
-        let glow = SKShapeNode(rect: rect, cornerRadius: 8)
+        let glow = SKShapeNode(rect: rect, cornerRadius: GameTheme.Layout.cellCornerRadius)
         glow.fillColor = color.withAlphaComponent(glowOpacity)
         glow.strokeColor = SpriteKitColors.effectBorder.withAlphaComponent(0.3)
         glow.lineWidth = 2

@@ -1,4 +1,5 @@
 import SpriteKit
+import SwiftUI
 
 // MARK: - Game Over Effect
 
@@ -44,7 +45,7 @@ enum GameOverEffect {
             for col in 0..<gridSize {
                 let overlay = SKShapeNode(
                     rect: CGRect(x: 0, y: 0, width: cellSize, height: cellSize),
-                    cornerRadius: 8
+                    cornerRadius: GameTheme.Layout.cellCornerRadius
                 )
                 overlay.fillColor = desaturatedColor
                 overlay.strokeColor = .clear
