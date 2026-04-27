@@ -15,7 +15,7 @@ struct BoardView: View {
     
     // MARK: - Configuration
     private struct DragConfiguration {
-        static let offsetAboveFinger: CGFloat = 80
+        static let offsetAboveFinger: CGFloat = 40
         static let offScreenMargin: CGFloat = 100
         static let hoverTolerance: CGFloat = 15
         static let maxSnapDistance: CGFloat = 300
