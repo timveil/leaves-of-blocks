@@ -88,6 +88,13 @@ class GameScene: SKScene {
         syncGridFromModel()
     }
 
+    override func willMove(from view: SKView) {
+        cancellables.removeAll()
+        ghostBlockNode?.removeFromParent()
+        ghostBlockNode = nil
+        super.willMove(from: view)
+    }
+
     // MARK: - Setup
 
     /// Positions the grid node within the scene.

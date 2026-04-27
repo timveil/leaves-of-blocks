@@ -74,8 +74,8 @@ class GameSceneBridge: ObservableObject {
                 if isGameOver {
                     self.scene.playGameOverEffect()
                     if self.gameState.isNewHighScore {
-                        // Delay celebration slightly so it layers on top of the sweep
-                        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) { [weak self] in
+                        Task { @MainActor [weak self] in
+                            try? await Task.sleep(for: .seconds(0.5))
                             self?.scene.playHighScoreCelebration()
                         }
                     }

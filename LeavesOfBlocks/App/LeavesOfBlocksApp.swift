@@ -11,20 +11,20 @@ import CoreData
 @main
 struct Main: App {
     @State private var showLaunchScreen = true
+    @StateObject private var gameState = GameState()
     let coreDataManager = CoreDataManager.shared
-    
+
     var body: some Scene {
         WindowGroup {
             ZStack {
-                // Consistent background to prevent white flash
                 GameTheme.Gradients.background
                     .ignoresSafeArea()
-                
+
                 if showLaunchScreen {
                     LaunchScreen()
                         .transition(.opacity)
                 } else {
-                    ContentView()
+                    ContentView(gameState: gameState)
                         .transition(.opacity)
                         .environment(\.managedObjectContext, coreDataManager.viewContext)
                 }

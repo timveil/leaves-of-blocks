@@ -15,7 +15,7 @@ enum AppScreen: Equatable {
 // MARK: - Main Content View
 
 struct ContentView: View {
-    @StateObject private var gameState = GameState()
+    @ObservedObject var gameState: GameState
     @State private var currentScreen: AppScreen = .home
     @State private var pendingNavigation: AppScreen?
     @State private var showMenu = false
@@ -193,5 +193,5 @@ struct ContentView: View {
 }
 
 #Preview {
-    ContentView()
+    ContentView(gameState: GameState())
 }
