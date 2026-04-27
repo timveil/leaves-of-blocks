@@ -22,6 +22,7 @@
 "new_game" = "New Game";
 
 // MARK: - Menu Labels
+"menu_title" = "Menu";
 "home" = "Home";
 "new_game_menu" = "New Game";
 "how_to_play_menu" = "How To";

@@ -14,8 +14,25 @@ struct ToolbarView: View {
     private let iconSize: CGFloat = 28
 
     var body: some View {
-        VStack(spacing: GameTheme.Layout.largeSpacing) {
-            // Menu grid
+        VStack(spacing: 0) {
+            // Gold header bar
+            HStack {
+                Spacer()
+                Text("menu_title".localized)
+                    .font(GameTheme.Typography.headline)
+                    .foregroundColor(GameTheme.Colors.buttonText)
+                Spacer()
+            }
+            .padding(.vertical, GameTheme.Layout.mediumPadding)
+            .background(GameTheme.Colors.accent)
+            .overlay(
+                Rectangle()
+                    .frame(height: GameTheme.Layout.dividerHeight)
+                    .foregroundColor(.black),
+                alignment: .bottom
+            )
+
+            // Menu buttons on white background
             HStack(spacing: GameTheme.Layout.extraLargeSpacing) {
                 menuButton(
                     icon: "house",
@@ -63,25 +80,16 @@ struct ToolbarView: View {
                     onDismiss()
                 }
             }
+            .padding(.vertical, GameTheme.Layout.largePadding)
+            .frame(maxWidth: .infinity)
+            .background(Color.white)
 
-            // Pull handle to dismiss
-            Capsule()
-                .fill(Color.black.opacity(0.3))
-                .frame(width: 40, height: 4)
-        }
-        .padding(.horizontal, GameTheme.Layout.largePadding)
-        .padding(.top, GameTheme.Layout.largePadding)
-        .padding(.bottom, GameTheme.Layout.mediumPadding)
-        .background(
-            GameTheme.Colors.cardBackground
-                .ignoresSafeArea(edges: .top)
-        )
-        .overlay(
+            // Bottom black border
             Rectangle()
                 .frame(height: GameTheme.Layout.dividerHeight)
-                .foregroundColor(.black),
-            alignment: .bottom
-        )
+                .foregroundColor(.black)
+        }
+        .ignoresSafeArea(edges: .top)
     }
 
     private func menuButton(

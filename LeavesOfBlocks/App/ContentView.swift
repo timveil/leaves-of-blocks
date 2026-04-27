@@ -18,74 +18,48 @@ struct ContentView: View {
     @ObservedObject var gameState: GameState
     @State private var currentScreen: AppScreen = .home
     @State private var pendingNavigation: AppScreen?
-    @State private var showMenu = false
 
     // MARK: - View Body
 
     var body: some View {
         NavigationStack {
-            ZStack(alignment: .top) {
-                // Main Content Area (full screen)
-                mainContent
+            mainContent
+                .toolbar {
+                    ToolbarItem(placement: .topBarTrailing) {
+                        Menu {
+                            Button(action: { handleNavigation(to: .home) }) {
+                                Label("home".localized, systemImage: "house")
+                            }
+                            .disabled(currentScreen == .home)
 
-                // Persistent top bar: Whitman portrait + pull handle
-                topBar
+                            Button(action: { handleNewGame() }) {
+                                Label("new_game_menu".localized, systemImage: "play")
+                            }
 
-                // Slide-down menu overlay
-                if showMenu {
-                    Color.black.opacity(0.3)
-                        .ignoresSafeArea()
-                        .onTapGesture { withAnimation(.easeOut(duration: 0.25)) { showMenu = false } }
-                        .zIndex(10)
+                            Divider()
 
-                    VStack {
-                        ToolbarView(
-                            currentScreen: currentScreen,
-                            onGoHome: { handleNavigation(to: .home) },
-                            onShowAbout: { handleNavigation(to: .about) },
-                            onShowHowToPlay: { handleNavigation(to: .howToPlay) },
-                            onShowSettings: { handleNavigation(to: .settings) },
-                            onNewGame: {
-                                if currentScreen != .game {
-                                    gameState.startGame(difficulty: .moderate)
-                                    currentScreen = .game
-                                } else {
-                                    handleNewGameInProgress()
-                                }
-                            },
-                            onDismiss: { withAnimation(.easeOut(duration: 0.25)) { showMenu = false } }
-                        )
-                        .transition(.move(edge: .top).combined(with: .opacity))
+                            Button(action: { handleNavigation(to: .howToPlay) }) {
+                                Label("how_to_play_menu".localized, systemImage: "questionmark.circle")
+                            }
 
-                        Spacer()
+                            Button(action: { handleNavigation(to: .about) }) {
+                                Label("about_menu".localized, systemImage: "info.circle")
+                            }
+
+                            Button(action: { handleNavigation(to: .settings) }) {
+                                Label("settings_menu".localized, systemImage: "gearshape")
+                            }
+                        } label: {
+                            Image(systemName: "line.3.horizontal")
+                                .font(.system(size: 20, weight: .bold))
+                                .foregroundColor(GameTheme.Colors.primaryText)
+                                .frame(width: 40, height: 40)
+                        }
+                        .accessibilityIdentifier("menu_button")
                     }
-                    .zIndex(11)
                 }
-            }
+                .toolbarBackground(.hidden, for: .navigationBar)
         }
-    }
-
-    // MARK: - Top Bar
-
-    private var topBar: some View {
-        HStack {
-            Spacer()
-
-            Button(action: {
-                withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) {
-                    showMenu.toggle()
-                }
-            }) {
-                Image(systemName: showMenu ? "xmark" : "line.3.horizontal")
-                    .font(.system(size: 20, weight: .bold))
-                    .foregroundColor(GameTheme.Colors.primaryText)
-                    .frame(width: 40, height: 40)
-            }
-            .accessibilityIdentifier("menu_button")
-        }
-        .padding(.horizontal, GameTheme.Layout.largePadding)
-        .padding(.top, 4)
-        .zIndex(12)
     }
 
     // MARK: - Main Content
@@ -104,7 +78,6 @@ struct ContentView: View {
                         currentScreen = .history
                     }
                 )
-                .gameScreenNavigation()
 
             case .game:
                 BoardView(
@@ -126,18 +99,15 @@ struct ContentView: View {
                         }
                     }
                 )
-                .gameScreenNavigation()
 
             case .summary(let session):
                 SummaryView(
                     gameState: gameState,
                     historicalSession: session
                 )
-                .gameScreenNavigation()
 
             case .about:
                 AboutView()
-                    .gameScreenNavigation()
 
             case .history:
                 HistoryView(
@@ -146,15 +116,12 @@ struct ContentView: View {
                         currentScreen = .summary(session)
                     }
                 )
-                .gameScreenNavigation()
 
             case .howToPlay:
                 HowToPlayView()
-                    .gameScreenNavigation()
 
             case .settings:
                 SettingsView(gameState: gameState)
-                    .gameScreenNavigation()
             }
         }
     }
@@ -162,7 +129,6 @@ struct ContentView: View {
     // MARK: - Navigation Helpers
 
     private func handleNavigation(to destination: AppScreen) {
-        withAnimation(.easeOut(duration: 0.25)) { showMenu = false }
         if currentScreen == .game && !gameState.isGameOver && gameState.score > 0 {
             pendingNavigation = destination
             gameState.showSaveGameDialog()
@@ -171,9 +137,11 @@ struct ContentView: View {
         }
     }
 
-    private func handleNewGameInProgress() {
-        withAnimation(.easeOut(duration: 0.25)) { showMenu = false }
-        if !gameState.isGameOver && gameState.score > 0 {
+    private func handleNewGame() {
+        if currentScreen != .game {
+            gameState.startGame(difficulty: .moderate)
+            currentScreen = .game
+        } else if !gameState.isGameOver && gameState.score > 0 {
             pendingNavigation = .game
             gameState.showSaveGameDialog()
         } else {
