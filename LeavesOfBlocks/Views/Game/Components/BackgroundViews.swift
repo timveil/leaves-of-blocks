@@ -24,3 +24,9 @@ struct BlockGrassView: View {
     }
 }
 
+// MARK: - Previews
+
+#Preview {
+    GameBackgroundView()
+}
+

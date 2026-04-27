@@ -21,9 +21,9 @@ struct BoardView: View {
     }
     
     private struct GridConstants {
-        static let cellSpacing: CGFloat = 3
-        static let gridPadding: CGFloat = 16 // GameTheme.Layout.mediumPadding
-        
+        static let cellSpacing: CGFloat = GameTheme.Layout.gridLineWidth
+        static let gridPadding: CGFloat = GameTheme.Layout.gridBorderWidth
+
         static func cellWithSpacing(cellSize: CGFloat) -> CGFloat {
             return cellSize + cellSpacing
         }
@@ -62,7 +62,7 @@ struct BoardView: View {
     var body: some View {
         BaseScreenView(showsStatusBar: false) {
             ZStack {
-                VStack(spacing: GameTheme.Layout.smallSpacing) {
+                VStack(spacing: 44) {
                     // Score Row
                     HStack {
                         Spacer()
@@ -70,7 +70,6 @@ struct BoardView: View {
                             .frame(width: gameWidth)
                         Spacer()
                     }
-                    .padding(.bottom, GameTheme.Layout.mediumPadding)
 
                     // Grid Row
                     HStack {
@@ -100,14 +99,6 @@ struct BoardView: View {
                         }
                         Spacer()
                     }
-                    
-                    // Game Stats Row
-                    GameStatsRowView(
-                        gameState: gameState,
-                        gameWidth: gameWidth
-                    )
-                    
-                    Spacer().frame(maxHeight: 30)
                     
                     // Holding Area Row
                     HStack {

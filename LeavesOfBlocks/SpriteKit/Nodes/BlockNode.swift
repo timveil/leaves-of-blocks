@@ -31,6 +31,9 @@ class BlockNode: SKNode {
     /// Size of each cell in points
     let cellSize: CGFloat
 
+    /// Gap between cells in points (matches grid spacing)
+    let spacing: CGFloat
+
     // MARK: - Initialization
 
     /// Creates a new block node for the given shape.
@@ -38,9 +41,11 @@ class BlockNode: SKNode {
     /// - Parameters:
     ///   - block: The `BlockShape` to render
     ///   - cellSize: The width and height of each cell in points
-    init(block: BlockShape, cellSize: CGFloat) {
+    ///   - spacing: Gap between cells to match grid layout (default: 0)
+    init(block: BlockShape, cellSize: CGFloat, spacing: CGFloat = 0) {
         self.block = block
         self.cellSize = cellSize
+        self.spacing = spacing
         super.init()
         buildBlock()
     }
@@ -67,17 +72,18 @@ class BlockNode: SKNode {
     /// Builds a normal multi-cell block.
     private func buildNormalBlock(color: UIColor) {
         let bounds = block.getBounds()
+        let step = cellSize + spacing
 
         for position in block.positions {
-            let cellRect = CGRect(x: 0, y: 0, width: cellSize - 2, height: cellSize - 2)
+            let cellRect = CGRect(x: 0, y: 0, width: cellSize, height: cellSize)
             let cellNode = SKShapeNode(rect: cellRect, cornerRadius: GameTheme.Layout.cellCornerRadius)
             cellNode.fillColor = color
             cellNode.strokeColor = SpriteKitColors.blockCellOverlay
             cellNode.lineWidth = 1.5
 
-            let offsetX = CGFloat(position.col - bounds.minCol) * cellSize
-            let offsetY = CGFloat(position.row - bounds.minRow) * cellSize
-            cellNode.position = CGPoint(x: offsetX + 1, y: offsetY + 1)
+            let offsetX = CGFloat(position.col - bounds.minCol) * step
+            let offsetY = CGFloat(position.row - bounds.minRow) * step
+            cellNode.position = CGPoint(x: offsetX, y: offsetY)
 
             addChild(cellNode)
         }
@@ -135,9 +141,10 @@ class BlockNode: SKNode {
     /// Returns the bounding size of this block in points.
     var boundingSize: CGSize {
         let bounds = block.getBounds()
+        let step = cellSize + spacing
         return CGSize(
-            width: CGFloat(bounds.width) * cellSize,
-            height: CGFloat(bounds.height) * cellSize
+            width: CGFloat(bounds.width) * step - spacing,
+            height: CGFloat(bounds.height) * step - spacing
         )
     }
 }

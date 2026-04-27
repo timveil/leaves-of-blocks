@@ -33,6 +33,7 @@ struct SpriteKitGameView: View {
 #Preview {
     let gameState = GameState()
     let bridge = GameSceneBridge(gameState: gameState)
+    let size = GameScene.sceneSize()
     SpriteKitGameView(bridge: bridge)
-        .frame(width: 373, height: 373)
+        .frame(width: size.width, height: size.height)
 }

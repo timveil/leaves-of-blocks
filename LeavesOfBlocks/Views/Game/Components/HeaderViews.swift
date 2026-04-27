@@ -79,3 +79,22 @@ struct SimpleScoreView: View {
         )
     }
 }
+
+// MARK: - Previews
+
+#Preview("Score View") {
+    let state: GameState = {
+        let s = GameState()
+        s.score = 1250
+        s.linesCleared = 7
+        return s
+    }()
+    SimpleScoreView(gameState: state)
+        .frame(width: 350)
+        .padding()
+}
+
+#Preview("App Title") {
+    SimpleAppTitleView()
+        .padding()
+}

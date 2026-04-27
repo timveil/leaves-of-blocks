@@ -216,3 +216,67 @@ private struct DraggableBlockView: View {
         return CGFloat(block.getBounds().height) * cellSize
     }
 }
+
+// MARK: - Previews
+
+#Preview("Block Shapes") {
+    VStack(spacing: 20) {
+        HStack(spacing: 20) {
+            BlockView(
+                block: BlockShape(positions: [
+                    GridPosition(row: 0, col: 0),
+                    GridPosition(row: 0, col: 1),
+                    GridPosition(row: 1, col: 0),
+                    GridPosition(row: 1, col: 1)
+                ], color: .green),
+                cellSize: 40
+            )
+            BlockView(
+                block: BlockShape(positions: [
+                    GridPosition(row: 0, col: 0),
+                    GridPosition(row: 0, col: 1),
+                    GridPosition(row: 0, col: 2)
+                ], color: .blue),
+                cellSize: 40
+            )
+            BlockView(
+                block: BlockShape(positions: [
+                    GridPosition(row: 0, col: 0),
+                    GridPosition(row: 1, col: 0),
+                    GridPosition(row: 1, col: 1)
+                ], color: .orange),
+                cellSize: 40
+            )
+        }
+        HStack(spacing: 20) {
+            BlockView(
+                block: BlockShape(positions: [GridPosition(row: 0, col: 0)], color: .red, type: .horizontalClear),
+                cellSize: 40
+            )
+            BlockView(
+                block: BlockShape(positions: [GridPosition(row: 0, col: 0)], color: .blue, type: .verticalClear),
+                cellSize: 40
+            )
+            BlockView(
+                block: BlockShape(positions: [GridPosition(row: 0, col: 0)], color: .purple, type: .areaClear),
+                cellSize: 40
+            )
+        }
+    }
+    .padding()
+}
+
+#Preview("Current Blocks") {
+    CurrentBlocksView(
+        gameState: GameState(),
+        cellSize: 40,
+        draggedBlock: nil,
+        isDragging: false,
+        draggedBlockIndex: nil,
+        isHoveringOverOrigin: false,
+        onDragStart: { _, _, _ in },
+        onDragMove: { _ in },
+        onDragEnd: {}
+    )
+    .padding()
+}

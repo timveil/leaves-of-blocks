@@ -26,19 +26,10 @@ enum SpriteKitColors {
     // MARK: - Grid Colors
 
     /// Empty grid cell background color
-    static let gridCellEmpty = UIColor(GameTheme.Colors.gridBackground).withAlphaComponent(0.4)
+    static let gridCellEmpty = UIColor.white
 
-    /// Empty grid cell border color
-    static let gridCellBorder = UIColor.black.withAlphaComponent(0.15)
-
-    /// Filled grid cell border color
-    static let gridCellFilledBorder = UIColor.black.withAlphaComponent(0.3)
-
-    /// Grid card background color
-    static let cardBackground = UIColor(GameTheme.Colors.cardBackground)
-
-    /// Card border color (solid black)
-    static let cardBorder = UIColor.black
+    /// Grid line color (bold black for folk-art style)
+    static let gridLineColor = UIColor.black
 
     // MARK: - Preview Colors
 

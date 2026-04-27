@@ -3,96 +3,84 @@ import SwiftUI
 
 // MARK: - Grid Node
 
-/// Renders the 8x8 game grid as a SpriteKit node tree.
+/// Renders the 8x8 game grid as a SpriteKit node tree with folk-art black gridlines.
 ///
-/// `GridNode` manages 64 cell nodes arranged in an 8x8 grid layout, matching
-/// the visual appearance of the SwiftUI `GameGridView`. Each cell reflects the
-/// current state of the corresponding `GridCell` in the game model.
+/// `GridNode` draws bold black gridlines as a path-based shape and places cell nodes
+/// in the gaps between lines. Empty cells use a solid white fill.
 ///
 /// ## Coordinate System
-/// The grid uses a top-left origin with Y increasing downward (matching SwiftUI layout).
-/// Cell positions are calculated as:
+/// Effects and cells share a content-local coordinate system where (0,0) is the
+/// top-left of the first cell. The border is handled externally by the crop node.
 /// ```
 /// x = col * (cellSize + spacing)
 /// y = row * (cellSize + spacing)
-/// ```
-///
-/// ## Usage
-/// ```swift
-/// let gridNode = GridNode(cellSize: 40, spacing: 3)
-/// gridNode.syncGrid(gameState.grid)
 /// ```
 class GridNode: SKNode {
 
     // MARK: - Node Name Constants
 
-    /// Format for cell node names: "cell_{row}_{col}"
     static func cellName(row: Int, col: Int) -> String {
         "cell_\(row)_\(col)"
     }
 
-    /// Name used for game-over overlay nodes
     static let gameOverOverlayName = "gameOverOverlay"
 
     // MARK: - Properties
 
-    /// Size of each grid cell in points
     let cellSize: CGFloat
-
-    /// Spacing between grid cells in points
     let spacing: CGFloat
-
-    /// Grid size (number of rows/columns)
     let gridSize: Int
 
-    /// 2D array of cell shape nodes for O(1) lookup
     private var cellNodes: [[SKShapeNode]] = []
 
-    /// Background card node behind the grid
-    private let backgroundNode: SKShapeNode
+    /// Content container offset by borderWidth — cells and effects share this coordinate space.
+    let contentNode: SKNode
 
-    /// Total width of the grid including spacing
+    private let borderWidth = GameTheme.Layout.gridBorderWidth
+
+    /// Content dimension (cells + internal spacing, no border)
     var gridWidth: CGFloat {
         CGFloat(gridSize) * cellSize + CGFloat(gridSize - 1) * spacing
     }
 
-    /// Total height of the grid including spacing
     var gridHeight: CGFloat {
-        gridWidth // Square grid
+        gridWidth
+    }
+
+    /// Total size including border on all sides
+    var totalSize: CGFloat {
+        gridWidth + borderWidth * 2
     }
 
     // MARK: - Initialization
 
-    /// Creates a new grid node with the specified cell dimensions.
-    ///
-    /// - Parameters:
-    ///   - cellSize: The width and height of each cell in points (default: 40)
-    ///   - spacing: The gap between cells in points (default: 3)
-    ///   - gridSize: The number of rows and columns (default: 8)
     init(cellSize: CGFloat = 40, spacing: CGFloat = 3, gridSize: Int = 8) {
         self.cellSize = cellSize
         self.spacing = spacing
         self.gridSize = gridSize
 
-        let padding = GameTheme.Layout.mediumPadding
-        let totalWidth = CGFloat(gridSize) * cellSize + CGFloat(gridSize - 1) * spacing + padding * 2
-        let totalHeight = totalWidth
+        let bw = GameTheme.Layout.gridBorderWidth
+        let contentDim = CGFloat(gridSize) * cellSize + CGFloat(gridSize - 1) * spacing
+        let total = contentDim + bw * 2
 
-        let bgRect = CGRect(
-            x: -padding,
-            y: -padding,
-            width: totalWidth,
-            height: totalHeight
-        )
-        backgroundNode = SKShapeNode(rect: bgRect, cornerRadius: GameTheme.Layout.cardCornerRadius)
-        backgroundNode.fillColor = SpriteKitColors.cardBackground
-        backgroundNode.strokeColor = SpriteKitColors.cardBorder
-        backgroundNode.lineWidth = 2.5
-        backgroundNode.zPosition = -1
+        // Solid black background — cells sit on top, gaps between them form the gridlines
+        let bgRect = CGRect(x: 0, y: 0, width: total, height: total)
+        let gridBackgroundNode = SKShapeNode(rect: bgRect)
+        gridBackgroundNode.fillColor = SpriteKitColors.gridLineColor
+        gridBackgroundNode.strokeColor = .clear
+        gridBackgroundNode.lineWidth = 0
+        gridBackgroundNode.zPosition = 0
+
+        // Content node offset by border — cells and effects live here
+        // yScale flipped so row 0 renders at the top (SpriteKit Y is bottom-up)
+        contentNode = SKNode()
+        contentNode.yScale = -1
+        contentNode.position = CGPoint(x: bw, y: bw + contentDim)
 
         super.init()
 
-        addChild(backgroundNode)
+        addChild(gridBackgroundNode)
+        addChild(contentNode)
         buildGrid()
     }
 
@@ -103,7 +91,6 @@ class GridNode: SKNode {
 
     // MARK: - Grid Construction
 
-    /// Builds the initial 8x8 grid of cell shape nodes.
     private func buildGrid() {
         for row in 0..<gridSize {
             var rowNodes: [SKShapeNode] = []
@@ -111,29 +98,24 @@ class GridNode: SKNode {
                 let cellNode = createCellNode()
                 cellNode.position = cellPosition(row: row, col: col)
                 cellNode.name = GridNode.cellName(row: row, col: col)
-                addChild(cellNode)
+                contentNode.addChild(cellNode)
                 rowNodes.append(cellNode)
             }
             cellNodes.append(rowNodes)
         }
     }
 
-    /// Creates a single empty cell shape node.
     private func createCellNode() -> SKShapeNode {
         let rect = CGRect(x: 0, y: 0, width: cellSize, height: cellSize)
-        let node = SKShapeNode(rect: rect, cornerRadius: GameTheme.Layout.cellCornerRadius)
+        let node = SKShapeNode(rect: rect)
         node.fillColor = SpriteKitColors.gridCellEmpty
-        node.strokeColor = SpriteKitColors.gridCellBorder
-        node.lineWidth = 1
+        node.strokeColor = .clear
+        node.lineWidth = 0
+        node.zPosition = 1
         return node
     }
 
-    /// Calculates the position of a cell node in the grid.
-    ///
-    /// - Parameters:
-    ///   - row: The row index (0-based, from top)
-    ///   - col: The column index (0-based, from left)
-    /// - Returns: The `CGPoint` position for the cell node
+    /// Returns the cell position in content-local coordinates (no border offset).
     func cellPosition(row: Int, col: Int) -> CGPoint {
         let x = CGFloat(col) * (cellSize + spacing)
         let y = CGFloat(row) * (cellSize + spacing)
@@ -142,12 +124,6 @@ class GridNode: SKNode {
 
     // MARK: - Grid Synchronization
 
-    /// Updates all cell visuals to match the current game grid state.
-    ///
-    /// Iterates through the model grid and updates each cell node's fill color,
-    /// stroke color, and line width to reflect whether the cell is empty or filled.
-    ///
-    /// - Parameter grid: The 2D array of `GridCell` values from `GameState`
     func syncGrid(_ grid: [[GridCell]]) {
         for row in 0..<min(gridSize, grid.count) {
             for col in 0..<min(gridSize, grid[row].count) {
@@ -156,28 +132,17 @@ class GridNode: SKNode {
 
                 if cell.isFilled {
                     node.fillColor = SpriteKitColors.blockColor(for: cell.color)
-                    node.strokeColor = SpriteKitColors.gridCellFilledBorder
-                    node.lineWidth = 2
                 } else {
                     node.fillColor = SpriteKitColors.gridCellEmpty
-                    node.strokeColor = SpriteKitColors.gridCellBorder
-                    node.lineWidth = 1
                 }
+                node.strokeColor = .clear
+                node.lineWidth = 0
             }
         }
     }
 
     // MARK: - Preview Highlighting
 
-    /// Shows a placement preview overlay for the given block at the specified position.
-    ///
-    /// Highlights cells that would be affected by placing the block, including
-    /// normal block cells and special block effects (row/column/area clears).
-    ///
-    /// - Parameters:
-    ///   - block: The `BlockShape` being previewed
-    ///   - position: The grid position where the block would be placed
-    ///   - canPlace: Whether the block can legally be placed at this position
     func showPreview(block: BlockShape, at position: GridPosition, canPlace: Bool) {
         guard canPlace else { return }
 
@@ -213,41 +178,26 @@ class GridNode: SKNode {
         }
     }
 
-    /// Highlights a single cell with the given preview color.
     private func highlightCell(row: Int, col: Int, color: UIColor) {
         guard row >= 0 && row < gridSize && col >= 0 && col < gridSize else { return }
         let node = cellNodes[row][col]
-        // Only override if not already filled
         if node.fillColor == SpriteKitColors.gridCellEmpty {
             node.fillColor = color
-            node.strokeColor = color.withAlphaComponent(0.8)
-            node.lineWidth = 2
         }
     }
 
-    /// Shows line-completion highlights for rows and columns that would complete.
-    ///
-    /// - Parameters:
-    ///   - rows: Set of row indices that would be completed
-    ///   - cols: Set of column indices that would be completed
     func highlightCompletedLines(rows: Set<Int>, cols: Set<Int>) {
         let gold = SpriteKitColors.lineCompletionPrimary
 
         for row in rows {
             for col in 0..<gridSize {
-                let node = cellNodes[row][col]
-                node.fillColor = gold
-                node.strokeColor = SpriteKitColors.lineCompletionAccent
-                node.lineWidth = 3
+                cellNodes[row][col].fillColor = gold
             }
         }
 
         for col in cols {
             for row in 0..<gridSize {
-                let node = cellNodes[row][col]
-                node.fillColor = gold
-                node.strokeColor = SpriteKitColors.lineCompletionAccent
-                node.lineWidth = 3
+                cellNodes[row][col].fillColor = gold
             }
         }
     }

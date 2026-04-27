@@ -42,6 +42,9 @@ extension GameTheme {
         
         // Cell Styling
         static let cellCornerRadius: CGFloat = 3
+        static let gridLineWidth: CGFloat = 2
+        static let gridCornerRadius: CGFloat = 0
+        static let gridBorderWidth: CGFloat = 3
 
         // Special Block Styling
         static let specialBlockCornerRadius: CGFloat = 6

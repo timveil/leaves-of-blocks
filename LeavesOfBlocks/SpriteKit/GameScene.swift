@@ -31,11 +31,11 @@ class GameScene: SKScene {
     /// Cell size in points
     private let cellSize: CGFloat
 
-    /// Grid spacing in points
-    private let gridSpacing: CGFloat = 3
+    /// Grid spacing in points (matches gridLineWidth)
+    private let gridSpacing: CGFloat = GameTheme.Layout.gridLineWidth
 
-    /// Grid padding in points
-    private let gridPadding: CGFloat = 16
+    /// Grid border width in points
+    private let gridBorderWidth: CGFloat = GameTheme.Layout.gridBorderWidth
 
     /// Combine subscriptions
     private var cancellables = Set<AnyCancellable>()
@@ -92,7 +92,7 @@ class GameScene: SKScene {
 
     /// Positions the grid node within the scene.
     private func setupGrid() {
-        gridNode.position = CGPoint(x: gridPadding, y: gridPadding)
+        gridNode.position = .zero
         gridNode.zPosition = 0
         addChild(gridNode)
     }
@@ -212,17 +212,14 @@ class GameScene: SKScene {
         ghostBlockNode?.removeFromParent()
         lastGhostBlockId = ghostId
 
-        let ghost = BlockNode(block: block, cellSize: cellSize)
+        let ghost = BlockNode(block: block, cellSize: cellSize, spacing: gridSpacing)
         ghost.alpha = 0.4
         ghost.zPosition = 3
 
         let cellPos = gridNode.cellPosition(row: position.row, col: position.col)
-        ghost.position = CGPoint(
-            x: cellPos.x + gridPadding,
-            y: cellPos.y + gridPadding
-        )
+        ghost.position = cellPos
 
-        addChild(ghost)
+        gridNode.contentNode.addChild(ghost)
         ghostBlockNode = ghost
 
         let pulse = SKAction.sequence([
@@ -249,7 +246,7 @@ class GameScene: SKScene {
         BlockPlacementEffect.play(
             block: block,
             at: position,
-            in: gridNode,
+            in: gridNode.contentNode,
             cellSize: cellSize,
             spacing: gridSpacing
         )
@@ -269,7 +266,7 @@ class GameScene: SKScene {
         LineClearEffect.play(
             clearedRows: rows,
             clearedCols: cols,
-            in: gridNode,
+            in: gridNode.contentNode,
             cellSize: cellSize,
             spacing: gridSpacing,
             gridSize: GameTheme.GameConfig.gridSize
@@ -278,7 +275,7 @@ class GameScene: SKScene {
         ComboPulseEffect.play(
             comboCount: totalLines,
             gridWidth: gridNode.gridWidth,
-            in: gridNode
+            in: gridNode.contentNode
         )
 
         // Force grid sync after effects start to show cleared state
@@ -295,7 +292,7 @@ class GameScene: SKScene {
         FallingLeavesEffect.setPaused(true, in: self)
 
         GameOverEffect.playGameOver(
-            in: gridNode,
+            in: gridNode.contentNode,
             cellSize: cellSize,
             spacing: gridSpacing,
             gridSize: GameTheme.GameConfig.gridSize
@@ -308,24 +305,24 @@ class GameScene: SKScene {
     func playHighScoreCelebration() {
         GameOverEffect.playHighScoreCelebration(
             gridWidth: gridNode.gridWidth,
-            in: gridNode
+            in: gridNode.contentNode
         )
     }
 
     /// Clears game-over overlays and resumes falling leaves (e.g., on new game).
     func clearGameOverEffects() {
-        GameOverEffect.clearGameOver(in: gridNode)
+        GameOverEffect.clearGameOver(in: gridNode.contentNode)
         FallingLeavesEffect.setPaused(false, in: self)
     }
 
     // MARK: - Scene Sizing
 
-    /// Calculates the required scene size for the grid with padding.
+    /// Calculates the required scene size for the grid including border.
     static func sceneSize(cellSize: CGFloat = 40, gridSize: Int = 8) -> CGSize {
-        let spacing: CGFloat = 3
-        let padding: CGFloat = 16
+        let spacing = GameTheme.Layout.gridLineWidth
+        let border = GameTheme.Layout.gridBorderWidth
         let gridDimension = CGFloat(gridSize) * cellSize + CGFloat(gridSize - 1) * spacing
-        let total = gridDimension + padding * 2
+        let total = gridDimension + border * 2
         return CGSize(width: total, height: total)
     }
 }

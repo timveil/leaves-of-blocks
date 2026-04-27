@@ -47,10 +47,14 @@ struct GameGridView: View {
     // Performance caching for preview calculations
     @State private var previewCache = PreviewCache()
     
+    private let lw = GameTheme.Layout.gridLineWidth
+
+    private let borderWidth = GameTheme.Layout.gridBorderWidth
+
     var body: some View {
-        VStack(spacing: 3) {
+        VStack(spacing: lw) {
                 ForEach(0..<GameTheme.GameConfig.gridSize, id: \.self) { row in
-                    HStack(spacing: 3) {
+                    HStack(spacing: lw) {
                         ForEach(0..<GameTheme.GameConfig.gridSize, id: \.self) { col in
                             GridCellView(
                                 cell: gameState.grid[row][col],
@@ -63,15 +67,18 @@ struct GameGridView: View {
                     }
                 }
             }
-            .padding(GameTheme.Layout.mediumPadding)
-            .background(GameTheme.Colors.cardBackground)
-            .clipShape(RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius, style: .continuous))
-            .overlay(
-                RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius, style: .continuous)
-                    .strokeBorder(Color.black, lineWidth: 2.5)
+            .padding(borderWidth)
+            .background(
+                GridLinesShape(
+                    cellSize: cellSize,
+                    lineWidth: lw,
+                    borderWidth: borderWidth,
+                    gridSize: GameTheme.GameConfig.gridSize
+                )
+                .fill(Color.black)
             )
+            .clipped()
             .onChange(of: gameState.blocksPlaced) { _, _ in
-                // Invalidate cache when blocks are placed to avoid stale data
                 previewCache.invalidate()
             }
             .background(
@@ -217,30 +224,50 @@ private struct GridCellView: View {
     let previewColor: Color
     let isLineComplete: Bool
 
-    private let cr = GameTheme.Layout.cellCornerRadius
-
     var body: some View {
-        RoundedRectangle(cornerRadius: cr)
-            .fill(
-                cell.isFilled ?
-                    cell.color.color :
-                (isLineComplete ?
-                    GameTheme.Colors.lineCompletionPrimary :
-                (isPreview ?
-                    previewColor.opacity(GameTheme.Layout.mediumHighOpacity) :
-                    GameTheme.Colors.blockBackground.opacity(GameTheme.Layout.mediumLowOpacity)
-                ))
-            )
+        Rectangle()
+            .fill(cellColor)
             .frame(width: size, height: size)
-            .overlay(
-                RoundedRectangle(cornerRadius: cr)
-                    .strokeBorder(
-                        cell.isFilled ? Color.black.opacity(0.3) :
-                        (isLineComplete ? GameTheme.Colors.lineCompletionAccent :
-                        Color.black.opacity(0.1)),
-                        lineWidth: cell.isFilled ? 1.5 : (isLineComplete ? 2 : 1)
-                    )
-            )
+    }
+
+    private var cellColor: Color {
+        if cell.isFilled {
+            return cell.color.color
+        } else if isLineComplete {
+            return GameTheme.Colors.lineCompletionPrimary
+        } else if isPreview {
+            return previewColor.opacity(GameTheme.Layout.mediumHighOpacity)
+        } else {
+            return .white
+        }
+    }
+}
+
+// MARK: - Grid Lines Shape
+
+private struct GridLinesShape: Shape {
+    let cellSize: CGFloat
+    let lineWidth: CGFloat
+    let borderWidth: CGFloat
+    let gridSize: Int
+
+    func path(in rect: CGRect) -> Path {
+        var path = Path()
+
+        // Outer border edges
+        path.addRect(CGRect(x: 0, y: 0, width: rect.width, height: borderWidth))
+        path.addRect(CGRect(x: 0, y: rect.height - borderWidth, width: rect.width, height: borderWidth))
+        path.addRect(CGRect(x: 0, y: 0, width: borderWidth, height: rect.height))
+        path.addRect(CGRect(x: rect.width - borderWidth, y: 0, width: borderWidth, height: rect.height))
+
+        // Internal gridlines
+        for i in 1..<gridSize {
+            let pos = borderWidth + CGFloat(i) * cellSize + CGFloat(i - 1) * lineWidth
+            path.addRect(CGRect(x: 0, y: pos, width: rect.width, height: lineWidth))
+            path.addRect(CGRect(x: pos, y: 0, width: lineWidth, height: rect.height))
+        }
+
+        return path
     }
 }
 
@@ -276,5 +303,76 @@ private struct PreviewPulseView: View {
                     isAnimating = true
                 }
             }
+    }
+}
+
+// MARK: - Previews
+
+#Preview("Empty Grid") {
+    let state = GameState()
+    GameGridView(
+        gameState: state,
+        cellSize: 40,
+        draggedBlock: nil,
+        previewPosition: nil,
+        onGridFrameChange: { _ in }
+    )
+    .padding()
+}
+
+#Preview("Grid with Blocks") {
+    let state: GameState = {
+        let s = GameState()
+        let colors: [BlockColor] = [.blue, .green, .red, .yellow, .orange, .pink, .purple]
+        for col in 0..<8 {
+            s.grid[7][col] = GridCell(isFilled: true, color: colors[col % colors.count])
+        }
+        for col in 0..<5 {
+            s.grid[6][col] = GridCell(isFilled: true, color: colors[(col + 2) % colors.count])
+        }
+        s.grid[4][2] = GridCell(isFilled: true, color: .red)
+        s.grid[4][3] = GridCell(isFilled: true, color: .red)
+        s.grid[5][2] = GridCell(isFilled: true, color: .red)
+        s.grid[5][3] = GridCell(isFilled: true, color: .red)
+        s.grid[3][0] = GridCell(isFilled: true, color: .green)
+        s.grid[3][1] = GridCell(isFilled: true, color: .green)
+        s.grid[3][2] = GridCell(isFilled: true, color: .green)
+        return s
+    }()
+    GameGridView(
+        gameState: state,
+        cellSize: 40,
+        draggedBlock: nil,
+        previewPosition: nil,
+        onGridFrameChange: { _ in }
+    )
+    .padding()
+}
+
+#Preview("Grid on Background") {
+    ZStack {
+        GameBackgroundView()
+        let state: GameState = {
+            let s = GameState()
+            let colors: [BlockColor] = [.blue, .green, .red, .yellow, .orange, .pink, .purple]
+            for col in 0..<8 {
+                s.grid[7][col] = GridCell(isFilled: true, color: colors[col % colors.count])
+            }
+            for col in 0..<5 {
+                s.grid[6][col] = GridCell(isFilled: true, color: colors[(col + 2) % colors.count])
+            }
+            s.grid[4][2] = GridCell(isFilled: true, color: .red)
+            s.grid[4][3] = GridCell(isFilled: true, color: .red)
+            s.grid[5][2] = GridCell(isFilled: true, color: .red)
+            s.grid[5][3] = GridCell(isFilled: true, color: .red)
+            return s
+        }()
+        GameGridView(
+            gameState: state,
+            cellSize: 40,
+            draggedBlock: nil,
+            previewPosition: nil,
+            onGridFrameChange: { _ in }
+        )
     }
 }
