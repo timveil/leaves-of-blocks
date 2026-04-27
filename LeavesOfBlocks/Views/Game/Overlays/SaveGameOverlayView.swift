@@ -15,28 +15,44 @@ struct SaveGameOverlayView: View {
                     .foregroundColor(GameTheme.Colors.secondaryText)
                     .multilineTextAlignment(.center)
 
-                ScoreDisplayView(
-                    title: "current_score".localized,
-                    score: gameState.score
-                )
-
-                VStack(spacing: GameTheme.Layout.mediumSpacing) {
-                    FullWidthActionButton(
-                        title: "save_game_button".localized,
-                        style: .success,
-                        onTap: onSaveGame
+                HStack(spacing: GameTheme.Layout.extraLargeSpacing) {
+                    circularButton(
+                        icon: "tray.and.arrow.down.fill",
+                        accessibilityLabel: "save_game_button".localized,
+                        color: GameTheme.Colors.success,
+                        action: onSaveGame
                     )
 
-                    FullWidthActionButton(
-                        title: "exit_without_saving".localized,
-                        style: .danger,
-                        onTap: onExitGame
+                    circularButton(
+                        icon: "xmark",
+                        accessibilityLabel: "exit_without_saving".localized,
+                        color: GameTheme.Colors.error,
+                        action: onExitGame
                     )
                 }
             }
         }
         .padding(.horizontal, GameTheme.Layout.extraLargePadding)
         .transition(.scale.combined(with: .opacity))
+    }
+
+    private func circularButton(icon: String, accessibilityLabel: String, color: Color, action: @escaping () -> Void) -> some View {
+        Button(action: action) {
+            Image(systemName: icon)
+                .font(.system(size: 28))
+                .foregroundColor(GameTheme.Colors.buttonText)
+                .frame(width: 64, height: 64)
+                .background(
+                    Circle()
+                        .fill(color)
+                )
+                .overlay(
+                    Circle()
+                        .stroke(Color.black, lineWidth: GameTheme.Layout.cardBorderWidth)
+                )
+        }
+        .buttonStyle(PlainButtonStyle())
+        .accessibilityLabel(accessibilityLabel)
     }
 }
 
