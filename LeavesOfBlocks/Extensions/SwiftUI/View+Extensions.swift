@@ -74,9 +74,4 @@ extension View {
         self.animation(GameTheme.Animations.lineClearAnimation, value: value)
     }
     
-    /// Applies a bounce effect when a value changes
-    func bounceEffect<V: Equatable>(value: V, scale: CGFloat = 1.1) -> some View {
-        self.scaleEffect(1.0)
-            .animation(GameTheme.Animations.fastSpring, value: value)
-    }
 }

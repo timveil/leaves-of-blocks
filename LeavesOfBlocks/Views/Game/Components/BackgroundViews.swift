@@ -18,12 +18,6 @@ struct GameBackgroundView: View {
     }
 }
 
-struct BlockGrassView: View {
-    var body: some View {
-        EmptyView()
-    }
-}
-
 // MARK: - Previews
 
 #Preview {
