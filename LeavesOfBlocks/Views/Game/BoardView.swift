@@ -63,6 +63,8 @@ struct BoardView: View {
         BaseScreenView(showsStatusBar: false) {
             ZStack {
                 VStack(spacing: 44) {
+                    Spacer(minLength: 0)
+
                     // Score Row
                     HStack {
                         Spacer()

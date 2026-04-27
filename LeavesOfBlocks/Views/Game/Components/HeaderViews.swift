@@ -55,6 +55,9 @@ struct SimpleScoreView: View {
                         .font(GameTheme.Typography.title)
                         .foregroundColor(GameTheme.Colors.primaryText)
                         .accessibilityIdentifier("score_display")
+                    Text("points".localized)
+                        .font(GameTheme.Typography.caption)
+                        .foregroundColor(GameTheme.Colors.secondaryText)
                 }
 
                 Spacer()
