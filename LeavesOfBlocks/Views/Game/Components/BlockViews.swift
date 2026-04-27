@@ -26,41 +26,29 @@ struct CurrentBlocksView: View {
     
     var body: some View {
         HStack(spacing: GameTheme.Layout.mediumSpacing) {
-                ForEach(Array(gameState.currentBlocks.enumerated()), id: \.offset) { index, block in
-                    // Fixed-size slot for each block
-                    ZStack {
-                        // Background for the slot
-                        RoundedRectangle(cornerRadius: GameTheme.Layout.buttonCornerRadius)
-                            .fill(GameTheme.Colors.blockContainerBackground)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: GameTheme.Layout.buttonCornerRadius)
-                                    .stroke(Color.black.opacity(0.2), lineWidth: 1)
-                            )
-                        
-                        // Scaled block centered in slot - size stays consistent
-                        DraggableBlockView(
-                            block: block,
-                            cellSize: scaledCellSize(for: block),
-                            onDragStart: { location in
-                                onDragStart(block, index, location)
-                            },
-                            onDragMove: onDragMove,
-                            onDragEnd: onDragEnd
-                        )
-                    }
-                    .frame(width: slotWidth, height: containerHeight)
-                }
+            ForEach(Array(gameState.currentBlocks.enumerated()), id: \.offset) { index, block in
+                DraggableBlockView(
+                    block: block,
+                    cellSize: scaledCellSize(for: block),
+                    onDragStart: { location in
+                        onDragStart(block, index, location)
+                    },
+                    onDragMove: onDragMove,
+                    onDragEnd: onDragEnd
+                )
+                .frame(width: slotWidth, height: containerHeight)
             }
-        .padding(GameTheme.Layout.mediumPadding)
+        }
+        .padding(GameTheme.Layout.smallPadding)
         .background(
-            RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
+            RoundedRectangle(cornerRadius: GameTheme.Layout.buttonCornerRadius)
                 .fill(
                     isHoveringOverOrigin ?
                     GameTheme.Colors.accent.opacity(0.15) :
                     GameTheme.Colors.cardBackground
                 )
                 .overlay(
-                    RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
+                    RoundedRectangle(cornerRadius: GameTheme.Layout.buttonCornerRadius)
                         .stroke(
                             isHoveringOverOrigin ? GameTheme.Colors.accent : Color.black,
                             lineWidth: 2.5
