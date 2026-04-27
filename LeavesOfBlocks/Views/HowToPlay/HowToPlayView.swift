@@ -7,22 +7,7 @@ struct HowToPlayView: View {
             ScrollView {
                 VStack(spacing: GameTheme.Layout.mediumPadding) {
                     // Main content card
-                    VStack(spacing: 0) {
-                        // Header with gold background
-                        Text("how_to_play".localized)
-                            .font(GameTheme.Typography.title)
-                            .foregroundColor(GameTheme.Colors.buttonText)
-                            .frame(maxWidth: .infinity)
-                            .padding(.horizontal, GameTheme.Layout.largePadding)
-                            .padding(.vertical, GameTheme.Layout.mediumPadding)
-                            .background(GameTheme.Colors.accent)
-                            .overlay(
-                                Rectangle()
-                                    .frame(height: 2.5)
-                                    .foregroundColor(.black),
-                                alignment: .bottom
-                            )
-
+                    GoldHeaderCard(title: "how_to_play".localized) {
                         VStack(alignment: .leading, spacing: GameTheme.Layout.largePadding) {
                             QuoteView(
                                 quote: "how_to_play_quote".localized,
@@ -55,10 +40,7 @@ struct HowToPlayView: View {
                                 }
                             }
                         }
-                        .padding(GameTheme.Layout.largePadding)
-                        .background(Color.white)
                     }
-                    .folkArtCard()
 
                     // Scoring table card
                     VStack(spacing: 0) {
@@ -155,19 +137,6 @@ struct HowToPlayView: View {
                 .sectionTextStyle(color: GameTheme.Colors.secondaryText)
                 .lineSpacing(6)
         }
-    }
-}
-
-// MARK: - Folk Art Card Modifier
-
-private extension View {
-    func folkArtCard() -> some View {
-        self
-            .clipShape(RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius))
-            .overlay(
-                RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
-                    .stroke(Color.black, lineWidth: 2.5)
-            )
     }
 }
 

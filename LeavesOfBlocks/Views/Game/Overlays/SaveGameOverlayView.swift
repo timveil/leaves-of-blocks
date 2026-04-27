@@ -8,21 +8,7 @@ struct SaveGameOverlayView: View {
     let onExitGame: () -> Void
 
     var body: some View {
-        VStack(spacing: 0) {
-            Text("save_game_title".localized)
-                .font(GameTheme.Typography.title)
-                .foregroundColor(GameTheme.Colors.buttonText)
-                .frame(maxWidth: .infinity)
-                .padding(.horizontal, GameTheme.Layout.largePadding)
-                .padding(.vertical, GameTheme.Layout.mediumPadding)
-                .background(GameTheme.Colors.accent)
-                .overlay(
-                    Rectangle()
-                        .frame(height: 2.5)
-                        .foregroundColor(.black),
-                    alignment: .bottom
-                )
-
+        GoldHeaderCard(title: "save_game_title".localized) {
             VStack(spacing: GameTheme.Layout.largePadding) {
                 Text("save_game_message".localized)
                     .font(GameTheme.Typography.body)
@@ -48,14 +34,7 @@ struct SaveGameOverlayView: View {
                     )
                 }
             }
-            .padding(GameTheme.Layout.largePadding)
-            .background(Color.white)
         }
-        .clipShape(RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius))
-        .overlay(
-            RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
-                .stroke(Color.black, lineWidth: 2.5)
-        )
         .padding(.horizontal, GameTheme.Layout.extraLargePadding)
         .transition(.scale.combined(with: .opacity))
     }

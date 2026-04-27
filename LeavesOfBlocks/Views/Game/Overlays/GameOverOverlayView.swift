@@ -8,21 +8,7 @@ struct GameOverOverlayView: View {
     let onNewGame: () -> Void
 
     var body: some View {
-        VStack(spacing: 0) {
-            Text("game_over".localized)
-                .font(GameTheme.Typography.title)
-                .foregroundColor(GameTheme.Colors.buttonText)
-                .frame(maxWidth: .infinity)
-                .padding(.horizontal, GameTheme.Layout.largePadding)
-                .padding(.vertical, GameTheme.Layout.mediumPadding)
-                .background(GameTheme.Colors.accent)
-                .overlay(
-                    Rectangle()
-                        .frame(height: 2.5)
-                        .foregroundColor(.black),
-                    alignment: .bottom
-                )
-
+        GoldHeaderCard(title: "game_over".localized) {
             VStack(spacing: GameTheme.Layout.largePadding) {
                 Text("game_over_quote".localized)
                     .font(GameTheme.Typography.body.italic())
@@ -48,14 +34,7 @@ struct GameOverOverlayView: View {
                     )
                 }
             }
-            .padding(GameTheme.Layout.largePadding)
-            .background(Color.white)
         }
-        .clipShape(RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius))
-        .overlay(
-            RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
-                .stroke(Color.black, lineWidth: 2.5)
-        )
         .padding(.horizontal, GameTheme.Layout.extraLargePadding)
         .transition(.scale.combined(with: .opacity))
     }

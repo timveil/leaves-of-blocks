@@ -25,24 +25,8 @@ struct SettingsView: View {
     var body: some View {
         BaseScreenView {
             ScrollView {
-                VStack(spacing: 0) {
-                    // Header with gold background
-                    Text("settings".localized)
-                        .font(GameTheme.Typography.title)
-                        .foregroundColor(GameTheme.Colors.buttonText)
-                        .frame(maxWidth: .infinity)
-                        .padding(.horizontal, GameTheme.Layout.largePadding)
-                        .padding(.vertical, GameTheme.Layout.mediumPadding)
-                        .background(GameTheme.Colors.accent)
-                        .overlay(
-                            Rectangle()
-                                .frame(height: 2.5)
-                                .foregroundColor(.black),
-                            alignment: .bottom
-                        )
-
+                GoldHeaderCard(title: "settings".localized) {
                     VStack(spacing: GameTheme.Layout.largePadding) {
-                        // Walt Whitman Quote Block
                         QuoteView(
                             quote: "settings_quote".localized,
                             author: "settings_author".localized,
@@ -53,7 +37,6 @@ struct SettingsView: View {
                         Spacer()
                             .frame(height: GameTheme.Layout.mediumPadding)
 
-                        // Action Buttons
                         VStack(spacing: GameTheme.Layout.mediumPadding) {
                             FullWidthActionButton(
                                 title: "clear_game_history".localized,
@@ -70,14 +53,7 @@ struct SettingsView: View {
                             }
                         }
                     }
-                    .padding(GameTheme.Layout.largePadding)
-                    .background(Color.white)
                 }
-                .clipShape(RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius))
-                .overlay(
-                    RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
-                        .stroke(Color.black, lineWidth: 2.5)
-                )
                 .padding(.horizontal, GameTheme.Layout.largePadding)
                 .padding(.vertical, GameTheme.Layout.mediumPadding)
             }

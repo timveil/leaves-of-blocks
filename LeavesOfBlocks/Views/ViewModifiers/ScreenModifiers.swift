@@ -26,73 +26,18 @@ extension View {
     }
     
     // MARK: - Card Style Modifiers
-    
-    /// Applies standard game card styling with customizable parameters
-    func gameCardStyle(
+
+    /// Applies the standard folk-art card border: clipped rounded rectangle with black stroke
+    func folkArtCard(
         cornerRadius: CGFloat = GameTheme.Layout.cardCornerRadius,
         borderColor: Color = .black,
-        borderWidth: CGFloat = 2.5
+        borderWidth: CGFloat = GameTheme.Layout.cardBorderWidth
     ) -> some View {
         self
-            .background(
+            .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
+            .overlay(
                 RoundedRectangle(cornerRadius: cornerRadius)
-                    .fill(GameTheme.Colors.cardBackground)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: cornerRadius)
-                            .stroke(borderColor, lineWidth: borderWidth)
-                    )
-            )
-    }
-    
-    /// Applies button card styling with conditional selection state
-    func gameButtonCardStyle(
-        isSelected: Bool = false,
-        cornerRadius: CGFloat = GameTheme.Layout.buttonCornerRadius,
-        selectedColor: Color = GameTheme.Colors.accent,
-        unselectedColor: Color = GameTheme.Colors.primaryBackground
-    ) -> some View {
-        self
-            .background(
-                RoundedRectangle(cornerRadius: cornerRadius)
-                    .fill(isSelected ? selectedColor.opacity(0.8) : unselectedColor)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: cornerRadius)
-                            .stroke(Color.black, lineWidth: 2.5)
-                    )
-            )
-            .scaleEffect(isSelected ? 1.08 : 1.0)
-            .animation(.spring(response: 0.3, dampingFraction: 0.6), value: isSelected)
-    }
-    
-    /// Applies 3D elevated card styling for prominent elements
-    func game3DCardStyle(
-        cornerRadius: CGFloat = GameTheme.Layout.cardCornerRadius,
-        elevation: CGFloat = 8
-    ) -> some View {
-        self
-            .background(
-                RoundedRectangle(cornerRadius: cornerRadius)
-                    .fill(GameTheme.Colors.cardBackground)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: cornerRadius)
-                            .stroke(Color.black, lineWidth: 3)
-                    )
-            )
-    }
-    
-    /// Applies gradient card styling
-    func gameGradientCardStyle(
-        cornerRadius: CGFloat = GameTheme.Layout.cardCornerRadius,
-        borderWidth: CGFloat = 2.5
-    ) -> some View {
-        self
-            .background(
-                RoundedRectangle(cornerRadius: cornerRadius)
-                    .fill(GameTheme.Colors.cardBackground)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: cornerRadius)
-                            .stroke(Color.black, lineWidth: borderWidth)
-                    )
+                    .stroke(borderColor, lineWidth: borderWidth)
             )
     }
     
@@ -152,23 +97,8 @@ extension View {
             .foregroundColor(color)
     }
     
-    /// Applies headline text styling
-    func sectionTextStyle(color: Color = GameTheme.Colors.primaryText) -> some View {
-        self
-            .font(GameTheme.Typography.body)
-            .foregroundColor(color)
-    }
-    
-    
-    /// Applies headline text styling
-    func gameHeadlineStyle(color: Color = GameTheme.Colors.primaryText) -> some View {
-        self
-            .font(GameTheme.Typography.headline)
-            .foregroundColor(color)
-    }
-    
     /// Applies body text styling
-    func gameBodyStyle(color: Color = GameTheme.Colors.primaryText) -> some View {
+    func sectionTextStyle(color: Color = GameTheme.Colors.primaryText) -> some View {
         self
             .font(GameTheme.Typography.body)
             .foregroundColor(color)
@@ -237,7 +167,7 @@ extension View {
             )
             .overlay(
                 Rectangle()
-                    .frame(height: 2.5)
+                    .frame(height: GameTheme.Layout.dividerHeight)
                     .foregroundColor(borderColor),
                 alignment: .bottom
             )

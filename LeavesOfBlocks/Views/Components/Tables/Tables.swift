@@ -242,7 +242,8 @@ struct KeyValueTable: View {
                     )
                 }
             }
-            .gameCardStyle()
+            .background(GameTheme.Colors.cardBackground)
+            .folkArtCard()
         }
     }
 }

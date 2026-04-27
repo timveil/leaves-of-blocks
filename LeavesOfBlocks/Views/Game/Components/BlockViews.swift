@@ -51,7 +51,7 @@ struct CurrentBlocksView: View {
                     RoundedRectangle(cornerRadius: GameTheme.Layout.buttonCornerRadius)
                         .stroke(
                             isHoveringOverOrigin ? GameTheme.Colors.accent : Color.black,
-                            lineWidth: 2.5
+                            lineWidth: GameTheme.Layout.cardBorderWidth
                         )
                 )
         )

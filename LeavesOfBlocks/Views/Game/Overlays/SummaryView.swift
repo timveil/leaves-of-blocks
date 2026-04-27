@@ -134,20 +134,7 @@ private struct SummaryDifficultyCard: View {
     let difficulty: DifficultyMode
 
     var body: some View {
-        VStack(spacing: 0) {
-            Text("difficulty".localized)
-                .font(GameTheme.Typography.title)
-                .foregroundColor(GameTheme.Colors.buttonText)
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, GameTheme.Layout.mediumPadding)
-                .background(GameTheme.Colors.accent)
-                .overlay(
-                    Rectangle()
-                        .frame(height: 2.5)
-                        .foregroundColor(.black),
-                    alignment: .bottom
-                )
-
+        GoldHeaderCard(title: "difficulty".localized) {
             HStack(spacing: 8) {
                 ForEach(0..<difficulty.acornCount, id: \.self) { _ in
                     Image("AcornIcon")
@@ -156,15 +143,7 @@ private struct SummaryDifficultyCard: View {
                         .frame(height: 44)
                 }
             }
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, GameTheme.Layout.largePadding)
-            .background(Color.white)
         }
-        .clipShape(RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius))
-        .overlay(
-            RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
-                .stroke(Color.black, lineWidth: 2.5)
-        )
     }
 }
 
@@ -175,34 +154,13 @@ private struct SummaryStatCard: View {
     let value: String
 
     var body: some View {
-        VStack(spacing: 0) {
-            Text(title)
-                .font(GameTheme.Typography.title)
-                .foregroundColor(GameTheme.Colors.buttonText)
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, GameTheme.Layout.mediumPadding)
-                .background(GameTheme.Colors.accent)
-                .overlay(
-                    Rectangle()
-                        .frame(height: 2.5)
-                        .foregroundColor(.black),
-                    alignment: .bottom
-                )
-
+        GoldHeaderCard(title: title) {
             Text(value)
                 .font(GameTheme.Typography.display)
                 .foregroundColor(GameTheme.Colors.primaryText)
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, GameTheme.Layout.largePadding)
-                .background(Color.white)
         }
-        .clipShape(RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius))
-        .overlay(
-            RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
-                .stroke(Color.black, lineWidth: 2.5)
-        )
     }
 }
 

@@ -75,7 +75,7 @@ struct FullWidthActionButton: View {
                     .fill(style.backgroundColor)
                     .overlay(
                         RoundedRectangle(cornerRadius: GameTheme.Layout.buttonCornerRadius)
-                            .stroke(Color.black, lineWidth: 2.5)
+                            .stroke(Color.black, lineWidth: GameTheme.Layout.cardBorderWidth)
                     )
             )
         }

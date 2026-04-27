@@ -234,7 +234,7 @@ enum ShapeType {
         ScoringTableRowView(points: "+100", description: "scoring_line_clear".localized, color: GameTheme.Colors.success, isLast: true)
     }
     .clipShape(RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius))
-    .overlay(RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius).stroke(Color.black, lineWidth: 2.5))
+    .overlay(RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius).stroke(Color.black, lineWidth: GameTheme.Layout.cardBorderWidth))
     .padding()
 }
 
@@ -245,7 +245,7 @@ enum ShapeType {
         DifficultyTableRowView(mode: .moderate, description: "difficulty_moderate_desc".localized, isLast: true)
     }
     .clipShape(RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius))
-    .overlay(RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius).stroke(Color.black, lineWidth: 2.5))
+    .overlay(RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius).stroke(Color.black, lineWidth: GameTheme.Layout.cardBorderWidth))
     .padding()
 }
 
@@ -256,7 +256,7 @@ enum ShapeType {
         ShapesTableRowView(shapeType: .horizontalClear, description: "shape_row_clear_desc".localized, isLast: true)
     }
     .clipShape(RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius))
-    .overlay(RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius).stroke(Color.black, lineWidth: 2.5))
+    .overlay(RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius).stroke(Color.black, lineWidth: GameTheme.Layout.cardBorderWidth))
     .padding()
 }
 

@@ -33,7 +33,7 @@ struct AboutView: View {
                     .background(GameTheme.Colors.accent)
                     .overlay(
                         Rectangle()
-                            .frame(height: 2.5)
+                            .frame(height: GameTheme.Layout.dividerHeight)
                             .foregroundColor(.black),
                         alignment: .bottom
                     )
@@ -103,11 +103,7 @@ struct AboutView: View {
                     .padding(GameTheme.Layout.largePadding)
                     .background(Color.white)
                 }
-                .clipShape(RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius))
-                .overlay(
-                    RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
-                        .stroke(Color.black, lineWidth: 2.5)
-                )
+                .folkArtCard()
                 .padding(.horizontal, GameTheme.Layout.largePadding)
                 .padding(.vertical, GameTheme.Layout.mediumPadding)
                 .padding(.bottom, 120)

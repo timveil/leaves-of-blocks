@@ -98,11 +98,7 @@ struct HistoryView: View {
                         .frame(maxWidth: .infinity)
                         .padding(.vertical, GameTheme.Layout.mediumPadding)
                         .background(GameTheme.Colors.accent)
-                        .clipShape(RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius))
-                        .overlay(
-                            RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
-                                .stroke(Color.black, lineWidth: 2.5)
-                        )
+                        .folkArtCard()
 
                     ForEach(gameHistory.indices, id: \.self) { index in
                         Button(action: {

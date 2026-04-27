@@ -32,8 +32,10 @@ extension GameTheme {
         static let buttonCornerRadius: CGFloat = 16
         static let overlayCornerRadius: CGFloat = 28
         
-        // Stroke
+        // Stroke and Borders
         static let strokeWidth: CGFloat = 3
+        static let cardBorderWidth: CGFloat = 2.5
+        static let dividerHeight: CGFloat = 2.5
         
         // Shadows
         static let shadowRadius: CGFloat = 12

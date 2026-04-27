@@ -174,10 +174,8 @@ struct GameStatisticCard: View {
             }
         }
         .padding(GameTheme.Layout.largePadding)
-        .gameCardStyle(
-            borderColor: color.opacity(0.3),
-            borderWidth: 1
-        )
+        .background(GameTheme.Colors.cardBackground)
+        .folkArtCard(borderColor: color.opacity(0.3), borderWidth: 1)
     }
 }
 

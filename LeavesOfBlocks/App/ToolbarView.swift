@@ -78,7 +78,7 @@ struct ToolbarView: View {
         )
         .overlay(
             Rectangle()
-                .frame(height: 2.5)
+                .frame(height: GameTheme.Layout.dividerHeight)
                 .foregroundColor(.black),
             alignment: .bottom
         )

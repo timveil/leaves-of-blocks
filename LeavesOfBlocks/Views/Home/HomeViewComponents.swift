@@ -57,7 +57,7 @@ struct DifficultySelectionView: View {
                     )
                     .overlay(
                         Circle()
-                            .stroke(Color.black, lineWidth: 2.5)
+                            .stroke(Color.black, lineWidth: GameTheme.Layout.cardBorderWidth)
                     )
             }
             .buttonStyle(PlainButtonStyle())
@@ -113,7 +113,7 @@ private struct AcornSlider: View {
                     .frame(width: 36, height: 36)
                     .overlay(
                         Circle()
-                            .stroke(Color.black, lineWidth: 2.5)
+                            .stroke(Color.black, lineWidth: GameTheme.Layout.cardBorderWidth)
                     )
                     .offset(x: thumbX - 18)
                     .gesture(
