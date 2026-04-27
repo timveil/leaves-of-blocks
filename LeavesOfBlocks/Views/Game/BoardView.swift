@@ -9,7 +9,7 @@ struct BoardView: View {
     @State private var gridFrame: CGRect = .zero
     @State private var blockSlotsFrame: CGRect = .zero
 
-    /// Bridge for SpriteKit scene communication (lazy-initialized only when needed)
+    /// Bridge for SpriteKit scene communication
     @State private var sceneBridge: GameSceneBridge?
     
     // MARK: - Configuration
@@ -76,8 +76,7 @@ struct BoardView: View {
                     // Grid Row
                     HStack {
                         Spacer()
-                        if AppConfiguration.FeatureFlags.useSpriteKitRenderer,
-                           let bridge = sceneBridge {
+                        if let bridge = sceneBridge {
                             SpriteKitGameView(bridge: bridge)
                                 .frame(width: gameWidth, height: gameWidth)
                                 .background(
@@ -87,17 +86,6 @@ struct BoardView: View {
                                         }
                                     }
                                 )
-                        } else {
-                            GameGridView(
-                                gameState: gameState,
-                                cellSize: cellSize,
-                                draggedBlock: dragState.draggedBlock,
-                                previewPosition: dragState.previewPosition,
-                                onGridFrameChange: { frame in
-                                    gridFrame = frame
-                                }
-                            )
-                            .frame(width: gameWidth)
                         }
                         Spacer()
                     }
@@ -138,7 +126,7 @@ struct BoardView: View {
                 .zIndex(10) // Game elements above grass
                 .padding(.horizontal, GameTheme.Layout.largePadding)
                 .onAppear {
-                    if AppConfiguration.FeatureFlags.useSpriteKitRenderer && sceneBridge == nil {
+                    if sceneBridge == nil {
                         sceneBridge = GameSceneBridge(gameState: gameState, cellSize: cellSize)
                     }
                 }

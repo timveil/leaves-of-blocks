@@ -5,12 +5,9 @@ import SpriteKit
 
 /// A SwiftUI wrapper that embeds the SpriteKit game scene for grid rendering.
 ///
-/// `SpriteKitGameView` replaces the SwiftUI `GameGridView` when the SpriteKit
-/// renderer is enabled. It displays the 8x8 game grid using SpriteKit while
-/// keeping all surrounding UI (score, holding area, overlays) in SwiftUI.
+/// Displays the 8×8 game grid using SpriteKit while keeping all surrounding UI
+/// (score, holding area, overlays) in SwiftUI.
 ///
-/// ## Integration
-/// This view is used inside `BoardView` as a drop-in replacement for `GameGridView`.
 /// The `GameSceneBridge` manages communication between the SwiftUI drag system
 /// and the SpriteKit scene's preview rendering.
 ///
