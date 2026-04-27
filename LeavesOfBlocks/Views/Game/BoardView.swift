@@ -157,8 +157,7 @@ struct BoardView: View {
             // Game Over Overlay - highest priority, appears above everything
             if gameState.isGameOver {
                 ZStack {
-                    // Semi-transparent background to dim the game
-                    GameTheme.Colors.primaryText.opacity(0.5)
+                    Color.black.opacity(0.7)
                         .ignoresSafeArea()
                     
                     VStack {
@@ -178,8 +177,7 @@ struct BoardView: View {
             // Save Game Overlay - appears when user tries to navigate away from active game
             if gameState.showSaveGameOverlay {
                 ZStack {
-                    // Semi-transparent background to dim the game
-                    GameTheme.Colors.primaryText.opacity(0.5)
+                    Color.black.opacity(0.7)
                         .ignoresSafeArea()
                     
                     VStack {

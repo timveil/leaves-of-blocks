@@ -80,14 +80,14 @@ extension GameTheme {
         static let warning = sun500
         static let error = poppy500
 
-        // Block Colors (inspired by the Whitman illustration palette)
-        static let blockBlue = Color(red: 0.278, green: 0.478, blue: 0.729)
-        static let blockGreen = leaf500
-        static let blockRed = poppy500
+        // Block Colors (drawn from the folk-art background illustration)
+        static let blockBlue = Color(red: 0.082, green: 0.459, blue: 0.443)
+        static let blockGreen = leaf600
+        static let blockRed = Color(red: 0.753, green: 0.224, blue: 0.169)
         static let blockYellow = sun500
-        static let blockPurple = Color(red: 0.412, green: 0.318, blue: 0.580)
+        static let blockPurple = Color(red: 0.384, green: 0.216, blue: 0.188)
         static let blockOrange = Color(red: 0.906, green: 0.530, blue: 0.200)
-        static let blockPink = poppy300
+        static let blockPink = Color(red: 0.886, green: 0.561, blue: 0.388)
 
         // Background Gradients
         static let backgroundGradient = [

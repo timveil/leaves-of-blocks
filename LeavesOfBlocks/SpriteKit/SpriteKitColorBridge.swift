@@ -21,13 +21,13 @@ enum SpriteKitColors {
     /// Returns the `UIColor` for a given `BlockColor` case.
     static func blockColor(for blockColor: BlockColor) -> UIColor {
         switch blockColor {
-        case .blue:   return UIColor(red: 0.278, green: 0.478, blue: 0.729, alpha: 1.0)
-        case .green:  return UIColor(red: 0.133, green: 0.612, blue: 0.251, alpha: 1.0)
-        case .red:    return UIColor(red: 0.776, green: 0.384, blue: 0.251, alpha: 1.0)
+        case .blue:   return UIColor(red: 0.082, green: 0.459, blue: 0.443, alpha: 1.0)
+        case .green:  return UIColor(red: 0.239, green: 0.541, blue: 0.310, alpha: 1.0)
+        case .red:    return UIColor(red: 0.753, green: 0.224, blue: 0.169, alpha: 1.0)
         case .yellow: return UIColor(red: 0.804, green: 0.600, blue: 0.239, alpha: 1.0)
-        case .purple: return UIColor(red: 0.412, green: 0.318, blue: 0.580, alpha: 1.0)
+        case .purple: return UIColor(red: 0.384, green: 0.216, blue: 0.188, alpha: 1.0)
         case .orange: return UIColor(red: 0.906, green: 0.530, blue: 0.200, alpha: 1.0)
-        case .pink:   return UIColor(red: 0.875, green: 0.592, blue: 0.478, alpha: 1.0)
+        case .pink:   return UIColor(red: 0.886, green: 0.561, blue: 0.388, alpha: 1.0)
         }
     }
 
