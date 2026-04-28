@@ -90,6 +90,8 @@ enum GameOverEffect {
     ///   - gridWidth: Width of the grid in points
     ///   - parent: The parent node to attach effects to
     static func playHighScoreCelebration(gridWidth: CGFloat, in parent: SKNode) {
+        guard !UIAccessibility.prefersReducedMotion else { return }
+
         let center = CGPoint(x: gridWidth / 2, y: gridWidth / 2)
 
         // Primary burst - golden sparkles

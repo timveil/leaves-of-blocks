@@ -1,40 +1,24 @@
 import Foundation
-import UIKit
 
 // MARK: - Application Configuration
 
-struct AppConfiguration {
-    
-    // MARK: - Environment
-    
-    enum Environment {
-        case debug
-        case release
-        case testing
-        
-        static var current: Environment {
-            #if DEBUG
-            return .debug
-            #elseif TESTING
-            return .testing
-            #else
-            return .release
-            #endif
-        }
-    }
-    
+/// Build/runtime tuning knobs that aren't user preferences.
+///
+/// Kept compile-time only — no dependencies on `UserDefaults`, no remote config.
+enum AppConfiguration {
+
     // MARK: - Feature Flags
 
-    struct FeatureFlags {
-        static let enableDebugMode = Environment.current == .debug
+    enum FeatureFlags {
+        /// True in DEBUG builds. Used to gate verbose logging and debug helpers.
+        static let enableDebugMode = BuildConfiguration.isDebugBuild
     }
 
     // MARK: - Performance Settings
 
-    struct Performance {
+    enum Performance {
         static let maxFallingLeaves = 50
         static let animationFrameRate = 60.0
         static var dragUpdateThrottleInterval: TimeInterval { 1.0 / animationFrameRate }
     }
 }
-

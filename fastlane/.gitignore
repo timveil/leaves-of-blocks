@@ -20,3 +20,4 @@ derivedData
 # App Store Connect API key
 AuthKey_*.p8
 AuthKey_*.json
+SnapshotHelper.swift

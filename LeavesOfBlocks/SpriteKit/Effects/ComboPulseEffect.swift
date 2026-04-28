@@ -39,7 +39,7 @@ enum ComboPulseEffect {
     ///   - gridWidth: Width of the grid in points (used for ring radius)
     ///   - parent: The parent node to attach the effect to
     static func play(comboCount: Int, gridWidth: CGFloat, in parent: SKNode) {
-        guard comboCount > 0 else { return }
+        guard comboCount > 0, !UIAccessibility.prefersReducedMotion else { return }
 
         let tier = min(comboCount, 3)
         let center = CGPoint(x: gridWidth / 2, y: gridWidth / 2)

@@ -8,7 +8,7 @@ import Foundation
 /// Colors follow an autumn theme that matches the game's visual design.
 ///
 /// - Note: All cases are `Codable` for persistence and `Hashable` for efficient collections.
-enum BlockColor: CaseIterable, Codable, Hashable {
+enum BlockColor: String, CaseIterable, Codable, Hashable {
     case blue, green, red, yellow, purple, orange, pink
 
     var accessibilityName: String {

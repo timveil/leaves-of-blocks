@@ -63,6 +63,8 @@ enum LineClearEffect {
         spacing: CGFloat,
         gridSize: Int
     ) {
+        guard !UIAccessibility.prefersReducedMotion else { return }
+
         let positions = collectPositions(rows: rows, cols: cols, gridSize: gridSize)
 
         for (index, pos) in positions.enumerated() {

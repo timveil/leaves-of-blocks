@@ -115,24 +115,23 @@ struct AboutView: View {
 
     // MARK: - Private Views
 
-    /// Creator description with linked name using tappable text
+    /// Creator description with linked name using tappable text.
     private var creatorDescriptionView: some View {
-        (
-            Text("developed_by_prefix".localized)
-                .font(GameTheme.Typography.body)
-                .foregroundColor(GameTheme.Colors.secondaryText)
-            +
-            Text(.init("[\("creator_name".localized)](\(URLs.linkedin))"))
-                .font(GameTheme.Typography.body)
-                .foregroundColor(GameTheme.Colors.primaryAccent)
-                .underline()
-            +
-            Text("creator_description_suffix".localized)
-                .font(GameTheme.Typography.body)
-                .foregroundColor(GameTheme.Colors.secondaryText)
-        )
-        .lineSpacing(6)
-        .tint(GameTheme.Colors.primaryAccent)
+        var attributed = AttributedString("developed_by_prefix".localized)
+
+        var name = AttributedString("creator_name".localized)
+        name.link = URLs.linkedin
+        name.underlineStyle = .single
+        name.foregroundColor = GameTheme.Colors.primaryAccent
+        attributed.append(name)
+
+        attributed.append(AttributedString("creator_description_suffix".localized))
+
+        return Text(attributed)
+            .font(GameTheme.Typography.body)
+            .foregroundColor(GameTheme.Colors.secondaryText)
+            .lineSpacing(6)
+            .tint(GameTheme.Colors.primaryAccent)
     }
 }
 

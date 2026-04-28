@@ -59,9 +59,17 @@ enum FallingLeavesEffect {
     /// Particles are low-alpha and use `.alpha` blend mode to remain subtle.
     ///
     /// - Parameter sceneWidth: Width of the scene in points (emitter spans this width)
-    /// - Returns: A configured `SKEmitterNode` ready to be added to the scene
+    /// - Returns: A configured `SKEmitterNode` ready to be added to the scene. When
+    ///   the user has Reduce Motion enabled the emitter is returned with a zero
+    ///   birth rate so no particles spawn.
     static func createEmitter(sceneWidth: CGFloat) -> SKEmitterNode {
         let emitter = SKEmitterNode()
+        emitter.name = FallingLeavesEffect.nodeName
+
+        guard !UIAccessibility.prefersReducedMotion else {
+            emitter.particleBirthRate = 0
+            return emitter
+        }
 
         // Leaf texture - small rounded diamond shape
         emitter.particleTexture = SKTexture(image: createLeafImage())
@@ -117,7 +125,6 @@ enum FallingLeavesEffect {
         emitter.particleBlendMode = .alpha
 
         emitter.zPosition = -5 // Behind grid
-        emitter.name = FallingLeavesEffect.nodeName
 
         return emitter
     }
@@ -129,7 +136,11 @@ enum FallingLeavesEffect {
     ///   - parent: The scene containing the emitter
     static func setPaused(_ paused: Bool, in parent: SKNode) {
         if let emitter = parent.childNode(withName: FallingLeavesEffect.nodeName) as? SKEmitterNode {
-            emitter.particleBirthRate = paused ? 0 : min(birthRate, CGFloat(AppConfiguration.Performance.maxFallingLeaves) / lifetime)
+            if paused || UIAccessibility.prefersReducedMotion {
+                emitter.particleBirthRate = 0
+            } else {
+                emitter.particleBirthRate = min(birthRate, CGFloat(AppConfiguration.Performance.maxFallingLeaves) / lifetime)
+            }
         }
     }
 

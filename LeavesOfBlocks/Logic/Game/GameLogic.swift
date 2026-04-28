@@ -56,8 +56,11 @@ private struct DifficultyPatternConfig {
     }
 }
 
-/// Handles all game logic operations separate from state management
-class GameLogic {
+/// Handles all game logic operations separate from state management.
+///
+/// This is a static-only namespace; all members are `static`. Declared as an
+/// `enum` (without cases) so it cannot be accidentally instantiated.
+enum GameLogic {
     
     // MARK: - Block Placement Logic
     

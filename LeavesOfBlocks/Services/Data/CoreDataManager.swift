@@ -84,6 +84,17 @@ final class CoreDataManager {
 
     // MARK: - Game History Operations
 
+    /// Persists a completed game session as a new `GameRecord`.
+    ///
+    /// - Parameters:
+    ///   - score: Final score for the session.
+    ///   - difficulty: Difficulty mode the session was played in. Persisted as `rawValue`.
+    ///   - blocksPlaced: Total blocks the player placed.
+    ///   - linesCleared: Total lines cleared during the session.
+    ///   - longestCombo: Maximum combo (lines cleared in a single placement).
+    ///   - gameTime: Elapsed gameplay duration, in seconds.
+    ///   - sessionMetrics: Optional analytics from `PlayerBehaviorTracker`. When
+    ///     present, efficiency / strategic / fallback metrics are also persisted.
     func saveGameRecord(score: Int, difficulty: DifficultyMode, blocksPlaced: Int,
                        linesCleared: Int, longestCombo: Int, gameTime: TimeInterval,
                        sessionMetrics: PlayerBehaviorTracker.SessionMetrics? = nil) {
@@ -126,6 +137,10 @@ final class CoreDataManager {
         saveContext()
     }
 
+    /// Returns persisted game records, newest first.
+    ///
+    /// - Parameter limit: Optional cap on the number of rows returned.
+    /// - Returns: Records sorted by `date` descending, or an empty array on error.
     func fetchGameHistory(limit: Int? = nil) -> [GameRecord] {
         let request: NSFetchRequest<GameRecord> = GameRecord.fetchRequest()
         request.sortDescriptors = [NSSortDescriptor(key: "date", ascending: false)]
@@ -143,6 +158,10 @@ final class CoreDataManager {
         }
     }
 
+    /// Returns persisted game records for one difficulty, highest score first.
+    ///
+    /// - Parameter difficulty: Difficulty mode to filter by.
+    /// - Returns: Records sorted by `score` descending, or an empty array on error.
     func fetchGameHistory(for difficulty: DifficultyMode) -> [GameRecord] {
         let request: NSFetchRequest<GameRecord> = GameRecord.fetchRequest()
         request.predicate = NSPredicate(format: "difficulty == %@", difficulty.rawValue)
@@ -157,6 +176,10 @@ final class CoreDataManager {
         }
     }
 
+    /// Returns the top-scoring game records.
+    ///
+    /// - Parameter limit: Maximum number of high scores to fetch. Defaults to 10.
+    /// - Returns: Records sorted by `score` descending, or an empty array on error.
     func fetchHighScores(limit: Int = 10) -> [GameRecord] {
         let request: NSFetchRequest<GameRecord> = GameRecord.fetchRequest()
         request.sortDescriptors = [NSSortDescriptor(key: "score", ascending: false)]
@@ -198,6 +221,12 @@ final class CoreDataManager {
 
     // MARK: - Statistics
 
+    /// Aggregates totals across all persisted game records.
+    ///
+    /// - Returns: A `GameHistoryStatistics` with totals/averages/highscore. Returns
+    ///   an all-zero value if the fetch fails.
+    /// - Note: Currently fetches and reduces in Swift. With sufficient row counts,
+    ///   prefer `NSExpressionDescription` aggregates against the store directly.
     func calculateStatistics() -> GameHistoryStatistics {
         let request: NSFetchRequest<GameRecord> = GameRecord.fetchRequest()
 

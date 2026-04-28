@@ -76,6 +76,8 @@ final class LeavesOfBlocksUITests: XCTestCase {
         let button = app.buttons[accessibilityId]
         XCTAssertTrue(button.waitForExistence(timeout: 2), "\(accessibilityId) should exist in menu")
         button.tap()
+        // Wait for the menu to dismiss before the next interaction.
+        _ = button.waitForNonExistence(timeout: 2)
     }
 
     @MainActor
@@ -198,40 +200,38 @@ final class LeavesOfBlocksUITests: XCTestCase {
         let blockContainer = app.otherElements["block_container"]
         let firstBlock = blockContainer.otherElements.matching(identifier: "draggable_block").element(boundBy: 0)
 
-        if firstBlock.waitForExistence(timeout: 2) {
-            let startCoordinate = firstBlock.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
-            let endCoordinate = gridElement.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+        XCTAssertTrue(firstBlock.waitForExistence(timeout: 2), "First draggable block should appear")
 
-            startCoordinate.press(forDuration: 0.1, thenDragTo: endCoordinate)
+        let startCoordinate = firstBlock.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
+        let endCoordinate = gridElement.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
 
-            let scoreDisplay = app.staticTexts["score_display"]
-            _ = scoreDisplay.waitForExistence(timeout: 2)
-            let scoreText = scoreDisplay.label
+        startCoordinate.press(forDuration: 0.1, thenDragTo: endCoordinate)
 
-            if let score = Int(scoreText.components(separatedBy: CharacterSet.decimalDigits.inverted).joined()) {
-                XCTAssertGreaterThan(score, 0, "Score should increase after placing a block")
-            }
-        }
+        let scoreDisplay = app.staticTexts["score_display"]
+        XCTAssertTrue(scoreDisplay.waitForExistence(timeout: 2), "Score display should exist")
+        let scoreText = scoreDisplay.label
+        let score = Int(scoreText.components(separatedBy: CharacterSet.decimalDigits.inverted).joined())
+        XCTAssertNotNil(score, "Score display should contain a parseable integer; got '\(scoreText)'")
+        XCTAssertGreaterThan(score ?? 0, 0, "Score should increase after placing a block")
     }
 
     @MainActor
     func testNavigationFlow() throws {
         // How to Play (via slide-down menu)
         navigateViaMenu(to: "how_to_play_button")
-        sleep(1)
         navigateHome()
 
         // History (via score display on home screen)
         let historyButton = app.buttons["history_button"]
         if historyButton.waitForExistence(timeout: 2) {
             historyButton.tap()
-            sleep(1)
+            // Wait for the history button to dismiss (we navigated away from home).
+            _ = historyButton.waitForNonExistence(timeout: 2)
             navigateHome()
         }
 
         // About (via slide-down menu)
         navigateViaMenu(to: "about_button")
-        sleep(1)
         navigateHome()
 
         let startButton = app.buttons["start_game_button"]
