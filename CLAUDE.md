@@ -194,9 +194,9 @@ Core Data persists `GameRecord` entries via `CoreDataManager` (`viewContext` onl
 - `Logic/Game/GameLogic.swift` is pure and the easiest target for new coverage.
 - UI tests should drive real flows; prefer `waitForExistence(timeout:)` over `sleep()`.
 
-## GitHub Pages / docs/
+## Privacy
 
-`docs/` contains assets used by the README (`app-icon.png`) and is also the GitHub Pages source for the privacy-policy site. Privacy: no data collection, no networking, local-only Core Data + bundled assets.
+No data collection, no networking, local-only Core Data + bundled assets.
 
 ## Open-Source Notes
 

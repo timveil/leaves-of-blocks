@@ -1,5 +1,5 @@
 <div align="center">
-  <img src="docs/app-icon.png" alt="Leaves of Blocks App Icon" width="120" height="120" />
+  <img src="LeavesOfBlocks/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png" alt="Leaves of Blocks App Icon" width="120" height="120" />
   
   # Leaves of Blocks
   
@@ -230,7 +230,7 @@ For questions, bugs, or feature requests, please [open an issue](https://github.
 
 <div align="center">
   <hr>
-  <img src="docs/app-icon.png" alt="Leaves of Blocks" width="60" height="60" />
+  <img src="LeavesOfBlocks/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png" alt="Leaves of Blocks" width="60" height="60" />
   <p><strong>Leaves of Blocks</strong> - Where autumn meets intelligent puzzle design</p>
   <p><em>Built with SwiftUI • Powered by advanced algorithms • Designed for delight</em></p>
 </div>

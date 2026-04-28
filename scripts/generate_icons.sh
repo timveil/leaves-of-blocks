@@ -13,21 +13,15 @@ fi
 # Create tmp directory if it doesn't exist
 mkdir -p tmp
 
-# Source SVG files
+# Source SVG file
 SVG_FILE="logo.svg"
-TRANSPARENT_SVG_FILE="logo-transparent.svg"
 
 if [ ! -f "$SVG_FILE" ]; then
     echo "Error: $SVG_FILE not found!"
     exit 1
 fi
 
-if [ ! -f "$TRANSPARENT_SVG_FILE" ]; then
-    echo "Error: $TRANSPARENT_SVG_FILE not found!"
-    exit 1
-fi
-
-echo "Generating iOS app icons from $SVG_FILE and transparent launch icons from $TRANSPARENT_SVG_FILE..."
+echo "Generating iOS app icons from $SVG_FILE..."
 
 # iOS App Icon sizes (all square with white background)
 # iPhone App Icons
@@ -60,9 +54,6 @@ rsvg-convert -w 64 -h 64 "$SVG_FILE" > tmp/AppIcon-64.png
 rsvg-convert -w 32 -h 32 "$SVG_FILE" > tmp/AppIcon-32.png
 rsvg-convert -w 16 -h 16 "$SVG_FILE" > tmp/AppIcon-16.png
 
-# GitHub Pages app icon (for documentation site, transparent background)
-rsvg-convert -w 256 -h 256 --background-color=transparent "$TRANSPARENT_SVG_FILE" > tmp/app-icon.png
-
 echo "✅ Generated all iOS app icons successfully!"
 echo "📁 Icons saved in ./tmp/ directory"
 echo ""
@@ -77,7 +68,6 @@ ASSETS_DIR="LeavesOfBlocks/Assets.xcassets/AppIcon.appiconset"
 
 # Create directories if they don't exist
 mkdir -p "$ASSETS_DIR"
-mkdir -p docs
 
 # Copy main app icons
 echo "📱 Copying main app icons..."
@@ -99,10 +89,6 @@ cp tmp/AppIcon-76.png "$ASSETS_DIR/AppIcon-76.png"            # iPad 76x76
 
 # App Store icon
 cp tmp/AppIcon-1024.png "$ASSETS_DIR/AppIcon-1024.png"        # App Store 1024x1024
-
-# Copy GitHub Pages app icon
-echo "📄 Copying GitHub Pages app icon..."
-cp tmp/app-icon.png docs/app-icon.png
 
 # Create Contents.json for the icon set
 cat > "$ASSETS_DIR/Contents.json" << 'EOF'
@@ -215,12 +201,11 @@ EOF
 echo ""
 echo "✅ Icons generated and copied to iOS project successfully!"
 echo "📁 App Icons location: $ASSETS_DIR"
-echo "📁 GitHub Pages Icon location: docs/app-icon.png"
 echo ""
 echo "🚀 Next steps:"
 echo "1. Open your Xcode project"
 echo "2. Navigate to Assets.xcassets"
-echo "3. The AppIcon should now show all your new green-themed icons"
+echo "3. The AppIcon should now show the new icons"
 echo "4. Build and test your app to see the new icons!"
 echo ""
 echo "📱 iOS App Icon Requirements:"
