@@ -8,6 +8,7 @@ struct ComboNotificationView: View {
     @State private var scale: CGFloat = 0.9
     @State private var opacity: Double = 0.0
     @State private var yOffset: CGFloat = 0
+    @State private var dismissTask: Task<Void, Never>?
     
     private var comboText: String {
         if comboCount >= 5 {
@@ -74,30 +75,31 @@ struct ComboNotificationView: View {
             x: 0,
             y: 6
         )
-        .frame(maxWidth: 280) // Consistent width with other overlays
+        .frame(maxWidth: 280)
+        .accessibilityElement(children: .ignore)
+        .accessibilityLabel("ax_combo_format".localized(with: comboText, comboCount, bonusPoints))
         .scaleEffect(scale)
         .opacity(opacity)
         .offset(y: yOffset)
         .onAppear {
-            startAnimation()
-        }
-    }
-    
-    private func startAnimation() {
-        // Entry animation - faster, smoother spring
-        withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
-            scale = 1.0
-            opacity = 1.0
-        }
-
-        // Shorter hold time, then quick fade out
-        Task { @MainActor in
-            try? await Task.sleep(for: .seconds(0.5))
-            withAnimation(.easeOut(duration: 0.25)) {
-                opacity = 0.0
-                yOffset = -15
-                scale = 0.9
+            AccessibilityNotification.Announcement("ax_combo_format".localized(with: comboText, comboCount, bonusPoints)).post()
+            withAnimation(.spring(response: 0.4, dampingFraction: 0.8)) {
+                scale = 1.0
+                opacity = 1.0
             }
+
+            dismissTask = Task { @MainActor in
+                try? await Task.sleep(for: .seconds(0.5))
+                guard !Task.isCancelled else { return }
+                withAnimation(.easeOut(duration: 0.25)) {
+                    opacity = 0.0
+                    yOffset = -15
+                    scale = 0.9
+                }
+            }
+        }
+        .onDisappear {
+            dismissTask?.cancel()
         }
     }
 }
@@ -113,7 +115,7 @@ struct ComboNotificationOverlay: View {
         ZStack {
             if let combo = activeCombo {
                 // Semi-transparent background to dim the game
-                Color.black.opacity(0.7)
+                GameTheme.Colors.primaryText.opacity(0.4)
                     .ignoresSafeArea()
                 
                 // Position combo notification higher on screen
@@ -204,21 +206,24 @@ struct ComboNotificationPreviewContainer: View {
                         }
                         .padding(.horizontal, 20)
                         .padding(.vertical, 12)
-                        .gameCardStyle()
+                        .background(GameTheme.Colors.cardBackground)
+                        .folkArtCard()
                         
                         Button("three_line_combo_button".localized) {
                             triggerCombo3()
                         }
                         .padding(.horizontal, 20)
                         .padding(.vertical, 12)
-                        .gameCardStyle()
+                        .background(GameTheme.Colors.cardBackground)
+                        .folkArtCard()
                         
                         Button("five_line_combo_button".localized) {
                             triggerCombo5()
                         }
                         .padding(.horizontal, 20)
                         .padding(.vertical, 12)
-                        .gameCardStyle()
+                        .background(GameTheme.Colors.cardBackground)
+                        .folkArtCard()
                         
                         Button("show_all_combos".localized) {
                             triggerAllCombos()

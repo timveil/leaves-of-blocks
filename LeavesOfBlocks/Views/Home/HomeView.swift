@@ -6,43 +6,47 @@ struct HomeView: View {
     @ObservedObject var gameState: GameState
     let onStartGame: (DifficultyMode) -> Void
     let onShowHistory: () -> Void
-    
-    @State private var selectedDifficulty: DifficultyMode = .moderate
-    
+
     var body: some View {
         BaseScreenView(showsStatusBar: false) {
-            VStack(spacing: GameTheme.Layout.extraLargeSpacing) {
+            VStack {
                 // Invisible accessibility element for UI testing
                 Text("")
                     .accessibilityIdentifier("home_screen_identifier")
                     .hidden()
-                
-                // High Score Display - Now tappable for history
-                ScoreDisplayView(
-                    score: gameState.highScore,
-                    lastScore: gameState.score > 0 ? gameState.score : nil,
-                    showHistoryHint: true,
-                    action: onShowHistory
-                )
-                .frame(maxWidth: 280)
-                
-                Spacer().frame(maxHeight: 10)
-                
-                // Difficulty Selection
-                DifficultySelectionView(
-                    selectedDifficulty: $selectedDifficulty,
-                    onStartGame: onStartGame
-                )
+
+                Spacer()
+
+                VStack(spacing: GameTheme.Layout.largePadding) {
+                    ScoreDisplayView(
+                        score: gameState.highScore,
+                        lastScore: gameState.score > 0 ? gameState.score : nil,
+                        showHistoryHint: true,
+                        action: onShowHistory
+                    )
+
+                    GoldHeaderCard(title: "ready_to_play".localized) {
+                        DifficultySelectionView(
+                            onStartGame: onStartGame
+                        )
+                    }
+                }
+
+                Spacer()
             }
-            .padding(.horizontal, GameTheme.Layout.extraLargePadding)
-            .padding(.bottom, 80)
+            .padding(.horizontal, GameTheme.Layout.largePadding)
         }
     }
 }
 
 #Preview {
     HomeView(
-        gameState: GameState(),
+        gameState: {
+            let state = GameState()
+            state.previewHighScore = 10_350
+            state.score = 87_200
+            return state
+        }(),
         onStartGame: { _ in },
         onShowHistory: { }
     )

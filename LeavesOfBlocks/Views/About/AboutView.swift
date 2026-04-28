@@ -15,92 +15,111 @@ struct AboutView: View {
 
     var body: some View {
         BaseScreenView {
-            GeometryReader { geometry in
-                ScrollView {
-                    VStack(spacing: GameTheme.Layout.largePadding) {
-                    // Header
-                    VStack(spacing: GameTheme.Layout.smallSpacing) {
+            ScrollView {
+                VStack(spacing: 0) {
+                    // Header with gold background
+                    VStack(spacing: 4) {
                         Text("about_the_game".localized)
-                            .pageTitleStyle()
-                            .padding(.top, GameTheme.Layout.mediumPadding)
+                            .font(GameTheme.Typography.title)
+                            .foregroundColor(GameTheme.Colors.buttonText)
 
                         Text("version_format".localized(with: Bundle.main.appVersion))
                             .font(GameTheme.Typography.caption)
-                            .foregroundColor(GameTheme.Colors.tertiaryText)
+                            .foregroundColor(GameTheme.Colors.buttonText.opacity(0.8))
                     }
-                    
+                    .frame(maxWidth: .infinity)
+                    .padding(.horizontal, GameTheme.Layout.largePadding)
+                    .padding(.vertical, GameTheme.Layout.mediumPadding)
+                    .background(GameTheme.Colors.accent)
+                    .overlay(
+                        Rectangle()
+                            .frame(height: GameTheme.Layout.dividerHeight)
+                            .foregroundColor(.black),
+                        alignment: .bottom
+                    )
+
                     // Content sections
                     VStack(alignment: .leading, spacing: GameTheme.Layout.largePadding) {
-                
-                // Whitman Quote - Move to top
-                QuoteView(
-                    quoteLines: [
-                        "answer".localized,
-                        "whitman_quote_1".localized,
-                        "whitman_quote_2".localized
-                    ],
-                    author: "whitman_author".localized,
-                    title: "whitman_title".localized,
-                    year: "whitman_year".localized
-                )
-                
-                // Inspiration
-                VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
-                    Text("inspiration".localized)
-                        .sectionHeaderStyle()
-                    
-                    Text("inspiration_quote".localized)
-                        .sectionTextStyle(color: GameTheme.Colors.secondaryText)
-                        .lineSpacing(6)
-                }
-                
-                // Dedication - New section
-                VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
-                    Text("dedication".localized)
-                        .sectionHeaderStyle()
-                    
-                    Text("dedication_text".localized)
-                        .sectionTextStyle(color: GameTheme.Colors.secondaryText)
-                        .lineSpacing(6)
-                }
-                
-                // Creator Info
-                VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
-                    Text("creator".localized)
-                        .sectionHeaderStyle()
+                        QuoteView(
+                            quoteLines: [
+                                "answer".localized,
+                                "whitman_quote_1".localized,
+                                "whitman_quote_2".localized
+                            ],
+                            author: "whitman_author".localized,
+                            title: "whitman_title".localized,
+                            year: "whitman_year".localized
+                        )
 
-                    creatorDescriptionView
-                }
-                
-                // Technical Details
-                VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
-                    Text("technical_details".localized)
-                        .sectionHeaderStyle()
+                        // Inspiration
+                        VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
+                            Text("inspiration".localized)
+                                .sectionHeaderStyle()
 
-                    Text("technical_description".localized)
-                        .sectionTextStyle(color: GameTheme.Colors.secondaryText)
-                        .lineSpacing(6)
-                }
+                            Text("inspiration_quote".localized)
+                                .sectionTextStyle(color: GameTheme.Colors.secondaryText)
+                                .lineSpacing(6)
+                        }
 
-                // Website
-                VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
-                    Text("website".localized)
-                        .sectionHeaderStyle()
+                        // Dedication
+                        VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
+                            Text("dedication".localized)
+                                .sectionHeaderStyle()
 
-                    Link("company_website".localized, destination: URLs.website)
-                        .font(GameTheme.Typography.body)
-                        .foregroundColor(GameTheme.Colors.primaryAccent)
-                        .underline()
-                }
+                            Text("dedication_text".localized)
+                                .sectionTextStyle(color: GameTheme.Colors.secondaryText)
+                                .lineSpacing(6)
+                        }
+
+                        // Creator Info
+                        VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
+                            Text("creator".localized)
+                                .sectionHeaderStyle()
+
+                            creatorDescriptionView
+                        }
+
+                        // Technical Details
+                        VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
+                            Text("technical_details".localized)
+                                .sectionHeaderStyle()
+
+                            Text("technical_description".localized)
+                                .sectionTextStyle(color: GameTheme.Colors.secondaryText)
+                                .lineSpacing(6)
+                        }
+
+                        // Website
+                        VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
+                            Text("website".localized)
+                                .sectionHeaderStyle()
+
+                            Link("company_website".localized, destination: URLs.website)
+                                .font(GameTheme.Typography.body)
+                                .foregroundColor(GameTheme.Colors.primaryAccent)
+                                .underline()
+                        }
                     }
-
-                    Spacer(minLength: GameTheme.Layout.extraLargePadding)
+                    .padding(GameTheme.Layout.largePadding)
+                    .background(Color.white)
                 }
+                .folkArtCard()
                 .padding(.horizontal, GameTheme.Layout.largePadding)
-                .padding(.bottom, 80)
-                }
-                .frame(height: geometry.size.height - 100) // Leave space for grass
+                .padding(.vertical, GameTheme.Layout.mediumPadding)
+                .padding(.bottom, 120)
             }
+            .scrollIndicators(.hidden)
+            .mask(
+                VStack(spacing: 0) {
+                    Color.black
+                    LinearGradient(
+                        colors: [.black, .clear],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                    .frame(height: 160)
+                }
+            )
         }
     }
 
@@ -127,25 +146,6 @@ struct AboutView: View {
     }
 }
 
-private struct AboutSectionView: View {
-    let title: String
-    let content: String
-    
-    var body: some View {
-        VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
-            Text(title)
-                .sectionTextStyle()
-            
-            Text(content)
-                .gameBodyStyle(color: GameTheme.Colors.secondaryText)
-                .lineSpacing(4)
-                .fixedSize(horizontal: false, vertical: true)
-        }
-        .frame(maxWidth: .infinity, alignment: .leading)
-        .padding(GameTheme.Layout.largePadding)
-        .gameGradientCardStyle()
-    }
-}
 
 #Preview {
     AboutView()

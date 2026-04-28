@@ -46,8 +46,10 @@ class GameState: ObservableObject {
         return gameService.currentGameTime
     }
     
+    var previewHighScore: Int?
+
     var highScore: Int {
-        return gameService.getHighScore()
+        return previewHighScore ?? gameService.getHighScore()
     }
     
     var statistics: GameSessionStatistics {

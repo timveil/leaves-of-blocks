@@ -102,51 +102,48 @@ struct QuoteView: View {
     
     
     var body: some View {
-        VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
-            // Quote text
-            VStack(alignment: .leading, spacing: GameTheme.Layout.smallSpacing) {
-                ForEach(quoteLines, id: \.self) { line in
-                    Text(line)
-                        .font(GameTheme.Typography.body)
-                        .foregroundColor(GameTheme.Colors.primaryText)
-                        .lineSpacing(4)
+        HStack(alignment: .top, spacing: 0) {
+            RoundedRectangle(cornerRadius: 1.5)
+                .fill(GameTheme.Colors.accent)
+                .frame(width: 3)
+
+            VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
+                VStack(alignment: .leading, spacing: GameTheme.Layout.smallSpacing) {
+                    ForEach(quoteLines, id: \.self) { line in
+                        Text(line)
+                            .font(GameTheme.Typography.body.italic())
+                            .foregroundColor(GameTheme.Colors.secondaryText)
+                            .lineSpacing(4)
+                    }
                 }
-            }
-            
-            // Attribution - Improved layout for better wrapping
-            HStack {
-                Spacer()
-                VStack(alignment: .trailing, spacing: 2) {
-                    // Author line
-                    Text("— \(author)")
-                        .font(GameTheme.Typography.body)
-                        .foregroundColor(GameTheme.Colors.primaryText)
-                    
-                    // Title and year line (if available)
-                    if title != nil || year != nil {
-                        HStack(spacing: 4) {
-                            if let title = title {
-                                Text("\"\(title)\"")
-                                    .font(GameTheme.Typography.caption)
-                                    .foregroundColor(GameTheme.Colors.secondaryText)
-                            }
-                            
-                            if let year = year {
-                                Text("(\(year))")
-                                    .font(GameTheme.Typography.caption)
-                                    .foregroundColor(GameTheme.Colors.secondaryText)
+
+                HStack {
+                    Spacer()
+                    VStack(alignment: .trailing, spacing: 2) {
+                        Text("— \(author)")
+                            .font(GameTheme.Typography.caption)
+                            .foregroundColor(GameTheme.Colors.primaryText)
+
+                        if title != nil || year != nil {
+                            HStack(spacing: 4) {
+                                if let title = title {
+                                    Text("\"\(title)\"")
+                                        .font(GameTheme.Typography.caption)
+                                        .foregroundColor(GameTheme.Colors.tertiaryText)
+                                }
+
+                                if let year = year {
+                                    Text("(\(year))")
+                                        .font(GameTheme.Typography.caption)
+                                        .foregroundColor(GameTheme.Colors.tertiaryText)
+                                }
                             }
                         }
                     }
                 }
             }
-            .padding(.top, GameTheme.Layout.smallSpacing)
+            .padding(.leading, GameTheme.Layout.mediumPadding)
         }
-        .padding(GameTheme.Layout.mediumPadding)
-        .background(
-            RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
-                .fill(backgroundColor)
-        )
     }
 }
 

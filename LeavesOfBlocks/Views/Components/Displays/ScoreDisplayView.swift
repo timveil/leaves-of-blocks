@@ -8,17 +8,15 @@ struct ScoreDisplayView: View {
     let score: Int
     let lastScore: Int?
     let showHistoryHint: Bool
-    let isHighlighted: Bool
     let showIcon: Bool
     let iconName: String?
     let action: (() -> Void)?
-    
+
     init(
         title: String = "best_score".localized,
         score: Int,
         lastScore: Int? = nil,
         showHistoryHint: Bool = false,
-        isHighlighted: Bool = false,
         showIcon: Bool = false,
         iconName: String? = nil,
         action: (() -> Void)? = nil
@@ -27,7 +25,6 @@ struct ScoreDisplayView: View {
         self.score = score
         self.lastScore = lastScore
         self.showHistoryHint = showHistoryHint
-        self.isHighlighted = isHighlighted
         self.showIcon = showIcon
         self.iconName = iconName
         self.action = action
@@ -49,16 +46,22 @@ struct ScoreDisplayView: View {
     
     private var scoreContent: some View {
         VStack(spacing: 0) {
-            // Header with gradient background (like Statistics widget)
+            // Header
             Text(title)
-                .font(GameTheme.Typography.headline)
+                .font(GameTheme.Typography.title)
                 .foregroundColor(GameTheme.Colors.buttonText)
                 .frame(maxWidth: .infinity)
             .padding(.horizontal, GameTheme.Layout.largePadding)
             .padding(.vertical, GameTheme.Layout.mediumPadding)
             .background(GameTheme.Colors.accent)
-            
-            // Content area with brown background
+            .overlay(
+                Rectangle()
+                    .frame(height: GameTheme.Layout.dividerHeight)
+                    .foregroundColor(.black),
+                alignment: .bottom
+            )
+
+            // Content area
             VStack(spacing: GameTheme.Layout.mediumSpacing) {
                 if showIcon, let iconName = iconName {
                     Image(systemName: iconName)
@@ -67,7 +70,7 @@ struct ScoreDisplayView: View {
                         .padding(.top, GameTheme.Layout.mediumPadding)
                 }
                 
-                Text(score.formattedScore)
+                Text(score.abbreviatedScore)
                     .font(GameTheme.Typography.display)
                     .foregroundColor(GameTheme.Colors.primaryText)
                     .lineLimit(1)
@@ -81,29 +84,16 @@ struct ScoreDisplayView: View {
                 
                 if showHistoryHint {
                     Text("tap_for_history".localized)
-                        .gameCaptionStyle(color: GameTheme.Colors.accent.opacity(0.7))
+                        .gameCaptionStyle(color: GameTheme.Colors.primaryText.opacity(0.6))
                         .padding(.bottom, GameTheme.Layout.mediumPadding)
                 }
             }
             .frame(maxWidth: .infinity)
             .padding(.horizontal, GameTheme.Layout.largePadding)
             .padding(.bottom, GameTheme.Layout.largePadding)
-            .background(GameTheme.Colors.cardBackground)
+            .background(Color.white)
         }
-        .clipShape(RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius))
-        .overlay(
-            RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
-                .stroke(
-                    GameTheme.Gradients.cardBorder,
-                    lineWidth: 1
-                )
-        )
-        .shadow(
-            color: GameTheme.Colors.cardShadow.opacity(0.15),
-            radius: 12,
-            x: 0,
-            y: 6
-        )
+        .folkArtCard()
     }
 }
 
@@ -119,13 +109,12 @@ struct ScoreDisplayView: View {
         )
         
         ScoreDisplayView(
-            title: "Final Score",
-            score: 54321,
-            isHighlighted: true
+            title: "final_score".localized,
+            score: 54321
         )
         
         ScoreDisplayView(
-            title: "Final Score",
+            title: "final_score".localized,
             score: 99999,
             showIcon: true,
             iconName: "crown.fill"

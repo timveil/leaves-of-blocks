@@ -32,15 +32,13 @@ extension View {
     
     /// Prints the frame of a view for debugging
     func debugFrame(_ label: String = "Frame") -> some View {
-        self.background(
-            GeometryReader { geometry in
-                Color.clear.onAppear {
-                    if AppConfiguration.FeatureFlags.enableDebugMode {
-                        BuildConfiguration.log("\(label): \(geometry.frame(in: .global))", level: .debug)
-                    }
-                }
+        self.onGeometryChange(for: CGRect.self) { proxy in
+            proxy.frame(in: .global)
+        } action: { frame in
+            if AppConfiguration.FeatureFlags.enableDebugMode {
+                BuildConfiguration.log("\(label): \(frame)", level: .debug)
             }
-        )
+        }
     }
     
     /// Adds a colored border for debugging layout issues
@@ -74,9 +72,4 @@ extension View {
         self.animation(GameTheme.Animations.lineClearAnimation, value: value)
     }
     
-    /// Applies a bounce effect when a value changes
-    func bounceEffect<V: Equatable>(value: V, scale: CGFloat = 1.1) -> some View {
-        self.scaleEffect(1.0)
-            .animation(GameTheme.Animations.fastSpring, value: value)
-    }
 }

@@ -24,47 +24,40 @@ struct SettingsView: View {
     
     var body: some View {
         BaseScreenView {
-            VStack(spacing: GameTheme.Layout.largePadding) {
-                // Header
-                VStack(spacing: GameTheme.Layout.smallPadding) {
-                    Text("settings".localized)
-                        .pageTitleStyle()
-                        .padding(.top, GameTheme.Layout.mediumPadding)
-                }
-                
-                // Walt Whitman Quote Block
-                QuoteView(
-                    quote: "settings_quote".localized,
-                    author: "settings_author".localized,
-                    title: "settings_title".localized,
-                    year: "settings_year".localized
-                )
-                .padding(.horizontal, GameTheme.Layout.largePadding)
-                
-                // Action Buttons
-                VStack(spacing: GameTheme.Layout.mediumPadding) {
-                    // Clear Game History Button
-                    FullWidthActionButton(
-                        title: "clear_game_history".localized,
-                        icon: "clock.arrow.circlepath",
-                        style: .secondary
-                    ) {
-                        showingClearHistoryConfirmation = true
-                    }
-                    
-                    // Reset All Data Button
-                    FullWidthActionButton(
-                        title: "reset_all_data".localized,
-                        icon: "trash.circle",
-                        style: .danger
-                    ) {
-                        showingResetAllConfirmation = true
+            ScrollView {
+                GoldHeaderCard(title: "settings".localized) {
+                    VStack(spacing: GameTheme.Layout.largePadding) {
+                        QuoteView(
+                            quote: "settings_quote".localized,
+                            author: "settings_author".localized,
+                            title: "settings_title".localized,
+                            year: "settings_year".localized
+                        )
+
+                        Spacer()
+                            .frame(height: GameTheme.Layout.mediumPadding)
+
+                        VStack(spacing: GameTheme.Layout.mediumPadding) {
+                            FullWidthActionButton(
+                                title: "clear_game_history".localized,
+                                style: .secondary
+                            ) {
+                                showingClearHistoryConfirmation = true
+                            }
+
+                            FullWidthActionButton(
+                                title: "reset_all_data".localized,
+                                style: .danger
+                            ) {
+                                showingResetAllConfirmation = true
+                            }
+                        }
                     }
                 }
                 .padding(.horizontal, GameTheme.Layout.largePadding)
-                
-                Spacer()
+                .padding(.vertical, GameTheme.Layout.mediumPadding)
             }
+            .scrollIndicators(.hidden)
         }
         .confirmationDialog("clear_game_history".localized, isPresented: $showingClearHistoryConfirmation, titleVisibility: .visible) {
             Button("clear_all_game_history".localized, role: .destructive) {

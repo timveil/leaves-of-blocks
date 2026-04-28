@@ -26,65 +26,38 @@ struct CurrentBlocksView: View {
     
     var body: some View {
         HStack(spacing: GameTheme.Layout.mediumSpacing) {
-                ForEach(Array(gameState.currentBlocks.enumerated()), id: \.offset) { index, block in
-                    // Fixed-size slot for each block
-                    ZStack {
-                        // Background for the slot - highlight if hovering over origin
-                        RoundedRectangle(cornerRadius: GameTheme.Layout.buttonCornerRadius)
-                            .fill(GameTheme.Colors.blockContainerBackground)
-                            .overlay(
-                                RoundedRectangle(cornerRadius: GameTheme.Layout.buttonCornerRadius)
-                                    .stroke(GameTheme.Colors.blockContainerBorder, lineWidth: 1)
-                            )
-                            .shadow(
-                                color: GameTheme.Colors.blockContainerShadow,
-                                radius: 6,
-                                x: 2,
-                                y: 3
-                            )
-                        
-                        // Scaled block centered in slot - size stays consistent
-                        DraggableBlockView(
-                            block: block,
-                            cellSize: scaledCellSize(for: block),
-                            onDragStart: { location in
-                                onDragStart(block, index, location)
-                            },
-                            onDragMove: onDragMove,
-                            onDragEnd: onDragEnd
-                        )
-                    }
-                    .frame(width: slotWidth, height: containerHeight)
-                }
+            ForEach(Array(gameState.currentBlocks.enumerated()), id: \.offset) { index, block in
+                DraggableBlockView(
+                    block: block,
+                    cellSize: scaledCellSize(for: block),
+                    onDragStart: { location in
+                        onDragStart(block, index, location)
+                    },
+                    onDragMove: onDragMove,
+                    onDragEnd: onDragEnd
+                )
+                .frame(width: slotWidth, height: containerHeight)
             }
-        .padding(GameTheme.Layout.mediumPadding)
+        }
+        .padding(GameTheme.Layout.smallPadding)
         .background(
-            RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
+            RoundedRectangle(cornerRadius: GameTheme.Layout.buttonCornerRadius)
                 .fill(
-                    isHoveringOverOrigin ? 
-                    GameTheme.Colors.accent.opacity(0.15) : 
+                    isHoveringOverOrigin ?
+                    GameTheme.Colors.accent.opacity(0.15) :
                     GameTheme.Colors.cardBackground
                 )
                 .overlay(
-                    RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
+                    RoundedRectangle(cornerRadius: GameTheme.Layout.buttonCornerRadius)
                         .stroke(
-                            isHoveringOverOrigin ?
-                            GameTheme.Gradients.blockVisual(from: GameTheme.Colors.accent, to: GameTheme.Colors.accent) :
-                            GameTheme.Gradients.cardBorder,
-                            lineWidth: isHoveringOverOrigin ? 3 : GameTheme.Layout.strokeWidth
+                            isHoveringOverOrigin ? GameTheme.Colors.accent : Color.black,
+                            lineWidth: GameTheme.Layout.cardBorderWidth
                         )
                 )
-                .shadow(
-                    color: isHoveringOverOrigin ? 
-                    GameTheme.Colors.accent.opacity(0.4) : 
-                    GameTheme.Colors.cardShadow, 
-                    radius: isHoveringOverOrigin ? 12 : GameTheme.Layout.shadowRadius, 
-                    x: 0, 
-                    y: isHoveringOverOrigin ? 6 : GameTheme.Layout.shadowOffset
-                )
         )
-        .scaleEffect(isHoveringOverOrigin ? 1.02 : 1.0)
         .accessibilityIdentifier("block_container")
+        .accessibilityElement(children: .contain)
+        .accessibilityLabel("ax_available_blocks_format".localized(with: gameState.currentBlocks.count))
     }
     
     // Calculate optimal cell size for each block to fit in its slot
@@ -121,11 +94,10 @@ struct BlockView: View {
                 RoundedRectangle(cornerRadius: GameTheme.Layout.specialBlockCornerRadius)
                     .fill(block.color.color)
                     .frame(width: cellSize - 2, height: cellSize - 2)
-                    .shadow(color: block.color.color.opacity(0.2), radius: 2)
                 
                 // Icon overlay
                 Image(systemName: block.type.systemIconName)
-                    .foregroundColor(.white)
+                    .foregroundColor(GameTheme.Colors.buttonText)
                     .font(.system(size: cellSize * GameTheme.Layout.specialBlockIconScale, weight: .bold))
             }
         } else {
@@ -144,14 +116,13 @@ struct BlockView: View {
                 
                 // Individual leaf-like cells of the block
                 ForEach(Array(block.positions.enumerated()), id: \.offset) { index, position in
-                    RoundedRectangle(cornerRadius: 8)
+                    RoundedRectangle(cornerRadius: GameTheme.Layout.cellCornerRadius)
                         .fill(block.color.color)
                         .frame(width: cellSize - 2, height: cellSize - 2)
                         .overlay(
-                            RoundedRectangle(cornerRadius: 8)
-                                .stroke(Color(red: 0.95, green: 0.9, blue: 0.8).opacity(0.5), lineWidth: 1.5)
+                            RoundedRectangle(cornerRadius: GameTheme.Layout.cellCornerRadius)
+                                .strokeBorder(Color.black.opacity(0.3), lineWidth: 1.5)
                         )
-                        .shadow(color: block.color.color.opacity(0.3), radius: 3, x: 0, y: 2)
                         .offset(
                             x: CGFloat(position.col - bounds.minCol) * cellSize - width/2 + cellSize/2,
                             y: CGFloat(position.row - bounds.minRow) * cellSize - height/2 + cellSize/2
@@ -170,12 +141,9 @@ private struct DraggableBlockView: View {
     let onDragEnd: () -> Void
     
     @State private var isDragging: Bool = false
-    @State private var lastUpdateTime: Date = Date()
-    @State private var throttleTimer: Timer?
+    @State private var throttleTask: Task<Void, Never>?
     @State private var pendingLocation: CGPoint?
-    
-    // Performance constants from configuration
-    private let targetFPS: Double = AppConfiguration.Performance.animationFrameRate
+
     private let frameInterval: TimeInterval = AppConfiguration.Performance.dragUpdateThrottleInterval
     
     var body: some View {
@@ -187,12 +155,12 @@ private struct DraggableBlockView: View {
         .frame(width: getBlockWidth(), height: getBlockHeight())
         .contentShape(Rectangle()) // Ensure entire frame is tappable
         .accessibilityIdentifier("draggable_block")
+        .accessibilityLabel(block.accessibilityLabel)
         .gesture(
             DragGesture(minimumDistance: 5, coordinateSpace: .global)
                 .onChanged { value in
                     if !isDragging {
                         isDragging = true
-                        lastUpdateTime = Date()
                         onDragStart(value.location)
                         startThrottledUpdates()
                     } else {
@@ -207,23 +175,26 @@ private struct DraggableBlockView: View {
                 }
         )
         .onDisappear {
-            // Clean up timer if view disappears during drag
             stopThrottledUpdates()
         }
     }
     
     private func startThrottledUpdates() {
-        throttleTimer = Timer.scheduledTimer(withTimeInterval: frameInterval, repeats: true) { _ in
-            if let location = pendingLocation {
-                onDragMove(location)
-                pendingLocation = nil
+        throttleTask = Task { @MainActor in
+            while !Task.isCancelled {
+                try? await Task.sleep(for: .seconds(frameInterval))
+                guard !Task.isCancelled else { break }
+                if let location = pendingLocation {
+                    onDragMove(location)
+                    pendingLocation = nil
+                }
             }
         }
     }
-    
+
     private func stopThrottledUpdates() {
-        throttleTimer?.invalidate()
-        throttleTimer = nil
+        throttleTask?.cancel()
+        throttleTask = nil
         pendingLocation = nil
     }
     
@@ -234,4 +205,68 @@ private struct DraggableBlockView: View {
     private func getBlockHeight() -> CGFloat {
         return CGFloat(block.getBounds().height) * cellSize
     }
+}
+
+// MARK: - Previews
+
+#Preview("Block Shapes") {
+    VStack(spacing: 20) {
+        HStack(spacing: 20) {
+            BlockView(
+                block: BlockShape(positions: [
+                    GridPosition(row: 0, col: 0),
+                    GridPosition(row: 0, col: 1),
+                    GridPosition(row: 1, col: 0),
+                    GridPosition(row: 1, col: 1)
+                ], color: .green),
+                cellSize: 40
+            )
+            BlockView(
+                block: BlockShape(positions: [
+                    GridPosition(row: 0, col: 0),
+                    GridPosition(row: 0, col: 1),
+                    GridPosition(row: 0, col: 2)
+                ], color: .blue),
+                cellSize: 40
+            )
+            BlockView(
+                block: BlockShape(positions: [
+                    GridPosition(row: 0, col: 0),
+                    GridPosition(row: 1, col: 0),
+                    GridPosition(row: 1, col: 1)
+                ], color: .orange),
+                cellSize: 40
+            )
+        }
+        HStack(spacing: 20) {
+            BlockView(
+                block: BlockShape(positions: [GridPosition(row: 0, col: 0)], color: .red, type: .horizontalClear),
+                cellSize: 40
+            )
+            BlockView(
+                block: BlockShape(positions: [GridPosition(row: 0, col: 0)], color: .blue, type: .verticalClear),
+                cellSize: 40
+            )
+            BlockView(
+                block: BlockShape(positions: [GridPosition(row: 0, col: 0)], color: .purple, type: .areaClear),
+                cellSize: 40
+            )
+        }
+    }
+    .padding()
+}
+
+#Preview("Current Blocks") {
+    CurrentBlocksView(
+        gameState: GameState(),
+        cellSize: 40,
+        draggedBlock: nil,
+        isDragging: false,
+        draggedBlockIndex: nil,
+        isHoveringOverOrigin: false,
+        onDragStart: { _, _, _ in },
+        onDragMove: { _ in },
+        onDragEnd: {}
+    )
+    .padding()
 }

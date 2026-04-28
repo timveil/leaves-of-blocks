@@ -26,101 +26,18 @@ extension View {
     }
     
     // MARK: - Card Style Modifiers
-    
-    /// Applies standard game card styling with customizable parameters
-    func gameCardStyle(
+
+    /// Applies the standard folk-art card border: clipped rounded rectangle with black stroke
+    func folkArtCard(
         cornerRadius: CGFloat = GameTheme.Layout.cardCornerRadius,
-        borderColor: Color = GameTheme.Colors.gridBorder,
-        borderWidth: CGFloat = 1,
-        shadowRadius: CGFloat = GameTheme.Layout.shadowRadius,
-        shadowOffset: CGFloat = GameTheme.Layout.shadowOffset
+        borderColor: Color = .black,
+        borderWidth: CGFloat = GameTheme.Layout.cardBorderWidth
     ) -> some View {
         self
-            .background(
+            .clipShape(RoundedRectangle(cornerRadius: cornerRadius))
+            .overlay(
                 RoundedRectangle(cornerRadius: cornerRadius)
-                    .fill(GameTheme.Colors.cardBackground)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: cornerRadius)
-                            .stroke(borderColor, lineWidth: borderWidth)
-                    )
-                    .shadow(
-                        color: GameTheme.Colors.cardShadow,
-                        radius: shadowRadius,
-                        x: 0,
-                        y: shadowOffset
-                    )
-            )
-    }
-    
-    /// Applies button card styling with conditional selection state
-    func gameButtonCardStyle(
-        isSelected: Bool = false,
-        cornerRadius: CGFloat = GameTheme.Layout.buttonCornerRadius,
-        selectedColor: Color = GameTheme.Colors.accent,
-        unselectedColor: Color = GameTheme.Colors.containerBackground
-    ) -> some View {
-        self
-            .background(
-                RoundedRectangle(cornerRadius: cornerRadius)
-                    .fill(isSelected ? selectedColor.opacity(0.2) : unselectedColor)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: cornerRadius)
-                            .stroke(
-                                isSelected ? selectedColor : GameTheme.Colors.gridBorder.opacity(0.3),
-                                lineWidth: isSelected ? 2 : 1
-                            )
-                    )
-                    .shadow(
-                        color: GameTheme.Colors.cardShadow.opacity(isSelected ? 0.3 : 0.1),
-                        radius: isSelected ? 8 : 4,
-                        x: 0,
-                        y: isSelected ? 4 : 2
-                    )
-            )
-    }
-    
-    /// Applies 3D elevated card styling for prominent elements
-    func game3DCardStyle(
-        cornerRadius: CGFloat = GameTheme.Layout.cardCornerRadius,
-        elevation: CGFloat = 8
-    ) -> some View {
-        self
-            .background(
-                RoundedRectangle(cornerRadius: cornerRadius)
-                    .fill(GameTheme.Colors.cardBackground)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: cornerRadius)
-                            .stroke(
-                                GameTheme.Gradients.cardBorder,
-                                lineWidth: 2
-                            )
-                    )
-                    .shadow(color: .black.opacity(0.08), radius: elevation * 0.4, x: 0, y: elevation * 0.3)
-            )
-    }
-    
-    /// Applies gradient card styling
-    func gameGradientCardStyle(
-        cornerRadius: CGFloat = GameTheme.Layout.cardCornerRadius,
-        gradient: LinearGradient? = nil,
-        borderWidth: CGFloat = 2
-    ) -> some View {
-        let defaultGradient = GameTheme.Gradients.cardBorder
-        
-        return self
-            .background(
-                RoundedRectangle(cornerRadius: cornerRadius)
-                    .fill(GameTheme.Colors.cardBackground)
-                    .overlay(
-                        RoundedRectangle(cornerRadius: cornerRadius)
-                            .stroke(gradient ?? defaultGradient, lineWidth: borderWidth)
-                    )
-                    .shadow(
-                        color: GameTheme.Colors.cardShadow,
-                        radius: GameTheme.Layout.shadowRadius,
-                        x: 0,
-                        y: GameTheme.Layout.shadowOffset
-                    )
+                    .stroke(borderColor, lineWidth: borderWidth)
             )
     }
     
@@ -180,23 +97,8 @@ extension View {
             .foregroundColor(color)
     }
     
-    /// Applies headline text styling
-    func sectionTextStyle(color: Color = GameTheme.Colors.primaryText) -> some View {
-        self
-            .font(GameTheme.Typography.body)
-            .foregroundColor(color)
-    }
-    
-    
-    /// Applies headline text styling
-    func gameHeadlineStyle(color: Color = GameTheme.Colors.primaryText) -> some View {
-        self
-            .font(GameTheme.Typography.headline)
-            .foregroundColor(color)
-    }
-    
     /// Applies body text styling
-    func gameBodyStyle(color: Color = GameTheme.Colors.primaryText) -> some View {
+    func sectionTextStyle(color: Color = GameTheme.Colors.primaryText) -> some View {
         self
             .font(GameTheme.Typography.body)
             .foregroundColor(color)
@@ -248,10 +150,10 @@ extension View {
             )
     }
     
-    /// Applies table header styling with uneven rounded corners
+    /// Applies table header styling with gold background and black border
     func gameTableHeaderStyle(
-        backgroundColor: Color = GameTheme.Colors.accent.opacity(0.1),
-        borderColor: Color = GameTheme.Colors.accent.opacity(0.3)
+        backgroundColor: Color = GameTheme.Colors.accent,
+        borderColor: Color = Color.black
     ) -> some View {
         self
             .background(
@@ -262,29 +164,26 @@ extension View {
                     topTrailingRadius: GameTheme.Layout.cardCornerRadius
                 )
                 .fill(backgroundColor)
-                .overlay(
-                    UnevenRoundedRectangle(
-                        topLeadingRadius: GameTheme.Layout.cardCornerRadius,
-                        bottomLeadingRadius: 0,
-                        bottomTrailingRadius: 0,
-                        topTrailingRadius: GameTheme.Layout.cardCornerRadius
-                    )
-                    .stroke(borderColor, lineWidth: 1)
-                )
+            )
+            .overlay(
+                Rectangle()
+                    .frame(height: GameTheme.Layout.dividerHeight)
+                    .foregroundColor(borderColor),
+                alignment: .bottom
             )
     }
-    
+
     /// Applies table row styling for middle rows (no rounded corners)
     func gameTableRowStyle(
-        backgroundColor: Color = GameTheme.Colors.cardBackground
+        backgroundColor: Color = Color.white
     ) -> some View {
         self
             .background(backgroundColor)
     }
-    
+
     /// Applies table footer styling with bottom rounded corners
     func gameTableFooterStyle(
-        backgroundColor: Color = GameTheme.Colors.cardBackground
+        backgroundColor: Color = Color.white
     ) -> some View {
         self
             .background(

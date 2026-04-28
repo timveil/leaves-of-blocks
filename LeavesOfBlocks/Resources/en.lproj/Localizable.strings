@@ -17,8 +17,17 @@
 "about_the_game" = "About the Game";
 "settings" = "Settings";
 "select_difficulty" = "Select Difficulty";
+"ready_to_play" = "The Powerful Play";
 "start_game" = "Start Game";
 "new_game" = "New Game";
+
+// MARK: - Menu Labels
+"menu_title" = "Menu";
+"home" = "Home";
+"new_game_menu" = "New Game";
+"how_to_play_menu" = "How To";
+"about_menu" = "About";
+"settings_menu" = "Settings";
 
 // MARK: - Game UI
 "score" = "Score";
@@ -44,6 +53,7 @@
 "game_summary" = "Game Summary";
 "past_game_summary" = "Past Game Summary";
 "best_score" = "Best Score";
+"past_games" = "Past Games";
 
 // MARK: - Efficiency Metrics
 "efficiency" = "Efficiency";
@@ -56,7 +66,7 @@
 "settings_author" = "Walt Whitman";
 "settings_title" = "A Clear Midnight";
 "settings_year" = "1880";
-"clear_game_history" = "Clear Game History";
+"clear_game_history" = "Clear History";
 "reset_all_data" = "Reset All Data";
 "clear_history_warning" = "This will permanently delete all your saved games and statistics. This action cannot be undone.";
 "reset_data_warning" = "This will permanently delete ALL game data including history, high scores, and preferences. This action cannot be undone.";
@@ -108,31 +118,40 @@
 "tip_save_small_blocks" = "Save smaller blocks for tight spaces and finishing moves";
 "tip_efficiency_matters" = "Your efficiency grade improves with organized, strategic play";
 
-// MARK: - Scoring Table
+// MARK: - Table Headers
+"scoring_header" = "Scoring";
+"difficulty_header" = "Difficulty";
+"shapes_header" = "Block Shapes";
+"points_suffix" = "pts";
 "points" = "Points";
 "description" = "Description";
 "mode" = "Mode";
 "shape" = "Shape";
 
 // MARK: - Scoring Descriptions
-"scoring_blocks_placed" = "Placing blocks on the grid";
-"scoring_clear_lines" = "Clearing complete lines";
-"scoring_combo_bonus" = "Combo bonus for each additional line";
+"scoring_blocks_placed" = "Points earned for each block placed on the grid";
+"scoring_clear_lines" = "Points earned for each complete line cleared";
+"scoring_combo_bonus" = "Bonus points for each additional line cleared simultaneously";
+
+// MARK: - Difficulty Names
+"difficulty_gentle" = "Gentle";
+"difficulty_bold" = "Bold";
+"difficulty_wild" = "Wild";
 
 // MARK: - Difficulty Descriptions
-"difficulty_easy_desc" = "Perfect for beginners - you'll get more small, manageable blocks that are easier to place";
-"difficulty_moderate_desc" = "A balanced challenge with a good mix of small and large blocks for engaging gameplay";
-"difficulty_hard_desc" = "For experienced players - expect more large, complex blocks that require strategic thinking";
+"difficulty_easy_desc" = "Gentle mode is perfect for beginners — more small, manageable blocks that are easier to place";
+"difficulty_moderate_desc" = "Bold mode offers a balanced challenge with a good mix of small and large blocks";
+"difficulty_hard_desc" = "Wild mode is for experienced players — expect more large, complex blocks that require strategic thinking";
 
 // MARK: - Shape Descriptions
 "shape_normal_blocks" = "Normal\nBlocks";
 "shape_row_clear" = "Row Clear";
 "shape_column_clear" = "Column Clear";
 "shape_area_clear" = "Area Clear";
-"shape_normal_desc" = "These are your main building blocks! They come in many shapes and sizes (1-9 squares each). Use them to fill rows and columns, then watch them disappear when complete.";
-"shape_horizontal_desc" = "A powerful red block that instantly clears an entire horizontal row when placed, regardless of what's in that row. Great for breaking through difficult situations!";
-"shape_vertical_desc" = "A powerful blue block that instantly clears an entire vertical column when placed, regardless of what's in that column. Perfect for creating space!";
-"shape_area_desc" = "The ultimate power block! This purple block clears a large 3×3 area around wherever you place it. Use wisely for maximum impact and points!";
+"shape_normal_desc" = "Normal blocks are your main building pieces. They come in many shapes and sizes (1–9 squares each). Fill rows and columns to clear them.";
+"shape_horizontal_desc" = "Row Clear is a powerful red block that instantly clears an entire horizontal row when placed. Great for breaking through tight spots.";
+"shape_vertical_desc" = "Column Clear is a powerful blue block that instantly clears an entire vertical column when placed. Perfect for creating space.";
+"shape_area_desc" = "Area Clear is the ultimate power block. This purple block clears a 3×3 area around wherever you place it. Use wisely for maximum impact.";
 
 // MARK: - About Page
 "about_game_description" = "A block puzzle game inspired by Walt Whitman's poetry and a love of ad-free gameplay. Place blocks thoughtfully, clear lines strategically, and find meaning in simple moments of focus.";
@@ -201,3 +220,22 @@
 "three_line_combo_button" = "3-Line Combo (+100)";
 "five_line_combo_button" = "5-Line Mega Combo (+200)";
 "show_all_combos" = "Show All Combos";
+
+// MARK: - Accessibility
+"ax_difficulty_slider" = "Difficulty";
+"ax_difficulty_hint" = "Swipe up or down to change difficulty";
+"ax_block_format" = "%d-cell %@ block";
+"ax_row_clear_block" = "Row clear power-up";
+"ax_column_clear_block" = "Column clear power-up";
+"ax_area_clear_block" = "Area clear power-up";
+"ax_available_blocks_format" = "%d blocks available";
+"ax_score_format" = "Score %@, %@ lines cleared";
+"ax_combo_format" = "%@, %d lines cleared, %d bonus points";
+"ax_game_grid" = "Game grid, 8 by 8";
+"ax_color_blue" = "blue";
+"ax_color_green" = "green";
+"ax_color_red" = "red";
+"ax_color_yellow" = "yellow";
+"ax_color_purple" = "purple";
+"ax_color_orange" = "orange";
+"ax_color_pink" = "pink";

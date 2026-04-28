@@ -32,16 +32,24 @@ extension GameTheme {
         static let buttonCornerRadius: CGFloat = 16
         static let overlayCornerRadius: CGFloat = 28
         
-        // Stroke
+        // Stroke and Borders
         static let strokeWidth: CGFloat = 3
+        static let cardBorderWidth: CGFloat = 2.5
+        static let dividerHeight: CGFloat = 2.5
         
         // Shadows
         static let shadowRadius: CGFloat = 12
         static let shadowOffset: CGFloat = 6
         static let shadowOffsetSize = CGSize(width: 0, height: 6)
         
+        // Cell Styling
+        static let cellCornerRadius: CGFloat = 3
+        static let gridLineWidth: CGFloat = 2
+        static let gridCornerRadius: CGFloat = 0
+        static let gridBorderWidth: CGFloat = 3
+
         // Special Block Styling
-        static let specialBlockCornerRadius: CGFloat = 12
+        static let specialBlockCornerRadius: CGFloat = 6
         static let specialBlockIconScale: CGFloat = 0.5
         
         // Opacity Constants for UI Elements

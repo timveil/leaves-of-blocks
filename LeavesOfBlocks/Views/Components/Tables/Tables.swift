@@ -152,7 +152,7 @@ struct DifficultyTable: View {
                         .font(GameTheme.Typography.body)
                         .foregroundColor(level.difficulty.color)
                     
-                    Text(level.difficulty.rawValue)
+                    Text(level.difficulty.displayName)
                         .font(GameTheme.Typography.body)
                         .fontWeight(.medium)
                         .foregroundColor(GameTheme.Colors.primaryText)
@@ -242,7 +242,8 @@ struct KeyValueTable: View {
                     )
                 }
             }
-            .gameCardStyle()
+            .background(GameTheme.Colors.cardBackground)
+            .folkArtCard()
         }
     }
 }
@@ -319,5 +320,19 @@ struct SummaryStatsTable: View {
         let seconds = Int(timeInterval) % 60
         return String(format: "%d:%02d", minutes, seconds)
     }
+}
+
+// MARK: - Previews
+
+#Preview("Key Value Table") {
+    KeyValueTable(
+        title: "Game Stats",
+        items: [
+            .init(key: "Score", value: "1,250", icon: "star.fill"),
+            .init(key: "Lines", value: "7", icon: "square.grid.3x3.fill"),
+            .init(key: "Time", value: "3:05", icon: "clock.fill"),
+        ]
+    )
+    .padding()
 }
 

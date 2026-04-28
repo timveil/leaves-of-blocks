@@ -1,4 +1,5 @@
 import SwiftUI
+import SpriteKit
 
 // MARK: - Main Game Board
 
@@ -7,19 +8,23 @@ struct BoardView: View {
     @State private var dragState: DragState = DragState()
     @State private var gridFrame: CGRect = .zero
     @State private var blockSlotsFrame: CGRect = .zero
+    @State private var viewBounds: CGRect = .zero
+
+    /// Bridge for SpriteKit scene communication
+    @State private var sceneBridge: GameSceneBridge?
     
     // MARK: - Configuration
     private struct DragConfiguration {
-        static let offsetAboveFinger: CGFloat = 80
+        static let offsetAboveFinger: CGFloat = 40
         static let offScreenMargin: CGFloat = 100
         static let hoverTolerance: CGFloat = 15
         static let maxSnapDistance: CGFloat = 300
     }
     
     private struct GridConstants {
-        static let cellSpacing: CGFloat = 3
-        static let gridPadding: CGFloat = 16 // GameTheme.Layout.mediumPadding
-        
+        static let cellSpacing: CGFloat = GameTheme.Layout.gridLineWidth
+        static let gridPadding: CGFloat = GameTheme.Layout.gridBorderWidth
+
         static func cellWithSpacing(cellSize: CGFloat) -> CGFloat {
             return cellSize + cellSpacing
         }
@@ -58,7 +63,9 @@ struct BoardView: View {
     var body: some View {
         BaseScreenView(showsStatusBar: false) {
             ZStack {
-                VStack(spacing: GameTheme.Layout.smallSpacing) {
+                VStack(spacing: 44) {
+                    Spacer(minLength: 0)
+
                     // Score Row
                     HStack {
                         Spacer()
@@ -66,30 +73,21 @@ struct BoardView: View {
                             .frame(width: gameWidth)
                         Spacer()
                     }
-                    
-                    // Grid Row  
+
+                    // Grid Row
                     HStack {
                         Spacer()
-                        GameGridView(
-                        gameState: gameState,
-                        cellSize: cellSize,
-                        draggedBlock: dragState.draggedBlock,
-                        previewPosition: dragState.previewPosition,
-                        onGridFrameChange: { frame in
-                            gridFrame = frame
+                        if let bridge = sceneBridge {
+                            SpriteKitGameView(bridge: bridge)
+                                .frame(width: gameWidth, height: gameWidth)
+                                .onGeometryChange(for: CGRect.self) { proxy in
+                                    proxy.frame(in: .global)
+                                } action: { newValue in
+                                    gridFrame = newValue
+                                }
                         }
-                        )
-                        .frame(width: gameWidth)
                         Spacer()
                     }
-                    
-                    // Game Stats Row
-                    GameStatsRowView(
-                        gameState: gameState,
-                        gameWidth: gameWidth
-                    )
-                    
-                    Spacer().frame(maxHeight: 30)
                     
                     // Holding Area Row
                     HStack {
@@ -112,13 +110,11 @@ struct BoardView: View {
                         }
                         )
                         .frame(width: gameWidth)
-                        .background(
-                            GeometryReader { geo in
-                                Color.clear.onAppear {
-                                    blockSlotsFrame = geo.frame(in: .global)
-                                }
-                            }
-                        )
+                        .onGeometryChange(for: CGRect.self) { proxy in
+                            proxy.frame(in: .global)
+                        } action: { newValue in
+                            blockSlotsFrame = newValue
+                        }
                         Spacer()
                     }
                     
@@ -126,6 +122,11 @@ struct BoardView: View {
                 }
                 .zIndex(10) // Game elements above grass
                 .padding(.horizontal, GameTheme.Layout.largePadding)
+                .onAppear {
+                    if sceneBridge == nil {
+                        sceneBridge = GameSceneBridge(gameState: gameState, cellSize: cellSize)
+                    }
+                }
             
             // Combo Notification Overlay - appears above game elements but below game over
             ComboNotificationOverlay(gameState: gameState)
@@ -134,8 +135,7 @@ struct BoardView: View {
             // Game Over Overlay - highest priority, appears above everything
             if gameState.isGameOver {
                 ZStack {
-                    // Semi-transparent background to dim the game
-                    Color.black.opacity(0.8)
+                    Color.black.opacity(0.7)
                         .ignoresSafeArea()
                     
                     VStack {
@@ -155,8 +155,7 @@ struct BoardView: View {
             // Save Game Overlay - appears when user tries to navigate away from active game
             if gameState.showSaveGameOverlay {
                 ZStack {
-                    // Semi-transparent background to dim the game
-                    Color.black.opacity(0.8)
+                    Color.black.opacity(0.7)
                         .ignoresSafeArea()
                     
                     VStack {
@@ -183,13 +182,17 @@ struct BoardView: View {
                 .position(getDraggedBlockVisualCenter())
                 .allowsHitTesting(false)
                 .zIndex(1000)
-                .scaleEffect(1.1) // Slightly larger during drag for better visibility
-                .shadow(color: .black.opacity(0.2), radius: 4, x: 0, y: 2)
+                .scaleEffect(1.1)
             }
         }
     }
+    .onGeometryChange(for: CGRect.self) { proxy in
+        proxy.frame(in: .global)
+    } action: { newValue in
+        viewBounds = newValue
     }
-    
+    }
+
     // MARK: - Drag Lifecycle Methods
     
     private func handleDragStart(block: BlockShape, index: Int, fingerLocation: CGPoint) {
@@ -202,30 +205,57 @@ struct BoardView: View {
     
     private func handleDragMove(fingerLocation: CGPoint) {
         dragState.dragLocation = fingerLocation
-        
+
         let blockVisualCenter = getDraggedBlockVisualCenter()
         dragState.isHoveringOverOrigin = isBlockOverHoldingArea(visualCenter: blockVisualCenter)
-        
+
         updateDragPreview(blockVisualCenter: blockVisualCenter)
+
+        // Forward preview state to SpriteKit bridge
+        sceneBridge?.updatePreview(block: dragState.draggedBlock, position: dragState.previewPosition)
     }
     
     private func handleDragEnd() {
-        defer { dragState.reset() }
-        
+        defer {
+            dragState.reset()
+            sceneBridge?.clearPreview()
+        }
+
         guard let block = dragState.draggedBlock else { return }
-        
+
         let blockVisualCenter = getDraggedBlockVisualCenter()
-        
+
         // Check cancellation conditions
         if isLocationOffScreen(blockVisualCenter) {
             gameState.blockReturnFeedback()
             return
         }
-        
+
         // Try to place the block
         if let position = dragState.previewPosition,
            gameState.canPlaceBlock(block, at: position) {
+            // Capture pre-placement line counts to detect clears
+            let linesBefore = gameState.linesCleared
+
             gameState.placeBlock(block, at: position)
+
+            // Trigger SpriteKit visual effects
+            sceneBridge?.triggerBlockPlacementEffect(block: block, at: position)
+
+            // Detect lines cleared during this placement
+            if gameState.linesCleared > linesBefore {
+                // Single-pass: count cells per row and per column
+                var rowCounts: [Int: Int] = [:]
+                var colCounts: [Int: Int] = [:]
+                for cell in gameState.lastClearedCells {
+                    rowCounts[cell.row, default: 0] += 1
+                    colCounts[cell.col, default: 0] += 1
+                }
+                let gridSize = GameTheme.GameConfig.gridSize
+                let confirmedRows = Set(rowCounts.filter { $0.value >= gridSize }.keys)
+                let confirmedCols = Set(colCounts.filter { $0.value >= gridSize }.keys)
+                sceneBridge?.triggerLineClearEffect(clearedRows: confirmedRows, clearedCols: confirmedCols)
+            }
         } else {
             gameState.blockReturnFeedback()
         }
@@ -241,13 +271,12 @@ struct BoardView: View {
     }
     
     private func isLocationOffScreen(_ location: CGPoint) -> Bool {
-        let screenBounds = UIScreen.main.bounds
         let margin = DragConfiguration.offScreenMargin
-        
-        return location.x < -margin ||
-               location.x > screenBounds.width + margin ||
-               location.y < -margin ||
-               location.y > screenBounds.height + margin
+
+        return location.x < viewBounds.minX - margin ||
+               location.x > viewBounds.maxX + margin ||
+               location.y < viewBounds.minY - margin ||
+               location.y > viewBounds.maxY + margin
     }
     
     private func isBlockOverHoldingArea(visualCenter: CGPoint) -> Bool {

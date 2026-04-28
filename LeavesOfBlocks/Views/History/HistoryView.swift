@@ -5,13 +5,12 @@ struct HistoryView: View {
     let onSelectSession: (GameSession) -> Void
     @State private var gameHistory: [GameSession] = []
     @State private var statistics = GameStatistics(totalGames: 0, totalScore: 0, averageScore: 0, totalBlocksPlaced: 0, highScore: 0)
-    
+
     private func loadGameHistory() {
         let records = CoreDataManager.shared.fetchGameHistory()
-        
+
         var sessions: [GameSession] = []
-        
-        // Add current session if there's a score and game is not over
+
         if gameState.score > 0 && !gameState.isGameOver {
             sessions.append(GameSession(
                 date: Date(),
@@ -20,7 +19,7 @@ struct HistoryView: View {
                 linesCleared: gameState.linesCleared,
                 difficulty: gameState.currentDifficulty,
                 gameTime: gameState.currentGameTime,
-                averageGridEfficiency: nil, // Current session metrics not yet finalized
+                averageGridEfficiency: nil,
                 averageFragmentation: nil,
                 strategicPlayRating: nil,
                 challengeMaintained: nil,
@@ -30,8 +29,7 @@ struct HistoryView: View {
                 tierUsageDistribution: nil
             ))
         }
-        
-        // Add Core Data records
+
         for record in records {
             if let date = record.date,
                let difficultyString = record.difficulty,
@@ -54,43 +52,83 @@ struct HistoryView: View {
                 ))
             }
         }
-        
+
         gameHistory = sessions.sorted { $0.date > $1.date }
         statistics = CoreDataManager.shared.calculateStatistics()
     }
-    
+
+    private var totalGames: Int {
+        gameHistory.count
+    }
+
+    private var averageScore: Int {
+        guard totalGames > 0 else { return 0 }
+        return gameHistory.reduce(0) { $0 + $1.score } / totalGames
+    }
+
+    private var totalBlocksPlaced: Int {
+        gameHistory.reduce(0) { $0 + $1.blocksPlaced }
+    }
+
     var body: some View {
         BaseScreenView {
-            VStack(spacing: GameTheme.Layout.mediumSpacing) {
-                // Header
-                Text("game_history".localized)
-                    .pageTitleStyle()
-                    .padding(.top, GameTheme.Layout.mediumPadding)
-                
-                // Statistics Summary
-                StatsSummaryView(gameHistory: gameHistory, highScore: statistics.highScore)
-                
-                // History List
-                ScrollView {
-                    LazyVStack(spacing: GameTheme.Layout.mediumSpacing) {
-                        ForEach(gameHistory.indices, id: \.self) { index in
-                            Button(action: {
-                                onSelectSession(gameHistory[index])
-                            }) {
-                                GameSessionRow(
-                                    session: gameHistory[index],
-                                    isHighScore: gameHistory[index].score == statistics.highScore
-                                )
-                            }
-                            .buttonStyle(PlainButtonStyle())
-                            .accessibilityIdentifier("game_history_button_\(index)")
+            ScrollView {
+                VStack(spacing: GameTheme.Layout.mediumPadding) {
+                    HistoryStatCard(
+                        title: "high_score".localized,
+                        value: statistics.highScore.abbreviatedScore
+                    )
+                    HistoryStatCard(
+                        title: "games_played".localized,
+                        value: totalGames.abbreviatedScore
+                    )
+                    HistoryStatCard(
+                        title: "average_score".localized,
+                        value: averageScore.abbreviatedScore
+                    )
+                    HistoryStatCard(
+                        title: "total_blocks".localized,
+                        value: totalBlocksPlaced.abbreviatedScore
+                    )
+
+                    // Section divider
+                    Text("past_games".localized)
+                        .font(GameTheme.Typography.title)
+                        .foregroundColor(GameTheme.Colors.buttonText)
+                        .frame(maxWidth: .infinity)
+                        .padding(.vertical, GameTheme.Layout.mediumPadding)
+                        .background(GameTheme.Colors.accent)
+                        .folkArtCard()
+
+                    ForEach(gameHistory.indices, id: \.self) { index in
+                        Button(action: {
+                            onSelectSession(gameHistory[index])
+                        }) {
+                            GameSessionRow(
+                                session: gameHistory[index],
+                                isHighScore: gameHistory[index].score == statistics.highScore
+                            )
                         }
+                        .buttonStyle(PlainButtonStyle())
+                        .accessibilityIdentifier("game_history_button_\(index)")
                     }
-                    .padding(.horizontal, GameTheme.Layout.largePadding)
-                    .padding(.bottom, GameTheme.Layout.extraLargePadding)
                 }
-                .padding(.bottom, 80) // Add bottom padding to prevent covering grass
+                .padding(.horizontal, GameTheme.Layout.largePadding)
+                .padding(.vertical, GameTheme.Layout.mediumPadding)
+                .padding(.bottom, 120)
             }
+            .scrollIndicators(.hidden)
+            .mask(
+                VStack(spacing: 0) {
+                    Color.black
+                    LinearGradient(
+                        colors: [.black, .clear],
+                        startPoint: .top,
+                        endPoint: .bottom
+                    )
+                    .frame(height: 160)
+                }
+            )
         }
         .onAppear {
             loadGameHistory()
@@ -102,60 +140,28 @@ struct HistoryView: View {
 }
 
 /// Represents a completed game session with all relevant statistics.
-///
-/// `GameSession` captures the key metrics from a finished game, providing
-/// a comprehensive snapshot for historical analysis and display.
-///
-/// ## Usage
-/// Used in game history displays, high score tracking, and session comparisons.
-/// Created automatically when games end or loaded from Core Data persistence.
 struct GameSession: Equatable {
-    /// When the game session was completed
     let date: Date
-    /// Final score achieved in the session
     let score: Int
-    /// Total number of blocks successfully placed
     let blocksPlaced: Int
-    /// Total number of lines cleared during the session
     let linesCleared: Int
-    /// Difficulty level used for the session
     let difficulty: DifficultyMode
-    /// Total time spent playing the session
     let gameTime: TimeInterval
-    
-    // New efficiency metrics
-    /// Average grid efficiency throughout the game (0.0 to 1.0)
     let averageGridEfficiency: Double?
-    /// Average grid fragmentation throughout the game (0.0 to 1.0)
     let averageFragmentation: Double?
-    /// Strategic play rating (0.0 to 1.0)
     let strategicPlayRating: Double?
-    /// Percentage of game spent in higher challenge tiers (0.0 to 1.0)
     let challengeMaintained: Double?
-    /// Number of times fallback system activated
     let fallbackActivations: Int?
-    /// Letter grade for efficiency (A+, A, B+, etc.)
     let efficiencyGrade: String?
-    /// Descriptive grade for strategic play (Master, Expert, etc.)
     let strategicGrade: String?
-    /// JSON string of tier usage distribution
     let tierUsageDistribution: String?
-    
-    /// Formats the game time as MM:SS for display.
-    ///
-    /// - Returns: A string in "M:SS" or "MM:SS" format (e.g., "3:45", "12:30")
+
     var formattedGameTime: String {
         let minutes = Int(gameTime) / 60
         let seconds = Int(gameTime) % 60
         return String(format: "%d:%02d", minutes, seconds)
     }
-    
-    /// Formats the session date for user-friendly display.
-    ///
-    /// Uses medium date style and short time style for optimal readability
-    /// while conserving display space in history lists.
-    ///
-    /// - Returns: A formatted date string (e.g., "Jan 15, 2025 at 3:30 PM")
+
     var formattedDate: String {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
@@ -167,7 +173,7 @@ struct GameSession: Equatable {
 #Preview {
     struct PreviewWrapper: View {
         @State private var hasLoadedData = false
-        
+
         var body: some View {
             HistoryView(
                 gameState: GameState(),
@@ -176,8 +182,7 @@ struct GameSession: Equatable {
             .onAppear {
                 guard !hasLoadedData else { return }
                 hasLoadedData = true
-                
-                // Add mock data to CoreData for preview
+
                 let sessions = [
                     (score: 2450, blocks: 45, lines: 12, difficulty: DifficultyMode.hard, combo: 3, time: 180.0, daysAgo: 0),
                     (score: 1890, blocks: 38, lines: 8, difficulty: DifficultyMode.moderate, combo: 2, time: 150.0, daysAgo: 1),
@@ -185,9 +190,8 @@ struct GameSession: Equatable {
                     (score: 1240, blocks: 28, lines: 6, difficulty: DifficultyMode.easy, combo: 1, time: 120.0, daysAgo: 3),
                     (score: 2780, blocks: 41, lines: 11, difficulty: DifficultyMode.moderate, combo: 3, time: 165.0, daysAgo: 5)
                 ]
-                
+
                 for session in sessions {
-                    // Create mock session metrics for preview
                     let mockMetrics = PlayerBehaviorTracker.SessionMetrics(
                         score: session.score,
                         blocksPlaced: session.blocks,
@@ -202,7 +206,7 @@ struct GameSession: Equatable {
                         fallbackActivations: Int.random(in: 0...3),
                         challengeMaintained: Double.random(in: 0.3...0.8)
                     )
-                    
+
                     CoreDataManager.shared.saveGameRecord(
                         score: session.score,
                         difficulty: session.difficulty,
@@ -216,6 +220,6 @@ struct GameSession: Equatable {
             }
         }
     }
-    
+
     return PreviewWrapper()
 }
