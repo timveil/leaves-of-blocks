@@ -20,31 +20,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Improve app store discoverability with enhanced Games category metadata
-### Added
-
-### Changed
-
-### Fixed
 
 ## [1.0.9] - 2025-11-27
 
 ### Fixed
 - Include build number increment in release commit
-### Added
-
-### Changed
-
-### Fixed
 
 ## [1.0.8] - 2025-11-27
 
 ### Added
 - Add automated changelog and conventional commit enforcement
-### Added
-
-### Changed
-
-### Fixed
 
 ## [1.0.7] - 2025-11-27
 

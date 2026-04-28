@@ -7,30 +7,13 @@ struct HistoryStatCard: View {
     let value: String
 
     var body: some View {
-        VStack(spacing: 0) {
-            Text(title)
-                .font(GameTheme.Typography.title)
-                .foregroundColor(GameTheme.Colors.buttonText)
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, GameTheme.Layout.mediumPadding)
-                .background(GameTheme.Colors.accent)
-                .overlay(
-                    Rectangle()
-                        .frame(height: GameTheme.Layout.dividerHeight)
-                        .foregroundColor(.black),
-                    alignment: .bottom
-                )
-
+        GoldHeaderCard(title: title) {
             Text(value)
                 .font(GameTheme.Typography.display)
                 .foregroundColor(GameTheme.Colors.primaryText)
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, GameTheme.Layout.largePadding)
-                .background(Color.white)
         }
-        .folkArtCard()
     }
 }
 
@@ -42,14 +25,7 @@ struct GameSessionRow: View {
 
     var body: some View {
         VStack(spacing: GameTheme.Layout.mediumSpacing) {
-            HStack(spacing: 6) {
-                ForEach(0..<session.difficulty.acornCount, id: \.self) { _ in
-                    Image("AcornIcon")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(height: 40)
-                }
-            }
+            AcornCountView(count: session.difficulty.acornCount, height: 40)
 
             Text(session.score.abbreviatedScore)
                 .font(GameTheme.Typography.display)

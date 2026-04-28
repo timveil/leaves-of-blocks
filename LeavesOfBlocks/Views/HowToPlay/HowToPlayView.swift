@@ -59,8 +59,7 @@ struct HowToPlayView: View {
                         ScoringTableRowView(
                             points: "+50",
                             description: "scoring_combo_bonus".localized,
-                            color: GameTheme.Colors.blockOrange,
-                            isLast: true
+                            color: GameTheme.Colors.blockOrange
                         )
                     }
                     .folkArtCard()
@@ -79,8 +78,7 @@ struct HowToPlayView: View {
                         )
                         DifficultyTableRowView(
                             mode: .hard,
-                            description: "difficulty_hard_desc".localized,
-                            isLast: true
+                            description: "difficulty_hard_desc".localized
                         )
                     }
                     .folkArtCard()
@@ -103,8 +101,7 @@ struct HowToPlayView: View {
                         )
                         ShapesTableRowView(
                             shapeType: .areaClear,
-                            description: "shape_area_desc".localized,
-                            isLast: true
+                            description: "shape_area_desc".localized
                         )
                     }
                     .folkArtCard()
@@ -114,17 +111,7 @@ struct HowToPlayView: View {
                 .padding(.bottom, 120)
             }
             .scrollIndicators(.hidden)
-            .mask(
-                VStack(spacing: 0) {
-                    Color.black
-                    LinearGradient(
-                        colors: [.black, .clear],
-                        startPoint: .top,
-                        endPoint: .bottom
-                    )
-                    .frame(height: 160)
-                }
-            )
+            .scrollFadeMask()
         }
     }
 

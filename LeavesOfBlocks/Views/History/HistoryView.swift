@@ -4,7 +4,7 @@ struct HistoryView: View {
     var gameState: GameState
     let onSelectSession: (GameSession) -> Void
     @State private var gameHistory: [GameSession] = []
-    @State private var statistics = GameStatistics(totalGames: 0, totalScore: 0, averageScore: 0, totalBlocksPlaced: 0, highScore: 0)
+    @State private var statistics = GameHistoryStatistics(totalGames: 0, totalScore: 0, averageScore: 0, totalBlocksPlaced: 0, highScore: 0)
 
     private func loadGameHistory() {
         let records = CoreDataManager.shared.fetchGameHistory()
@@ -118,17 +118,7 @@ struct HistoryView: View {
                 .padding(.bottom, 120)
             }
             .scrollIndicators(.hidden)
-            .mask(
-                VStack(spacing: 0) {
-                    Color.black
-                    LinearGradient(
-                        colors: [.black, .clear],
-                        startPoint: .top,
-                        endPoint: .bottom
-                    )
-                    .frame(height: 160)
-                }
-            )
+            .scrollFadeMask()
         }
         .onAppear {
             loadGameHistory()
@@ -157,17 +147,19 @@ struct GameSession: Equatable {
     let tierUsageDistribution: String?
 
     var formattedGameTime: String {
-        let minutes = Int(gameTime) / 60
-        let seconds = Int(gameTime) % 60
-        return String(format: "%d:%02d", minutes, seconds)
+        gameTime.formattedAsClock
     }
 
     var formattedDate: String {
+        Self.dateFormatter.string(from: date)
+    }
+
+    private static let dateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateStyle = .medium
         formatter.timeStyle = .short
-        return formatter.string(from: date)
-    }
+        return formatter
+    }()
 }
 
 #Preview {

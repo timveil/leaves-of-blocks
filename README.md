@@ -106,10 +106,9 @@ All utility scripts are organized in the `scripts/` directory for advanced users
 ## Architecture
 
 ### Technical Stack
-- **Framework**: Pure SwiftUI (zero external dependencies)
-- **State Management**: ObservableObject pattern with service layer architecture
+- **Framework**: SwiftUI + SpriteKit (zero external runtime dependencies)
+- **State Management**: iOS 17+ `@Observable` macro with `@MainActor` isolation
 - **Persistence**: Core Data for game history and analytics
-- **Performance**: Optimized with <2ms grid analysis and <10ms block generation
 
 ### Code Organization
 ```
@@ -120,10 +119,9 @@ LeavesOfBlocks/
 │   ├── Game/              # Game-specific views
 │   └── History/           # Analytics and history
 ├── Models/                # Data models and game state
-├── Logic/                 # Game algorithms and rules
-│   ├── Game/              # Core game logic
-│   └── Analytics/         # Player behavior analysis
-├── Services/              # Infrastructure services
+├── Logic/                 # Game algorithms, grid analysis, behavior tracking
+├── Services/              # Infrastructure services (Core Data, timing, haptics)
+├── SpriteKit/             # GameScene, nodes, particle effects
 ├── Resources/             # Themes, assets, localization
 └── Documentation/         # Project documentation
 
@@ -144,10 +142,10 @@ menu.sh                    # Interactive development menu
 ## Deployment
 
 ### CI/CD
-Automated builds and testing via GitHub Actions:
-- Builds on every push and PR
-- Comprehensive test suite execution
-- Static analysis and code quality checks
+Automated builds and testing via GitHub Actions (`.github/workflows/ios.yml`):
+- Builds on every push to `main` and pull request
+- Unit and UI test suites run in parallel after a shared build job
+- Derived-data caching for faster subsequent runs
 
 ### Quick Deployment
 
@@ -177,8 +175,10 @@ See [CLAUDE.md](./CLAUDE.md) for comprehensive build commands and deployment pro
 
 ## Documentation
 
-- **[CLAUDE.md](./CLAUDE.md)**: Comprehensive development guide and coding standards
-- **[Coding Standards](./LeavesOfBlocks/Documentation/CodingStandards.md)**: Swift style guide and best practices
+- **[CONTRIBUTING.md](./CONTRIBUTING.md)**: How to set up the project, run tests, and submit changes
+- **[CHANGELOG.md](./CHANGELOG.md)**: Release notes and version history
+- **[Coding Standards](./LeavesOfBlocks/Documentation/CodingStandards.md)**: Swift style guide and conventions
+- **[SECURITY.md](./SECURITY.md)**: How to report security issues
 
 ## Configuration
 

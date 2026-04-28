@@ -67,7 +67,7 @@ struct SummaryView: View {
                     // Stat cards
                     SummaryStatCard(
                         title: "time_played".localized,
-                        value: formatTime(gameTime)
+                        value: gameTime.formattedAsClock
                     )
                     SummaryStatCard(
                         title: "blocks_placed".localized,
@@ -85,14 +85,14 @@ struct SummaryView: View {
                     if let effGrade = efficiencyGrade {
                         SummaryStatCard(
                             title: "efficiency".localized,
-                            value: effGrade
+                            value: effGrade.localizedGrade
                         )
                     }
 
                     if let stratGrade = strategicGrade {
                         SummaryStatCard(
                             title: "strategy".localized,
-                            value: stratGrade
+                            value: stratGrade.localizedGrade
                         )
                     }
 
@@ -107,24 +107,8 @@ struct SummaryView: View {
                 .padding(.bottom, 120)
             }
             .scrollIndicators(.hidden)
-            .mask(
-                VStack(spacing: 0) {
-                    Color.black
-                    LinearGradient(
-                        colors: [.black, .clear],
-                        startPoint: .top,
-                        endPoint: .bottom
-                    )
-                    .frame(height: 160)
-                }
-            )
+            .scrollFadeMask()
         }
-    }
-
-    private func formatTime(_ timeInterval: TimeInterval) -> String {
-        let minutes = Int(timeInterval) / 60
-        let seconds = Int(timeInterval) % 60
-        return String(format: "%d:%02d", minutes, seconds)
     }
 }
 
@@ -135,14 +119,7 @@ private struct SummaryDifficultyCard: View {
 
     var body: some View {
         GoldHeaderCard(title: "difficulty".localized) {
-            HStack(spacing: 8) {
-                ForEach(0..<difficulty.acornCount, id: \.self) { _ in
-                    Image("AcornIcon")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(height: 44)
-                }
-            }
+            AcornCountView(count: difficulty.acornCount, spacing: 8)
         }
     }
 }

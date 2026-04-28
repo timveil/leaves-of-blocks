@@ -30,47 +30,12 @@ extension GameTheme {
             endPoint: .bottomTrailing
         )
 
-        static let accent = LinearGradient(
-            colors: [Colors.primaryAccent, Colors.secondaryAccent, Colors.tertiaryAccent],
-            startPoint: .topLeading,
-            endPoint: .bottomTrailing
-        )
-
-        static let text = LinearGradient(
-            colors: [Colors.primaryText, Colors.secondaryText],
-            startPoint: .topLeading,
-            endPoint: .bottomTrailing
-        )
-
-        static let button = LinearGradient(
-            colors: [Colors.primaryAccent, Colors.secondaryAccent],
-            startPoint: .leading,
-            endPoint: .trailing
-        )
-
-        static let overlay = RadialGradient(
-            colors: [
-                Colors.primaryAccent.opacity(0.06),
-                Color.clear,
-                Colors.accent.opacity(0.03)
-            ],
-            center: .topTrailing,
-            startRadius: 50,
-            endRadius: 400
-        )
-
         // MARK: - Card & UI Gradients
 
         static let cardBorder = LinearGradient(
             colors: [Colors.gridBorder.opacity(0.25), Colors.gridBorder.opacity(0.10)],
             startPoint: .topLeading,
             endPoint: .bottomTrailing
-        )
-
-        static let verticalFade = LinearGradient(
-            colors: [Color.clear, Color.clear],
-            startPoint: .top,
-            endPoint: .bottom
         )
 
         // MARK: - Combo Effect Gradients
@@ -92,31 +57,5 @@ extension GameTheme {
             startPoint: .topLeading,
             endPoint: .bottomTrailing
         )
-
-        // MARK: - Helper Methods
-
-        static func blockVisual(from startColor: Color, to endColor: Color) -> LinearGradient {
-            LinearGradient(
-                colors: [startColor, endColor],
-                startPoint: .topLeading,
-                endPoint: .bottomTrailing
-            )
-        }
-
-        static func verticalFade(from startColor: Color, to endColor: Color) -> LinearGradient {
-            LinearGradient(
-                colors: [startColor, endColor],
-                startPoint: .top,
-                endPoint: .bottom
-            )
-        }
-
-        static func horizontalProgress(from startColor: Color, to endColor: Color) -> LinearGradient {
-            LinearGradient(
-                colors: [startColor, endColor],
-                startPoint: .leading,
-                endPoint: .trailing
-            )
-        }
     }
 }

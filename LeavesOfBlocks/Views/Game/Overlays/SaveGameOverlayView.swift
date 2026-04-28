@@ -16,14 +16,14 @@ struct SaveGameOverlayView: View {
                     .multilineTextAlignment(.center)
 
                 HStack(spacing: GameTheme.Layout.extraLargeSpacing) {
-                    circularButton(
+                    CircularIconButton(
                         icon: "tray.and.arrow.down.fill",
                         accessibilityLabel: "save_game_button".localized,
                         color: GameTheme.Colors.success,
                         action: onSaveGame
                     )
 
-                    circularButton(
+                    CircularIconButton(
                         icon: "xmark",
                         accessibilityLabel: "exit_without_saving".localized,
                         color: GameTheme.Colors.error,
@@ -34,25 +34,6 @@ struct SaveGameOverlayView: View {
         }
         .padding(.horizontal, GameTheme.Layout.extraLargePadding)
         .transition(.scale.combined(with: .opacity))
-    }
-
-    private func circularButton(icon: String, accessibilityLabel: String, color: Color, action: @escaping () -> Void) -> some View {
-        Button(action: action) {
-            Image(systemName: icon)
-                .font(.system(size: 28))
-                .foregroundColor(GameTheme.Colors.buttonText)
-                .frame(width: 64, height: 64)
-                .background(
-                    Circle()
-                        .fill(color)
-                )
-                .overlay(
-                    Circle()
-                        .stroke(Color.black, lineWidth: GameTheme.Layout.cardBorderWidth)
-                )
-        }
-        .buttonStyle(PlainButtonStyle())
-        .accessibilityLabel(accessibilityLabel)
     }
 }
 

@@ -402,4 +402,17 @@ final class GameState {
         showSaveGameOverlay = false
         onComplete()
     }
+
+    // MARK: - Data Management
+
+    /// Clears all persisted game history.
+    func clearGameHistory() {
+        gameService.clearGameHistory()
+    }
+
+    /// Clears all persisted data and resets the active game.
+    func resetAllData() {
+        gameService.resetAllData()
+        resetGame()
+    }
 }

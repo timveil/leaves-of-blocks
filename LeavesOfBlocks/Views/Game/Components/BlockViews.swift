@@ -16,8 +16,8 @@ struct CurrentBlocksView: View {
     // Fixed dimensions to prevent layout shifts
     private let containerHeight: CGFloat = 50 // Reduced height for more compact layout
     private var gridWidth: CGFloat {
-        // Match the game grid width: (8 cells * cellSize) + (7 spacings * 3px)
-        return (8 * cellSize) + (7 * 3)
+        let gridSize = CGFloat(GameTheme.GameConfig.gridSize)
+        return (gridSize * cellSize) + ((gridSize - 1) * GameTheme.Layout.gridLineWidth)
     }
     private var slotWidth: CGFloat {
         // Divide available width by 3 blocks, accounting for spacing between slots
@@ -223,7 +223,7 @@ private struct DraggableBlockView: View {
                     GridPosition(row: 1, col: 0),
                     GridPosition(row: 1, col: 1)
                 ], color: .green),
-                cellSize: 40
+                cellSize: GameTheme.Layout.cellSize
             )
             BlockView(
                 block: BlockShape(positions: [
@@ -231,7 +231,7 @@ private struct DraggableBlockView: View {
                     GridPosition(row: 0, col: 1),
                     GridPosition(row: 0, col: 2)
                 ], color: .blue),
-                cellSize: 40
+                cellSize: GameTheme.Layout.cellSize
             )
             BlockView(
                 block: BlockShape(positions: [
@@ -239,21 +239,21 @@ private struct DraggableBlockView: View {
                     GridPosition(row: 1, col: 0),
                     GridPosition(row: 1, col: 1)
                 ], color: .orange),
-                cellSize: 40
+                cellSize: GameTheme.Layout.cellSize
             )
         }
         HStack(spacing: 20) {
             BlockView(
                 block: BlockShape(positions: [GridPosition(row: 0, col: 0)], color: .red, type: .horizontalClear),
-                cellSize: 40
+                cellSize: GameTheme.Layout.cellSize
             )
             BlockView(
                 block: BlockShape(positions: [GridPosition(row: 0, col: 0)], color: .blue, type: .verticalClear),
-                cellSize: 40
+                cellSize: GameTheme.Layout.cellSize
             )
             BlockView(
                 block: BlockShape(positions: [GridPosition(row: 0, col: 0)], color: .purple, type: .areaClear),
-                cellSize: 40
+                cellSize: GameTheme.Layout.cellSize
             )
         }
     }
@@ -263,7 +263,7 @@ private struct DraggableBlockView: View {
 #Preview("Current Blocks") {
     CurrentBlocksView(
         gameState: GameState(),
-        cellSize: 40,
+        cellSize: GameTheme.Layout.cellSize,
         draggedBlock: nil,
         isDragging: false,
         draggedBlockIndex: nil,

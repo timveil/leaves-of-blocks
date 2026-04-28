@@ -49,15 +49,16 @@ struct BoardView: View {
         }
     }
     
-    let cellSize: CGFloat = 40
+    let cellSize: CGFloat = GameTheme.Layout.cellSize
     let onViewSummary: () -> Void
     let onNewGame: () -> Void
     let onSaveAndExit: (() -> Void)?
     let onExitWithoutSaving: (() -> Void)?
-    
+
     // Computed property - simple calculation, no need for lazy loading in SwiftUI
     private var gameWidth: CGFloat {
-        (8 * cellSize) + (7 * GridConstants.cellSpacing) + (2 * GridConstants.gridPadding)
+        let gridSize = CGFloat(GameTheme.GameConfig.gridSize)
+        return (gridSize * cellSize) + ((gridSize - 1) * GridConstants.cellSpacing) + (2 * GridConstants.gridPadding)
     }
     
     var body: some View {

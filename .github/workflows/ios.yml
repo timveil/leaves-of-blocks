@@ -43,10 +43,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
       - name: Cache Derived Data
-        uses: actions/cache@v5
+        uses: actions/cache@v4
         with:
           path: ~/Library/Developer/Xcode/DerivedData
           key: derived-data-${{ hashFiles('LeavesOfBlocks.xcodeproj/project.pbxproj') }}
@@ -60,7 +60,7 @@ jobs:
         run: ./scripts/build.sh build-for-testing
 
       - name: Upload Test Build Artifacts
-        uses: actions/upload-artifact@v7
+        uses: actions/upload-artifact@v4
         with:
           name: test-build
           path: build/DerivedData/Build/Products
@@ -73,10 +73,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
       - name: Download Test Build
-        uses: actions/download-artifact@v8
+        uses: actions/download-artifact@v4
         with:
           name: test-build
           path: build/DerivedData/Build/Products
@@ -91,10 +91,10 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: actions/checkout@v6
+        uses: actions/checkout@v4
 
       - name: Download Test Build
-        uses: actions/download-artifact@v8
+        uses: actions/download-artifact@v4
         with:
           name: test-build
           path: build/DerivedData/Build/Products

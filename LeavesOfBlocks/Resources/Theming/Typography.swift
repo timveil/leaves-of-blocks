@@ -2,42 +2,30 @@ import SwiftUI
 
 extension GameTheme {
     struct Typography {
-        // MARK: - Simplified Typography System
+        // MARK: - Typography System
+        //
+        // Fonts use SwiftUI text styles so they scale with the user's
+        // Dynamic Type setting. Where a heavier weight or serif design
+        // is needed, we apply it via system(_:design:) + .weight(_:).
 
-        /// Display text for large, prominent numbers and titles (48pt, bold, serif)
-        /// Use for: game scores, game over text, large numbers
-        static let display = Font.system(size: 64, weight: .bold, design: .serif)
+        /// Display text for prominent numbers and titles. Scales with Dynamic Type.
+        /// Use for: game scores, game-over text, large numbers
+        static let display = Font.system(.largeTitle, design: .serif).weight(.bold)
 
-        /// Title text for screen and section headers (28pt, bold, serif)
+        /// Title text for screen and section headers. Scales with Dynamic Type.
         /// Use for: screen titles, major section headers
-        static let title = Font.system(size: 28, weight: .bold, design: .serif)
+        static let title = Font.system(.title, design: .serif).weight(.bold)
 
-        /// Headline text for sub-headers and important labels (20pt, semibold, serif)
+        /// Headline text for sub-headers and important labels. Scales with Dynamic Type.
         /// Use for: card headers, section sub-titles, prominent labels
-        static let headline = Font.system(size: 20, weight: .semibold, design: .serif)
+        static let headline = Font.system(.title3, design: .serif).weight(.semibold)
 
-        /// Body text for main content (16pt, medium, serif)
+        /// Body text for main content. Scales with Dynamic Type.
         /// Use for: general text, button labels, descriptions
-        static let body = Font.system(size: 16, weight: .medium, design: .serif)
+        static let body = Font.system(.body, design: .serif).weight(.medium)
 
-        /// Caption text for secondary information (14pt, medium, serif)
+        /// Caption text for secondary information. Scales with Dynamic Type.
         /// Use for: small labels, hints, secondary details
-        static let caption = Font.system(size: 14, weight: .medium, design: .serif)
-
-        /// Tiny text for minimal UI elements (10pt, medium)
-        /// Use for: timestamps, small badges, tertiary information
-        static let tiny = Font.system(size: 10, weight: .medium, design: .default)
-
-        /// Serif text for decorative quotes (18pt, regular, serif)
-        /// Use for: quotes in about screen, decorative text
-        static let serif = Font.system(size: 18, weight: .regular, design: .serif)
-
-        // MARK: - Dynamic Font Helper (for special cases only)
-
-        /// Creates a dynamic font for special cases that need custom sizing
-        static func dynamic(size: CGFloat, weight: Font.Weight = .medium) -> Font {
-            Font.system(size: size, weight: weight, design: .default)
-        }
-
+        static let caption = Font.system(.subheadline, design: .serif).weight(.medium)
     }
 }

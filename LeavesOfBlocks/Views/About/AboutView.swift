@@ -109,17 +109,7 @@ struct AboutView: View {
                 .padding(.bottom, 120)
             }
             .scrollIndicators(.hidden)
-            .mask(
-                VStack(spacing: 0) {
-                    Color.black
-                    LinearGradient(
-                        colors: [.black, .clear],
-                        startPoint: .top,
-                        endPoint: .bottom
-                    )
-                    .frame(height: 160)
-                }
-            )
+            .scrollFadeMask()
         }
     }
 

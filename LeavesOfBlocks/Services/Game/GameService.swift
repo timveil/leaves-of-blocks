@@ -68,9 +68,7 @@ final class GameService {
     
     /// Formats game time as a readable string
     func formattedGameTime() -> String {
-        let minutes = Int(currentGameTime) / 60
-        let seconds = Int(currentGameTime) % 60
-        return String(format: "%d:%02d", minutes, seconds)
+        currentGameTime.formattedAsClock
     }
     
     // MARK: - High Score Management

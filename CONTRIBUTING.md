@@ -43,10 +43,6 @@ The interactive `./menu.sh` exposes the same workflows in a menu format.
 
 Use the issue templates under [`.github/ISSUE_TEMPLATE/`](.github/ISSUE_TEMPLATE/). Include device, iOS version, and reproduction steps for bugs.
 
-## Code of Conduct
-
-By participating in this project you agree to abide by the [Code of Conduct](CODE_OF_CONDUCT.md).
-
 ## License
 
 By contributing, you agree that your contributions will be licensed under the [MIT License](LICENSE) that covers the project.

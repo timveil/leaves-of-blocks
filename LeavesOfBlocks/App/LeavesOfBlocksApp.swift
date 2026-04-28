@@ -89,8 +89,8 @@ struct Main: App {
         highScoreGame.strategicPlayRating = 0.92
         highScoreGame.challengeMaintained = 0.78
         highScoreGame.fallbackActivations = 2
-        highScoreGame.efficiencyGrade = "A"
-        highScoreGame.strategicGrade = "A+"
+        highScoreGame.efficiencyGrade = "grade_a"
+        highScoreGame.strategicGrade = "grade_a_plus"
 
         // Save the context
         do {

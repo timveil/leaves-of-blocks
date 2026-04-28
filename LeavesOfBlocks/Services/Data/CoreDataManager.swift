@@ -1,82 +1,78 @@
 import Foundation
 import CoreData
 
-class CoreDataManager {
+extension Notification.Name {
+    static let coreDataSaveFailure = Notification.Name("CoreDataSaveFailure")
+}
+
+@MainActor
+final class CoreDataManager {
     static let shared = CoreDataManager()
-    
+
     private init() {}
-    
+
     lazy var persistentContainer: NSPersistentContainer = {
         let container = NSPersistentContainer(name: "LeavesOfBlocks")
-        
+
         container.loadPersistentStores { _, error in
             if let error = error as NSError? {
                 BuildConfiguration.log("Core Data error: \(error.localizedDescription)", level: .error)
 
                 #if DEBUG
-                // In debug mode, we can crash to help identify issues
                 fatalError("Core Data failed to load: \(error)")
                 #else
-                // In production, attempt recovery by deleting and recreating the store
                 self.handleCoreDataLoadFailure(container: container, error: error)
                 #endif
             }
         }
-        
+
         container.viewContext.automaticallyMergesChangesFromParent = true
         return container
     }()
-    
+
     var viewContext: NSManagedObjectContext {
         persistentContainer.viewContext
     }
-    
+
     func saveContext() {
         let context = persistentContainer.viewContext
-        
-        if context.hasChanges {
-            do {
-                try context.save()
-            } catch {
-                let nsError = error as NSError
-                BuildConfiguration.log("Error saving context: \(nsError.localizedDescription)", level: .error)
 
-                // Attempt to rollback changes on save failure
-                context.rollback()
+        guard context.hasChanges else { return }
 
-                // Notify observers that save failed (could be used for user notification)
-                NotificationCenter.default.post(
-                    name: NSNotification.Name("CoreDataSaveFailure"),
-                    object: nil,
-                    userInfo: ["error": nsError]
-                )
-            }
+        do {
+            try context.save()
+        } catch {
+            let nsError = error as NSError
+            BuildConfiguration.log("Error saving context: \(nsError.localizedDescription)", level: .error)
+
+            context.rollback()
+
+            NotificationCenter.default.post(
+                name: .coreDataSaveFailure,
+                object: nil,
+                userInfo: ["error": nsError]
+            )
         }
     }
-    
+
     // MARK: - Error Recovery
-    
-    /// Handles Core Data load failures by attempting to recreate the persistent store
-    private func handleCoreDataLoadFailure(container: NSPersistentContainer, error: NSError) {
+
+    /// Handles Core Data load failures by attempting to recreate the persistent store.
+    private nonisolated func handleCoreDataLoadFailure(container: NSPersistentContainer, error: NSError) {
         BuildConfiguration.log("Attempting Core Data recovery...", level: .warning)
 
-        // Get the store URL
         guard let storeURL = container.persistentStoreDescriptions.first?.url else {
             BuildConfiguration.log("Could not get store URL for recovery", level: .error)
             return
         }
 
-        // Attempt to delete the corrupted store
         do {
             try FileManager.default.removeItem(at: storeURL)
             BuildConfiguration.log("Deleted corrupted Core Data store", level: .info)
 
-            // Try to reload the store
             container.loadPersistentStores { _, recoveryError in
                 if let recoveryError = recoveryError {
                     BuildConfiguration.log("Core Data recovery failed: \(recoveryError.localizedDescription)", level: .error)
-                    // At this point, the app will have to run without persistence
-                    // You could implement a fallback storage mechanism here
                 } else {
                     BuildConfiguration.log("Core Data recovery successful", level: .info)
                 }
@@ -85,15 +81,15 @@ class CoreDataManager {
             BuildConfiguration.log("Failed to delete corrupted store: \(error.localizedDescription)", level: .error)
         }
     }
-    
+
     // MARK: - Game History Operations
-    
-    func saveGameRecord(score: Int, difficulty: DifficultyMode, blocksPlaced: Int, 
+
+    func saveGameRecord(score: Int, difficulty: DifficultyMode, blocksPlaced: Int,
                        linesCleared: Int, longestCombo: Int, gameTime: TimeInterval,
                        sessionMetrics: PlayerBehaviorTracker.SessionMetrics? = nil) {
-        let context = persistentContainer.viewContext
+        let context = viewContext
         let gameRecord = GameRecord(context: context)
-        
+
         gameRecord.id = UUID()
         gameRecord.score = Int32(score)
         gameRecord.difficulty = difficulty.rawValue
@@ -102,8 +98,7 @@ class CoreDataManager {
         gameRecord.longestCombo = Int32(longestCombo)
         gameRecord.gameTime = gameTime
         gameRecord.date = Date()
-        
-        // Store efficiency metrics if available
+
         if let metrics = sessionMetrics {
             gameRecord.averageGridEfficiency = metrics.averageGridEfficiency
             gameRecord.averageFragmentation = metrics.averageFragmentation
@@ -112,8 +107,7 @@ class CoreDataManager {
             gameRecord.fallbackActivations = Int32(metrics.fallbackActivations)
             gameRecord.efficiencyGrade = metrics.efficiencyGrade
             gameRecord.strategicGrade = metrics.strategicGrade
-            
-            // Serialize tier usage distribution to JSON string
+
             do {
                 let tierData = try JSONSerialization.data(withJSONObject: metrics.tierUsageDistribution)
                 if let tierString = String(data: tierData, encoding: .utf8) {
@@ -123,23 +117,24 @@ class CoreDataManager {
                 BuildConfiguration.log("Failed to serialize tier usage distribution: \(error.localizedDescription)", level: .warning)
             }
         }
-        
+
         #if DEBUG
         let metricsInfo = sessionMetrics != nil ? ", Efficiency: \(String(format: "%.2f", sessionMetrics?.averageGridEfficiency ?? 0.0))" : ""
         BuildConfiguration.log("Saving game record: Score=\(score), Difficulty=\(difficulty.rawValue), Time=\(Int(gameTime))s\(metricsInfo)", level: .debug)
         #endif
-        
+
         saveContext()
     }
-    
+
     func fetchGameHistory(limit: Int? = nil) -> [GameRecord] {
         let request: NSFetchRequest<GameRecord> = GameRecord.fetchRequest()
         request.sortDescriptors = [NSSortDescriptor(key: "date", ascending: false)]
-        
+        request.fetchBatchSize = 20
+
         if let limit = limit {
             request.fetchLimit = limit
         }
-        
+
         do {
             return try viewContext.fetch(request)
         } catch {
@@ -147,11 +142,12 @@ class CoreDataManager {
             return []
         }
     }
-    
+
     func fetchGameHistory(for difficulty: DifficultyMode) -> [GameRecord] {
         let request: NSFetchRequest<GameRecord> = GameRecord.fetchRequest()
         request.predicate = NSPredicate(format: "difficulty == %@", difficulty.rawValue)
         request.sortDescriptors = [NSSortDescriptor(key: "score", ascending: false)]
+        request.fetchBatchSize = 20
 
         do {
             return try viewContext.fetch(request)
@@ -160,7 +156,7 @@ class CoreDataManager {
             return []
         }
     }
-    
+
     func fetchHighScores(limit: Int = 10) -> [GameRecord] {
         let request: NSFetchRequest<GameRecord> = GameRecord.fetchRequest()
         request.sortDescriptors = [NSSortDescriptor(key: "score", ascending: false)]
@@ -173,34 +169,48 @@ class CoreDataManager {
             return []
         }
     }
-    
+
+    /// Deletes every persisted `GameRecord`.
+    ///
+    /// `NSBatchDeleteRequest` runs against the persistent store and bypasses the
+    /// in-memory `viewContext`, so we ask for the deleted object IDs and merge
+    /// them back into the context. Without this merge, any active fetched
+    /// results / `@FetchRequest` continues to show stale rows until the screen
+    /// is rebuilt.
     func deleteAllGameRecords() {
         let request: NSFetchRequest<NSFetchRequestResult> = GameRecord.fetchRequest()
         let deleteRequest = NSBatchDeleteRequest(fetchRequest: request)
+        deleteRequest.resultType = .resultTypeObjectIDs
 
         do {
-            try viewContext.execute(deleteRequest)
-            saveContext()
+            let result = try viewContext.execute(deleteRequest) as? NSBatchDeleteResult
+            if let objectIDs = result?.result as? [NSManagedObjectID], !objectIDs.isEmpty {
+                let changes: [AnyHashable: Any] = [NSDeletedObjectsKey: objectIDs]
+                NSManagedObjectContext.mergeChanges(
+                    fromRemoteContextSave: changes,
+                    into: [viewContext]
+                )
+            }
         } catch {
             BuildConfiguration.log("Error deleting all game records: \(error.localizedDescription)", level: .error)
         }
     }
-    
+
     // MARK: - Statistics
-    
-    func calculateStatistics() -> GameStatistics {
+
+    func calculateStatistics() -> GameHistoryStatistics {
         let request: NSFetchRequest<GameRecord> = GameRecord.fetchRequest()
-        
+
         do {
             let records = try viewContext.fetch(request)
-            
+
             let totalGames = records.count
             let totalScore = records.reduce(0) { $0 + Int($1.score) }
             let averageScore = totalGames > 0 ? totalScore / totalGames : 0
             let totalBlocksPlaced = records.reduce(0) { $0 + Int($1.blocksPlaced) }
             let highScore = records.map { Int($0.score) }.max() ?? 0
-            
-            return GameStatistics(
+
+            return GameHistoryStatistics(
                 totalGames: totalGames,
                 totalScore: totalScore,
                 averageScore: averageScore,
@@ -209,12 +219,12 @@ class CoreDataManager {
             )
         } catch {
             BuildConfiguration.log("Error calculating statistics: \(error.localizedDescription)", level: .error)
-            return GameStatistics(totalGames: 0, totalScore: 0, averageScore: 0, totalBlocksPlaced: 0, highScore: 0)
+            return GameHistoryStatistics(totalGames: 0, totalScore: 0, averageScore: 0, totalBlocksPlaced: 0, highScore: 0)
         }
     }
 }
 
-struct GameStatistics {
+struct GameHistoryStatistics {
     let totalGames: Int
     let totalScore: Int
     let averageScore: Int

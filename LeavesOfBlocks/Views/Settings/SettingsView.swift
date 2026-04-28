@@ -19,9 +19,7 @@ struct SettingsView: View {
     @State private var showingResetAllConfirmation = false
     @State private var resetCompletedMessage: String?
     @State private var showingResetCompleted = false
-    
-    private let gameService = GameService()
-    
+
     var body: some View {
         BaseScreenView {
             ScrollView {
@@ -87,14 +85,13 @@ struct SettingsView: View {
     // MARK: - Private Methods
     
     private func clearGameHistory() {
-        gameService.clearGameHistory()
+        gameState.clearGameHistory()
         resetCompletedMessage = "history_cleared_message".localized
         showingResetCompleted = true
     }
-    
+
     private func resetAllData() {
-        gameService.resetAllData()
-        gameState.resetGame() // Reset current game state
+        gameState.resetAllData()
         resetCompletedMessage = "all_data_reset_message".localized
         showingResetCompleted = true
     }

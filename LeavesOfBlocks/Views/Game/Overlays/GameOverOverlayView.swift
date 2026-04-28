@@ -22,14 +22,14 @@ struct GameOverOverlayView: View {
                     .minimumScaleFactor(0.7)
 
                 HStack(spacing: GameTheme.Layout.extraLargeSpacing) {
-                    circularButton(
+                    CircularIconButton(
                         icon: "play.fill",
                         accessibilityLabel: "new_game".localized,
                         color: GameTheme.Colors.success,
                         action: onNewGame
                     )
 
-                    circularButton(
+                    CircularIconButton(
                         icon: "list.bullet",
                         accessibilityLabel: "view_summary".localized,
                         color: GameTheme.Colors.accent,
@@ -40,25 +40,6 @@ struct GameOverOverlayView: View {
         }
         .padding(.horizontal, GameTheme.Layout.extraLargePadding)
         .transition(.scale.combined(with: .opacity))
-    }
-
-    private func circularButton(icon: String, accessibilityLabel: String, color: Color, action: @escaping () -> Void) -> some View {
-        Button(action: action) {
-            Image(systemName: icon)
-                .font(.system(size: 28))
-                .foregroundColor(GameTheme.Colors.buttonText)
-                .frame(width: 64, height: 64)
-                .background(
-                    Circle()
-                        .fill(color)
-                )
-                .overlay(
-                    Circle()
-                        .stroke(Color.black, lineWidth: GameTheme.Layout.cardBorderWidth)
-                )
-        }
-        .buttonStyle(PlainButtonStyle())
-        .accessibilityLabel(accessibilityLabel)
     }
 }
 

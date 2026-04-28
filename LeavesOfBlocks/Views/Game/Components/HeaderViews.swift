@@ -2,16 +2,6 @@ import SwiftUI
 
 // MARK: - Header and Score Components
 
-struct SimpleAppTitleView: View {
-    var body: some View {
-        Text("app_title".localized)
-            .font(GameTheme.Typography.title)
-            .foregroundColor(GameTheme.Colors.primaryText)
-            .padding(.vertical, GameTheme.Layout.smallPadding)
-            .accessibilityIdentifier("leaves_of_blocks_title")
-    }
-}
-
 struct SimpleScoreView: View {
     var gameState: GameState
     
@@ -92,10 +82,5 @@ struct SimpleScoreView: View {
     }()
     SimpleScoreView(gameState: state)
         .frame(width: 350)
-        .padding()
-}
-
-#Preview("App Title") {
-    SimpleAppTitleView()
         .padding()
 }

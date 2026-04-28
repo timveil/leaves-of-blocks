@@ -38,7 +38,6 @@ struct ScoringTableRowView: View {
     let points: String
     let description: String
     let color: Color
-    var isLast: Bool = false
 
     var body: some View {
         VStack(spacing: 6) {
@@ -81,18 +80,10 @@ struct DifficultyTableHeaderView: View {
 struct DifficultyTableRowView: View {
     let mode: DifficultyMode
     let description: String
-    var isLast: Bool = false
 
     var body: some View {
         VStack(spacing: 6) {
-            HStack(spacing: 6) {
-                ForEach(0..<mode.acornCount, id: \.self) { _ in
-                    Image("AcornIcon")
-                        .resizable()
-                        .aspectRatio(contentMode: .fit)
-                        .frame(height: 44)
-                }
-            }
+            AcornCountView(count: mode.acornCount)
 
             Text(description)
                 .font(GameTheme.Typography.body)
@@ -129,7 +120,6 @@ struct ShapesTableHeaderView: View {
 struct ShapesTableRowView: View {
     let shapeType: ShapeType
     let description: String
-    var isLast: Bool = false
 
     var body: some View {
         VStack(spacing: 6) {
@@ -218,20 +208,13 @@ enum ShapeType {
     }
 }
 
-// MARK: - Table Row Style Modifier
-
 // MARK: - Previews
-
-#Preview("Tip Row") {
-    TipRow(text: "Clear multiple lines at once for combo bonuses!")
-        .padding()
-}
 
 #Preview("Scoring Table Row") {
     VStack(spacing: 0) {
         ScoringTableHeaderView()
         ScoringTableRowView(points: "+10", description: "scoring_block_placement".localized, color: GameTheme.Colors.accent)
-        ScoringTableRowView(points: "+100", description: "scoring_line_clear".localized, color: GameTheme.Colors.success, isLast: true)
+        ScoringTableRowView(points: "+100", description: "scoring_line_clear".localized, color: GameTheme.Colors.success)
     }
     .clipShape(RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius))
     .overlay(RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius).stroke(Color.black, lineWidth: GameTheme.Layout.cardBorderWidth))
@@ -242,7 +225,7 @@ enum ShapeType {
     VStack(spacing: 0) {
         DifficultyTableHeaderView()
         DifficultyTableRowView(mode: .easy, description: "difficulty_easy_desc".localized)
-        DifficultyTableRowView(mode: .moderate, description: "difficulty_moderate_desc".localized, isLast: true)
+        DifficultyTableRowView(mode: .moderate, description: "difficulty_moderate_desc".localized)
     }
     .clipShape(RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius))
     .overlay(RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius).stroke(Color.black, lineWidth: GameTheme.Layout.cardBorderWidth))
@@ -253,24 +236,9 @@ enum ShapeType {
     VStack(spacing: 0) {
         ShapesTableHeaderView()
         ShapesTableRowView(shapeType: .normalBlocks, description: "shape_normal_desc".localized)
-        ShapesTableRowView(shapeType: .horizontalClear, description: "shape_row_clear_desc".localized, isLast: true)
+        ShapesTableRowView(shapeType: .horizontalClear, description: "shape_row_clear_desc".localized)
     }
     .clipShape(RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius))
     .overlay(RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius).stroke(Color.black, lineWidth: GameTheme.Layout.cardBorderWidth))
     .padding()
-}
-
-struct ConditionalTableRowStyleModifier: ViewModifier {
-    let isLast: Bool
-    let backgroundColor: Color
-
-    func body(content: Content) -> some View {
-        if isLast {
-            content
-                .gameTableFooterStyle(backgroundColor: backgroundColor)
-        } else {
-            content
-                .gameTableRowStyle(backgroundColor: backgroundColor)
-        }
-    }
 }

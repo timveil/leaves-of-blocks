@@ -39,19 +39,31 @@ extension String {
     func localized(with arguments: CVarArg...) -> String {
         return String(format: localized, arguments: arguments)
     }
-    
-    /// Returns a localized version of the string in uppercase.
+
+    /// Localizes a grade or challenge value persisted in Core Data.
     ///
-    /// This computed property is useful for UI elements that require uppercase text
-    /// while maintaining localization support.
-    ///
-    /// ## Usage
-    /// ```swift
-    /// let title = "score".localizedUppercase
-    /// ```
-    ///
-    /// - Returns: The localized string converted to uppercase
-    var localizedUppercase: String {
-        return localized.uppercased()
+    /// Handles both new stable keys (e.g. `"grade_a_plus"`, `"grade_master"`)
+    /// and legacy English values (`"A+"`, `"Master"`) saved by older builds.
+    var localizedGrade: String {
+        let key = Self.legacyGradeMap[self] ?? self
+        return key.localized
     }
+
+    private static let legacyGradeMap: [String: String] = [
+        "A+": "grade_a_plus",
+        "A": "grade_a",
+        "B+": "grade_b_plus",
+        "B": "grade_b",
+        "C+": "grade_c_plus",
+        "C": "grade_c",
+        "D": "grade_d",
+        "Master": "grade_master",
+        "Expert": "grade_expert",
+        "Skilled": "grade_skilled",
+        "Learning": "grade_learning",
+        "Beginner": "grade_beginner",
+        "High": "challenge_high",
+        "Medium": "challenge_medium",
+        "Low": "challenge_low"
+    ]
 }

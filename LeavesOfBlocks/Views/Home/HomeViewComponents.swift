@@ -58,23 +58,14 @@ struct DifficultySelectionView: View {
                 }
 
             // Play button
-            Button(action: {
-                onStartGame(selectedDifficulty)
-            }) {
-                Image(systemName: "play.fill")
-                    .font(.system(size: 32))
-                    .foregroundColor(GameTheme.Colors.buttonText)
-                    .frame(width: 72, height: 72)
-                    .background(
-                        Circle()
-                            .fill(GameTheme.Colors.success)
-                    )
-                    .overlay(
-                        Circle()
-                            .stroke(Color.black, lineWidth: GameTheme.Layout.cardBorderWidth)
-                    )
-            }
-            .buttonStyle(PlainButtonStyle())
+            CircularIconButton(
+                icon: "play.fill",
+                accessibilityLabel: "start_game".localized,
+                color: GameTheme.Colors.success,
+                size: 72,
+                iconSize: 32,
+                action: { onStartGame(selectedDifficulty) }
+            )
             .accessibilityIdentifier("start_game_button")
         }
         .padding(.horizontal, GameTheme.Layout.mediumPadding)

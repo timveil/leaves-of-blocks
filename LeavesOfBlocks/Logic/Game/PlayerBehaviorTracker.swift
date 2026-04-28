@@ -27,33 +27,39 @@ final class PlayerBehaviorTracker {
         let challengeMaintained: Double            // Percentage of game spent in higher tiers
         
         // Derived metrics
+        //
+        // These return stable lowercase keys ("grade_a_plus", "grade_master")
+        // that are persisted to Core Data. Display sites should pass them
+        // through `.localizedGrade` to render. Older records may still
+        // contain English values ("A+", "Master") — `localizedGrade` handles
+        // both formats.
         var efficiencyGrade: String {
             switch averageGridEfficiency {
-            case 0.8...1.0: return "A+"
-            case 0.7..<0.8: return "A"
-            case 0.6..<0.7: return "B+"
-            case 0.5..<0.6: return "B"
-            case 0.4..<0.5: return "C+"
-            case 0.3..<0.4: return "C"
-            default: return "D"
+            case 0.8...1.0: return "grade_a_plus"
+            case 0.7..<0.8: return "grade_a"
+            case 0.6..<0.7: return "grade_b_plus"
+            case 0.5..<0.6: return "grade_b"
+            case 0.4..<0.5: return "grade_c_plus"
+            case 0.3..<0.4: return "grade_c"
+            default: return "grade_d"
             }
         }
-        
+
         var strategicGrade: String {
             switch strategicPlayRating {
-            case 0.8...1.0: return "Master"
-            case 0.6..<0.8: return "Expert"
-            case 0.4..<0.6: return "Skilled"
-            case 0.2..<0.4: return "Learning"
-            default: return "Beginner"
+            case 0.8...1.0: return "grade_master"
+            case 0.6..<0.8: return "grade_expert"
+            case 0.4..<0.6: return "grade_skilled"
+            case 0.2..<0.4: return "grade_learning"
+            default: return "grade_beginner"
             }
         }
-        
+
         var challengeLevel: String {
             switch challengeMaintained {
-            case 0.7...1.0: return "High"
-            case 0.4..<0.7: return "Medium"
-            default: return "Low"
+            case 0.7...1.0: return "challenge_high"
+            case 0.4..<0.7: return "challenge_medium"
+            default: return "challenge_low"
             }
         }
     }
@@ -183,43 +189,6 @@ final class PlayerBehaviorTracker {
         return sessionMetrics
     }
     
-    // MARK: - Analytics Helpers
-    
-    /// Gets current session efficiency if available
-    var currentEfficiency: Double? {
-        return gridEfficiencyHistory.last
-    }
-    
-    /// Gets current strategic rating if available  
-    var currentStrategicRating: Double? {
-        return strategicOpportunities.last
-    }
-    
-    /// Gets efficiency trend (improving/declining)
-    var efficiencyTrend: String {
-        guard gridEfficiencyHistory.count >= 5 else { return "Insufficient Data" }
-        
-        let recent = Array(gridEfficiencyHistory.suffix(5))
-        let older = Array(gridEfficiencyHistory.dropLast(5).suffix(5))
-        
-        let recentAvg = recent.reduce(0, +) / Double(recent.count)
-        let olderAvg = older.isEmpty ? recentAvg : older.reduce(0, +) / Double(older.count)
-        
-        let improvement = recentAvg - olderAvg
-        
-        switch improvement {
-        case 0.1...: return "Improving"
-        case -0.1..<0.1: return "Stable"
-        default: return "Declining"
-        }
-    }
-    
-    /// Gets performance summary for current session
-    var performanceSummary: String {
-        guard let metrics = currentSessionMetrics else { return "No session data" }
-        
-        return "Efficiency: \(metrics.efficiencyGrade) | Strategic: \(metrics.strategicGrade) | Challenge: \(metrics.challengeLevel)"
-    }
 }
 
 // MARK: - Extended GameSessionStatistics
