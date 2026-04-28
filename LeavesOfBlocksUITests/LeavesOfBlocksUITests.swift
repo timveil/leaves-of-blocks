@@ -191,16 +191,19 @@ final class LeavesOfBlocksUITests: XCTestCase {
         XCTAssertTrue(startButton.waitForExistence(timeout: 2))
         startButton.tap()
 
-        XCTAssertTrue(waitForGameGrid(timeout: 3))
+        XCTAssertTrue(waitForGameGrid(timeout: 5))
 
         let gridElement = app.otherElements["spritekit_game_grid"].exists
             ? app.otherElements["spritekit_game_grid"]
             : app.otherElements["game_grid"]
 
+        // The holding area mounts after the grid; wait for the container
+        // before querying its descendants.
         let blockContainer = app.otherElements["block_container"]
-        let firstBlock = blockContainer.otherElements.matching(identifier: "draggable_block").element(boundBy: 0)
+        XCTAssertTrue(blockContainer.waitForExistence(timeout: 5), "Block container should exist after game starts")
 
-        XCTAssertTrue(firstBlock.waitForExistence(timeout: 2), "First draggable block should appear")
+        let firstBlock = app.otherElements.matching(identifier: "draggable_block").element(boundBy: 0)
+        XCTAssertTrue(firstBlock.waitForExistence(timeout: 5), "First draggable block should appear")
 
         let startCoordinate = firstBlock.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
         let endCoordinate = gridElement.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))

@@ -55,9 +55,14 @@ struct CurrentBlocksView: View {
                         )
                 )
         )
-        .accessibilityIdentifier("block_container")
+        // Modifier order matters: `.accessibilityElement(children:)` must come
+        // first so the identifier and label apply to the resulting container
+        // element. With the identifier listed first, SwiftUI cascades it down
+        // to the descendant draggable blocks instead of binding it to the
+        // container itself.
         .accessibilityElement(children: .contain)
         .accessibilityLabel("ax_available_blocks_format".localized(with: gameState.currentBlocks.count))
+        .accessibilityIdentifier("block_container")
     }
     
     // Calculate optimal cell size for each block to fit in its slot
@@ -157,9 +162,10 @@ private struct DraggableBlockView: View {
         }
         .frame(width: getBlockWidth(), height: getBlockHeight())
         .contentShape(Rectangle()) // Ensure entire frame is tappable
+        // See block_container note above — element first, then label/id.
         .accessibilityElement(children: .ignore)
-        .accessibilityIdentifier("draggable_block")
         .accessibilityLabel(block.accessibilityLabel)
+        .accessibilityIdentifier("draggable_block")
         .gesture(
             DragGesture(minimumDistance: 5, coordinateSpace: .global)
                 .onChanged { value in
