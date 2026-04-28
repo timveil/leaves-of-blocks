@@ -1,8 +1,23 @@
 import SwiftUI
 
+/// In-app branding splash shown once on cold launch.
+///
+/// The OS storyboard splash (`LaunchScreen.storyboard`) handles the very first
+/// frame; this view runs a short staged entrance for the Whitman portrait,
+/// app title, and tagline, then signals completion via `onComplete`.
+///
+/// The animation sequence is ~0.8 seconds; when Reduce Motion is enabled the
+/// splash dismisses immediately so users aren't held behind an animation
+/// they've explicitly opted out of.
 struct LaunchScreen: View {
-    @State private var isAnimated = false
-    @State private var showIcon = false
+    @Environment(\.accessibilityReduceMotion) private var reduceMotion
+
+    /// Total dwell time before the splash dismisses, including animation tail.
+    private static let dwell: Duration = .milliseconds(800)
+
+    let onComplete: () -> Void
+
+    @State private var visible = false
 
     var body: some View {
         ZStack {
@@ -12,111 +27,83 @@ struct LaunchScreen: View {
                 Spacer()
 
                 VStack(spacing: 24) {
-                    // Whitman Portrait in folk-art circle
-                    Image("WhitmanPortrait")
-                        .resizable()
-                        .aspectRatio(contentMode: .fill)
-                        .frame(width: 120, height: 120)
-                        .clipShape(Circle())
-                        .padding(12)
-                        .background(
-                            Circle()
-                                .fill(Color.white)
-                        )
-                        .overlay(
-                            Circle()
-                                .stroke(Color.black, lineWidth: GameTheme.Layout.cardBorderWidth)
-                        )
-                        .shadow(color: GameTheme.Colors.cardShadow.opacity(0.4), radius: 16, x: 0, y: 8)
-                        .scaleEffect(showIcon ? 1.0 : 0.5)
-                        .opacity(showIcon ? 1.0 : 0.0)
+                    portraitView
+                        .scaleEffect(visible ? 1.0 : 0.6)
+                        .opacity(visible ? 1.0 : 0.0)
                         .animation(
-                            .spring(response: 0.8, dampingFraction: 0.6)
-                            .delay(0.3),
-                            value: showIcon
+                            reduceMotion ? nil : .spring(response: 0.6, dampingFraction: 0.7),
+                            value: visible
                         )
 
-                    VStack(spacing: 8) {
-                        Text("app_title".localized)
-                            .font(GameTheme.Typography.title)
-                            .foregroundColor(GameTheme.Colors.primaryText)
-                            .padding(.horizontal, 20)
-                            .padding(.vertical, 8)
-                            .background(
-                                Capsule()
-                                    .fill(Color.white.opacity(0.85))
-                            )
-                            .scaleEffect(isAnimated ? 1.0 : 0.8)
-                            .opacity(isAnimated ? 1.0 : 0.0)
-                            .animation(
-                                .spring(response: 0.8, dampingFraction: 0.6)
-                                .delay(0.8),
-                                value: isAnimated
-                            )
+                    titleView
+                        .scaleEffect(visible ? 1.0 : 0.85)
+                        .opacity(visible ? 1.0 : 0.0)
+                        .animation(
+                            reduceMotion ? nil : .spring(response: 0.5, dampingFraction: 0.75).delay(0.15),
+                            value: visible
+                        )
 
-                        Text("app_tagline".localized)
-                            .font(GameTheme.Typography.caption)
-                            .foregroundColor(GameTheme.Colors.secondaryText)
-                            .padding(.horizontal, 16)
-                            .padding(.vertical, 6)
-                            .background(
-                                Capsule()
-                                    .fill(Color.white.opacity(0.75))
-                            )
-                            .opacity(isAnimated ? 1.0 : 0.0)
-                            .animation(
-                                .easeOut(duration: 1.0)
-                                .delay(1.2),
-                                value: isAnimated
-                            )
-                    }
+                    taglineView
+                        .opacity(visible ? 1.0 : 0.0)
+                        .animation(
+                            reduceMotion ? nil : .easeOut(duration: 0.35).delay(0.30),
+                            value: visible
+                        )
                 }
 
                 Spacer()
-
-                // Loading indicator
-                VStack(spacing: 16) {
-                    HStack(spacing: 8) {
-                        ForEach(0..<3, id: \.self) { index in
-                            Circle()
-                                .fill(GameTheme.Colors.primaryAccent)
-                                .frame(width: 12, height: 12)
-                                .scaleEffect(isAnimated ? 1.2 : 0.8)
-                                .animation(
-                                    .easeInOut(duration: 0.6)
-                                    .repeatForever(autoreverses: true)
-                                    .delay(Double(index) * 0.2),
-                                    value: isAnimated
-                                )
-                        }
-                    }
-
-                    Text("loading".localized)
-                        .font(GameTheme.Typography.caption)
-                        .foregroundColor(GameTheme.Colors.secondaryText)
-                        .padding(.horizontal, 16)
-                        .padding(.vertical, 6)
-                        .background(
-                            Capsule()
-                                .fill(Color.white.opacity(0.75))
-                        )
-                        .opacity(isAnimated ? 1.0 : 0.0)
-                        .animation(
-                            .easeOut(duration: 1.0)
-                            .delay(1.0),
-                            value: isAnimated
-                        )
-                }
-                .padding(.bottom, 120)
             }
         }
-        .onAppear {
-            isAnimated = true
-            showIcon = true
+        .task {
+            visible = true
+
+            // Reduce Motion: skip the dwell. The OS storyboard splash already
+            // covers the cold-launch moment; users don't owe us another second.
+            if reduceMotion {
+                onComplete()
+                return
+            }
+
+            try? await Task.sleep(for: Self.dwell)
+            onComplete()
         }
+    }
+
+    // MARK: - Subviews
+
+    private var portraitView: some View {
+        Image("WhitmanPortrait")
+            .resizable()
+            .aspectRatio(contentMode: .fill)
+            .frame(width: 120, height: 120)
+            .clipShape(Circle())
+            .padding(12)
+            .background(Circle().fill(Color.white))
+            .overlay(
+                Circle().stroke(Color.black, lineWidth: GameTheme.Layout.cardBorderWidth)
+            )
+            .shadow(color: GameTheme.Colors.cardShadow.opacity(0.4), radius: 16, x: 0, y: 8)
+    }
+
+    private var titleView: some View {
+        Text("app_title".localized)
+            .font(GameTheme.Typography.title)
+            .foregroundColor(GameTheme.Colors.primaryText)
+            .padding(.horizontal, 20)
+            .padding(.vertical, 8)
+            .background(Capsule().fill(Color.white.opacity(0.85)))
+    }
+
+    private var taglineView: some View {
+        Text("app_tagline".localized)
+            .font(GameTheme.Typography.caption)
+            .foregroundColor(GameTheme.Colors.secondaryText)
+            .padding(.horizontal, 16)
+            .padding(.vertical, 6)
+            .background(Capsule().fill(Color.white.opacity(0.75)))
     }
 }
 
 #Preview {
-    LaunchScreen()
+    LaunchScreen(onComplete: {})
 }

@@ -13,7 +13,7 @@ struct Main: App {
                     .ignoresSafeArea()
 
                 if showLaunchScreen {
-                    LaunchScreen()
+                    LaunchScreen(onComplete: dismissLaunchScreen)
                         .transition(.opacity)
                 } else {
                     ContentView(gameState: gameState)
@@ -22,17 +22,21 @@ struct Main: App {
                 }
             }
             .task {
-                if AppConfiguration.Runtime.isUITesting {
-                    showLaunchScreen = false
-
-                    if AppConfiguration.Runtime.isScreenshotMode {
-                        await ScreenshotFixtures.install(into: coreDataManager)
-                    }
-                } else {
-                    try? await Task.sleep(for: .seconds(2.5))
-                    showLaunchScreen = false
+                guard AppConfiguration.Runtime.isUITesting else { return }
+                // UI tests skip the branding splash so they reach the home
+                // screen immediately; LaunchScreen's onComplete still runs in
+                // the non-UI-testing path.
+                showLaunchScreen = false
+                if AppConfiguration.Runtime.isScreenshotMode {
+                    await ScreenshotFixtures.install(into: coreDataManager)
                 }
             }
+        }
+    }
+
+    private func dismissLaunchScreen() {
+        withAnimation(.easeOut(duration: 0.25)) {
+            showLaunchScreen = false
         }
     }
 }
