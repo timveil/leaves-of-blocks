@@ -10,11 +10,6 @@ struct HomeView: View {
     var body: some View {
         BaseScreenView(showsStatusBar: false) {
             VStack(spacing: GameTheme.Layout.largePadding) {
-                // Invisible accessibility element for UI testing
-                Text("")
-                    .accessibilityIdentifier("home_screen_identifier")
-                    .hidden()
-
                 ScoreDisplayView(
                     score: gameState.highScore,
                     lastScore: gameState.score > 0 ? gameState.score : nil,
@@ -32,6 +27,7 @@ struct HomeView: View {
             }
             .padding(.horizontal, GameTheme.Layout.largePadding)
             .padding(.vertical, GameTheme.Layout.mediumPadding)
+            .accessibilityIdentifier("home_screen_identifier")
         }
     }
 }
