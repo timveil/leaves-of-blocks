@@ -124,21 +124,20 @@ while true; do
 
     echo -e "${BLUE}Asset Generation:${NC}"
     echo " 18) Generate & Copy App Icons"
-    echo " 19) Generate Grass Images"
     echo ""
 
     echo -e "${BLUE}Development Environment:${NC}"
-    echo " 20) Check Environment Status"
-    echo " 21) Setup Ruby (asdf)"
-    echo " 22) Repair Ruby Gems"
-    echo " 23) Configure AI API Key"
+    echo " 19) Check Environment Status"
+    echo " 20) Setup Ruby (asdf)"
+    echo " 21) Repair Ruby Gems"
+    echo " 22) Configure AI API Key"
     echo ""
 
     echo -e "${BLUE}Other:${NC}"
-    echo " 24) Open in Xcode"
-    echo " 25) Run in Simulator (without Xcode)"
-    echo " 26) View CLAUDE.md"
-    echo " 27) View Coding Standards"
+    echo " 23) Open in Xcode"
+    echo " 24) Run in Simulator (without Xcode)"
+    echo " 25) View CLAUDE.md"
+    echo " 26) View Coding Standards"
     echo ""
 
     echo -e "${RED}  0) Exit${NC}"
@@ -269,10 +268,6 @@ while true; do
                        "Generate & Copy App Icons"
             ;;
         19)
-            run_command "python3 ./scripts/generate_grass_images.py" \
-                       "Generate Grass Images"
-            ;;
-        20)
             # Environment Status Check
             echo -e "${BLUE}=== Development Environment Status ===${NC}"
             echo ""
@@ -345,7 +340,7 @@ while true; do
             broken_gems=$(gem list 2>&1 | grep -c "extensions are not built" || true)
             if [ "$broken_gems" -gt 0 ]; then
                 echo -e "${RED}✗ Found gems with broken extensions${NC}"
-                echo -e "${YELLOW}  Run option 21 'Repair Ruby Gems' to fix${NC}"
+                echo -e "${YELLOW}  Run option 20 'Repair Ruby Gems' to fix${NC}"
             else
                 echo -e "${GREEN}✓ No broken gem extensions detected${NC}"
             fi
@@ -365,14 +360,14 @@ while true; do
             else
                 echo -e "${YELLOW}⚠ ANTHROPIC_API_KEY not set${NC}"
                 echo "  AI release notes disabled (using template fallback)"
-                echo "  Run option 23 to configure"
+                echo "  Run option 22 to configure"
             fi
             echo ""
 
             echo -e "${GREEN}Press any key to continue...${NC}"
             read -n 1 -s
             ;;
-        21)
+        20)
             # Setup Ruby with asdf
             echo -e "${BLUE}=== Ruby Setup with asdf ===${NC}"
             echo ""
@@ -485,7 +480,7 @@ while true; do
             echo -e "${GREEN}Press any key to continue...${NC}"
             read -n 1 -s
             ;;
-        22)
+        21)
             # Repair Ruby Gems
             echo -e "${BLUE}=== Repair Ruby Gems ===${NC}"
             echo ""
@@ -557,7 +552,7 @@ while true; do
             echo -e "${GREEN}Press any key to continue...${NC}"
             read -n 1 -s
             ;;
-        23)
+        22)
             # Configure AI API Key
             echo -e "${BLUE}=== Configure AI API Key ===${NC}"
             echo ""
@@ -639,19 +634,19 @@ while true; do
             echo -e "${GREEN}Press any key to continue...${NC}"
             read -n 1 -s
             ;;
-        24)
+        23)
             echo -e "${BLUE}Opening project in Xcode...${NC}"
             open "LeavesOfBlocks.xcodeproj"
             ;;
-        25)
+        24)
             run_command "./scripts/build.sh run" \
                        "Run in Simulator (without Xcode)"
             ;;
-        26)
+        25)
             run_command "cat 'CLAUDE.md' | less" \
                        "View CLAUDE.md"
             ;;
-        27)
+        26)
             run_command "cat 'LeavesOfBlocks/Documentation/CodingStandards.md' | less" \
                        "View Coding Standards"
             ;;
