@@ -74,10 +74,10 @@ struct LaunchScreen: View {
     private var portraitView: some View {
         Image("WhitmanPortrait")
             .resizable()
-            .aspectRatio(contentMode: .fill)
-            .frame(width: 120, height: 120)
+            .aspectRatio(contentMode: .fit)
+            .frame(width: 180, height: 180)
             .clipShape(Circle())
-            .padding(12)
+            .padding(14)
             .background(Circle().fill(Color.white))
             .overlay(
                 Circle().stroke(Color.black, lineWidth: GameTheme.Layout.cardBorderWidth)
