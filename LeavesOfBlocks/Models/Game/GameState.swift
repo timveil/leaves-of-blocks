@@ -1,5 +1,4 @@
 import Foundation
-import SwiftUI
 
 /// The main game state management class that handles all game logic and UI state.
 ///

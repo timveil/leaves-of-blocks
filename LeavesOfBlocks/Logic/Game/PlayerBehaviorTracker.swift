@@ -3,6 +3,12 @@ import Foundation
 // MARK: - Player Behavior Tracking System
 
 /// Tracks player behavior and efficiency metrics throughout the game session.
+///
+/// - Note: Always accessed from the main actor (constructed by `GameState`,
+///   read by SwiftUI views). The class itself is not annotated `@MainActor`
+///   because static helpers in `BlockGenerator` invoke it from
+///   non-isolated contexts that are themselves serialized through
+///   `GameState`'s `@MainActor` boundary.
 @Observable
 final class PlayerBehaviorTracker {
     
@@ -75,6 +81,10 @@ final class PlayerBehaviorTracker {
     @ObservationIgnored private var fallbackCount: Int = 0
     @ObservationIgnored private var totalMeasurements: Int = 0
     @ObservationIgnored private var highTierMeasurements: Int = 0
+
+    /// Cap on per-session metric history. Prevents unbounded memory growth in
+    /// very long sessions; older measurements are dropped from the front.
+    @ObservationIgnored private static let maxHistoryLength = 200
     
     // MARK: - Current Metrics Access
     
@@ -129,10 +139,10 @@ final class PlayerBehaviorTracker {
         let metrics = GridAnalysis.analyzeGrid(grid)
         let tier = GridAnalysis.determineDifficultyTier(for: grid)
         
-        // Record efficiency metrics
-        gridEfficiencyHistory.append(metrics.efficiency)
-        fragmentationHistory.append(metrics.fragmentation)
-        strategicOpportunities.append(metrics.strategicPotential)
+        // Record efficiency metrics, dropping the oldest entries past the cap.
+        appendBounded(&gridEfficiencyHistory, metrics.efficiency)
+        appendBounded(&fragmentationHistory, metrics.fragmentation)
+        appendBounded(&strategicOpportunities, metrics.strategicPotential)
         
         // Track tier usage
         let tierName = tier.description
@@ -147,6 +157,14 @@ final class PlayerBehaviorTracker {
         BuildConfiguration.log("Recorded grid state - Efficiency: \(String(format: "%.3f", metrics.efficiency)), Tier: \(tierName)", level: .verbose)
     }
     
+    /// Appends `value` to `history`, dropping the oldest entry once the cap is exceeded.
+    private func appendBounded(_ history: inout [Double], _ value: Double) {
+        history.append(value)
+        if history.count > Self.maxHistoryLength {
+            history.removeFirst(history.count - Self.maxHistoryLength)
+        }
+    }
+
     /// Records when fallback system activates
     func recordFallbackActivation(from originalTier: GridAnalysis.DifficultyTier, to finalTier: GridAnalysis.DifficultyTier) {
         fallbackCount += 1

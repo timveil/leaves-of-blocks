@@ -625,6 +625,7 @@ enum GameLogic {
     
     /// Validates if a grid position is within valid bounds
     private static func isValidGridPosition(_ position: GridPosition) -> Bool {
-        return position.row.isValidGridIndex && position.col.isValidGridIndex
+        let size = GameTheme.GameConfig.gridSize
+        return position.row.isValidGridIndex(in: size) && position.col.isValidGridIndex(in: size)
     }
 }

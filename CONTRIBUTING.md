@@ -24,6 +24,22 @@ open LeavesOfBlocks.xcodeproj
 
 The interactive `./menu.sh` exposes the same workflows in a menu format.
 
+### Building for a real device
+
+Simulator builds work as-is. To install on a physical device you need to swap
+the upstream code-signing identity for your own Apple Developer Team:
+
+1. Open `LeavesOfBlocks.xcodeproj` in Xcode.
+2. Select the `LeavesOfBlocks` target → **Signing & Capabilities**.
+3. Pick your team from the **Team** dropdown. Xcode will offer a free
+   Personal Team if you don't have a paid membership.
+4. Change the bundle identifier from `timothy.veil.LeavesOfBlocks` to
+   something unique to you (e.g. `com.example.LeavesOfBlocks`). The bundle
+   ID is also referenced in `LeavesOfBlocks.xcodeproj/project.pbxproj`.
+
+Don't commit signing changes when submitting a pull request — keep your local
+team / bundle ID changes in your fork.
+
 ## Development Conventions
 
 - **Coding standards**: All code must follow [`LeavesOfBlocks/Documentation/CodingStandards.md`](LeavesOfBlocks/Documentation/CodingStandards.md). This covers Swift formatting, file organization, naming, DocC documentation, and SwiftUI conventions.

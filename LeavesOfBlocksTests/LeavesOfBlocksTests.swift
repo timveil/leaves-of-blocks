@@ -60,26 +60,26 @@ struct IntAbbreviatedScoreTests {
     }
 }
 
-@Suite("Int.isValidGridIndex")
+@Suite("Int.isValidGridIndex(in:)")
 struct IntIsValidGridIndexTests {
     @Test("Zero is a valid grid index")
     func zero() {
-        #expect(0.isValidGridIndex)
+        #expect(0.isValidGridIndex(in: 8))
     }
 
     @Test("Last in-range index is valid")
     func lastInRange() {
-        #expect(7.isValidGridIndex)
+        #expect(7.isValidGridIndex(in: 8))
     }
 
     @Test("Negative indices are invalid")
     func negative() {
-        #expect(!(-1).isValidGridIndex)
+        #expect(!(-1).isValidGridIndex(in: 8))
     }
 
     @Test("Index equal to the grid size is invalid")
     func atSize() {
-        #expect(!8.isValidGridIndex)
+        #expect(!8.isValidGridIndex(in: 8))
     }
 }
 

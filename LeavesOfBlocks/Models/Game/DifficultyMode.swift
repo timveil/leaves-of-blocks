@@ -1,11 +1,10 @@
 import Foundation
-import SwiftUI
 
 enum DifficultyMode: String, CaseIterable, Codable {
     case easy = "Easy"
-    case moderate = "Moderate" 
+    case moderate = "Moderate"
     case hard = "Hard"
-    
+
     var displayName: String {
         switch self {
         case .easy: return "difficulty_gentle".localized
@@ -33,7 +32,8 @@ enum DifficultyMode: String, CaseIterable, Codable {
         }
     }
 
-    var icon: String {
+    /// SF Symbol name representing this difficulty.
+    var iconName: String {
         switch self {
         case .easy:
             return "leaf.fill"
@@ -41,17 +41,6 @@ enum DifficultyMode: String, CaseIterable, Codable {
             return "square.stack.3d.up.fill"
         case .hard:
             return "flame.fill"
-        }
-    }
-    
-    var color: Color {
-        switch self {
-        case .easy:
-            return GameTheme.Colors.blockGreen
-        case .moderate:
-            return GameTheme.Colors.blockYellow
-        case .hard:
-            return GameTheme.Colors.blockRed
         }
     }
 }

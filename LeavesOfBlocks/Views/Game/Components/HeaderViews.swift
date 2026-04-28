@@ -4,21 +4,13 @@ import SwiftUI
 
 struct SimpleScoreView: View {
     var gameState: GameState
-    
+
     private var displayScore: Int {
-        // Show demo score in screenshot mode
-        if ProcessInfo.processInfo.arguments.contains("-screenshot-mode") {
-            return 941
-        }
-        return gameState.score
+        AppConfiguration.Runtime.isScreenshotMode ? 941 : gameState.score
     }
-    
+
     private var displayLinesCleared: Int {
-        // Show demo lines cleared in screenshot mode
-        if ProcessInfo.processInfo.arguments.contains("-screenshot-mode") {
-            return 13
-        }
-        return gameState.linesCleared
+        AppConfiguration.Runtime.isScreenshotMode ? 13 : gameState.linesCleared
     }
     
     var body: some View {

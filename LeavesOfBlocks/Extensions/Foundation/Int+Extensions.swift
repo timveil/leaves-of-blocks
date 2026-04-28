@@ -30,8 +30,8 @@ extension Int {
         }
     }
     
-    /// Returns true if the number is within a valid grid range
-    var isValidGridIndex: Bool {
-        return self >= 0 && self < GameTheme.GameConfig.gridSize
+    /// Returns `true` if the value is within `[0, gridSize)` — a valid grid axis index.
+    func isValidGridIndex(in gridSize: Int) -> Bool {
+        return self >= 0 && self < gridSize
     }
 }

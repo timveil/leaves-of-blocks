@@ -71,8 +71,7 @@ enum FallingLeavesEffect {
             return emitter
         }
 
-        // Leaf texture - small rounded diamond shape
-        emitter.particleTexture = SKTexture(image: createLeafImage())
+        emitter.particleTexture = leafTexture
 
         // Emission from top, spanning full width
         emitter.position = CGPoint(x: sceneWidth / 2, y: -10)
@@ -145,6 +144,9 @@ enum FallingLeavesEffect {
     }
 
     // MARK: - Private Helpers
+
+    /// Cached leaf texture, generated once per app launch and shared by all emitters.
+    private static let leafTexture: SKTexture = SKTexture(image: createLeafImage())
 
     /// Creates a small leaf-shaped image for the particle texture.
     private static func createLeafImage() -> UIImage {

@@ -1,5 +1,4 @@
 import SpriteKit
-import SwiftUI
 
 // MARK: - Grid Node
 

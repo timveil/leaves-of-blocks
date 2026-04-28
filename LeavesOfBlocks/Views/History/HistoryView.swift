@@ -129,39 +129,6 @@ struct HistoryView: View {
     }
 }
 
-/// Represents a completed game session with all relevant statistics.
-struct GameSession: Equatable {
-    let date: Date
-    let score: Int
-    let blocksPlaced: Int
-    let linesCleared: Int
-    let difficulty: DifficultyMode
-    let gameTime: TimeInterval
-    let averageGridEfficiency: Double?
-    let averageFragmentation: Double?
-    let strategicPlayRating: Double?
-    let challengeMaintained: Double?
-    let fallbackActivations: Int?
-    let efficiencyGrade: String?
-    let strategicGrade: String?
-    let tierUsageDistribution: String?
-
-    var formattedGameTime: String {
-        gameTime.formattedAsClock
-    }
-
-    var formattedDate: String {
-        Self.dateFormatter.string(from: date)
-    }
-
-    private static let dateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateStyle = .medium
-        formatter.timeStyle = .short
-        return formatter
-    }()
-}
-
 #Preview {
     struct PreviewWrapper: View {
         @State private var hasLoadedData = false

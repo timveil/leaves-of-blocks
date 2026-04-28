@@ -18,6 +18,7 @@ import Observation
 /// ## Coordinate System
 /// The scene uses a top-left origin (Y increases downward) to match SwiftUI layout.
 /// The grid is positioned with padding matching `GameTheme.Layout.mediumPadding`.
+@MainActor
 class GameScene: SKScene {
 
     // MARK: - Properties

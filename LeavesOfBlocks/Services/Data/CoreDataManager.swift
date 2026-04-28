@@ -14,6 +14,12 @@ final class CoreDataManager {
     lazy var persistentContainer: NSPersistentContainer = {
         let container = NSPersistentContainer(name: "LeavesOfBlocks")
 
+        // Enable lightweight migration for additive schema changes.
+        if let description = container.persistentStoreDescriptions.first {
+            description.shouldMigrateStoreAutomatically = true
+            description.shouldInferMappingModelAutomatically = true
+        }
+
         container.loadPersistentStores { _, error in
             if let error = error as NSError? {
                 BuildConfiguration.log("Core Data error: \(error.localizedDescription)", level: .error)
@@ -37,21 +43,23 @@ final class CoreDataManager {
     func saveContext() {
         let context = persistentContainer.viewContext
 
-        guard context.hasChanges else { return }
+        context.performAndWait {
+            guard context.hasChanges else { return }
 
-        do {
-            try context.save()
-        } catch {
-            let nsError = error as NSError
-            BuildConfiguration.log("Error saving context: \(nsError.localizedDescription)", level: .error)
+            do {
+                try context.save()
+            } catch {
+                let nsError = error as NSError
+                BuildConfiguration.log("Error saving context: \(nsError.localizedDescription)", level: .error)
 
-            context.rollback()
+                context.rollback()
 
-            NotificationCenter.default.post(
-                name: .coreDataSaveFailure,
-                object: nil,
-                userInfo: ["error": nsError]
-            )
+                NotificationCenter.default.post(
+                    name: .coreDataSaveFailure,
+                    object: nil,
+                    userInfo: ["error": nsError]
+                )
+            }
         }
     }
 
@@ -99,40 +107,42 @@ final class CoreDataManager {
                        linesCleared: Int, longestCombo: Int, gameTime: TimeInterval,
                        sessionMetrics: PlayerBehaviorTracker.SessionMetrics? = nil) {
         let context = viewContext
-        let gameRecord = GameRecord(context: context)
+        context.performAndWait {
+            let gameRecord = GameRecord(context: context)
 
-        gameRecord.id = UUID()
-        gameRecord.score = Int32(score)
-        gameRecord.difficulty = difficulty.rawValue
-        gameRecord.blocksPlaced = Int32(blocksPlaced)
-        gameRecord.linesCleared = Int32(linesCleared)
-        gameRecord.longestCombo = Int32(longestCombo)
-        gameRecord.gameTime = gameTime
-        gameRecord.date = Date()
+            gameRecord.id = UUID()
+            gameRecord.score = Int32(score)
+            gameRecord.difficulty = difficulty.rawValue
+            gameRecord.blocksPlaced = Int32(blocksPlaced)
+            gameRecord.linesCleared = Int32(linesCleared)
+            gameRecord.longestCombo = Int32(longestCombo)
+            gameRecord.gameTime = gameTime
+            gameRecord.date = Date()
 
-        if let metrics = sessionMetrics {
-            gameRecord.averageGridEfficiency = metrics.averageGridEfficiency
-            gameRecord.averageFragmentation = metrics.averageFragmentation
-            gameRecord.strategicPlayRating = metrics.strategicPlayRating
-            gameRecord.challengeMaintained = metrics.challengeMaintained
-            gameRecord.fallbackActivations = Int32(metrics.fallbackActivations)
-            gameRecord.efficiencyGrade = metrics.efficiencyGrade
-            gameRecord.strategicGrade = metrics.strategicGrade
+            if let metrics = sessionMetrics {
+                gameRecord.averageGridEfficiency = metrics.averageGridEfficiency
+                gameRecord.averageFragmentation = metrics.averageFragmentation
+                gameRecord.strategicPlayRating = metrics.strategicPlayRating
+                gameRecord.challengeMaintained = metrics.challengeMaintained
+                gameRecord.fallbackActivations = Int32(metrics.fallbackActivations)
+                gameRecord.efficiencyGrade = metrics.efficiencyGrade
+                gameRecord.strategicGrade = metrics.strategicGrade
 
-            do {
-                let tierData = try JSONSerialization.data(withJSONObject: metrics.tierUsageDistribution)
-                if let tierString = String(data: tierData, encoding: .utf8) {
-                    gameRecord.tierUsageDistribution = tierString
+                do {
+                    let tierData = try JSONSerialization.data(withJSONObject: metrics.tierUsageDistribution)
+                    if let tierString = String(data: tierData, encoding: .utf8) {
+                        gameRecord.tierUsageDistribution = tierString
+                    }
+                } catch {
+                    BuildConfiguration.log("Failed to serialize tier usage distribution: \(error.localizedDescription)", level: .warning)
                 }
-            } catch {
-                BuildConfiguration.log("Failed to serialize tier usage distribution: \(error.localizedDescription)", level: .warning)
             }
-        }
 
-        #if DEBUG
-        let metricsInfo = sessionMetrics != nil ? ", Efficiency: \(String(format: "%.2f", sessionMetrics?.averageGridEfficiency ?? 0.0))" : ""
-        BuildConfiguration.log("Saving game record: Score=\(score), Difficulty=\(difficulty.rawValue), Time=\(Int(gameTime))s\(metricsInfo)", level: .debug)
-        #endif
+            #if DEBUG
+            let metricsInfo = sessionMetrics != nil ? ", Efficiency: \(String(format: "%.2f", sessionMetrics?.averageGridEfficiency ?? 0.0))" : ""
+            BuildConfiguration.log("Saving game record: Score=\(score), Difficulty=\(difficulty.rawValue), Time=\(Int(gameTime))s\(metricsInfo)", level: .debug)
+            #endif
+        }
 
         saveContext()
     }
@@ -142,19 +152,22 @@ final class CoreDataManager {
     /// - Parameter limit: Optional cap on the number of rows returned.
     /// - Returns: Records sorted by `date` descending, or an empty array on error.
     func fetchGameHistory(limit: Int? = nil) -> [GameRecord] {
-        let request: NSFetchRequest<GameRecord> = GameRecord.fetchRequest()
-        request.sortDescriptors = [NSSortDescriptor(key: "date", ascending: false)]
-        request.fetchBatchSize = 20
+        let context = viewContext
+        return context.performAndWait {
+            let request: NSFetchRequest<GameRecord> = GameRecord.fetchRequest()
+            request.sortDescriptors = [NSSortDescriptor(key: "date", ascending: false)]
+            request.fetchBatchSize = 20
 
-        if let limit = limit {
-            request.fetchLimit = limit
-        }
+            if let limit = limit {
+                request.fetchLimit = limit
+            }
 
-        do {
-            return try viewContext.fetch(request)
-        } catch {
-            BuildConfiguration.log("Error fetching game history: \(error.localizedDescription)", level: .error)
-            return []
+            do {
+                return try context.fetch(request)
+            } catch {
+                BuildConfiguration.log("Error fetching game history: \(error.localizedDescription)", level: .error)
+                return []
+            }
         }
     }
 
@@ -163,16 +176,19 @@ final class CoreDataManager {
     /// - Parameter difficulty: Difficulty mode to filter by.
     /// - Returns: Records sorted by `score` descending, or an empty array on error.
     func fetchGameHistory(for difficulty: DifficultyMode) -> [GameRecord] {
-        let request: NSFetchRequest<GameRecord> = GameRecord.fetchRequest()
-        request.predicate = NSPredicate(format: "difficulty == %@", difficulty.rawValue)
-        request.sortDescriptors = [NSSortDescriptor(key: "score", ascending: false)]
-        request.fetchBatchSize = 20
+        let context = viewContext
+        return context.performAndWait {
+            let request: NSFetchRequest<GameRecord> = GameRecord.fetchRequest()
+            request.predicate = NSPredicate(format: "difficulty == %@", difficulty.rawValue)
+            request.sortDescriptors = [NSSortDescriptor(key: "score", ascending: false)]
+            request.fetchBatchSize = 20
 
-        do {
-            return try viewContext.fetch(request)
-        } catch {
-            BuildConfiguration.log("Error fetching game history for difficulty: \(error.localizedDescription)", level: .error)
-            return []
+            do {
+                return try context.fetch(request)
+            } catch {
+                BuildConfiguration.log("Error fetching game history for difficulty: \(error.localizedDescription)", level: .error)
+                return []
+            }
         }
     }
 
@@ -181,15 +197,18 @@ final class CoreDataManager {
     /// - Parameter limit: Maximum number of high scores to fetch. Defaults to 10.
     /// - Returns: Records sorted by `score` descending, or an empty array on error.
     func fetchHighScores(limit: Int = 10) -> [GameRecord] {
-        let request: NSFetchRequest<GameRecord> = GameRecord.fetchRequest()
-        request.sortDescriptors = [NSSortDescriptor(key: "score", ascending: false)]
-        request.fetchLimit = limit
+        let context = viewContext
+        return context.performAndWait {
+            let request: NSFetchRequest<GameRecord> = GameRecord.fetchRequest()
+            request.sortDescriptors = [NSSortDescriptor(key: "score", ascending: false)]
+            request.fetchLimit = limit
 
-        do {
-            return try viewContext.fetch(request)
-        } catch {
-            BuildConfiguration.log("Error fetching high scores: \(error.localizedDescription)", level: .error)
-            return []
+            do {
+                return try context.fetch(request)
+            } catch {
+                BuildConfiguration.log("Error fetching high scores: \(error.localizedDescription)", level: .error)
+                return []
+            }
         }
     }
 
@@ -201,21 +220,24 @@ final class CoreDataManager {
     /// results / `@FetchRequest` continues to show stale rows until the screen
     /// is rebuilt.
     func deleteAllGameRecords() {
-        let request: NSFetchRequest<NSFetchRequestResult> = GameRecord.fetchRequest()
-        let deleteRequest = NSBatchDeleteRequest(fetchRequest: request)
-        deleteRequest.resultType = .resultTypeObjectIDs
+        let context = viewContext
+        context.performAndWait {
+            let request: NSFetchRequest<NSFetchRequestResult> = GameRecord.fetchRequest()
+            let deleteRequest = NSBatchDeleteRequest(fetchRequest: request)
+            deleteRequest.resultType = .resultTypeObjectIDs
 
-        do {
-            let result = try viewContext.execute(deleteRequest) as? NSBatchDeleteResult
-            if let objectIDs = result?.result as? [NSManagedObjectID], !objectIDs.isEmpty {
-                let changes: [AnyHashable: Any] = [NSDeletedObjectsKey: objectIDs]
-                NSManagedObjectContext.mergeChanges(
-                    fromRemoteContextSave: changes,
-                    into: [viewContext]
-                )
+            do {
+                let result = try context.execute(deleteRequest) as? NSBatchDeleteResult
+                if let objectIDs = result?.result as? [NSManagedObjectID], !objectIDs.isEmpty {
+                    let changes: [AnyHashable: Any] = [NSDeletedObjectsKey: objectIDs]
+                    NSManagedObjectContext.mergeChanges(
+                        fromRemoteContextSave: changes,
+                        into: [context]
+                    )
+                }
+            } catch {
+                BuildConfiguration.log("Error deleting all game records: \(error.localizedDescription)", level: .error)
             }
-        } catch {
-            BuildConfiguration.log("Error deleting all game records: \(error.localizedDescription)", level: .error)
         }
     }
 
@@ -228,27 +250,30 @@ final class CoreDataManager {
     /// - Note: Currently fetches and reduces in Swift. With sufficient row counts,
     ///   prefer `NSExpressionDescription` aggregates against the store directly.
     func calculateStatistics() -> GameHistoryStatistics {
-        let request: NSFetchRequest<GameRecord> = GameRecord.fetchRequest()
+        let context = viewContext
+        return context.performAndWait {
+            let request: NSFetchRequest<GameRecord> = GameRecord.fetchRequest()
 
-        do {
-            let records = try viewContext.fetch(request)
+            do {
+                let records = try context.fetch(request)
 
-            let totalGames = records.count
-            let totalScore = records.reduce(0) { $0 + Int($1.score) }
-            let averageScore = totalGames > 0 ? totalScore / totalGames : 0
-            let totalBlocksPlaced = records.reduce(0) { $0 + Int($1.blocksPlaced) }
-            let highScore = records.map { Int($0.score) }.max() ?? 0
+                let totalGames = records.count
+                let totalScore = records.reduce(0) { $0 + Int($1.score) }
+                let averageScore = totalGames > 0 ? totalScore / totalGames : 0
+                let totalBlocksPlaced = records.reduce(0) { $0 + Int($1.blocksPlaced) }
+                let highScore = records.map { Int($0.score) }.max() ?? 0
 
-            return GameHistoryStatistics(
-                totalGames: totalGames,
-                totalScore: totalScore,
-                averageScore: averageScore,
-                totalBlocksPlaced: totalBlocksPlaced,
-                highScore: highScore
-            )
-        } catch {
-            BuildConfiguration.log("Error calculating statistics: \(error.localizedDescription)", level: .error)
-            return GameHistoryStatistics(totalGames: 0, totalScore: 0, averageScore: 0, totalBlocksPlaced: 0, highScore: 0)
+                return GameHistoryStatistics(
+                    totalGames: totalGames,
+                    totalScore: totalScore,
+                    averageScore: averageScore,
+                    totalBlocksPlaced: totalBlocksPlaced,
+                    highScore: highScore
+                )
+            } catch {
+                BuildConfiguration.log("Error calculating statistics: \(error.localizedDescription)", level: .error)
+                return GameHistoryStatistics(totalGames: 0, totalScore: 0, averageScore: 0, totalBlocksPlaced: 0, highScore: 0)
+            }
         }
     }
 }
