@@ -42,17 +42,7 @@ extension View {
     }
     
     // MARK: - Animation Modifiers
-    
-    /// Applies standard game transition animation
-    func gameTransition() -> some View {
-        self
-            .transition(.asymmetric(
-                insertion: .scale.combined(with: .opacity),
-                removal: .scale.combined(with: .opacity)
-            ))
-            .animation(GameTheme.Animations.springAnimation, value: UUID())
-    }
-    
+
     /// Applies pulse animation for highlighting
     func gamePulseAnimation(isPulsing: Bool) -> some View {
         self

@@ -3,7 +3,7 @@ import SwiftUI
 
 /// The main game state management class that handles all game logic and UI state.
 ///
-/// `GameState` is an `ObservableObject` that manages the current state of the game,
+/// `GameState` is an `@Observable` class that manages the current state of the game,
 /// including the grid, active blocks, score, and game statistics. It delegates
 /// business logic to `GameLogic` and infrastructure concerns to `GameService`.
 ///
@@ -12,33 +12,35 @@ import SwiftUI
 /// let gameState = GameState()
 /// gameState.startGame(difficulty: .moderate)
 /// ```
-class GameState: ObservableObject {
-    
-    // MARK: - Published Properties
-    
-    @Published var grid: [[GridCell]]
-    @Published var currentBlocks: [BlockShape]
-    @Published var score: Int = 0
-    @Published var isGameOver: Bool = false
-    @Published var showSaveGameOverlay: Bool = false
-    @Published var linesCleared: Int = 0
-    @Published var lastClearedCells: [ClearedCell] = []
-    
+@MainActor
+@Observable
+final class GameState {
+
+    // MARK: - Observable Properties
+
+    var grid: [[GridCell]]
+    var currentBlocks: [BlockShape]
+    var score: Int = 0
+    var isGameOver: Bool = false
+    var showSaveGameOverlay: Bool = false
+    var linesCleared: Int = 0
+    var lastClearedCells: [ClearedCell] = []
+
     // Game Statistics
-    @Published var blocksPlaced: Int = 0
-    @Published var gameStartTime: Date = Date()
-    @Published var longestCombo: Int = 0
-    @Published var currentCombo: Int = 0
-    @Published var isNewHighScore: Bool = false
-    @Published var specialShapesUsed: Int = 0  // Track special shape usage
-    
+    var blocksPlaced: Int = 0
+    var gameStartTime: Date = Date()
+    var longestCombo: Int = 0
+    var currentCombo: Int = 0
+    var isNewHighScore: Bool = false
+    var specialShapesUsed: Int = 0  // Track special shape usage
+
     // Difficulty mode
-    @Published var currentDifficulty: DifficultyMode = .easy
+    var currentDifficulty: DifficultyMode = .easy
     
     // MARK: - Services
-    
-    private let gameService = GameService()
-    private let behaviorTracker = PlayerBehaviorTracker()
+
+    private let gameService: GameService
+    private let behaviorTracker: PlayerBehaviorTracker
     
     // MARK: - Computed Properties
     
@@ -66,8 +68,21 @@ class GameState: ObservableObject {
     }
     
     // MARK: - Initialization
-    
-    init() {
+
+    /// Creates a new game state.
+    ///
+    /// Service dependencies are injected so tests can pass fakes or capture side effects.
+    /// Pass `nil` (the default) to get a freshly constructed production service.
+    ///
+    /// - Parameters:
+    ///   - gameService: Timing, persistence, and haptics. `nil` constructs a default `GameService`.
+    ///   - behaviorTracker: Per-session efficiency/strategy tracker. `nil` constructs a default `PlayerBehaviorTracker`.
+    init(
+        gameService: GameService? = nil,
+        behaviorTracker: PlayerBehaviorTracker? = nil
+    ) {
+        self.gameService = gameService ?? GameService()
+        self.behaviorTracker = behaviorTracker ?? PlayerBehaviorTracker()
         grid = GameLogic.createEmptyGrid()
         currentBlocks = []
         generateNewBlocks()

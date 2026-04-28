@@ -3,7 +3,7 @@ import SwiftUI
 // MARK: - Save Game Overlay
 
 struct SaveGameOverlayView: View {
-    @ObservedObject var gameState: GameState
+    var gameState: GameState
     let onSaveGame: () -> Void
     let onExitGame: () -> Void
 

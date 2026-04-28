@@ -15,7 +15,7 @@ enum AppScreen: Equatable {
 // MARK: - Main Content View
 
 struct ContentView: View {
-    @ObservedObject var gameState: GameState
+    var gameState: GameState
     @State private var currentScreen: AppScreen = .home
     @State private var pendingNavigation: AppScreen?
 

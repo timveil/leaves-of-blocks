@@ -3,7 +3,7 @@ import SwiftUI
 // MARK: - Current Blocks Components
 
 struct CurrentBlocksView: View {
-    @ObservedObject var gameState: GameState
+    var gameState: GameState
     let cellSize: CGFloat
     let draggedBlock: BlockShape?
     let isDragging: Bool
@@ -86,50 +86,53 @@ struct CurrentBlocksView: View {
 struct BlockView: View {
     let block: BlockShape
     let cellSize: CGFloat
-    
+
     var body: some View {
-        if block.type == .horizontalClear || block.type == .verticalClear || block.type == .areaClear {
-            // Special power-up block rendering
-            ZStack {
-                RoundedRectangle(cornerRadius: GameTheme.Layout.specialBlockCornerRadius)
-                    .fill(block.color.color)
-                    .frame(width: cellSize - 2, height: cellSize - 2)
-                
-                // Icon overlay
-                Image(systemName: block.type.systemIconName)
-                    .foregroundColor(GameTheme.Colors.buttonText)
-                    .font(.system(size: cellSize * GameTheme.Layout.specialBlockIconScale, weight: .bold))
-            }
-        } else {
-            // Normal block rendering
-            ZStack {
-                // Calculate the bounding box of the block
-                let bounds = block.getBounds()
-                
-                let width = CGFloat(bounds.width) * cellSize
-                let height = CGFloat(bounds.height) * cellSize
-                
-                // Background for the block area
-                Rectangle()
-                    .fill(Color.clear)
-                    .frame(width: width, height: height)
-                
-                // Individual leaf-like cells of the block
-                ForEach(Array(block.positions.enumerated()), id: \.offset) { index, position in
-                    RoundedRectangle(cornerRadius: GameTheme.Layout.cellCornerRadius)
+        Group {
+            if block.type == .horizontalClear || block.type == .verticalClear || block.type == .areaClear {
+                // Special power-up block rendering
+                ZStack {
+                    RoundedRectangle(cornerRadius: GameTheme.Layout.specialBlockCornerRadius)
                         .fill(block.color.color)
                         .frame(width: cellSize - 2, height: cellSize - 2)
-                        .overlay(
-                            RoundedRectangle(cornerRadius: GameTheme.Layout.cellCornerRadius)
-                                .strokeBorder(Color.black.opacity(0.3), lineWidth: 1.5)
-                        )
-                        .offset(
-                            x: CGFloat(position.col - bounds.minCol) * cellSize - width/2 + cellSize/2,
-                            y: CGFloat(position.row - bounds.minRow) * cellSize - height/2 + cellSize/2
-                        )
+
+                    // Icon overlay
+                    Image(systemName: block.type.systemIconName)
+                        .foregroundColor(GameTheme.Colors.buttonText)
+                        .font(.system(size: cellSize * GameTheme.Layout.specialBlockIconScale, weight: .bold))
+                }
+            } else {
+                // Normal block rendering
+                ZStack {
+                    // Calculate the bounding box of the block
+                    let bounds = block.getBounds()
+
+                    let width = CGFloat(bounds.width) * cellSize
+                    let height = CGFloat(bounds.height) * cellSize
+
+                    // Background for the block area
+                    Rectangle()
+                        .fill(Color.clear)
+                        .frame(width: width, height: height)
+
+                    // Individual leaf-like cells of the block
+                    ForEach(Array(block.positions.enumerated()), id: \.offset) { index, position in
+                        RoundedRectangle(cornerRadius: GameTheme.Layout.cellCornerRadius)
+                            .fill(block.color.color)
+                            .frame(width: cellSize - 2, height: cellSize - 2)
+                            .overlay(
+                                RoundedRectangle(cornerRadius: GameTheme.Layout.cellCornerRadius)
+                                    .strokeBorder(Color.black.opacity(0.3), lineWidth: 1.5)
+                            )
+                            .offset(
+                                x: CGFloat(position.col - bounds.minCol) * cellSize - width/2 + cellSize/2,
+                                y: CGFloat(position.row - bounds.minRow) * cellSize - height/2 + cellSize/2
+                            )
+                    }
                 }
             }
         }
+        .accessibilityHidden(true)
     }
 }
 
@@ -154,6 +157,7 @@ private struct DraggableBlockView: View {
         }
         .frame(width: getBlockWidth(), height: getBlockHeight())
         .contentShape(Rectangle()) // Ensure entire frame is tappable
+        .accessibilityElement(children: .ignore)
         .accessibilityIdentifier("draggable_block")
         .accessibilityLabel(block.accessibilityLabel)
         .gesture(

@@ -218,13 +218,13 @@ The game includes a flexible configuration system for:
 
 ## License
 
-This project is licensed under the MIT License.
+This project is licensed under the [MIT License](LICENSE).
 
 ## Author
 
-**Timothy Veil**
-- GitHub: [@timveil](https://github.com/timveil)
-- Email: timothy.veil@example.com
+**Tim Veil** — [@timveil](https://github.com/timveil)
+
+For questions, bugs, or feature requests, please [open an issue](https://github.com/timveil/leaves-of-blocks/issues).
 
 ---
 

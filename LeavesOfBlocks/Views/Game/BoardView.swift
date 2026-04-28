@@ -4,7 +4,7 @@ import SpriteKit
 // MARK: - Main Game Board
 
 struct BoardView: View {
-    @ObservedObject var gameState: GameState
+    var gameState: GameState
     @State private var dragState: DragState = DragState()
     @State private var gridFrame: CGRect = .zero
     @State private var blockSlotsFrame: CGRect = .zero

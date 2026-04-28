@@ -3,7 +3,7 @@ import SwiftUI
 // MARK: - Game Summary View
 
 struct SummaryView: View {
-    @ObservedObject var gameState: GameState
+    var gameState: GameState
     let historicalSession: GameSession?
 
     private var score: Int {

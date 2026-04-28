@@ -3,15 +3,17 @@ import UIKit
 
 // MARK: - Game Service
 
-/// Handles game-related services like timing, persistence, and haptic feedback
-class GameService: ObservableObject {
+/// Handles game-related services like timing, persistence, and haptic feedback.
+@MainActor
+@Observable
+final class GameService {
 
     // MARK: - Properties
 
-    @Published var currentGameTime: TimeInterval = 0
-    private var timerTask: Task<Void, Never>?
-    private var gameStartTime: Date = Date()
-    private var isTimerActive: Bool = false
+    var currentGameTime: TimeInterval = 0
+    @ObservationIgnored private var timerTask: Task<Void, Never>?
+    @ObservationIgnored private var gameStartTime: Date = Date()
+    @ObservationIgnored private var isTimerActive: Bool = false
 
     private let coreDataManager = CoreDataManager.shared
 
@@ -20,7 +22,7 @@ class GameService: ObservableObject {
     init() {}
 
     deinit {
-        stopGameTimer()
+        timerTask?.cancel()
     }
 
     // MARK: - Timer Management

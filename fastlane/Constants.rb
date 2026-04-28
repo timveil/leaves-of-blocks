@@ -8,10 +8,13 @@ XCODE_PROJECT = "LeavesOfBlocks.xcodeproj"
 MAIN_SCHEME = "LeavesOfBlocks"
 
 # Developer Information
-DEVELOPER_NAME = "Tim"
-DEVELOPER_LAST_NAME = "Veil"
-DEVELOPER_PHONE = "+1 678 296 7960"
-DEVELOPER_EMAIL = "timveil@mac.com"
+# These are used in App Store Connect review submissions (see app_review_info below).
+# Sourced from environment variables so personal contact details are not committed to the repo.
+# Set them in fastlane/.env (see fastlane/.env.example).
+DEVELOPER_NAME = ENV["LOCAL_FASTLANE_DEVELOPER_FIRST_NAME"]
+DEVELOPER_LAST_NAME = ENV["LOCAL_FASTLANE_DEVELOPER_LAST_NAME"]
+DEVELOPER_PHONE = ENV["LOCAL_FASTLANE_DEVELOPER_PHONE"]
+DEVELOPER_EMAIL = ENV["LOCAL_FASTLANE_DEVELOPER_EMAIL"]
 
 # Build Configuration
 XCODE_VERSION = "26.2"

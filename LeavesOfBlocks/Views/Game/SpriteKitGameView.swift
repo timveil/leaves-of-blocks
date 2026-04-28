@@ -19,7 +19,7 @@ import SpriteKit
 struct SpriteKitGameView: View {
 
     /// The bridge coordinating SwiftUI and SpriteKit communication
-    @ObservedObject var bridge: GameSceneBridge
+    var bridge: GameSceneBridge
 
     var body: some View {
         SpriteView(scene: bridge.scene, options: [.allowsTransparency])
