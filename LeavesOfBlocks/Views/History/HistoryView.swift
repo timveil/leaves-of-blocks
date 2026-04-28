@@ -1,7 +1,7 @@
 import SwiftUI
 
 struct HistoryView: View {
-    @ObservedObject var gameState: GameState
+    var gameState: GameState
     let onSelectSession: (GameSession) -> Void
     @State private var gameHistory: [GameSession] = []
     @State private var statistics = GameStatistics(totalGames: 0, totalScore: 0, averageScore: 0, totalBlocksPlaced: 0, highScore: 0)

@@ -1,16 +1,16 @@
 import SpriteKit
-import Combine
+import Observation
 
 // MARK: - Game Scene
 
 /// The main SpriteKit scene that renders the game grid and blocks.
 ///
-/// `GameScene` observes `GameState` via Combine and renders the 8x8 grid using
-/// SpriteKit nodes. It serves as the rendering layer while all game logic remains
-/// in `GameLogic` and state management stays in `GameState`.
+/// `GameScene` observes `GameState` via the Observation framework and renders the
+/// 8x8 grid using SpriteKit nodes. It serves as the rendering layer while all game
+/// logic remains in `GameLogic` and state management stays in `GameState`.
 ///
 /// ## Architecture
-/// - Subscribes to `GameState.objectWillChange` to detect state changes
+/// - Tracks `GameState.grid` via `withObservationTracking` re-registration
 /// - Uses a dirty flag pattern to only re-render when the model changes
 /// - Delegates all game logic to the existing `GameLogic`/`GameState` system
 /// - Triggers visual effects (placement pop, line-clear particles, combo pulse)
@@ -37,8 +37,8 @@ class GameScene: SKScene {
     /// Grid border width in points
     private let gridBorderWidth: CGFloat = GameTheme.Layout.gridBorderWidth
 
-    /// Combine subscriptions
-    private var cancellables = Set<AnyCancellable>()
+    /// Whether grid observation is active. Set to false on scene teardown to stop re-registering.
+    private var observationActive = false
 
     /// Dirty flag to avoid unnecessary re-renders
     private var needsGridSync = true
@@ -84,12 +84,13 @@ class GameScene: SKScene {
         view.allowsTransparency = true
         setupGrid()
         setupFallingLeaves()
-        subscribeToGameState()
+        observationActive = true
+        observeGameState()
         syncGridFromModel()
     }
 
     override func willMove(from view: SKView) {
-        cancellables.removeAll()
+        observationActive = false
         ghostBlockNode?.removeFromParent()
         ghostBlockNode = nil
         super.willMove(from: view)
@@ -114,16 +115,24 @@ class GameScene: SKScene {
         addChild(emitter)
     }
 
-    /// Subscribes to `GameState` changes via Combine.
-    private func subscribeToGameState() {
-        guard let gameState = gameState else { return }
+    /// Tracks `GameState.grid` mutations and flags the scene for re-render.
+    ///
+    /// `withObservationTracking` fires its `onChange` block exactly once per registration,
+    /// so we re-register inside the dispatched task to keep observing for further changes
+    /// until the scene is torn down (`observationActive == false`).
+    private func observeGameState() {
+        guard observationActive, let gameState = gameState else { return }
 
-        gameState.objectWillChange
-            .receive(on: RunLoop.main)
-            .sink { [weak self] _ in
-                self?.needsGridSync = true
+        withObservationTracking { [weak self] in
+            _ = self?.gameState?.grid
+            _ = gameState // capture to keep tracking valid even if `self` is briefly nil
+        } onChange: { [weak self] in
+            Task { @MainActor [weak self] in
+                guard let self else { return }
+                self.needsGridSync = true
+                self.observeGameState()
             }
-            .store(in: &cancellables)
+        }
     }
 
     // MARK: - Update Loop

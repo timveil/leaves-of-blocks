@@ -41,7 +41,11 @@ final class LeavesOfBlocksUITests: XCTestCase {
         _ = startButton.waitForExistence(timeout: 3)
     }
 
+    @MainActor
     override func tearDownWithError() throws {
+        if let app, app.state != .notRunning {
+            app.terminate()
+        }
         app = nil
     }
 

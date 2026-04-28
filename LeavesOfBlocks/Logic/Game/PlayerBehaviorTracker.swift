@@ -2,8 +2,9 @@ import Foundation
 
 // MARK: - Player Behavior Tracking System
 
-/// Tracks player behavior and efficiency metrics throughout the game session
-class PlayerBehaviorTracker: ObservableObject {
+/// Tracks player behavior and efficiency metrics throughout the game session.
+@Observable
+final class PlayerBehaviorTracker {
     
     // MARK: - Session Metrics
     
@@ -58,16 +59,16 @@ class PlayerBehaviorTracker: ObservableObject {
     }
     
     // MARK: - Tracking Properties
-    
-    @Published private(set) var currentSessionMetrics: SessionMetrics?
-    
-    private var gridEfficiencyHistory: [Double] = []
-    private var fragmentationHistory: [Double] = []
-    private var strategicOpportunities: [Double] = []
-    private var tierUsageCount: [String: Int] = [:]
-    private var fallbackCount: Int = 0
-    private var totalMeasurements: Int = 0
-    private var highTierMeasurements: Int = 0
+
+    private(set) var currentSessionMetrics: SessionMetrics?
+
+    @ObservationIgnored private var gridEfficiencyHistory: [Double] = []
+    @ObservationIgnored private var fragmentationHistory: [Double] = []
+    @ObservationIgnored private var strategicOpportunities: [Double] = []
+    @ObservationIgnored private var tierUsageCount: [String: Int] = [:]
+    @ObservationIgnored private var fallbackCount: Int = 0
+    @ObservationIgnored private var totalMeasurements: Int = 0
+    @ObservationIgnored private var highTierMeasurements: Int = 0
     
     // MARK: - Current Metrics Access
     

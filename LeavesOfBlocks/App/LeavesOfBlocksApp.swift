@@ -11,7 +11,7 @@ import CoreData
 @main
 struct Main: App {
     @State private var showLaunchScreen = true
-    @StateObject private var gameState = GameState()
+    @State private var gameState = GameState()
     let coreDataManager = CoreDataManager.shared
 
     var body: some Scene {

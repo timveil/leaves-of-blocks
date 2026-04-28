@@ -13,7 +13,7 @@ import SwiftUI
 /// and application preferences. Follows the app's design patterns with confirmation
 /// dialogs for destructive actions.
 struct SettingsView: View {
-    @ObservedObject var gameState: GameState
+    var gameState: GameState
     @State private var showingResetOptions = false
     @State private var showingClearHistoryConfirmation = false
     @State private var showingResetAllConfirmation = false

@@ -107,7 +107,7 @@ struct ComboNotificationView: View {
 // MARK: - Combo Notification Manager
 
 struct ComboNotificationOverlay: View {
-    @ObservedObject var gameState: GameState
+    var gameState: GameState
     @State private var activeCombo: (count: Int, bonus: Int)?
     @State private var notificationId: UUID = UUID()
     

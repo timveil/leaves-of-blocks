@@ -13,7 +13,7 @@ struct SimpleAppTitleView: View {
 }
 
 struct SimpleScoreView: View {
-    @ObservedObject var gameState: GameState
+    var gameState: GameState
     
     private var displayScore: Int {
         // Show demo score in screenshot mode

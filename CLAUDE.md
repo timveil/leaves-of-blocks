@@ -18,7 +18,7 @@ Always reference this document before making code changes to ensure consistency 
 
 **NEVER USE HARDCODED TEXT STRINGS IN USER-FACING CODE**
 
-All user-visible text MUST use localization keys from `LeavesOfBlocks/Resources/Localizable.strings`:
+All user-visible text MUST use localization keys from `LeavesOfBlocks/Resources/Localizable.xcstrings` (String Catalog):
 
 **❌ WRONG - Hardcoded strings:**
 ```swift
@@ -36,7 +36,7 @@ Button("start_game".localized) { }
 
 **Enforcement Rules:**
 1. **ALL Text(), Button(), navigationTitle(), etc. MUST use `.localized`**
-2. **Add new keys to Localizable.strings when needed**
+2. **Add new keys to Localizable.xcstrings when needed** (Xcode's String Catalog editor manages this)
 3. **Use descriptive, consistent naming conventions for keys**
 4. **Use parameterized localization for dynamic content: `"score_format".localized(with: score)`**
 5. **This applies to ALL code including previews, debug code, and temporary implementations**
@@ -266,7 +266,7 @@ The app reads version information through `Bundle+Extensions.swift`:
 ### Key Components
 
 #### Core Game Files
-- `Models/Game/GameState.swift` - Core game state management (ObservableObject, streamlined with comprehensive DocC documentation)
+- `Models/Game/GameState.swift` - Core game state management (`@Observable @MainActor` class, streamlined with comprehensive DocC documentation)
 - `Models/Game/BlockModels.swift` - Block shapes, positions, and color definitions (fully documented with DocC)
 - `Models/Game/GridModels.swift` - Grid cell and position data structures  
 - `Models/Game/DifficultyMode.swift` - Difficulty settings and configurations
@@ -318,13 +318,13 @@ The app reads version information through `Bundle+Extensions.swift`:
   - `UIKit/Bundle+Extensions.swift` - Bundle version utilities
 - `Documentation/` - Project documentation and standards:
   - `CodingStandards.md` - Comprehensive coding guidelines and best practices
-- `Testing/` - Development test utilities and future test infrastructure:
-  - `GameLogicTestUtility.swift` - Development utility for basic game logic validation
+
+Unit and UI tests live outside the app target in `LeavesOfBlocksTests/` and `LeavesOfBlocksUITests/` respectively (see Testing Strategy section).
 
 ## Game Architecture Details
 
-### GameState (ObservableObject) - Refactored Architecture
-- **Primary Role**: Pure state management with @Published properties for reactive UI
+### GameState (@Observable, @MainActor) - Refactored Architecture
+- **Primary Role**: Pure state management with `@Observable`-tracked properties for reactive UI
 - **Core Responsibilities**: Manages 8x8 grid, current blocks (up to 3), score, difficulty, game statistics
 - **Delegation Pattern**: Delegates business logic to GameLogic service and infrastructure concerns to GameService
 - **Streamlined Design**: Reduced from 361 lines to ~80 lines through service extraction
@@ -366,7 +366,7 @@ The codebase now follows a clean service-oriented architecture:
 - **Grid Utilities**: Grid manipulation and game state validation
 - **Separation**: Business logic completely separated from UI state management
 
-#### GameService (ObservableObject)
+#### GameService (@Observable, @MainActor)
 - **Infrastructure Concerns**: Timer management, haptic feedback, persistence
 - **Session Management**: Game session lifecycle, high score tracking
 - **External Integrations**: UserDefaults, Core Data, UIKit feedback systems
@@ -432,13 +432,13 @@ Recent comprehensive refactoring achieved major architectural improvements:
 - **Extensibility**: Service layer architecture supports future feature additions
 - **Documentation**: Comprehensive DocC documentation for all public APIs
 - **Code Quality**: Standardized MARK comments and consistent coding patterns
-- **Testing Infrastructure**: Development test utilities ready for migration to proper test targets
+- **Testing Infrastructure**: Dedicated `LeavesOfBlocksTests` (Swift Testing) and `LeavesOfBlocksUITests` (XCTest) targets driven by `TestPlan.xctestplan`
 
 ## Development Notes
 
 - Pure SwiftUI implementation with Core Data for persistence (no external dependencies)
 - Uses NavigationView with StackNavigationViewStyle for consistent iPad behavior
-- ObservableObject/Published pattern for state management
+- `@Observable` macro (iOS 17+) with `@MainActor` isolation for state management
 - Custom drag gesture implementation with visual feedback
 - Modular component architecture with extensive view modifier system
 - Comprehensive configuration system for feature flags and testing
@@ -451,31 +451,20 @@ Recent comprehensive refactoring achieved major architectural improvements:
 
 ## Testing Strategy
 
-### Current Test Implementation Status
-- **Test Framework**: Project currently lacks dedicated test targets
-- **Development Test Utility**: `LeavesOfBlocks/Testing/GameLogicTestUtility.swift` provides basic validation
-- **Test Infrastructure**: Ready for proper test target implementation
+### Test Targets
+- **`LeavesOfBlocksTests/`** — Unit tests using the Swift Testing framework. Covers `BlockModels`, `GameLogic`, `GridModels`, `GameStatistics`.
+- **`LeavesOfBlocksUITests/`** — UI tests using XCTest. Includes launch tests and a Fastlane `SnapshotHelper.swift` for screenshot generation.
+- **`TestPlan.xctestplan`** — Test plan that drives both targets.
 
-### Available Development Testing
-- **GameLogicTestUtility**: Development utility for basic game logic validation
-  - Grid creation and manipulation validation
-  - Block placement validation tests
-  - Score calculation verification
-  - Game over detection testing
-  - Integration flow testing
-  - Usage: Call `GameLogicTestUtility.runAllTests()` in development builds
+### Running Tests
+- `./scripts/build.sh test` — full suite, parallelized
+- `./scripts/build.sh test-unit` / `test-ui` — target-specific runs
+- CI runs unit and UI test jobs concurrently after a shared build job (see `.github/workflows/`)
 
-### Test Framework Integration Notes
-- **Swift Testing**: Framework not currently available in main app target
-- **Recommended Setup**: Create dedicated test targets for comprehensive testing
-- **Migration Path**: Move development utilities to proper test targets with Swift Testing support
-- **Test Standards**: Follow Given-When-Then pattern with descriptive test names
-
-### Future Testing Improvements
-- Create dedicated `LeavesOfBlocksTests` target with Swift Testing framework
-- Implement comprehensive unit tests for GameLogic, BlockModels, and GameState
-- Add UI testing target for user interaction testing
-- Integrate tests with CI/CD pipeline for automated validation
+### Test Standards
+- Swift Testing framework for new unit tests; descriptive `@Test` names
+- Given-When-Then structure for readability
+- Pure-function logic in `Logic/Game/GameLogic.swift` is the easiest target for new coverage
 
 ## GitHub Pages Site
 
@@ -502,15 +491,15 @@ The project hosts documentation at the repository's GitHub Pages URL:
 ### Directory Layout
 - **Main App**: `LeavesOfBlocks/`
   - `Documentation/` - Project documentation and coding standards
-  - `Testing/` - Unit test files using Swift Testing framework
+- **Unit Tests**: `LeavesOfBlocksTests/` (Swift Testing framework)
+- **UI Tests**: `LeavesOfBlocksUITests/` (XCTest)
 - **GitHub Pages**: `docs/`
 - **CI/CD**: `.github/workflows/`
 
-### Important Notes on Test Implementation
-- **Current State**: No dedicated test targets exist in the project
-- **Development Testing**: `LeavesOfBlocks/Testing/GameLogicTestUtility.swift` provides basic validation utilities
-- **Build Commands**: References to "LeavesOfBlocksTests" target in build commands are aspirational
-- **Recommended Action**: Create proper test targets to enable comprehensive testing infrastructure
+### Test Implementation
+- **Unit tests** live in `LeavesOfBlocksTests/` (Swift Testing framework)
+- **UI tests** live in `LeavesOfBlocksUITests/` (XCTest)
+- Both are wired into `TestPlan.xctestplan` and run from `./scripts/build.sh test`
 
 ### Key Project Settings
 - Xcode Project: `LeavesOfBlocks.xcodeproj`
