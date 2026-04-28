@@ -45,17 +45,48 @@ show_header() {
 run_command() {
     local cmd=$1
     local desc=$2
-    
+
     echo -e "${BLUE}Running: ${desc}${NC}"
     echo -e "${YELLOW}Command: ${cmd}${NC}"
     echo ""
-    
+
     # Run the command
     eval "$cmd"
-    
+
     echo ""
     echo -e "${GREEN}Press any key to continue...${NC}"
     read -n 1 -s
+}
+
+# Reset state before a test run.
+#
+# Local test runs occasionally fail with "Application failed preflight checks"
+# when a previous run left a simulator booted with a stale install, or when
+# DerivedData has stale cached metadata about the bundle. This makes every
+# test run start from a known-clean state:
+#
+# 1. Shut down all booted simulators.
+# 2. Erase the project's DerivedData so xcodebuild rebuilds from source.
+prepare_test_environment() {
+    echo -e "${CYAN}Preparing test environment...${NC}"
+
+    if xcrun simctl list devices booted 2>/dev/null | grep -q "(Booted)"; then
+        echo -e "${YELLOW}  Shutting down booted simulator(s)...${NC}"
+        xcrun simctl shutdown all 2>/dev/null || true
+    else
+        echo -e "${YELLOW}  No booted simulators.${NC}"
+    fi
+
+    local derived_pattern="$HOME/Library/Developer/Xcode/DerivedData/LeavesOfBlocks-*"
+    if compgen -G "$derived_pattern" > /dev/null; then
+        echo -e "${YELLOW}  Removing stale DerivedData...${NC}"
+        rm -rf $derived_pattern
+    else
+        echo -e "${YELLOW}  No stale DerivedData.${NC}"
+    fi
+
+    echo -e "${GREEN}  Environment ready.${NC}"
+    echo ""
 }
 
 # Main menu loop
@@ -121,14 +152,17 @@ while true; do
                        "Build for Simulator"
             ;;
         2)
+            prepare_test_environment
             run_command "./scripts/build.sh test" \
                        "Run All Tests"
             ;;
         3)
+            prepare_test_environment
             run_command "./scripts/build.sh test-unit" \
                        "Run Unit Tests Only"
             ;;
         4)
+            prepare_test_environment
             run_command "./scripts/build.sh test-ui" \
                        "Run UI Tests Only"
             ;;
@@ -137,6 +171,7 @@ while true; do
                        "Clean Build"
             ;;
         6)
+            prepare_test_environment
             load_env
             run_command "bundle exec fastlane ios test" \
                        "Run Tests via Fastlane"
