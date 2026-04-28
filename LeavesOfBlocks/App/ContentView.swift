@@ -31,31 +31,38 @@ struct ContentView: View {
                                 Label("home".localized, systemImage: "house")
                             }
                             .disabled(currentScreen == .home)
+                            .accessibilityIdentifier("home_button")
 
                             Button(action: { handleNewGame() }) {
                                 Label("new_game_menu".localized, systemImage: "play")
                             }
+                            .accessibilityIdentifier("new_game_button")
 
                             Divider()
 
                             Button(action: { handleNavigation(to: .howToPlay) }) {
                                 Label("how_to_play_menu".localized, systemImage: "questionmark.circle")
                             }
+                            .accessibilityIdentifier("how_to_play_button")
 
                             Button(action: { handleNavigation(to: .about) }) {
                                 Label("about_menu".localized, systemImage: "info.circle")
                             }
+                            .accessibilityIdentifier("about_button")
 
                             Button(action: { handleNavigation(to: .settings) }) {
                                 Label("settings_menu".localized, systemImage: "gearshape")
                             }
+                            .accessibilityIdentifier("settings_button")
                         } label: {
                             Image(systemName: "line.3.horizontal")
                                 .font(.system(size: 20, weight: .bold))
                                 .foregroundColor(GameTheme.Colors.primaryText)
                                 .frame(width: 40, height: 40)
+                                .contentShape(Rectangle())
                         }
                         .accessibilityIdentifier("menu_button")
+                        .accessibilityLabel("menu_title".localized)
                     }
                 }
                 .toolbarBackground(.hidden, for: .navigationBar)

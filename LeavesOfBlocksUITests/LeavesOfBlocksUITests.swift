@@ -61,7 +61,9 @@ final class LeavesOfBlocksUITests: XCTestCase {
     private func openMenu() {
         let menuButton = app.buttons["menu_button"]
         XCTAssertTrue(menuButton.waitForExistence(timeout: 2), "Menu button should exist")
-        menuButton.tap()
+        // SwiftUI toolbar `Menu` returns an invalid AX hit point on iOS 26,
+        // so tap the element's center coordinate rather than via .tap().
+        menuButton.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
     }
 
     @MainActor
