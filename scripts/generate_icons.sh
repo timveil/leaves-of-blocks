@@ -63,16 +63,7 @@ rsvg-convert -w 16 -h 16 "$SVG_FILE" > tmp/AppIcon-16.png
 # GitHub Pages app icon (for documentation site, transparent background)
 rsvg-convert -w 256 -h 256 --background-color=transparent "$TRANSPARENT_SVG_FILE" > tmp/app-icon.png
 
-# Launch Screen Icons (transparent background for overlay use)
-rsvg-convert -w 120 -h 120 --background-color=transparent "$TRANSPARENT_SVG_FILE" > tmp/LaunchIcon@1x.png
-rsvg-convert -w 240 -h 240 --background-color=transparent "$TRANSPARENT_SVG_FILE" > tmp/LaunchIcon@2x.png
-rsvg-convert -w 360 -h 360 --background-color=transparent "$TRANSPARENT_SVG_FILE" > tmp/LaunchIcon@3x.png
-# For dark mode, we'll use the same transparent icons
-rsvg-convert -w 120 -h 120 --background-color=transparent "$TRANSPARENT_SVG_FILE" > tmp/LaunchIcon-Dark@1x.png
-rsvg-convert -w 240 -h 240 --background-color=transparent "$TRANSPARENT_SVG_FILE" > tmp/LaunchIcon-Dark@2x.png
-rsvg-convert -w 360 -h 360 --background-color=transparent "$TRANSPARENT_SVG_FILE" > tmp/LaunchIcon-Dark@3x.png
-
-echo "✅ Generated all iOS app icons and launch icons successfully!"
+echo "✅ Generated all iOS app icons successfully!"
 echo "📁 Icons saved in ./tmp/ directory"
 echo ""
 echo "Generated icon sizes:"
@@ -83,11 +74,9 @@ echo "📱 Copying icons to iOS project..."
 
 # Define the Assets directory paths
 ASSETS_DIR="LeavesOfBlocks/Assets.xcassets/AppIcon.appiconset"
-LAUNCH_ICON_DIR="LeavesOfBlocks/Assets.xcassets/LaunchIcon.imageset"
 
 # Create directories if they don't exist
 mkdir -p "$ASSETS_DIR"
-mkdir -p "$LAUNCH_ICON_DIR"
 mkdir -p docs
 
 # Copy main app icons
@@ -111,79 +100,9 @@ cp tmp/AppIcon-76.png "$ASSETS_DIR/AppIcon-76.png"            # iPad 76x76
 # App Store icon
 cp tmp/AppIcon-1024.png "$ASSETS_DIR/AppIcon-1024.png"        # App Store 1024x1024
 
-# Copy Launch Screen icons
-echo "📱 Copying Launch Screen icons..."
-cp tmp/LaunchIcon@1x.png "$LAUNCH_ICON_DIR/LaunchIcon@1x.png"
-cp tmp/LaunchIcon@2x.png "$LAUNCH_ICON_DIR/LaunchIcon@2x.png"
-cp tmp/LaunchIcon@3x.png "$LAUNCH_ICON_DIR/LaunchIcon@3x.png"
-cp tmp/LaunchIcon-Dark@1x.png "$LAUNCH_ICON_DIR/LaunchIcon-Dark@1x.png"
-cp tmp/LaunchIcon-Dark@2x.png "$LAUNCH_ICON_DIR/LaunchIcon-Dark@2x.png"
-cp tmp/LaunchIcon-Dark@3x.png "$LAUNCH_ICON_DIR/LaunchIcon-Dark@3x.png"
-
-
 # Copy GitHub Pages app icon
 echo "📄 Copying GitHub Pages app icon..."
 cp tmp/app-icon.png docs/app-icon.png
-
-# Create Contents.json for the launch icon set
-cat > "$LAUNCH_ICON_DIR/Contents.json" << 'EOF'
-{
-  "images" : [
-    {
-      "filename" : "LaunchIcon@1x.png",
-      "idiom" : "universal",
-      "scale" : "1x"
-    },
-    {
-      "appearances" : [
-        {
-          "appearance" : "luminosity",
-          "value" : "dark"
-        }
-      ],
-      "filename" : "LaunchIcon-Dark@1x.png",
-      "idiom" : "universal",
-      "scale" : "1x"
-    },
-    {
-      "filename" : "LaunchIcon@2x.png",
-      "idiom" : "universal",
-      "scale" : "2x"
-    },
-    {
-      "appearances" : [
-        {
-          "appearance" : "luminosity",
-          "value" : "dark"
-        }
-      ],
-      "filename" : "LaunchIcon-Dark@2x.png",
-      "idiom" : "universal",
-      "scale" : "2x"
-    },
-    {
-      "filename" : "LaunchIcon@3x.png",
-      "idiom" : "universal",
-      "scale" : "3x"
-    },
-    {
-      "appearances" : [
-        {
-          "appearance" : "luminosity",
-          "value" : "dark"
-        }
-      ],
-      "filename" : "LaunchIcon-Dark@3x.png",
-      "idiom" : "universal",
-      "scale" : "3x"
-    }
-  ],
-  "info" : {
-    "author" : "xcode",
-    "version" : 1
-  }
-}
-EOF
 
 # Create Contents.json for the icon set
 cat > "$ASSETS_DIR/Contents.json" << 'EOF'
@@ -296,15 +215,13 @@ EOF
 echo ""
 echo "✅ Icons generated and copied to iOS project successfully!"
 echo "📁 App Icons location: $ASSETS_DIR"
-echo "📁 Launch Icons location: $LAUNCH_ICON_DIR"
 echo "📁 GitHub Pages Icon location: docs/app-icon.png"
 echo ""
 echo "🚀 Next steps:"
 echo "1. Open your Xcode project"
 echo "2. Navigate to Assets.xcassets"
 echo "3. The AppIcon should now show all your new green-themed icons"
-echo "4. The LaunchIcon should show your new launch screen icon"
-echo "5. Build and test your app to see the new icons!"
+echo "4. Build and test your app to see the new icons!"
 echo ""
 echo "📱 iOS App Icon Requirements:"
 echo "• iPhone App: 180x180, 120x120"
@@ -313,6 +230,4 @@ echo "• iPhone Settings: 87x87, 58x58, 29x29"
 echo "• iPhone Spotlight: 120x120, 80x80, 40x40"
 echo "• iPad App: 167x167, 152x152, 76x76"
 echo "• App Store: 1024x1024"
-echo "• Launch Screen: 120x120, 240x240, 360x360 (with dark mode variants)"
 echo "• App icons have white background (Apple requirement)"
-echo "• Launch screen icons are transparent for gradient overlay blending"

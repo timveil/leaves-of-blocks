@@ -9,32 +9,29 @@ struct HomeView: View {
 
     var body: some View {
         BaseScreenView(showsStatusBar: false) {
-            VStack {
+            VStack(spacing: GameTheme.Layout.largePadding) {
                 // Invisible accessibility element for UI testing
                 Text("")
                     .accessibilityIdentifier("home_screen_identifier")
                     .hidden()
 
-                Spacer()
+                ScoreDisplayView(
+                    score: gameState.highScore,
+                    lastScore: gameState.score > 0 ? gameState.score : nil,
+                    showHistoryHint: true,
+                    action: onShowHistory
+                )
 
-                VStack(spacing: GameTheme.Layout.largePadding) {
-                    ScoreDisplayView(
-                        score: gameState.highScore,
-                        lastScore: gameState.score > 0 ? gameState.score : nil,
-                        showHistoryHint: true,
-                        action: onShowHistory
+                GoldHeaderCard(title: "ready_to_play".localized) {
+                    DifficultySelectionView(
+                        onStartGame: onStartGame
                     )
-
-                    GoldHeaderCard(title: "ready_to_play".localized) {
-                        DifficultySelectionView(
-                            onStartGame: onStartGame
-                        )
-                    }
                 }
 
-                Spacer()
+                Spacer(minLength: 0)
             }
             .padding(.horizontal, GameTheme.Layout.largePadding)
+            .padding(.vertical, GameTheme.Layout.mediumPadding)
         }
     }
 }

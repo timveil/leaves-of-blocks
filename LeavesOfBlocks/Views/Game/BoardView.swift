@@ -65,8 +65,6 @@ struct BoardView: View {
         BaseScreenView(showsStatusBar: false) {
             ZStack {
                 VStack(spacing: 44) {
-                    Spacer(minLength: 0)
-
                     // Score Row
                     HStack {
                         Spacer()
@@ -123,6 +121,7 @@ struct BoardView: View {
                 }
                 .zIndex(10) // Game elements above grass
                 .padding(.horizontal, GameTheme.Layout.largePadding)
+                .padding(.top, GameTheme.Layout.mediumPadding)
                 .onAppear {
                     if sceneBridge == nil {
                         sceneBridge = GameSceneBridge(gameState: gameState, cellSize: cellSize)
