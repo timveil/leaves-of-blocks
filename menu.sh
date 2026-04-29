@@ -347,8 +347,8 @@ while true; do
             echo ""
 
             # iOS Simulators
-            echo -e "${CYAN}iOS Simulators (iPhone 16 variants):${NC}"
-            xcrun simctl list devices available 2>/dev/null | grep "iPhone 16" || echo "No iPhone 16 simulators found"
+            echo -e "${CYAN}iOS Simulators (iPhone 17 variants):${NC}"
+            xcrun simctl list devices available 2>/dev/null | grep "iPhone 17" || echo "No iPhone 17 simulators found"
             echo ""
 
             # AI Release Notes Configuration

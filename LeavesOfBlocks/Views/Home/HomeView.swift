@@ -27,7 +27,6 @@ struct HomeView: View {
             }
             .padding(.horizontal, GameTheme.Layout.largePadding)
             .padding(.vertical, GameTheme.Layout.mediumPadding)
-            .accessibilityIdentifier("home_screen_identifier")
         }
     }
 }

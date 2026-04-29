@@ -2,8 +2,13 @@
 # Configuration for Fastlane Deliver
 # For more information about available options, run `fastlane deliver --help`
 
-# Import shared constants relative to this file
-require_relative 'Constants'
+# Import shared constants. `require_relative` fails under fastlane's eval-based
+# loader on Ruby 3.x+, so resolve the fastlane dir from Dir.pwd and use
+# `require` (idempotent across fastlane's repeated config evaluations).
+fastlane_dir = ['fastlane', '.']
+  .map { |d| File.expand_path(d, Dir.pwd) }
+  .find { |d| File.exist?(File.join(d, 'Constants.rb')) }
+require File.join(fastlane_dir, 'Constants')
 
 # App identifier
 app_identifier(APP_IDENTIFIER)

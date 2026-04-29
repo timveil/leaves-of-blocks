@@ -13,11 +13,16 @@
 # Uncomment the line if you want fastlane to automatically update itself
 # update_fastlane
 
-# Import shared constants
-require_relative 'Constants'
-
-# Import AI helper for enhanced release notes (optional, graceful fallback)
-require_relative 'AIHelper'
+# Import shared constants and AI helper. `require_relative` fails under
+# fastlane's eval-based loader on Ruby 3.x+ ("cannot infer basepath"), so
+# resolve the fastlane dir from Dir.pwd and use `require` (idempotent —
+# `load` would reassign top-level constants on each fastlane pass and emit
+# "already initialized constant" warnings).
+fastlane_dir = ['fastlane', '.']
+  .map { |d| File.expand_path(d, Dir.pwd) }
+  .find { |d| File.exist?(File.join(d, 'Constants.rb')) }
+require File.join(fastlane_dir, 'Constants')
+require File.join(fastlane_dir, 'AIHelper')
 
 default_platform(:ios)
 
@@ -661,10 +666,13 @@ platform :ios do
   lane :screenshots do
     # Build for testing first
     build_for_testing
-    
-    # Capture screenshots using snapshot (configuration from Snapfile)
+
+    # Capture screenshots using snapshot (configuration from Snapfile).
+    # Restrict to the dedicated screenshot test so unrelated gameplay UI
+    # tests don't run as part of asset generation.
     capture_screenshots(
-      number_of_retries: 0
+      number_of_retries: 0,
+      only_testing: ["LeavesOfBlocksUITests/LeavesOfBlocksUITests/testCaptureScreenshots"]
     )
     
     UI.success("✅ Screenshots captured successfully!")
@@ -789,13 +797,11 @@ platform :ios do
 
   after_all do |lane|
     # This block is called, only if the executed lane was successful
-    notification(message: "Fastlane finished '#{lane}' successfully! 🎉")
+    macos_notification(message: "Fastlane finished '#{lane}' successfully! 🎉")
   end
 
   error do |lane, exception|
     # This block is called, only if the executed lane failed
-    notification(
-      message: "Fastlane '#{lane}' failed with error: #{exception.message} ❌"
-    )
+    macos_notification(message: "Fastlane '#{lane}' failed with error: #{exception.message} ❌")
   end
 end

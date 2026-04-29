@@ -1,9 +1,11 @@
 # Constants.rb
-# Shared constants for Fastlane configuration files
-# Import this file in Deliverfile, Fastfile, and Snapfile with: require_relative 'Constants'
+# Shared constants for Fastlane configuration files.
+# Loaded from Deliverfile, Fastfile, and Snapfile via a Dir.pwd-resolved
+# `require` (require_relative breaks under fastlane's eval-based loader on
+# Ruby 3.x+ — "cannot infer basepath").
 
 # App Configuration
-APP_IDENTIFIER = ENV["LOCAL_FASTLANE_APP_IDENTIFIER"]
+APP_IDENTIFIER = ENV["LOCAL_FASTLANE_APP_IDENTIFIER"] || "timothy.veil.LeavesOfBlocks"
 XCODE_PROJECT = "LeavesOfBlocks.xcodeproj"
 MAIN_SCHEME = "LeavesOfBlocks"
 
@@ -17,13 +19,17 @@ DEVELOPER_PHONE = ENV["LOCAL_FASTLANE_DEVELOPER_PHONE"]
 DEVELOPER_EMAIL = ENV["LOCAL_FASTLANE_DEVELOPER_EMAIL"]
 
 # Build Configuration
-XCODE_VERSION = "26.2"
-IOS_SIMULATOR = "iPhone 17"
+XCODE_VERSION = "26.4.1"
+# Pin the iOS Simulator runtime version. fastlane's snapshot auto-detection
+# uses the runtime label ("iOS 26.4"), but xcodebuild's `-destination` needs
+# the installed point version ("26.4.1"). Update when the runtime changes.
+IOS_VERSION = "26.4.1"
+IOS_SIMULATOR = "iPhone 17 Pro"
 EXPORT_METHOD = "app-store"
 
 # Screenshot Configuration
 SCREENSHOT_DEVICES = [
-  "iPhone 17 Pro Max"   # largest iPhone display (required for App Store Connect)
+  "iPhone 17 Pro"
 ]
 SCREENSHOT_LANGUAGES = [
   "en-US"
@@ -108,3 +114,55 @@ end
 def enterprise_api_key
   api_key_config(in_house: true)
 end
+
+# macOS notification helper. Replaces fastlane's `notification` action, which
+# bundles an x86_64-only `terminal-notifier` binary that errors with "Bad CPU
+# type" on Apple Silicon without Rosetta installed.
+def macos_notification(message:, title: "fastlane")
+  escaped_message = message.to_s.gsub('\\', '\\\\').gsub('"', '\\"')
+  escaped_title = title.to_s.gsub('\\', '\\\\').gsub('"', '\\"')
+  system("osascript", "-e", %(display notification "#{escaped_message}" with title "#{escaped_title}"))
+rescue StandardError
+  nil
+end
+
+# fastlane's DeviceManager parses the `-- iOS 26.4 --` section header from
+# `xcrun simctl list devices` text output and uses that label as the device's
+# os_version. When the runtime's installed point version differs (e.g. the
+# "iOS 26.4" runtime is actually "26.4.1"), xcodebuild's `-destination` rejects
+# `OS:26.4` because the device reports `OS:26.4.1`. Backfill the point version
+# from `xcrun simctl list -j runtimes` so destinations match.
+require 'json'
+require 'open3'
+
+module FastlaneCoreDevicePointVersionFix
+  def simulators(*args, **kwargs)
+    devices = super
+    mapping = _runtime_name_to_version
+    devices.each do |d|
+      full = mapping["#{d.os_type} #{d.os_version}"]
+      if full && full != d.os_version
+        d.os_version = full
+        d.ios_version = full
+      end
+    end
+    devices
+  end
+
+  def _runtime_name_to_version
+    @_runtime_name_to_version ||= begin
+      out, status = Open3.capture2('xcrun', 'simctl', 'list', '-j', 'runtimes')
+      if status.success?
+        JSON.parse(out).fetch('runtimes', []).each_with_object({}) do |r, h|
+          h[r['name']] = r['version'] if r['isAvailable']
+        end
+      else
+        {}
+      end
+    rescue StandardError
+      {}
+    end
+  end
+end
+
+FastlaneCore::DeviceManager.singleton_class.prepend(FastlaneCoreDevicePointVersionFix)
