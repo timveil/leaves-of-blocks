@@ -56,7 +56,7 @@ module AIHelper
     Theme: Autumn/fall aesthetic with warm seasonal colors
     Gameplay: Drag and drop block shapes onto an 8x8 grid to clear horizontal and vertical lines
     Audience: Casual gamers of all ages
-    Key Features: Completely offline, no ads, no tracking, no in-app purchases, COPPA compliant
+    Key Features: Offline gameplay with optional Game Center opt-in (off by default) for leaderboards and achievements; no ads, no third-party tracking, no data sold, no in-app purchases
     Tone for communications: Friendly, warm, inviting - like a cozy autumn day
   CONTEXT
 

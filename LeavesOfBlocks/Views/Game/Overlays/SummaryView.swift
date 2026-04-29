@@ -5,6 +5,7 @@ import SwiftUI
 struct SummaryView: View {
     var gameState: GameState
     let historicalSession: GameSession?
+    var gameCenterService: GameCenterService = .shared
 
     private var score: Int {
         historicalSession?.score ?? gameState.score
@@ -101,6 +102,17 @@ struct SummaryView: View {
                             title: "best_ever".localized,
                             value: gameState.highScore.abbreviatedScore
                         )
+                    }
+
+                    if gameCenterService.isAuthenticated {
+                        FullWidthActionButton(
+                            title: "view_leaderboard".localized,
+                            style: .secondary,
+                            accessibilityId: "view_leaderboard_button"
+                        ) {
+                            gameCenterService.presentDashboard()
+                        }
+                        .padding(.top, GameTheme.Layout.mediumPadding)
                     }
                 }
                 .padding(.horizontal, GameTheme.Layout.largePadding)

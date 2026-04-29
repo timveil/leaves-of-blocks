@@ -14,11 +14,13 @@ import SwiftUI
 /// dialogs for destructive actions.
 struct SettingsView: View {
     var gameState: GameState
+    var gameCenterService: GameCenterService = .shared
     @State private var showingResetOptions = false
     @State private var showingClearHistoryConfirmation = false
     @State private var showingResetAllConfirmation = false
     @State private var resetCompletedMessage: String?
     @State private var showingResetCompleted = false
+    @State private var gameCenterEnabled: Bool = GameCenterPreference.isEnabled
 
     var body: some View {
         BaseScreenView {
@@ -34,6 +36,33 @@ struct SettingsView: View {
 
                         Spacer()
                             .frame(height: GameTheme.Layout.mediumPadding)
+
+                        VStack(alignment: .leading, spacing: GameTheme.Layout.mediumPadding) {
+                            Toggle(isOn: $gameCenterEnabled) {
+                                Text("game_center_enable".localized)
+                                    .font(GameTheme.Typography.body)
+                                    .foregroundColor(GameTheme.Colors.primaryText)
+                            }
+                            .tint(GameTheme.Colors.primaryAccent)
+                            .accessibilityIdentifier("game_center_toggle")
+
+                            Text("game_center_enable_description".localized)
+                                .font(GameTheme.Typography.caption)
+                                .foregroundColor(GameTheme.Colors.secondaryText)
+                                .lineSpacing(4)
+                                .frame(maxWidth: .infinity, alignment: .leading)
+
+                            if gameCenterService.isAuthenticated {
+                                FullWidthActionButton(
+                                    title: "view_game_center".localized,
+                                    style: .secondary,
+                                    accessibilityId: "view_game_center_button"
+                                ) {
+                                    gameCenterService.presentDashboard()
+                                }
+                            }
+                        }
+                        .frame(maxWidth: .infinity, alignment: .leading)
 
                         VStack(spacing: GameTheme.Layout.mediumPadding) {
                             FullWidthActionButton(
@@ -56,6 +85,14 @@ struct SettingsView: View {
                 .padding(.vertical, GameTheme.Layout.mediumPadding)
             }
             .scrollIndicators(.hidden)
+        }
+        .onChange(of: gameCenterEnabled) { _, newValue in
+            GameCenterPreference.isEnabled = newValue
+            if newValue {
+                gameCenterService.authenticateIfEnabled()
+            } else {
+                gameCenterService.userDisabledPreference()
+            }
         }
         .confirmationDialog("clear_game_history".localized, isPresented: $showingClearHistoryConfirmation, titleVisibility: .visible) {
             Button("clear_all_game_history".localized, role: .destructive) {

@@ -45,7 +45,7 @@ ISSUER_ID = ENV["LOCAL_APP_STORE_CONNECT_ISSUER_ID"]
 API_KEY_FILE_PATH = ENV["LOCAL_APP_STORE_CONNECT_API_KEY_PATH"]
 
 # App Store Configuration
-APP_DESCRIPTION = "Leaves of Blocks is a Whitman-inspired block puzzle game. The app is completely offline with no network requests, no ads, no tracking, and no in-app purchases. All features are available immediately upon download. The game includes comprehensive statistics tracking and game history stored locally using Core Data."
+APP_DESCRIPTION = "Leaves of Blocks is a Whitman-inspired block puzzle game. Offline gameplay with optional Apple Game Center support for leaderboards and achievements (off by default). No ads, no third-party tracking, no data sold, no in-app purchases. All features are available immediately upon download. The game includes comprehensive statistics tracking and game history stored locally using Core Data."
 
 # Submission Information Hash
 SUBMISSION_INFO = {

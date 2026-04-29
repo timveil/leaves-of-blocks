@@ -72,6 +72,7 @@ bundle exec fastlane ios submit                # Submit uploaded build for revie
 bundle exec fastlane ios deploy_and_submit     # Build, upload, submit in one
 bundle exec fastlane ios metadata_only         # Update App Store listing only
 bundle exec fastlane ios screenshots_only      # Update screenshots only
+bundle exec fastlane ios setup_game_center     # Create/verify Game Center leaderboards & achievements
 ```
 
 ### CI

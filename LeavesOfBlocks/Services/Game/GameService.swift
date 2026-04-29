@@ -98,7 +98,7 @@ final class GameService {
         sessionMetrics: PlayerBehaviorTracker.SessionMetrics? = nil
     ) {
         // High score is automatically tracked in Core Data
-        
+
         // Save to Core Data
         coreDataManager.saveGameRecord(
             score: score,
@@ -108,6 +108,14 @@ final class GameService {
             longestCombo: longestCombo,
             gameTime: gameTime,
             sessionMetrics: sessionMetrics
+        )
+
+        // Submit to Game Center if the user has opted in. The service is a
+        // no-op when the preference is off or the player isn't authenticated.
+        GameCenterService.shared.submitFinalScore(
+            score: score,
+            sessionMetrics: sessionMetrics,
+            longestCombo: longestCombo
         )
     }
     

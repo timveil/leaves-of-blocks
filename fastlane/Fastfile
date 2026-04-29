@@ -23,6 +23,8 @@ fastlane_dir = ['fastlane', '.']
   .find { |d| File.exist?(File.join(d, 'Constants.rb')) }
 require File.join(fastlane_dir, 'Constants')
 require File.join(fastlane_dir, 'AIHelper')
+require File.join(fastlane_dir, 'GameCenterConfig')
+require File.join(fastlane_dir, 'GameCenterClient')
 
 default_platform(:ios)
 
@@ -723,6 +725,110 @@ platform :ios do
     end
   end
 
+
+  desc "Create or verify Game Center leaderboards and achievements in App Store Connect"
+  desc "Reads from fastlane/GameCenterConfig.rb. Idempotent — entries with matching"
+  desc "vendor identifiers are skipped; new entries are POSTed via the App Store"
+  desc "Connect API. fastlane has no native action for this; see issue #9082."
+  lane :setup_game_center do
+    api_key = app_store_api_key
+
+    token = Spaceship::ConnectAPI.token
+    UI.user_error!("Could not load App Store Connect token — check your API key configuration") unless token
+
+    client = GameCenterClient.new(jwt: token.text)
+
+    UI.message("🎮 Looking up app #{GameCenterConfig::BUNDLE_ID}...")
+    app = client.find_app(bundle_id: GameCenterConfig::BUNDLE_ID)
+    app_id = app.fetch('id')
+    UI.success("  → app id #{app_id}")
+
+    UI.message("🎮 Resolving Game Center detail...")
+    detail = client.get_or_create_game_center_detail(app_id: app_id)
+    detail_id = detail.fetch('id')
+    UI.success("  → gameCenterDetail id #{detail_id}")
+
+    # MARK: - Leaderboards
+
+    UI.message("🏁 Reconciling #{GameCenterConfig::LEADERBOARDS.size} leaderboard(s)...")
+    existing_leaderboards = client.list_leaderboards(detail_id: detail_id)
+    by_vendor = existing_leaderboards.each_with_object({}) do |lb, acc|
+      vid = lb.dig('attributes', 'vendorIdentifier')
+      acc[vid] = lb if vid
+    end
+
+    leaderboard_summary = []
+    GameCenterConfig::LEADERBOARDS.each do |definition|
+      vid = definition[:vendor_identifier]
+      if (existing = by_vendor[vid])
+        UI.message("  ↺ #{vid} already exists (id #{existing['id']}) — skipping")
+        leaderboard_summary << [vid, existing['id'], 'kept']
+        next
+      end
+
+      UI.message("  ＋ Creating leaderboard #{vid}")
+      created = client.create_leaderboard(detail_id: detail_id, definition: definition)
+      lb_id = created.fetch('id')
+
+      definition[:localizations].each do |loc|
+        UI.message("    ＋ Localization #{loc[:locale]}")
+        client.create_leaderboard_localization(leaderboard_id: lb_id, definition: loc)
+      end
+
+      leaderboard_summary << [vid, lb_id, 'created']
+    end
+
+    # MARK: - Achievements
+
+    UI.message("🏆 Reconciling #{GameCenterConfig::ACHIEVEMENTS.size} achievement(s)...")
+    existing_achievements = client.list_achievements(detail_id: detail_id)
+    ach_by_vendor = existing_achievements.each_with_object({}) do |a, acc|
+      vid = a.dig('attributes', 'vendorIdentifier')
+      acc[vid] = a if vid
+    end
+
+    achievement_summary = []
+    GameCenterConfig::ACHIEVEMENTS.each do |definition|
+      vid = definition[:vendor_identifier]
+      if (existing = ach_by_vendor[vid])
+        UI.message("  ↺ #{vid} already exists (id #{existing['id']}) — skipping")
+        achievement_summary << [vid, existing['id'], 'kept']
+        next
+      end
+
+      UI.message("  ＋ Creating achievement #{vid} (#{definition[:points]} pts)")
+      created = client.create_achievement(detail_id: detail_id, definition: definition)
+      ach_id = created.fetch('id')
+
+      definition[:localizations].each do |loc|
+        UI.message("    ＋ Localization #{loc[:locale]}")
+        client.create_achievement_localization(achievement_id: ach_id, definition: loc)
+      end
+
+      achievement_summary << [vid, ach_id, 'created']
+    end
+
+    # MARK: - Summary
+
+    UI.message("")
+    UI.success("✅ Game Center setup complete")
+    UI.message("   App: #{GameCenterConfig::BUNDLE_ID} (#{app_id})")
+    UI.message("   Detail: #{detail_id}")
+    UI.message("   Achievement points total: #{GameCenterConfig.total_achievement_points} / 1000")
+    UI.message("")
+    UI.message("Leaderboards:")
+    leaderboard_summary.each do |vid, id, status|
+      UI.message(format("   %-9s %-32s %s", "[#{status}]", vid, id))
+    end
+    UI.message("")
+    UI.message("Achievements:")
+    achievement_summary.each do |vid, id, status|
+      UI.message(format("   %-9s %-32s %s", "[#{status}]", vid, id))
+    end
+    UI.message("")
+    UI.important("Achievement images are NOT uploaded by this lane. Apple may require them before review;")
+    UI.important("upload via App Store Connect → Game Center → <achievement> → Image, or extend this lane.")
+  end
 
   desc "Clean build artifacts and temporary files"
   lane :clean do

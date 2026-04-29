@@ -1,7 +1,7 @@
-Hello puzzle lovers! We've gathered up some fresh improvements to make your autumn puzzle experience even cozier.
+Hello puzzle lovers! This release brings optional Apple Game Center support to Leaves of Blocks.
 
-In this update, we've added more transparency by including version information and developer links right in the About screen, so you can easily see what version you're enjoying and learn more about the team behind your favorite block puzzle game. We've also enhanced how Leaves of Blocks appears in the App Store, making it easier for fellow puzzle enthusiasts to discover this peaceful, ad-free gaming experience.
+Game Center is opt-in and off by default — head to Settings to enable it whenever you'd like to compete on the leaderboard or earn achievements for your best plays. Leave it off and the game stays exactly as it has always been: yours, on your device.
 
-These thoughtful improvements continue our commitment to providing you with a clean, simple puzzle game that respects your privacy while delivering hours of satisfying gameplay on those crisp autumn evenings.
+The privacy promise hasn't changed: no ads, no third-party tracking, no data sold. Game Center submissions go directly to Apple and only when you choose to opt in.
 
 Thank you for playing Leaves of Blocks!

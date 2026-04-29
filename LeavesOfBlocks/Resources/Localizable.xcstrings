@@ -1431,6 +1431,40 @@
         }
       }
     },
+    "game_center_enable" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Enable Game Center"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Activar Game Center"
+          }
+        }
+      }
+    },
+    "game_center_enable_description" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "When on, your final score and earned achievements are sent to Apple's Game Center. Off by default — your data stays on this device until you opt in. No ads, no third-party tracking, no data sold."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cuando está activado, tu puntuación final y logros se envían a Game Center de Apple. Desactivado por defecto — tus datos permanecen en este dispositivo hasta que aceptes. Sin anuncios, sin rastreo de terceros, sin venta de datos."
+          }
+        }
+      }
+    },
     "game_history" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -2861,13 +2895,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Built with SwiftUI for iOS 18.5+. No ads, no tracking, no data collection. Play offline, scores stay private."
+            "value" : "Built with SwiftUI for iOS 18.5+. No ads. No third-party tracking. No data sold. Play offline by default — opt in to Apple Game Center for leaderboards and achievements."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Construido con SwiftUI para iOS 18.5+. Sin anuncios, sin rastreo, sin recolección de datos. Juega sin conexión, las puntuaciones permanecen privadas."
+            "value" : "Construido con SwiftUI para iOS 18.5+. Sin anuncios. Sin rastreo de terceros. Sin venta de datos. Juega sin conexión por defecto — actívalo en Game Center para tablas de clasificación y logros."
           }
         }
       }
@@ -3106,6 +3140,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Versión %@"
+          }
+        }
+      }
+    },
+    "view_game_center" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "View Game Center"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ver Game Center"
+          }
+        }
+      }
+    },
+    "view_leaderboard" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "View Leaderboard"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ver Tabla de Clasificación"
           }
         }
       }

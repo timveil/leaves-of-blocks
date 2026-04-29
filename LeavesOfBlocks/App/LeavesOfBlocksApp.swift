@@ -22,6 +22,10 @@ struct Main: App {
                 }
             }
             .task {
+                // Authenticate with Game Center if (and only if) the user has
+                // opted in. Apple recommends authenticating once on launch.
+                GameCenterService.shared.authenticateIfEnabled()
+
                 guard AppConfiguration.Runtime.isUITesting else { return }
                 // UI tests skip the branding splash so they reach the home
                 // screen immediately; LaunchScreen's onComplete still runs in
