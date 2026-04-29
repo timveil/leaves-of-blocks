@@ -2,7 +2,7 @@
 
 ## Supported Versions
 
-Only the latest release of Leaves of Blocks receives security updates. The app is a single-player offline iOS game with no networking, no analytics, and no remote services, so the attack surface is intentionally small.
+Only the latest release of Leaves of Blocks receives security updates. The app is a single-player iOS game with no analytics, no third-party SDKs, and no remote services beyond Apple's own Game Center (which is opt-in and off by default). The attack surface is intentionally small.
 
 | Version | Supported |
 |---------|-----------|

@@ -42,7 +42,13 @@
 - **Performance Grades**: A+ through D efficiency ratings
 - **Strategic Analysis**: Master through Beginner skill classifications
 - **Historical Tracking**: Detailed game history with trend analysis
-- **Achievement System**: Track improvement over time
+- **Game Center (opt-in)**: Apple Game Center leaderboard and achievements, off by default — your data stays on the device until you opt in
+
+### Privacy by Default
+- **No ads, no third-party tracking, no data sold**
+- **Offline-first**: gameplay never requires a network connection
+- **Local persistence**: history and high scores live in Core Data on the device
+- **Opt-in Game Center**: leaderboard and achievement sync to Apple only when the user explicitly enables it in Settings
 
 ## Quick Start
 
@@ -106,9 +112,9 @@ All utility scripts are organized in the `scripts/` directory for advanced users
 ## Architecture
 
 ### Technical Stack
-- **Framework**: SwiftUI + SpriteKit (zero external runtime dependencies)
+- **Framework**: SwiftUI + SpriteKit + GameKit + Core Data (system frameworks only — zero third-party runtime dependencies)
 - **State Management**: iOS 17+ `@Observable` macro with `@MainActor` isolation
-- **Persistence**: Core Data for game history and analytics
+- **Persistence**: Core Data for game history and analytics; Game Center leaderboards/achievements when the user opts in
 
 ### Code Organization
 ```
@@ -159,19 +165,42 @@ Use the interactive menu for streamlined deployment:
 
 ### Manual Deployment Commands
 
-For advanced users, direct Fastlane commands are available:
+For advanced users, direct Fastlane commands are available.
+
+#### One-time setup
+
+The Fastlane lanes that talk to App Store Connect (TestFlight, App Store, Game Center) need an API key. Set these env vars (typically in `fastlane/.env` — see `.env.example`):
 
 ```bash
-# Setup (one-time)
-bundle install
-
-# Core deployment commands
-bundle exec fastlane ios beta          # TestFlight
-bundle exec fastlane ios deploy        # App Store
-bundle exec fastlane ios submit        # Submit for review
+LOCAL_APP_STORE_CONNECT_API_KEY_ID=...
+LOCAL_APP_STORE_CONNECT_ISSUER_ID=...
+LOCAL_APP_STORE_CONNECT_API_KEY_PATH=/abs/path/to/AuthKey_XXX.p8
 ```
 
-See [CLAUDE.md](./CLAUDE.md) for comprehensive build commands and deployment procedures.
+The API key role must be **App Manager** or higher to manage Game Center entries.
+
+```bash
+bundle install                                      # install fastlane + gems
+bundle exec fastlane ios test_api_auth              # smoke-test the API key
+bundle exec fastlane ios setup_game_center          # register Game Center leaderboards & achievements (idempotent)
+```
+
+`setup_game_center` reads from `fastlane/GameCenterConfig.rb` and POSTs any missing leaderboard or achievement entries to App Store Connect. Re-run it any time you add or rename entries in that file.
+
+#### Per-release deployment
+
+```bash
+bundle exec fastlane ios beta                              # TestFlight upload
+bundle exec fastlane ios deploy version:patch              # App Store binary + metadata (also: minor, major, or 1.2.3)
+bundle exec fastlane ios deploy_and_submit version:patch   # deploy and submit for review in one shot
+bundle exec fastlane ios submit                            # submit a previously-uploaded build for review
+bundle exec fastlane ios metadata_only                     # listing changes only (no binary)
+bundle exec fastlane ios screenshots_only                  # screenshots only
+```
+
+`deploy` and `deploy_and_submit` regenerate the changelog from your commits, bump the marketing version, increment the build number, commit those changes, and tag `vX.Y.Z` before uploading. For the daily TestFlight loop, `beta` is enough.
+
+See [CLAUDE.md](./CLAUDE.md) for full lane internals and deployment procedures.
 
 ## Documentation
 
@@ -207,14 +236,14 @@ The game includes a flexible configuration system for:
 ### Short-term
 - [ ] Advanced configuration system for difficulty tuning
 - [ ] Enhanced logging and analytics dashboard
-- [ ] Achievement system with unlockable content
 - [ ] Export functionality for performance data
+- [ ] Achievement images uploaded automatically by `setup_game_center` (currently uploaded via App Store Connect web UI)
 
 ### Long-term
 - [ ] Machine learning-based adaptive difficulty
-- [ ] Social features and leaderboards
+- [ ] Friends-only and recurring (daily/weekly) Game Center leaderboards
 - [ ] AI-powered coaching and suggestions
-- [ ] Cross-platform synchronization
+- [ ] iCloud save sync (separate from Game Center)
 
 ## License
 

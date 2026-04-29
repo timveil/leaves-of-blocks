@@ -32,7 +32,8 @@ A SwiftUI + SpriteKit iOS puzzle game ("Leaves of Blocks") in the Block Blast ge
 - Deployment target: iOS 18.5+
 - iPhone-only (`TARGETED_DEVICE_FAMILY = 1`)
 - Xcode 26+; Swift 5
-- Zero external runtime dependencies
+- Zero third-party runtime dependencies (system frameworks only: SwiftUI, SpriteKit, GameKit, Core Data)
+- Game Center is opt-in (off by default), gated behind `GameCenterPreference`. Entitlement lives at `LeavesOfBlocks/LeavesOfBlocks.entitlements`.
 
 ## Build & Test
 
@@ -105,10 +106,11 @@ LeavesOfBlocks/
 │   ├── Game/                     # Game state, blocks, grid, difficulty, statistics
 │   └── Data/                     # Core Data entity (GameRecord)
 ├── Logic/Game/                   # Pure game logic (placement, line clearing, generation, analysis)
+├── LeavesOfBlocks.entitlements   # com.apple.developer.game-center
 ├── Services/
-│   ├── Configuration/            # AppConfiguration, BuildConfiguration (logging)
+│   ├── Configuration/            # AppConfiguration, BuildConfiguration, GameCenterPreference
 │   ├── Data/                     # CoreDataManager
-│   └── Game/                     # GameService (timing, haptics, persistence wrapper)
+│   └── Game/                     # GameService, GameCenterService (auth, score submit, achievements)
 ├── SpriteKit/
 │   ├── GameScene.swift           # SKScene, observes GameState via withObservationTracking
 │   ├── GameSceneBridge.swift     # SwiftUI ↔ SKScene drag-state bridge
@@ -146,7 +148,8 @@ Tests live outside the app target:
 `GameState` is `@Observable @MainActor` and is the single source of truth for in-flight gameplay (grid, current blocks, score, statistics, difficulty, save-overlay flag). It owns and delegates to:
 
 - **`GameLogic`** — static, pure functions for placement validation, line clearing, scoring, game-over detection, and grid construction. No state. The right place to add new game-rule logic.
-- **`GameService`** (`@Observable @MainActor`) — timer, haptics, high-score lookup, game record persistence wrapper, session lifecycle.
+- **`GameService`** (`@Observable @MainActor`) — timer, haptics, high-score lookup, game record persistence wrapper, session lifecycle. Also forwards final scores into `GameCenterService` (no-op when off/unauthenticated).
+- **`GameCenterService`** (`@MainActor @Observable` singleton, `Services/Game/GameCenterService.swift`) — GameKit wrapper. Owns auth state, score submission, achievement reporting, and dashboard presentation. All entry points short-circuit when `GameCenterPreference.isEnabled == false` or the player isn't authenticated. The pure `nonisolated static func evaluateAchievements(...)` derives `PendingAchievement`s from a `SessionMetrics` and is unit-tested.
 - **`PlayerBehaviorTracker`** — per-session efficiency/fragmentation/strategic-play analytics consumed by Summary and persisted to `GameRecord`.
 
 `BlockGenerator` is invoked from `GameState` to produce the next batch of blocks. It uses `GridAnalysis` to score the current grid and pick a difficulty tier (`diverse` / `constrained` / `minimal` / `emergency`) before sampling weighted shapes.
@@ -170,7 +173,7 @@ The bridge is read-only from the SpriteKit side: SwiftUI mutates `GameState`; th
 4. `GameLogic.clearCompletedLines(...)` returns cleared rows/cols and updated grid.
 5. `GameLogic.calculateBlockScore` and `calculateLineScore` compute deltas (10/cell, 100/line, +50/combo line).
 6. `GameLogic.isGameOver(...)` checks whether any remaining held block can fit anywhere.
-7. On game over, `PlayerBehaviorTracker.finalizeSession` produces `SessionMetrics`, which `GameService.saveGameRecord` writes via `CoreDataManager`.
+7. On game over, `PlayerBehaviorTracker.finalizeSession` produces `SessionMetrics`, which `GameService.saveGameRecord` writes via `CoreDataManager` and then forwards to `GameCenterService.shared.submitFinalScore(...)`. The submission is a no-op unless the user has opted in and authenticated.
 
 ### Difficulty Modes
 
@@ -185,6 +188,20 @@ The bridge is read-only from the SpriteKit side: SwiftUI mutates `GameState`; th
 
 Reusable components live under `Views/Components/` (cross-screen) or `Views/Game/Components/` (gameplay-specific).
 
+### Game Center
+
+GameKit integration is opt-in. The toggle lives in `SettingsView` and persists via `GameCenterPreference` (UserDefaults key `gameCenter.enabled`, default `false`). When enabled:
+
+- `LeavesOfBlocksApp.task` calls `GameCenterService.shared.authenticateIfEnabled()` once on launch.
+- After every game-over save, `GameService.saveGameRecord(...)` calls `submitFinalScore(...)` which posts to `GKLeaderboard` and reports achievements via `GKAchievement`.
+- `SettingsView` and `SummaryView` show a "View Game Center / View Leaderboard" button bound to `presentDashboard()` when authenticated.
+
+Identifiers are centralized in two places that **must** stay in sync:
+- `LeavesOfBlocks/Services/Game/GameCenterService.swift` → `enum GameCenterIDs`
+- `fastlane/GameCenterConfig.rb` → `LEADERBOARDS` and `ACHIEVEMENTS`
+
+To add or modify a leaderboard or achievement: update both files, then run `bundle exec fastlane ios setup_game_center` to apply the new entries to App Store Connect (idempotent — existing vendor identifiers are skipped).
+
 ## Persistence
 
 Core Data persists `GameRecord` entries via `CoreDataManager` (`viewContext` only). High scores are derived from the records, not stored separately. `HistoryView` reads via the manager and refreshes on context-change notifications.
@@ -195,9 +212,55 @@ Core Data persists `GameRecord` entries via `CoreDataManager` (`viewContext` onl
 - `Logic/Game/GameLogic.swift` is pure and the easiest target for new coverage.
 - UI tests should drive real flows; prefer `waitForExistence(timeout:)` over `sleep()`.
 
+## Deployment
+
+Production deployments run through Fastlane lanes defined in `fastlane/Fastfile`. Constants and helpers live in `fastlane/Constants.rb`.
+
+### One-time setup
+
+Required env vars (typically loaded from `fastlane/.env`, see `.env.example`):
+
+- `LOCAL_APP_STORE_CONNECT_API_KEY_ID` — App Store Connect API key ID
+- `LOCAL_APP_STORE_CONNECT_ISSUER_ID` — issuer ID for the API key
+- `LOCAL_APP_STORE_CONNECT_API_KEY_PATH` — absolute path to the `.p8` private key
+- The API key role must be **App Manager** or higher to manage Game Center entries.
+
+Then:
+
+```bash
+bundle install                                      # install fastlane + ruby gems
+bundle exec fastlane ios test_api_auth              # verify the API key works
+bundle exec fastlane ios setup_game_center          # one-time: register Game Center leaderboards/achievements
+```
+
+`setup_game_center` is idempotent — re-running it after editing `fastlane/GameCenterConfig.rb` only POSTs new vendor identifiers; existing entries are skipped.
+
+### Per-release flows
+
+```bash
+bundle exec fastlane ios beta                       # bump build, archive, upload to TestFlight
+bundle exec fastlane ios deploy version:patch       # bump version+build, regenerate changelog/release notes, upload binary + metadata
+bundle exec fastlane ios deploy_and_submit version:patch  # deploy + automatically submit for review
+bundle exec fastlane ios submit                     # submit a previously uploaded build for review
+bundle exec fastlane ios metadata_only              # update App Store listing (no binary)
+bundle exec fastlane ios screenshots_only           # update screenshots only
+```
+
+`deploy` and `deploy_and_submit` require a `version:` arg (`patch` / `minor` / `major` / explicit `1.2.3`). They commit the changelog + project bump and tag `vX.Y.Z` automatically.
+
+### Game Center capability
+
+The entitlement (`com.apple.developer.game-center`) is committed at `LeavesOfBlocks/LeavesOfBlocks.entitlements` and wired into both Debug and Release build configs. Automatic code signing typically auto-enables the capability on the App ID at first device build; if it doesn't, run `bundle exec fastlane produce --enable_services game_center` once.
+
 ## Privacy
 
-No data collection, no networking, local-only Core Data + bundled assets.
+The app is built around an opt-in privacy posture:
+
+- **No ads, no third-party tracking, no data sold.** No third-party SDKs, no analytics frameworks, no IDFA, no ATT prompt.
+- **Game Center is opt-in (off by default).** When the user leaves it disabled, the app makes no network requests and all data lives in local Core Data + bundled assets — identical to the pre-integration build.
+- **When opted in**, GameKit submits the final score and achievement progress to Apple's Game Center servers. No data flows to any third party.
+- `LeavesOfBlocks/Resources/PrivacyInfo.xcprivacy` declares `User ID` and `Gameplay Content` as collected, linked, **not** used for tracking.
+- About-screen and App Store metadata copy is the canonical privacy statement; keep `Localizable.xcstrings` (`technical_description`), `fastlane/Constants.rb` (`APP_DESCRIPTION`), and `fastlane/AIHelper.rb` (`APP_CONTEXT`) consistent when revising.
 
 ## Open-Source Notes
 
