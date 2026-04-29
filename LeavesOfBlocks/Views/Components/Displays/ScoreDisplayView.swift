@@ -6,6 +6,7 @@ import SwiftUI
 struct ScoreDisplayView: View {
     let title: String
     let score: Int
+    let subtitle: String?
     let lastScore: Int?
     let showHistoryHint: Bool
     let showIcon: Bool
@@ -15,6 +16,7 @@ struct ScoreDisplayView: View {
     init(
         title: String = "best_score".localized,
         score: Int,
+        subtitle: String? = nil,
         lastScore: Int? = nil,
         showHistoryHint: Bool = false,
         showIcon: Bool = false,
@@ -23,6 +25,7 @@ struct ScoreDisplayView: View {
     ) {
         self.title = title
         self.score = score
+        self.subtitle = subtitle
         self.lastScore = lastScore
         self.showHistoryHint = showHistoryHint
         self.showIcon = showIcon
@@ -76,7 +79,13 @@ struct ScoreDisplayView: View {
                     .lineLimit(1)
                     .minimumScaleFactor(0.7)
                     .padding(.top, showIcon ? 0 : GameTheme.Layout.mediumPadding)
-                
+
+                if let subtitle = subtitle {
+                    Text(subtitle)
+                        .gameCaptionStyle()
+                        .padding(.bottom, GameTheme.Layout.mediumPadding)
+                }
+
                 if let lastScore = lastScore {
                     Text("last_score_format".localized(with: lastScore.formattedScore))
                         .gameCaptionStyle()
