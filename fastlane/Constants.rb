@@ -166,3 +166,32 @@ module FastlaneCoreDevicePointVersionFix
 end
 
 FastlaneCore::DeviceManager.singleton_class.prepend(FastlaneCoreDevicePointVersionFix)
+
+# fastlane snapshot's HTML report (`screenshots.html`) maps screenshot filenames
+# to device sections via a hardcoded list that stops at iPhone 15. Screenshots
+# from newer devices (iPhone 16/17/Air etc.) get filtered out and the report
+# renders empty. Extend the mapping with the modern iPhone lineup.
+begin
+  require 'snapshot/reports_generator'
+  module SnapshotReportsModernDevices
+    EXTRA_DEVICES = {
+      'iPhone Air' => 'iPhone Air',
+      'iPhone 17 Pro Max' => 'iPhone 17 Pro Max',
+      'iPhone 17 Pro' => 'iPhone 17 Pro',
+      'iPhone 17e' => 'iPhone 17e',
+      'iPhone 17' => 'iPhone 17',
+      'iPhone 16 Pro Max' => 'iPhone 16 Pro Max',
+      'iPhone 16 Pro' => 'iPhone 16 Pro',
+      'iPhone 16 Plus' => 'iPhone 16 Plus',
+      'iPhone 16e' => 'iPhone 16e',
+      'iPhone 16' => 'iPhone 16'
+    }.freeze
+
+    def xcode_9_and_above_device_name_mappings
+      EXTRA_DEVICES.merge(super)
+    end
+  end
+  Snapshot::ReportsGenerator.prepend(SnapshotReportsModernDevices)
+rescue LoadError
+  # snapshot not loaded in this fastlane context — skip silently
+end
