@@ -1,0 +1,29 @@
+import SwiftUI
+
+/// A compact title + value tile for stat grids. Wraps `CompactGoldHeaderCard`
+/// with a single-line value rendered in `Typography.title`.
+struct CompactStatCard: View {
+    let title: String
+    let value: String
+
+    var body: some View {
+        CompactGoldHeaderCard(title: title) {
+            Text(value)
+                .font(GameTheme.Typography.title)
+                .foregroundColor(GameTheme.Colors.primaryText)
+                .lineLimit(1)
+                .minimumScaleFactor(0.6)
+        }
+    }
+}
+
+#Preview {
+    LazyVGrid(columns: [GridItem(.flexible()), GridItem(.flexible())], spacing: 16) {
+        CompactStatCard(title: "high_score".localized, value: "12,450")
+        CompactStatCard(title: "games_played".localized, value: "42")
+        CompactStatCard(title: "average_score".localized, value: "3,180")
+        CompactStatCard(title: "total_blocks".localized, value: "1,205")
+    }
+    .padding()
+    .background(GameTheme.Colors.primaryBackground)
+}

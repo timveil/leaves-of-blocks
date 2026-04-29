@@ -70,26 +70,33 @@ struct HistoryView: View {
         gameHistory.reduce(0) { $0 + $1.blocksPlaced }
     }
 
+    private let statColumns = [
+        GridItem(.flexible(), spacing: GameTheme.Layout.mediumPadding),
+        GridItem(.flexible(), spacing: GameTheme.Layout.mediumPadding)
+    ]
+
     var body: some View {
         BaseScreenView {
             ScrollView {
                 VStack(spacing: GameTheme.Layout.mediumPadding) {
-                    HistoryStatCard(
-                        title: "high_score".localized,
-                        value: statistics.highScore.abbreviatedScore
-                    )
-                    HistoryStatCard(
-                        title: "games_played".localized,
-                        value: totalGames.abbreviatedScore
-                    )
-                    HistoryStatCard(
-                        title: "average_score".localized,
-                        value: averageScore.abbreviatedScore
-                    )
-                    HistoryStatCard(
-                        title: "total_blocks".localized,
-                        value: totalBlocksPlaced.abbreviatedScore
-                    )
+                    LazyVGrid(columns: statColumns, spacing: GameTheme.Layout.mediumPadding) {
+                        CompactStatCard(
+                            title: "high_score".localized,
+                            value: statistics.highScore.abbreviatedScore
+                        )
+                        CompactStatCard(
+                            title: "games_played".localized,
+                            value: totalGames.abbreviatedScore
+                        )
+                        CompactStatCard(
+                            title: "average_score".localized,
+                            value: averageScore.abbreviatedScore
+                        )
+                        CompactStatCard(
+                            title: "total_blocks".localized,
+                            value: totalBlocksPlaced.abbreviatedScore
+                        )
+                    }
 
                     // Section divider
                     Text("past_games".localized)

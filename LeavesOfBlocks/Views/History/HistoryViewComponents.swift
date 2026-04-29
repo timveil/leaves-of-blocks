@@ -1,22 +1,5 @@
 import SwiftUI
 
-// MARK: - History Stat Card
-
-struct HistoryStatCard: View {
-    let title: String
-    let value: String
-
-    var body: some View {
-        GoldHeaderCard(title: title) {
-            Text(value)
-                .font(GameTheme.Typography.display)
-                .foregroundColor(GameTheme.Colors.primaryText)
-                .lineLimit(1)
-                .minimumScaleFactor(0.7)
-        }
-    }
-}
-
 // MARK: - Game Session Row
 
 struct GameSessionRow: View {
@@ -24,53 +7,72 @@ struct GameSessionRow: View {
     let isHighScore: Bool
 
     var body: some View {
-        VStack(spacing: GameTheme.Layout.mediumSpacing) {
-            AcornCountView(count: session.difficulty.acornCount, height: 40)
+        HStack(spacing: GameTheme.Layout.mediumSpacing) {
+            AcornCountView(count: session.difficulty.acornCount, height: 24, spacing: 4)
 
             Text(session.score.abbreviatedScore)
-                .font(GameTheme.Typography.display)
+                .font(GameTheme.Typography.title)
                 .foregroundColor(isHighScore ? GameTheme.Colors.accent : GameTheme.Colors.primaryText)
                 .lineLimit(1)
                 .minimumScaleFactor(0.7)
 
+            Spacer(minLength: GameTheme.Layout.mediumSpacing)
+
             Text(session.formattedDate)
                 .font(GameTheme.Typography.caption)
                 .foregroundColor(GameTheme.Colors.secondaryText)
+                .lineLimit(1)
         }
         .frame(maxWidth: .infinity)
-        .padding(GameTheme.Layout.mediumPadding)
+        .padding(.horizontal, GameTheme.Layout.mediumPadding)
+        .padding(.vertical, GameTheme.Layout.smallPadding)
         .background(Color.white)
         .folkArtCard(borderColor: isHighScore ? GameTheme.Colors.accent : .black)
         .accessibilityIdentifier("game_session_row")
     }
 }
 
-#Preview("History Stat Card") {
-    HistoryStatCard(title: "high_score".localized, value: "12,450")
-        .frame(width: 300)
-        .padding()
-}
-
 #Preview("Game Session Row") {
-    GameSessionRow(
-        session: GameSession(
-            date: Date(),
-            score: 8750,
-            blocksPlaced: 42,
-            linesCleared: 12,
-            difficulty: .moderate,
-            gameTime: 185,
-            averageGridEfficiency: nil,
-            averageFragmentation: nil,
-            strategicPlayRating: nil,
-            challengeMaintained: nil,
-            fallbackActivations: nil,
-            efficiencyGrade: nil,
-            strategicGrade: nil,
-            tierUsageDistribution: nil
-        ),
-        isHighScore: true
-    )
-    .frame(width: 300)
+    VStack(spacing: 12) {
+        GameSessionRow(
+            session: GameSession(
+                date: Date(),
+                score: 8750,
+                blocksPlaced: 42,
+                linesCleared: 12,
+                difficulty: .moderate,
+                gameTime: 185,
+                averageGridEfficiency: nil,
+                averageFragmentation: nil,
+                strategicPlayRating: nil,
+                challengeMaintained: nil,
+                fallbackActivations: nil,
+                efficiencyGrade: nil,
+                strategicGrade: nil,
+                tierUsageDistribution: nil
+            ),
+            isHighScore: true
+        )
+        GameSessionRow(
+            session: GameSession(
+                date: Date().addingTimeInterval(-86_400),
+                score: 1240,
+                blocksPlaced: 28,
+                linesCleared: 6,
+                difficulty: .easy,
+                gameTime: 120,
+                averageGridEfficiency: nil,
+                averageFragmentation: nil,
+                strategicPlayRating: nil,
+                challengeMaintained: nil,
+                fallbackActivations: nil,
+                efficiencyGrade: nil,
+                strategicGrade: nil,
+                tierUsageDistribution: nil
+            ),
+            isHighScore: false
+        )
+    }
     .padding()
+    .background(GameTheme.Colors.primaryBackground)
 }
