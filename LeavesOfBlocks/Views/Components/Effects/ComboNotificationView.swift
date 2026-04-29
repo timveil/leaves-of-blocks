@@ -9,7 +9,7 @@ struct ComboNotificationView: View {
     @State private var opacity: Double = 0.0
     @State private var yOffset: CGFloat = 0
     @State private var dismissTask: Task<Void, Never>?
-    
+
     private var comboText: String {
         if comboCount >= 5 {
             return "mega_combo".localized
@@ -19,62 +19,21 @@ struct ComboNotificationView: View {
             return "combo".localized
         }
     }
-    
-    private var comboHeaderGradient: LinearGradient {
-        if comboCount >= 5 {
-            return GameTheme.Gradients.comboHigh
-        } else if comboCount >= 3 {
-            return GameTheme.Gradients.comboMedium
-        } else {
-            return GameTheme.Gradients.comboLow
-        }
-    }
-    
+
     var body: some View {
-        VStack(spacing: 0) {
-            // Header with combo text (similar to ScoreDisplayView header style)
-            Text(comboText)
-                .font(GameTheme.Typography.headline)
-                .fontWeight(.bold)
-                .foregroundColor(GameTheme.Colors.buttonText)
-                .frame(maxWidth: .infinity)
-                .padding(.horizontal, GameTheme.Layout.largePadding)
-                .padding(.vertical, GameTheme.Layout.mediumPadding)
-                .background(comboHeaderGradient)
-            
-            // Content area with game styling (similar to ScoreDisplayView content)
+        GoldHeaderCard(title: comboText) {
             VStack(spacing: GameTheme.Layout.smallSpacing) {
-                // Lines cleared indicator
                 Text("lines_cleared_format".localized(with: comboCount))
                     .font(GameTheme.Typography.body)
                     .foregroundColor(GameTheme.Colors.secondaryText)
-                    .padding(.top, GameTheme.Layout.mediumPadding)
-                
-                // Bonus points with larger, prominent display
+
                 Text("+\(bonusPoints)")
-                    .font(GameTheme.Typography.title)
-                    .fontWeight(.bold)
+                    .font(GameTheme.Typography.display)
                     .foregroundColor(GameTheme.Colors.primaryText)
-                    .padding(.bottom, GameTheme.Layout.mediumPadding)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.7)
             }
-            .frame(maxWidth: .infinity)
-            .padding(.horizontal, GameTheme.Layout.largePadding)
-            .background(GameTheme.Colors.cardBackground)
         }
-        .clipShape(RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius))
-        .overlay(
-            RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius)
-                .stroke(
-                    GameTheme.Gradients.cardBorder,
-                    lineWidth: 2
-                )
-        )
-        .shadow(
-            color: GameTheme.Colors.cardShadow.opacity(0.3),
-            radius: 12,
-            x: 0,
-            y: 6
-        )
         .frame(maxWidth: 280)
         .accessibilityElement(children: .ignore)
         .accessibilityLabel("ax_combo_format".localized(with: comboText, comboCount, bonusPoints))
@@ -114,10 +73,12 @@ struct ComboNotificationOverlay: View {
     var body: some View {
         ZStack {
             if let combo = activeCombo {
-                // Semi-transparent background to dim the game
-                GameTheme.Colors.primaryText.opacity(0.4)
+                // Match the dim used by GameOver / SaveGame overlays so the
+                // combo popup reads with the same visual weight as those modals.
+                Color.black.opacity(0.7)
                     .ignoresSafeArea()
-                
+                    .transition(.opacity)
+
                 // Position combo notification higher on screen
                 VStack {
                     ComboNotificationView(
@@ -125,14 +86,16 @@ struct ComboNotificationOverlay: View {
                         bonusPoints: combo.bonus
                     )
                     .padding(.top, 80) // Position higher than center
-                    
+
                     Spacer()
                 }
                 .id(notificationId) // Force recreation for each new combo
                 .task {
                     // Clear the combo after animation completes - faster dismissal
                     try? await Task.sleep(for: .seconds(1.0))
-                    activeCombo = nil
+                    withAnimation(.easeInOut(duration: 0.25)) {
+                        activeCombo = nil
+                    }
                 }
             }
         }
@@ -140,7 +103,9 @@ struct ComboNotificationOverlay: View {
             // Only show notification for combos of 2+ lines
             if newCombo >= 2 {
                 let bonusPoints = (newCombo - 1) * GameTheme.GameConfig.comboBonus
-                activeCombo = (count: newCombo, bonus: bonusPoints)
+                withAnimation(.easeInOut(duration: 0.2)) {
+                    activeCombo = (count: newCombo, bonus: bonusPoints)
+                }
                 notificationId = UUID() // Generate new ID to force recreation
             }
         }

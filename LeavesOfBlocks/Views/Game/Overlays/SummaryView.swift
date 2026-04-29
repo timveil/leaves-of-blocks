@@ -123,9 +123,31 @@ private struct SummaryDifficultyTile: View {
     }
 }
 
-#Preview {
+#Preview("Empty") {
     SummaryView(
         gameState: GameState(),
         historicalSession: nil
+    )
+}
+
+#Preview("Historical") {
+    SummaryView(
+        gameState: GameState(),
+        historicalSession: GameSession(
+            date: Date().addingTimeInterval(-3_600),
+            score: 8_750,
+            blocksPlaced: 42,
+            linesCleared: 12,
+            difficulty: .moderate,
+            gameTime: 215,
+            averageGridEfficiency: 0.72,
+            averageFragmentation: 0.34,
+            strategicPlayRating: 0.65,
+            challengeMaintained: 0.58,
+            fallbackActivations: 1,
+            efficiencyGrade: "A-",
+            strategicGrade: "B+",
+            tierUsageDistribution: "diverse:14,constrained:18,minimal:6"
+        )
     )
 }

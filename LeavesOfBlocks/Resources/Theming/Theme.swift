@@ -30,32 +30,5 @@ extension GameTheme {
             endPoint: .bottomTrailing
         )
 
-        // MARK: - Card & UI Gradients
-
-        static let cardBorder = LinearGradient(
-            colors: [Colors.gridBorder.opacity(0.25), Colors.gridBorder.opacity(0.10)],
-            startPoint: .topLeading,
-            endPoint: .bottomTrailing
-        )
-
-        // MARK: - Combo Effect Gradients
-
-        static let comboLow = LinearGradient(
-            colors: [Colors.primaryAccent, Colors.primaryAccent.opacity(0.8)],
-            startPoint: .topLeading,
-            endPoint: .bottomTrailing
-        )
-
-        static let comboMedium = LinearGradient(
-            colors: [Colors.secondaryAccent, Colors.secondaryAccent.opacity(0.8)],
-            startPoint: .topLeading,
-            endPoint: .bottomTrailing
-        )
-
-        static let comboHigh = LinearGradient(
-            colors: [Colors.lineCompletionPrimary, Colors.lineCompletionSecondary],
-            startPoint: .topLeading,
-            endPoint: .bottomTrailing
-        )
     }
 }
