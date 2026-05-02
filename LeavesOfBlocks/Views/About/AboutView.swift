@@ -16,41 +16,30 @@ struct AboutView: View {
     var body: some View {
         BaseScreenView {
             ScrollView {
-                VStack(spacing: 0) {
-                    // Header with gold background
-                    VStack(spacing: 4) {
-                        Text("about_the_game".localized)
-                            .font(GameTheme.Typography.title)
-                            .foregroundColor(GameTheme.Colors.buttonText)
+                VStack(alignment: .leading, spacing: GameTheme.Layout.mediumPadding) {
+                    VStack(alignment: .leading, spacing: 4) {
+                        StrokedTitle(text: "about_the_game".localized)
 
                         Text("version_format".localized(with: Bundle.main.appVersion))
                             .font(GameTheme.Typography.caption)
-                            .foregroundColor(GameTheme.Colors.buttonText.opacity(0.8))
+                            .foregroundColor(.white)
+                            .shadow(color: .black.opacity(0.6), radius: 1, x: 0, y: 0)
+                            .padding(.leading, 2)
                     }
-                    .frame(maxWidth: .infinity)
-                    .padding(.horizontal, GameTheme.Layout.largePadding)
-                    .padding(.vertical, GameTheme.Layout.mediumPadding)
-                    .background(GameTheme.Colors.accent)
-                    .overlay(
-                        Rectangle()
-                            .frame(height: GameTheme.Layout.dividerHeight)
-                            .foregroundColor(.black),
-                        alignment: .bottom
+                    .padding(.bottom, GameTheme.Layout.smallSpacing)
+
+                    WhitmanQuoteCard(
+                        quoteLines: [
+                            "answer".localized,
+                            "whitman_quote_1".localized,
+                            "whitman_quote_2".localized
+                        ],
+                        title: "whitman_title".localized,
+                        year: "whitman_year".localized
                     )
 
-                    // Content sections
+                    // Main content card
                     VStack(alignment: .leading, spacing: GameTheme.Layout.largePadding) {
-                        QuoteView(
-                            quoteLines: [
-                                "answer".localized,
-                                "whitman_quote_1".localized,
-                                "whitman_quote_2".localized
-                            ],
-                            author: "whitman_author".localized,
-                            title: "whitman_title".localized,
-                            year: "whitman_year".localized
-                        )
-
                         // Inspiration
                         VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
                             Text("inspiration".localized)
@@ -101,9 +90,10 @@ struct AboutView: View {
                         }
                     }
                     .padding(GameTheme.Layout.largePadding)
-                    .background(Color.white)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(GameTheme.Colors.cardBackground)
+                    .folkArtCard()
                 }
-                .folkArtCard()
                 .padding(.horizontal, GameTheme.Layout.largePadding)
                 .padding(.vertical, GameTheme.Layout.mediumPadding)
                 .padding(.bottom, 120)

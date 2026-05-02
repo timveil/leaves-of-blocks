@@ -26,31 +26,34 @@ struct FullWidthActionButton: View {
     enum ActionButtonStyle {
         case primary
         case secondary
+        case warning
         case danger
         case success
-        
+
         var backgroundColor: Color {
             switch self {
             case .primary: return GameTheme.Colors.primaryAccent
             case .secondary: return GameTheme.Colors.containerBackground
+            case .warning: return GameTheme.Colors.blockOrange
             case .danger: return GameTheme.Colors.error
             case .success: return GameTheme.Colors.success
             }
         }
-        
+
         var textColor: Color {
             switch self {
             case .primary: return GameTheme.Colors.buttonText
+            case .warning: return GameTheme.Colors.buttonText
             case .danger: return GameTheme.Colors.buttonText
             case .secondary: return GameTheme.Colors.primaryText
             case .success: return GameTheme.Colors.buttonText
             }
         }
-        
+
         var borderColor: Color? {
             switch self {
             case .secondary: return GameTheme.Colors.gridBorder
-            case .primary, .danger, .success: return nil
+            case .primary, .warning, .danger, .success: return nil
             }
         }
     }

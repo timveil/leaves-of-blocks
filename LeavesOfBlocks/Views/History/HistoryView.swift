@@ -41,7 +41,10 @@ struct HistoryView: View {
     var body: some View {
         BaseScreenView {
             ScrollView {
-                VStack(spacing: GameTheme.Layout.mediumPadding) {
+                VStack(alignment: .leading, spacing: GameTheme.Layout.mediumPadding) {
+                    StrokedTitle(text: "history_menu".localized)
+                        .padding(.bottom, GameTheme.Layout.smallSpacing)
+
                     if gameHistory.isEmpty {
                         Text("no_games_yet".localized)
                             .font(GameTheme.Typography.body)

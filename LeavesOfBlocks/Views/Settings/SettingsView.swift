@@ -25,64 +25,66 @@ struct SettingsView: View {
     var body: some View {
         BaseScreenView {
             ScrollView {
-                GoldHeaderCard(title: "settings".localized) {
-                    VStack(spacing: GameTheme.Layout.largePadding) {
-                        QuoteView(
-                            quote: "settings_quote".localized,
-                            author: "settings_author".localized,
-                            title: "settings_title".localized,
-                            year: "settings_year".localized
-                        )
+                VStack(alignment: .leading, spacing: GameTheme.Layout.mediumPadding) {
+                    StrokedTitle(text: "settings".localized)
+                        .padding(.bottom, GameTheme.Layout.smallSpacing)
 
-                        Spacer()
-                            .frame(height: GameTheme.Layout.mediumPadding)
+                    WhitmanQuoteCard(
+                        quote: "settings_quote".localized,
+                        title: "settings_title".localized,
+                        year: "settings_year".localized
+                    )
 
-                        VStack(alignment: .leading, spacing: GameTheme.Layout.mediumPadding) {
-                            Toggle(isOn: $gameCenterEnabled) {
-                                Text("game_center_enable".localized)
-                                    .font(GameTheme.Typography.body)
-                                    .foregroundColor(GameTheme.Colors.primaryText)
-                            }
-                            .tint(GameTheme.Colors.primaryAccent)
-                            .accessibilityIdentifier("game_center_toggle")
-
-                            Text("game_center_enable_description".localized)
-                                .font(GameTheme.Typography.caption)
-                                .foregroundColor(GameTheme.Colors.secondaryText)
-                                .lineSpacing(4)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-
-                            if gameCenterService.isAuthenticated {
-                                FullWidthActionButton(
-                                    title: "view_game_center".localized,
-                                    style: .secondary,
-                                    accessibilityId: "view_game_center_button"
-                                ) {
-                                    gameCenterService.presentDashboard()
-                                }
-                            }
+                    VStack(alignment: .leading, spacing: GameTheme.Layout.mediumPadding) {
+                        Toggle(isOn: $gameCenterEnabled) {
+                            Text("game_center_enable".localized)
+                                .font(GameTheme.Typography.body)
+                                .foregroundColor(GameTheme.Colors.primaryText)
                         }
-                        .frame(maxWidth: .infinity, alignment: .leading)
+                        .tint(GameTheme.Colors.primaryAccent)
+                        .accessibilityIdentifier("game_center_toggle")
 
-                        VStack(spacing: GameTheme.Layout.mediumPadding) {
-                            FullWidthActionButton(
-                                title: "clear_game_history".localized,
-                                style: .secondary
-                            ) {
-                                showingClearHistoryConfirmation = true
-                            }
+                        Text("game_center_enable_description".localized)
+                            .font(GameTheme.Typography.caption)
+                            .foregroundColor(GameTheme.Colors.secondaryText)
+                            .lineSpacing(4)
+                            .frame(maxWidth: .infinity, alignment: .leading)
 
+                        if gameCenterService.isAuthenticated {
                             FullWidthActionButton(
-                                title: "reset_all_data".localized,
-                                style: .danger
+                                title: "view_game_center".localized,
+                                style: .secondary,
+                                accessibilityId: "view_game_center_button"
                             ) {
-                                showingResetAllConfirmation = true
+                                gameCenterService.presentDashboard()
                             }
                         }
                     }
+                    .padding(GameTheme.Layout.largePadding)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(GameTheme.Colors.cardBackground)
+                    .folkArtCard()
+
+                    VStack(spacing: GameTheme.Layout.mediumPadding) {
+                        FullWidthActionButton(
+                            title: "clear_game_history".localized,
+                            style: .warning
+                        ) {
+                            showingClearHistoryConfirmation = true
+                        }
+
+                        FullWidthActionButton(
+                            title: "reset_all_data".localized,
+                            style: .danger
+                        ) {
+                            showingResetAllConfirmation = true
+                        }
+                    }
+                    .padding(.top, GameTheme.Layout.smallSpacing)
                 }
                 .padding(.horizontal, GameTheme.Layout.largePadding)
                 .padding(.vertical, GameTheme.Layout.mediumPadding)
+                .padding(.bottom, 120)
             }
             .scrollIndicators(.hidden)
         }

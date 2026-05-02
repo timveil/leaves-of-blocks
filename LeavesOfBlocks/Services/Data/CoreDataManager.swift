@@ -276,6 +276,76 @@ final class CoreDataManager {
             }
         }
     }
+
+    /// Aggregates the richer set of statistics shown on the Statistics screen.
+    ///
+    /// Single fetch, then delegates to `ExtendedStatistics.aggregate(_:)` for
+    /// the pure-Swift reductions. The aggregation is exposed as a `static func`
+    /// so it can be unit-tested without a Core Data stack.
+    func calculateExtendedStatistics() -> ExtendedStatistics {
+        let context = viewContext
+        return context.performAndWait {
+            let request: NSFetchRequest<GameRecord> = GameRecord.fetchRequest()
+
+            do {
+                let records = try context.fetch(request)
+                let snapshots = records.map(GameRecordSnapshot.init(record:))
+                return ExtendedStatistics.aggregate(snapshots)
+            } catch {
+                BuildConfiguration.log("Error calculating extended statistics: \(error.localizedDescription)", level: .error)
+                return .empty
+            }
+        }
+    }
+}
+
+/// Value-typed projection of `GameRecord` used for testable aggregation.
+struct GameRecordSnapshot {
+    let score: Int
+    let difficulty: String?
+    let blocksPlaced: Int
+    let linesCleared: Int
+    let longestCombo: Int
+    let gameTime: TimeInterval
+    let date: Date?
+    let averageGridEfficiency: Double
+    let efficiencyGrade: String?
+
+    init(
+        score: Int,
+        difficulty: String?,
+        blocksPlaced: Int,
+        linesCleared: Int,
+        longestCombo: Int,
+        gameTime: TimeInterval,
+        date: Date?,
+        averageGridEfficiency: Double,
+        efficiencyGrade: String?
+    ) {
+        self.score = score
+        self.difficulty = difficulty
+        self.blocksPlaced = blocksPlaced
+        self.linesCleared = linesCleared
+        self.longestCombo = longestCombo
+        self.gameTime = gameTime
+        self.date = date
+        self.averageGridEfficiency = averageGridEfficiency
+        self.efficiencyGrade = efficiencyGrade
+    }
+
+    init(record: GameRecord) {
+        self.init(
+            score: Int(record.score),
+            difficulty: record.difficulty,
+            blocksPlaced: Int(record.blocksPlaced),
+            linesCleared: Int(record.linesCleared),
+            longestCombo: Int(record.longestCombo),
+            gameTime: record.gameTime,
+            date: record.date,
+            averageGridEfficiency: record.averageGridEfficiency,
+            efficiencyGrade: record.efficiencyGrade
+        )
+    }
 }
 
 struct GameHistoryStatistics {
@@ -284,4 +354,122 @@ struct GameHistoryStatistics {
     let averageScore: Int
     let totalBlocksPlaced: Int
     let highScore: Int
+}
+
+struct ExtendedStatistics {
+    // Basic
+    let totalGames: Int
+    let totalScore: Int
+    let averageScore: Int
+    let totalBlocksPlaced: Int
+    let highScore: Int
+
+    // Records
+    let bestCombo: Int
+    let mostLinesInGame: Int
+    let longestGameTime: TimeInterval
+
+    // Activity
+    let totalPlayTime: TimeInterval
+    let daysPlayed: Int
+    let favoriteDifficulty: DifficultyMode?
+
+    // Skill
+    /// Mean of `averageGridEfficiency` across non-zero records, in `0...1`.
+    let averageEfficiency: Double
+    /// Modal `efficiencyGrade` localization key (e.g. `"grade_a_plus"`).
+    let typicalEfficiencyGradeKey: String?
+
+    static let empty = ExtendedStatistics(
+        totalGames: 0,
+        totalScore: 0,
+        averageScore: 0,
+        totalBlocksPlaced: 0,
+        highScore: 0,
+        bestCombo: 0,
+        mostLinesInGame: 0,
+        longestGameTime: 0,
+        totalPlayTime: 0,
+        daysPlayed: 0,
+        favoriteDifficulty: nil,
+        averageEfficiency: 0,
+        typicalEfficiencyGradeKey: nil
+    )
+
+    /// Pure-Swift reduction over a list of game-record snapshots. Exposed as
+    /// `static` so unit tests can exercise the math without a Core Data stack.
+    static func aggregate(_ snapshots: [GameRecordSnapshot]) -> ExtendedStatistics {
+        guard !snapshots.isEmpty else { return .empty }
+
+        let totalGames = snapshots.count
+        let totalScore = snapshots.reduce(0) { $0 + $1.score }
+        let averageScore = totalScore / totalGames
+        let totalBlocksPlaced = snapshots.reduce(0) { $0 + $1.blocksPlaced }
+        let highScore = snapshots.map(\.score).max() ?? 0
+
+        // Records
+        let bestCombo = snapshots.map(\.longestCombo).max() ?? 0
+        let mostLinesInGame = snapshots.map(\.linesCleared).max() ?? 0
+        let longestGameTime = snapshots.map(\.gameTime).max() ?? 0
+
+        // Activity
+        let totalPlayTime = snapshots.reduce(0.0) { $0 + $1.gameTime }
+        let calendar = Calendar.current
+        let uniqueDays = Set(snapshots.compactMap { $0.date.map { calendar.startOfDay(for: $0) } })
+        let daysPlayed = uniqueDays.count
+
+        let difficultyValues = snapshots.compactMap { $0.difficulty.flatMap(DifficultyMode.init(rawValue:)) }
+        let favoriteDifficulty = mostFrequent(difficultyValues)
+
+        // Skill
+        let efficiencySamples = snapshots.map(\.averageGridEfficiency).filter { $0 > 0 }
+        let averageEfficiency: Double = efficiencySamples.isEmpty
+            ? 0
+            : efficiencySamples.reduce(0, +) / Double(efficiencySamples.count)
+
+        let gradeKeys = snapshots.compactMap { snap -> String? in
+            guard let raw = snap.efficiencyGrade, !raw.isEmpty else { return nil }
+            return canonicalGradeKey(raw)
+        }
+        let typicalEfficiencyGradeKey = mostFrequent(gradeKeys)
+
+        return ExtendedStatistics(
+            totalGames: totalGames,
+            totalScore: totalScore,
+            averageScore: averageScore,
+            totalBlocksPlaced: totalBlocksPlaced,
+            highScore: highScore,
+            bestCombo: bestCombo,
+            mostLinesInGame: mostLinesInGame,
+            longestGameTime: longestGameTime,
+            totalPlayTime: totalPlayTime,
+            daysPlayed: daysPlayed,
+            favoriteDifficulty: favoriteDifficulty,
+            averageEfficiency: averageEfficiency,
+            typicalEfficiencyGradeKey: typicalEfficiencyGradeKey
+        )
+    }
+
+    private static func mostFrequent<T: Hashable>(_ values: [T]) -> T? {
+        guard !values.isEmpty else { return nil }
+        var counts: [T: Int] = [:]
+        for value in values {
+            counts[value, default: 0] += 1
+        }
+        return counts.max(by: { $0.value < $1.value })?.key
+    }
+
+    private static func canonicalGradeKey(_ raw: String) -> String {
+        legacyGradeKeyMap[raw] ?? raw
+    }
+
+    private static let legacyGradeKeyMap: [String: String] = [
+        "A+": "grade_a_plus",
+        "A": "grade_a",
+        "B+": "grade_b_plus",
+        "B": "grade_b",
+        "C+": "grade_c_plus",
+        "C": "grade_c",
+        "D": "grade_d"
+    ]
 }

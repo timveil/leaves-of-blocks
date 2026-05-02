@@ -5,42 +5,46 @@ struct HowToPlayView: View {
     var body: some View {
         BaseScreenView {
             ScrollView {
-                VStack(spacing: GameTheme.Layout.mediumPadding) {
+                VStack(alignment: .leading, spacing: GameTheme.Layout.mediumPadding) {
+                    StrokedTitle(text: "how_to_play".localized)
+                        .padding(.bottom, GameTheme.Layout.smallSpacing)
+
+                    WhitmanQuoteCard(
+                        quote: "how_to_play_quote".localized,
+                        title: "how_to_play_title".localized,
+                        year: "how_to_play_year".localized
+                    )
+
                     // Main content card
-                    GoldHeaderCard(title: "how_to_play".localized) {
-                        VStack(alignment: .leading, spacing: GameTheme.Layout.largePadding) {
-                            QuoteView(
-                                quote: "how_to_play_quote".localized,
-                                author: "how_to_play_author".localized,
-                                title: "how_to_play_title".localized,
-                                year: "how_to_play_year".localized
-                            )
+                    VStack(alignment: .leading, spacing: GameTheme.Layout.largePadding) {
+                        sectionBlock("the_grid", "the_grid_description")
+                        sectionBlock("drag_drop", "drag_drop_description")
+                        sectionBlock("clear_lines", "clear_lines_description")
+                        sectionBlock("game_over_rules", "game_over_description")
+                        sectionBlock("advanced_features", "advanced_features_description")
+                        sectionBlock("efficiency_system", "efficiency_system_description")
+                        sectionBlock("strategic_grading", "strategic_grading_description")
+                        sectionBlock("adaptive_difficulty", "adaptive_difficulty_description")
 
-                            sectionBlock("the_grid", "the_grid_description")
-                            sectionBlock("drag_drop", "drag_drop_description")
-                            sectionBlock("clear_lines", "clear_lines_description")
-                            sectionBlock("game_over_rules", "game_over_description")
-                            sectionBlock("advanced_features", "advanced_features_description")
-                            sectionBlock("efficiency_system", "efficiency_system_description")
-                            sectionBlock("strategic_grading", "strategic_grading_description")
-                            sectionBlock("adaptive_difficulty", "adaptive_difficulty_description")
+                        // Pro Tips
+                        VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
+                            Text("pro_tips".localized)
+                                .sectionHeaderStyle()
 
-                            // Pro Tips
-                            VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
-                                Text("pro_tips".localized)
-                                    .sectionHeaderStyle()
-
-                                VStack(alignment: .leading, spacing: GameTheme.Layout.smallSpacing) {
-                                    TipRow(text: "tip_keep_organized".localized)
-                                    TipRow(text: "tip_multiple_lines".localized)
-                                    TipRow(text: "tip_plan_ahead".localized)
-                                    TipRow(text: "tip_corners_edges".localized)
-                                    TipRow(text: "tip_save_small_blocks".localized)
-                                    TipRow(text: "tip_efficiency_matters".localized)
-                                }
+                            VStack(alignment: .leading, spacing: GameTheme.Layout.smallSpacing) {
+                                TipRow(text: "tip_keep_organized".localized)
+                                TipRow(text: "tip_multiple_lines".localized)
+                                TipRow(text: "tip_plan_ahead".localized)
+                                TipRow(text: "tip_corners_edges".localized)
+                                TipRow(text: "tip_save_small_blocks".localized)
+                                TipRow(text: "tip_efficiency_matters".localized)
                             }
                         }
                     }
+                    .padding(GameTheme.Layout.largePadding)
+                    .frame(maxWidth: .infinity, alignment: .leading)
+                    .background(GameTheme.Colors.cardBackground)
+                    .folkArtCard()
 
                     // Scoring table card
                     VStack(spacing: 0) {
