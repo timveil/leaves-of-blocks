@@ -58,7 +58,7 @@ end
 
 # Screenshot Configuration
 SCREENSHOT_DEVICES = [
-  "iPhone 17 Pro"
+  "iPhone 17 Pro Max"
 ]
 SCREENSHOT_LANGUAGES = [
   "en-US"

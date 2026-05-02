@@ -557,6 +557,15 @@ platform :ios do
     increment_build_number(xcodeproj: XCODE_PROJECT)
     UI.success("Build Number Incremented")
 
+    # Regenerate screenshots before commit so a capture failure doesn't
+    # leave a stranded version bump on disk.
+    build_for_testing
+    capture_screenshots(
+      number_of_retries: 0,
+      only_testing: ["LeavesOfBlocksUITests/LeavesOfBlocksUITests/testCaptureScreenshots"]
+    )
+    UI.success("Screenshots regenerated")
+
     # Commit changelog, release notes, and project changes (including build number)
     commit_release(version: new_version)
 
@@ -583,7 +592,8 @@ platform :ios do
       submit_for_review: false,
       automatic_release: false,
       force: true,
-      skip_metadata: false
+      skip_metadata: false,
+      skip_screenshots: false
     )
 
     UI.success("🚀 App delivered to App Store Connect!")
@@ -647,6 +657,15 @@ platform :ios do
     # Increment build number (before commit so it's included)
     increment_build_number(xcodeproj: XCODE_PROJECT)
 
+    # Regenerate screenshots before commit so a capture failure doesn't
+    # leave a stranded version bump on disk.
+    build_for_testing
+    capture_screenshots(
+      number_of_retries: 0,
+      only_testing: ["LeavesOfBlocksUITests/LeavesOfBlocksUITests/testCaptureScreenshots"]
+    )
+    UI.success("Screenshots regenerated")
+
     # Commit changelog, release notes, and project changes (including build number)
     commit_release(version: new_version)
 
@@ -666,6 +685,7 @@ platform :ios do
       automatic_release: false,
       force: true,
       skip_metadata: false,
+      skip_screenshots: false,
       skip_waiting_for_build_processing: false
     )
 
