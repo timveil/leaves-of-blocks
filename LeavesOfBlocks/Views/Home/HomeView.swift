@@ -15,6 +15,8 @@ struct HomeView: View {
     var body: some View {
         BaseScreenView(showsStatusBar: false) {
             VStack(spacing: GameTheme.Layout.largePadding) {
+                Spacer(minLength: 0)
+
                 if hasInProgressGame {
                     ContinueGameCard(
                         score: gameState.score,
@@ -30,6 +32,7 @@ struct HomeView: View {
 
                 Spacer(minLength: 0)
             }
+            .frame(maxWidth: .infinity, maxHeight: .infinity)
             .padding(.horizontal, GameTheme.Layout.largePadding)
             .padding(.vertical, GameTheme.Layout.mediumPadding)
         }
