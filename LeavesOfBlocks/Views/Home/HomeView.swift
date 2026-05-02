@@ -74,6 +74,7 @@ private struct ContinueGameCard: View {
             }
             .padding(.horizontal, GameTheme.Layout.largePadding)
             .padding(.vertical, GameTheme.Layout.mediumPadding)
+            .background(GameTheme.Colors.cardBackground)
             .folkArtCard()
         }
         .buttonStyle(.plain)
