@@ -59,7 +59,10 @@ struct FullWidthActionButton: View {
     }
     
     var body: some View {
-        Button(action: onTap) {
+        Button(action: {
+            HapticFeedback.tap()
+            onTap()
+        }) {
             HStack(spacing: GameTheme.Layout.mediumSpacing) {
                 if let icon = icon {
                     Image(systemName: icon)

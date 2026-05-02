@@ -36,7 +36,10 @@ struct ScoreDisplayView: View {
     var body: some View {
         Group {
             if let action = action {
-                Button(action: action) {
+                Button(action: {
+                    HapticFeedback.tap()
+                    action()
+                }) {
                     scoreContent
                 }
                 .buttonStyle(PlainButtonStyle())

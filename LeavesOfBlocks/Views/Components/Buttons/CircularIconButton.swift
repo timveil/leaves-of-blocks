@@ -30,7 +30,10 @@ struct CircularIconButton: View {
     }
 
     var body: some View {
-        Button(action: action) {
+        Button(action: {
+            HapticFeedback.tap()
+            action()
+        }) {
             Image(systemName: icon)
                 .font(.system(size: iconSize))
                 .foregroundColor(GameTheme.Colors.buttonText)

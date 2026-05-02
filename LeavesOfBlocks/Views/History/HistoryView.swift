@@ -54,6 +54,7 @@ struct HistoryView: View {
                     } else {
                         ForEach(gameHistory.indices, id: \.self) { index in
                             Button(action: {
+                                HapticFeedback.tap()
                                 onSelectSession(gameHistory[index])
                             }) {
                                 GameSessionRow(

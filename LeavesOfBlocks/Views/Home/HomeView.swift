@@ -50,7 +50,10 @@ private struct ContinueGameCard: View {
     let action: () -> Void
 
     var body: some View {
-        Button(action: action) {
+        Button(action: {
+            HapticFeedback.tap()
+            action()
+        }) {
             HStack(spacing: GameTheme.Layout.mediumPadding) {
                 Image(systemName: "arrow.uturn.forward.circle.fill")
                     .font(.system(size: 32, weight: .bold))

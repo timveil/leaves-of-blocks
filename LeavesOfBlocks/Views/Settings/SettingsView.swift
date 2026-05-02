@@ -88,6 +88,7 @@ struct SettingsView: View {
             .scrollIndicators(.hidden)
         }
         .onChange(of: gameCenterEnabled) { _, newValue in
+            HapticFeedback.selection()
             GameCenterPreference.isEnabled = newValue
             if newValue {
                 gameCenterService.authenticateIfEnabled()
@@ -97,22 +98,30 @@ struct SettingsView: View {
         }
         .confirmationDialog("clear_game_history".localized, isPresented: $showingClearHistoryConfirmation, titleVisibility: .visible) {
             Button("clear_all_game_history".localized, role: .destructive) {
+                HapticFeedback.tap()
                 clearGameHistory()
             }
-            Button("cancel".localized, role: .cancel) { }
+            Button("cancel".localized, role: .cancel) {
+                HapticFeedback.tap()
+            }
         } message: {
             Text("clear_history_warning".localized)
         }
         .confirmationDialog("reset_all_data".localized, isPresented: $showingResetAllConfirmation, titleVisibility: .visible) {
             Button("reset_everything".localized, role: .destructive) {
+                HapticFeedback.tap()
                 resetAllData()
             }
-            Button("cancel".localized, role: .cancel) { }
+            Button("cancel".localized, role: .cancel) {
+                HapticFeedback.tap()
+            }
         } message: {
             Text("reset_data_warning".localized)
         }
         .alert("reset_complete".localized, isPresented: $showingResetCompleted) {
-            Button("ok".localized) { }
+            Button("ok".localized) {
+                HapticFeedback.tap()
+            }
         } message: {
             if let message = resetCompletedMessage {
                 Text(message)

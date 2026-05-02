@@ -32,48 +32,48 @@ struct ContentView: View {
                 .toolbar {
                     ToolbarItem(placement: .topBarTrailing) {
                         Menu {
-                            Button(action: { handleNavigation(to: .home) }) {
+                            Button(action: { menuTap { handleNavigation(to: .home) } }) {
                                 Label("home".localized, systemImage: "house")
                             }
                             .disabled(currentScreen == .home)
                             .accessibilityIdentifier("home_button")
 
-                            Button(action: { resumeGame() }) {
+                            Button(action: { menuTap { resumeGame() } }) {
                                 Label("resume_game_menu".localized, systemImage: "arrow.uturn.forward")
                             }
                             .disabled(!hasInProgressGame || currentScreen == .game)
                             .accessibilityIdentifier("resume_game_button")
 
-                            Button(action: { handleNewGame() }) {
+                            Button(action: { menuTap { handleNewGame() } }) {
                                 Label("new_game_menu".localized, systemImage: "play")
                             }
                             .accessibilityIdentifier("new_game_button")
 
                             Divider()
 
-                            Button(action: { handleNavigation(to: .history) }) {
+                            Button(action: { menuTap { handleNavigation(to: .history) } }) {
                                 Label("history_menu".localized, systemImage: "clock.arrow.circlepath")
                             }
                             .accessibilityIdentifier("history_button")
 
-                            Button(action: { handleNavigation(to: .statistics) }) {
+                            Button(action: { menuTap { handleNavigation(to: .statistics) } }) {
                                 Label("statistics_menu".localized, systemImage: "chart.bar.fill")
                             }
                             .accessibilityIdentifier("statistics_button")
 
                             Divider()
 
-                            Button(action: { handleNavigation(to: .howToPlay) }) {
+                            Button(action: { menuTap { handleNavigation(to: .howToPlay) } }) {
                                 Label("how_to_play_menu".localized, systemImage: "questionmark.circle")
                             }
                             .accessibilityIdentifier("how_to_play_button")
 
-                            Button(action: { handleNavigation(to: .about) }) {
+                            Button(action: { menuTap { handleNavigation(to: .about) } }) {
                                 Label("about_menu".localized, systemImage: "info.circle")
                             }
                             .accessibilityIdentifier("about_button")
 
-                            Button(action: { handleNavigation(to: .settings) }) {
+                            Button(action: { menuTap { handleNavigation(to: .settings) } }) {
                                 Label("settings_menu".localized, systemImage: "gearshape")
                             }
                             .accessibilityIdentifier("settings_button")
@@ -93,8 +93,11 @@ struct ContentView: View {
                     "discard_game_title".localized,
                     isPresented: $showDiscardConfirmation
                 ) {
-                    Button("cancel".localized, role: .cancel) {}
+                    Button("cancel".localized, role: .cancel) {
+                        HapticFeedback.tap()
+                    }
                     Button("discard_confirm".localized, role: .destructive) {
+                        HapticFeedback.tap()
                         startNewGame(.moderate)
                     }
                 } message: {
@@ -183,6 +186,11 @@ struct ContentView: View {
 
     private func resumeGame() {
         currentScreen = .game
+    }
+
+    private func menuTap(_ action: () -> Void) {
+        HapticFeedback.tap()
+        action()
     }
 }
 
