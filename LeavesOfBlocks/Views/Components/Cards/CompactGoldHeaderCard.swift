@@ -9,15 +9,16 @@ struct CompactGoldHeaderCard<Content: View>: View {
 
     var body: some View {
         VStack(spacing: 0) {
-            Text(title)
-                .font(GameTheme.Typography.headline)
-                .foregroundColor(GameTheme.Colors.buttonText)
-                .lineLimit(1)
-                .minimumScaleFactor(0.7)
+            Text(title.uppercased())
+                .font(.system(size: 13, weight: .heavy, design: .default))
+                .tracking(1.0)
+                .foregroundColor(GameTheme.Colors.primaryText)
+                .lineLimit(2)
+                .multilineTextAlignment(.center)
                 .frame(maxWidth: .infinity)
                 .padding(.horizontal, GameTheme.Layout.smallPadding)
                 .padding(.vertical, GameTheme.Layout.smallPadding)
-                .background(GameTheme.Colors.accent)
+                .background(GameTheme.Colors.headerBand)
                 .overlay(
                     Rectangle()
                         .frame(height: GameTheme.Layout.dividerHeight)

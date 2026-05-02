@@ -27,7 +27,7 @@ struct ScoringTableHeaderView: View {
     var body: some View {
         Text("scoring_header".localized)
             .font(GameTheme.Typography.title)
-            .foregroundColor(GameTheme.Colors.buttonText)
+            .foregroundColor(GameTheme.Colors.primaryText)
             .frame(maxWidth: .infinity)
             .padding(.vertical, GameTheme.Layout.mediumPadding)
             .gameTableHeaderStyle()
@@ -70,7 +70,7 @@ struct DifficultyTableHeaderView: View {
     var body: some View {
         Text("difficulty_header".localized)
             .font(GameTheme.Typography.title)
-            .foregroundColor(GameTheme.Colors.buttonText)
+            .foregroundColor(GameTheme.Colors.primaryText)
             .frame(maxWidth: .infinity)
             .padding(.vertical, GameTheme.Layout.mediumPadding)
             .gameTableHeaderStyle()
@@ -110,7 +110,7 @@ struct ShapesTableHeaderView: View {
     var body: some View {
         Text("shapes_header".localized)
             .font(GameTheme.Typography.title)
-            .foregroundColor(GameTheme.Colors.buttonText)
+            .foregroundColor(GameTheme.Colors.primaryText)
             .frame(maxWidth: .infinity)
             .padding(.vertical, GameTheme.Layout.mediumPadding)
             .gameTableHeaderStyle()

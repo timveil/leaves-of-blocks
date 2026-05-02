@@ -18,11 +18,11 @@ struct SimpleScoreView: View {
             // Gold header
             Text("score".localized)
                 .font(GameTheme.Typography.headline)
-                .foregroundColor(GameTheme.Colors.buttonText)
+                .foregroundColor(GameTheme.Colors.primaryText)
                 .frame(maxWidth: .infinity)
                 .padding(.horizontal, GameTheme.Layout.largePadding)
                 .padding(.vertical, GameTheme.Layout.smallPadding)
-                .background(GameTheme.Colors.accent)
+                .background(GameTheme.Colors.headerBand)
                 .overlay(
                     Rectangle()
                         .frame(height: GameTheme.Layout.dividerHeight)

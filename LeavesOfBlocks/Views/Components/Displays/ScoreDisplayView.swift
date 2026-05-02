@@ -52,11 +52,11 @@ struct ScoreDisplayView: View {
             // Header
             Text(title)
                 .font(GameTheme.Typography.title)
-                .foregroundColor(GameTheme.Colors.buttonText)
+                .foregroundColor(GameTheme.Colors.primaryText)
                 .frame(maxWidth: .infinity)
             .padding(.horizontal, GameTheme.Layout.largePadding)
             .padding(.vertical, GameTheme.Layout.mediumPadding)
-            .background(GameTheme.Colors.accent)
+            .background(GameTheme.Colors.headerBand)
             .overlay(
                 Rectangle()
                     .frame(height: GameTheme.Layout.dividerHeight)

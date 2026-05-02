@@ -130,7 +130,7 @@ private struct SummaryDifficultyTile: View {
 
     var body: some View {
         CompactGoldHeaderCard(title: "difficulty".localized) {
-            AcornCountView(count: difficulty.acornCount, height: 24, spacing: 4)
+            AcornCountView(count: difficulty.acornCount, height: 44, spacing: 6)
         }
     }
 }

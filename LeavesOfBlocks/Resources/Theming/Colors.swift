@@ -47,6 +47,9 @@ extension GameTheme {
         static let secondaryAccent = leaf700
         static let tertiaryAccent = leaf800
         static let accent = sun600
+        /// Lighter gold reserved for header bands paired with dark text — gives
+        /// the band the contrast needed against `Colors.primaryText`.
+        static let headerBand = sun300
 
         // Text Colors
         static let primaryText = ink800

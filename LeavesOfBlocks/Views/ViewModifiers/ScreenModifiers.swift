@@ -81,7 +81,7 @@ extension View {
 
     /// Applies table header styling with gold background and black border
     func gameTableHeaderStyle(
-        backgroundColor: Color = GameTheme.Colors.accent,
+        backgroundColor: Color = GameTheme.Colors.headerBand,
         borderColor: Color = Color.black
     ) -> some View {
         self

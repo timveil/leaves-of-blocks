@@ -28,7 +28,7 @@ struct WhitmanQuoteCard: View {
     }
 
     var body: some View {
-        HStack(alignment: .top, spacing: GameTheme.Layout.mediumPadding) {
+        HStack(alignment: .center, spacing: GameTheme.Layout.mediumPadding) {
             Image("WhitmanPortrait")
                 .resizable()
                 .aspectRatio(contentMode: .fit)
@@ -43,7 +43,7 @@ struct WhitmanQuoteCard: View {
                     VStack(alignment: .leading, spacing: GameTheme.Layout.smallSpacing) {
                         ForEach(quoteLines, id: \.self) { line in
                             Text(line)
-                                .font(GameTheme.Typography.body.italic())
+                                .font(GameTheme.Typography.body)
                                 .foregroundColor(GameTheme.Colors.primaryText)
                                 .lineSpacing(4)
                         }

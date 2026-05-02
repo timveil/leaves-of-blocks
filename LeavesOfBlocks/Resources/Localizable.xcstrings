@@ -2980,13 +2980,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Favorite Difficulty"
+            "value" : "Favorite Mode"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Dificultad Favorita"
+            "value" : "Modo Favorito"
           }
         }
       }
@@ -3048,13 +3048,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Most Lines, One Game"
+            "value" : "Most Lines"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Más Líneas, Una Partida"
+            "value" : "Más Líneas"
           }
         }
       }
@@ -3133,7 +3133,7 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Typical Efficiency Grade"
+            "value" : "Typical Grade"
           }
         },
         "es" : {
