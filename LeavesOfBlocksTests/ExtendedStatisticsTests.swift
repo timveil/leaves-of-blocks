@@ -35,10 +35,14 @@ private func snapshot(
     )
 }
 
-private let day1 = Date(timeIntervalSince1970: 1_700_000_000)              // anchor
-private let day1Later = day1.addingTimeInterval(3 * 60 * 60)               // same day, 3h later
-private let day2 = day1.addingTimeInterval(36 * 60 * 60)                   // ~1.5 days later
-private let day3 = day1.addingTimeInterval(72 * 60 * 60)                   // ~3 days later
+// 2023-11-14 12:00:00 UTC. Anchored at noon UTC so the small same-day offset
+// stays within the same calendar day under any reasonable host time zone.
+// (CI runs on macos-latest in UTC; the previous 22:13:20 UTC anchor put
+// `day1` and `day1Later` on different UTC calendar days.)
+private let day1 = Date(timeIntervalSince1970: 1_699_963_200)              // anchor (noon UTC)
+private let day1Later = day1.addingTimeInterval(60 * 60)                   // same day, 1h later
+private let day2 = day1.addingTimeInterval(24 * 60 * 60)                   // 1 day later
+private let day3 = day1.addingTimeInterval(48 * 60 * 60)                   // 2 days later
 
 // MARK: - Empty store
 
