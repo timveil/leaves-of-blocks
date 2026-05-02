@@ -42,7 +42,7 @@ struct ScoreDisplayView: View {
                 }) {
                     scoreContent
                 }
-                .buttonStyle(PlainButtonStyle())
+                .buttonStyle(.pressDarken)
                 .accessibilityIdentifier("history_button")
             } else {
                 scoreContent

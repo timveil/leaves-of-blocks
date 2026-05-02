@@ -78,7 +78,7 @@ private struct ContinueGameCard: View {
             .padding(.vertical, GameTheme.Layout.mediumPadding)
             .contentCard()
         }
-        .buttonStyle(.plain)
+        .buttonStyle(.pressDarken)
         .accessibilityIdentifier("continue_game_button")
     }
 }

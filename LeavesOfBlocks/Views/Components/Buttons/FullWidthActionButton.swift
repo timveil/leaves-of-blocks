@@ -85,7 +85,7 @@ struct FullWidthActionButton: View {
                     )
             )
         }
-        .buttonStyle(PlainButtonStyle())
+        .buttonStyle(.pressDarken)
         .accessibilityIdentifier(accessibilityId ?? "")
     }
 }

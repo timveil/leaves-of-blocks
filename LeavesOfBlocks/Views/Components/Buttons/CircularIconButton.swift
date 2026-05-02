@@ -44,7 +44,7 @@ struct CircularIconButton: View {
                         .stroke(Color.black, lineWidth: GameTheme.Layout.cardBorderWidth)
                 )
         }
-        .buttonStyle(PlainButtonStyle())
+        .buttonStyle(.pressDarken)
         .accessibilityLabel(accessibilityLabel)
     }
 }

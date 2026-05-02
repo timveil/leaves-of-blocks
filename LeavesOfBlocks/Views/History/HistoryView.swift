@@ -62,7 +62,7 @@ struct HistoryView: View {
                                     isHighScore: gameHistory[index].score == highScore
                                 )
                             }
-                            .buttonStyle(PlainButtonStyle())
+                            .buttonStyle(.pressDarken)
                             .accessibilityIdentifier("game_history_button_\(index)")
                         }
                     }
