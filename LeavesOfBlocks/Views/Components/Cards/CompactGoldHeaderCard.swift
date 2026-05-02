@@ -27,11 +27,12 @@ struct CompactGoldHeaderCard<Content: View>: View {
                 )
 
             content()
-                .frame(maxWidth: .infinity)
+                .frame(maxWidth: .infinity, maxHeight: .infinity)
                 .padding(.horizontal, GameTheme.Layout.smallPadding)
                 .padding(.vertical, GameTheme.Layout.mediumPadding)
                 .background(Color.white)
         }
+        .frame(maxWidth: .infinity, maxHeight: .infinity)
         .folkArtCard()
     }
 }
