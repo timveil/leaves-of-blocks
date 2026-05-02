@@ -26,10 +26,13 @@ struct HomeView: View {
                     )
                 }
 
-                DifficultyCard(
+                DifficultySelectionView(
                     onStartGame: onStartGame,
                     playButtonTitle: playButtonTitle
                 )
+                .padding(GameTheme.Layout.largePadding)
+                .frame(maxWidth: .infinity)
+                .contentCard()
 
                 Spacer(minLength: 0)
             }
@@ -70,30 +73,10 @@ private struct ContinueGameCard: View {
             }
             .padding(.horizontal, GameTheme.Layout.largePadding)
             .padding(.vertical, GameTheme.Layout.mediumPadding)
-            .background(GameTheme.Colors.cardBackground)
-            .folkArtCard()
+            .contentCard()
         }
         .buttonStyle(.plain)
         .accessibilityIdentifier("continue_game_button")
-    }
-}
-
-// MARK: - Difficulty Card (no gold header)
-
-private struct DifficultyCard: View {
-    let onStartGame: (DifficultyMode) -> Void
-    let playButtonTitle: String
-
-    var body: some View {
-        DifficultySelectionView(
-            onStartGame: onStartGame,
-            playButtonTitle: playButtonTitle
-        )
-        .padding(.horizontal, GameTheme.Layout.largePadding)
-        .padding(.vertical, GameTheme.Layout.largePadding)
-        .frame(maxWidth: .infinity)
-        .background(GameTheme.Colors.cardBackground)
-        .folkArtCard()
     }
 }
 

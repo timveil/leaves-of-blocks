@@ -72,8 +72,7 @@ struct WhitmanQuoteCard: View {
             }
         }
         .padding(GameTheme.Layout.mediumPadding)
-        .background(GameTheme.Colors.cardBackground)
-        .folkArtCard()
+        .contentCard()
     }
 }
 

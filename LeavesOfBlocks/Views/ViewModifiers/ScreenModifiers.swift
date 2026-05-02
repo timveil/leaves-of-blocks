@@ -20,6 +20,14 @@ extension View {
             )
     }
 
+    /// White card surface with the folk-art border. Padding stays caller-controlled
+    /// since it varies (medium / large / asymmetric) across the app.
+    func contentCard() -> some View {
+        self
+            .background(GameTheme.Colors.cardBackground)
+            .folkArtCard()
+    }
+
     // MARK: - Typography Modifiers
 
     /// Applies section header text styling

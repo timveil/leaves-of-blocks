@@ -43,8 +43,7 @@ struct HowToPlayView: View {
                     }
                     .padding(GameTheme.Layout.largePadding)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(GameTheme.Colors.cardBackground)
-                    .folkArtCard()
+                    .contentCard()
 
                     // Scoring table card
                     VStack(spacing: 0) {

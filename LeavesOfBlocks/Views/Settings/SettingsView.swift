@@ -53,7 +53,7 @@ struct SettingsView: View {
                         if gameCenterService.isAuthenticated {
                             FullWidthActionButton(
                                 title: "view_game_center".localized,
-                                style: .secondary,
+                                style: .success,
                                 accessibilityId: "view_game_center_button"
                             ) {
                                 gameCenterService.presentDashboard()
@@ -62,8 +62,7 @@ struct SettingsView: View {
                     }
                     .padding(GameTheme.Layout.largePadding)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(GameTheme.Colors.cardBackground)
-                    .folkArtCard()
+                    .contentCard()
 
                     VStack(spacing: GameTheme.Layout.mediumPadding) {
                         FullWidthActionButton(

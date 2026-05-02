@@ -107,7 +107,7 @@ struct SummaryView: View {
                     if gameCenterService.isAuthenticated {
                         FullWidthActionButton(
                             title: "view_leaderboard".localized,
-                            style: .secondary,
+                            style: .success,
                             accessibilityId: "view_leaderboard_button"
                         ) {
                             gameCenterService.presentDashboard()

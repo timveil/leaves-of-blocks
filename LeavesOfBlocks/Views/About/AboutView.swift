@@ -91,8 +91,7 @@ struct AboutView: View {
                     }
                     .padding(GameTheme.Layout.largePadding)
                     .frame(maxWidth: .infinity, alignment: .leading)
-                    .background(GameTheme.Colors.cardBackground)
-                    .folkArtCard()
+                    .contentCard()
                 }
                 .padding(.horizontal, GameTheme.Layout.largePadding)
                 .padding(.vertical, GameTheme.Layout.mediumPadding)

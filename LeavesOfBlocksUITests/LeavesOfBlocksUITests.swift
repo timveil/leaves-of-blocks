@@ -137,9 +137,7 @@ final class LeavesOfBlocksUITests: XCTestCase {
 
     @MainActor
     private func captureGameHistoryScreen() {
-        let historyButton = app.buttons["history_button"]
-        XCTAssertTrue(historyButton.waitForExistence(timeout: 3), "History button should exist")
-        historyButton.tap()
+        navigateViaMenu(to: "history_button")
 
         sleep(3)
 

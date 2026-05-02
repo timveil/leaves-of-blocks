@@ -166,24 +166,21 @@ struct ComboNotificationPreviewContainer: View {
                         }
                         .padding(.horizontal, 20)
                         .padding(.vertical, 12)
-                        .background(GameTheme.Colors.cardBackground)
-                        .folkArtCard()
+                        .contentCard()
                         
                         Button("three_line_combo_button".localized) {
                             triggerCombo3()
                         }
                         .padding(.horizontal, 20)
                         .padding(.vertical, 12)
-                        .background(GameTheme.Colors.cardBackground)
-                        .folkArtCard()
+                        .contentCard()
                         
                         Button("five_line_combo_button".localized) {
                             triggerCombo5()
                         }
                         .padding(.horizontal, 20)
                         .padding(.vertical, 12)
-                        .background(GameTheme.Colors.cardBackground)
-                        .folkArtCard()
+                        .contentCard()
                         
                         Button("show_all_combos".localized) {
                             triggerAllCombos()

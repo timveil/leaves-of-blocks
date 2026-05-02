@@ -2889,23 +2889,6 @@
         }
       }
     },
-    "start_game" : {
-      "extractionState" : "manual",
-      "localizations" : {
-        "en" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Start Game"
-          }
-        },
-        "es" : {
-          "stringUnit" : {
-            "state" : "translated",
-            "value" : "Iniciar Partida"
-          }
-        }
-      }
-    },
     "statistics" : {
       "extractionState" : "manual",
       "localizations" : {
