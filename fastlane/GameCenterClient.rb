@@ -79,7 +79,7 @@ class GameCenterClient
           vendorIdentifier: definition[:vendor_identifier],
           submissionType: definition[:submission_type],
           scoreSortType: definition[:score_sort_type],
-          scoreFormat: definition[:score_format],
+          defaultFormatter: definition[:default_formatter],
           scoreRangeStart: definition[:score_range_start],
           scoreRangeEnd: definition[:score_range_end]
         },
@@ -103,8 +103,8 @@ class GameCenterClient
         attributes: {
           locale: definition[:locale],
           name: definition[:name],
-          scoreFormatSuffix: definition[:score_format_suffix].to_s,
-          scoreFormatSuffixSingular: definition[:score_format_suffix_singular].to_s
+          formatterSuffix: definition[:formatter_suffix].to_s,
+          formatterSuffixSingular: definition[:formatter_suffix_singular].to_s
         },
         relationships: {
           gameCenterLeaderboard: { data: { type: 'gameCenterLeaderboards', id: leaderboard_id } }

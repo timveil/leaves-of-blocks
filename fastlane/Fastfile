@@ -772,8 +772,20 @@ platform :ios do
     GameCenterConfig::LEADERBOARDS.each do |definition|
       vid = definition[:vendor_identifier]
       if (existing = by_vendor[vid])
-        UI.message("  ↺ #{vid} already exists (id #{existing['id']}) — skipping")
-        leaderboard_summary << [vid, existing['id'], 'kept']
+        lb_id = existing['id']
+        existing_locales = client.list_leaderboard_localizations(leaderboard_id: lb_id)
+                                 .map { |l| l.dig('attributes', 'locale') }.compact
+        missing = definition[:localizations].reject { |loc| existing_locales.include?(loc[:locale]) }
+        if missing.empty?
+          UI.message("  ↺ #{vid} already exists (id #{lb_id}) — skipping")
+        else
+          UI.message("  ↺ #{vid} already exists (id #{lb_id}) — adding #{missing.size} missing localization(s)")
+          missing.each do |loc|
+            UI.message("    ＋ Localization #{loc[:locale]}")
+            client.create_leaderboard_localization(leaderboard_id: lb_id, definition: loc)
+          end
+        end
+        leaderboard_summary << [vid, lb_id, 'kept']
         next
       end
 
@@ -802,8 +814,20 @@ platform :ios do
     GameCenterConfig::ACHIEVEMENTS.each do |definition|
       vid = definition[:vendor_identifier]
       if (existing = ach_by_vendor[vid])
-        UI.message("  ↺ #{vid} already exists (id #{existing['id']}) — skipping")
-        achievement_summary << [vid, existing['id'], 'kept']
+        ach_id = existing['id']
+        existing_locales = client.list_achievement_localizations(achievement_id: ach_id)
+                                 .map { |l| l.dig('attributes', 'locale') }.compact
+        missing = definition[:localizations].reject { |loc| existing_locales.include?(loc[:locale]) }
+        if missing.empty?
+          UI.message("  ↺ #{vid} already exists (id #{ach_id}) — skipping")
+        else
+          UI.message("  ↺ #{vid} already exists (id #{ach_id}) — adding #{missing.size} missing localization(s)")
+          missing.each do |loc|
+            UI.message("    ＋ Localization #{loc[:locale]}")
+            client.create_achievement_localization(achievement_id: ach_id, definition: loc)
+          end
+        end
+        achievement_summary << [vid, ach_id, 'kept']
         next
       end
 

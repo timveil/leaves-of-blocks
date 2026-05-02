@@ -6,7 +6,7 @@
 # The vendor identifiers below MUST stay in sync with `GameCenterIDs` in
 # LeavesOfBlocks/Services/Game/GameCenterService.swift.
 #
-# Achievement points across all entries must total <= 1000 per Apple's rules.
+# Apple's rules: each achievement <= 100 points; total across app <= 1000.
 
 module GameCenterConfig
   BUNDLE_ID = APP_IDENTIFIER
@@ -16,16 +16,16 @@ module GameCenterConfig
       vendor_identifier: "lob.leaderboard.allTimeHigh",
       reference_name: "All-Time High Score",
       submission_type: "BEST_SCORE",
-      score_sort_type: "DESCENDING",
-      score_format: "INTEGER",
+      score_sort_type: "DESC",
+      default_formatter: "INTEGER",
       score_range_start: "0",
       score_range_end: "10000000",
       localizations: [
         {
           locale: "en-US",
           name: "All-Time High Score",
-          score_format_suffix: "",
-          score_format_suffix_singular: ""
+          formatter_suffix: "",
+          formatter_suffix_singular: ""
         }
       ]
     }
@@ -65,7 +65,7 @@ module GameCenterConfig
     {
       vendor_identifier: "lob.ach.efficiencyAPlus",
       reference_name: "Efficiency: A+",
-      points: 250,
+      points: 75,
       shows_before_earned: true,
       repeatable: false,
       localizations: [
@@ -80,7 +80,7 @@ module GameCenterConfig
     {
       vendor_identifier: "lob.ach.strategicMaster",
       reference_name: "Strategic: Master",
-      points: 250,
+      points: 75,
       shows_before_earned: true,
       repeatable: false,
       localizations: [
@@ -95,7 +95,7 @@ module GameCenterConfig
     {
       vendor_identifier: "lob.ach.score10k",
       reference_name: "Ten Thousand Leaves",
-      points: 350,
+      points: 100,
       shows_before_earned: true,
       repeatable: false,
       localizations: [
@@ -113,7 +113,12 @@ module GameCenterConfig
     ACHIEVEMENTS.sum { |a| a[:points] }
   end
 
-  # Sanity check at load time so misconfigurations surface immediately.
+  # Sanity checks at load time so misconfigurations surface immediately.
+  ACHIEVEMENTS.each do |a|
+    if a[:points] < 0 || a[:points] > 100
+      raise "Game Center achievement #{a[:vendor_identifier]} has #{a[:points]} points; Apple's per-achievement limit is 0–100."
+    end
+  end
   if total_achievement_points > 1000
     raise "Game Center achievement points total #{total_achievement_points}; Apple's per-app limit is 1000."
   end
