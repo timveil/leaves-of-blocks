@@ -8,14 +8,16 @@ struct HomeView: View {
     let onResumeGame: () -> Void
     let onStartGame: (DifficultyMode) -> Void
 
-    private var sectionTitle: String {
-        hasInProgressGame ? "new_game_section_title".localized : "ready_to_play".localized
+    private var playButtonTitle: String {
+        hasInProgressGame ? "new_game".localized : "play_game".localized
     }
 
     var body: some View {
         BaseScreenView(showsStatusBar: false) {
             VStack(spacing: GameTheme.Layout.largePadding) {
                 Spacer(minLength: 0)
+
+                WhitmanSticker()
 
                 if hasInProgressGame {
                     ContinueGameCard(
@@ -24,11 +26,10 @@ struct HomeView: View {
                     )
                 }
 
-                GoldHeaderCard(title: sectionTitle) {
-                    DifficultySelectionView(
-                        onStartGame: onStartGame
-                    )
-                }
+                DifficultyCard(
+                    onStartGame: onStartGame,
+                    playButtonTitle: playButtonTitle
+                )
 
                 Spacer(minLength: 0)
             }
@@ -74,6 +75,25 @@ private struct ContinueGameCard: View {
         }
         .buttonStyle(.plain)
         .accessibilityIdentifier("continue_game_button")
+    }
+}
+
+// MARK: - Difficulty Card (no gold header)
+
+private struct DifficultyCard: View {
+    let onStartGame: (DifficultyMode) -> Void
+    let playButtonTitle: String
+
+    var body: some View {
+        DifficultySelectionView(
+            onStartGame: onStartGame,
+            playButtonTitle: playButtonTitle
+        )
+        .padding(.horizontal, GameTheme.Layout.largePadding)
+        .padding(.vertical, GameTheme.Layout.largePadding)
+        .frame(maxWidth: .infinity)
+        .background(GameTheme.Colors.cardBackground)
+        .folkArtCard()
     }
 }
 

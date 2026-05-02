@@ -61,13 +61,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "About the Game"
+            "value" : "About"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Acerca del Juego"
+            "value" : "Acerca de"
           }
         }
       }
@@ -714,6 +714,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Historial"
+          }
+        }
+      }
+    },
+    "play_game" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Play Game"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jugar"
           }
         }
       }

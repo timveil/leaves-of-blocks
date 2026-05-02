@@ -16,7 +16,7 @@ struct StrokedTitle: View {
     var fillColor: Color = .white
     var strokeColor: Color = .black
 
-    static let defaultFont: Font = .system(.largeTitle, design: .default).weight(.black)
+    static let defaultFont: Font = .system(size: 44, weight: .black, design: .default)
 
     /// Eight evenly-spaced offsets approximate a 1px-equivalent stroke ring.
     private var strokeOffsets: [CGSize] {

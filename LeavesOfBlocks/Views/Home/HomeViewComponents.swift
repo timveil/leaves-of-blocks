@@ -4,6 +4,7 @@ import SwiftUI
 
 struct DifficultySelectionView: View {
     let onStartGame: (DifficultyMode) -> Void
+    var playButtonTitle: String = "play_game".localized
 
     @State private var sliderValue: Double = 2
 
@@ -58,15 +59,14 @@ struct DifficultySelectionView: View {
                 }
 
             // Play button
-            CircularIconButton(
+            FullWidthActionButton(
+                title: playButtonTitle,
                 icon: "play.fill",
-                accessibilityLabel: "start_game".localized,
-                color: GameTheme.Colors.success,
-                size: 72,
-                iconSize: 32,
-                action: { onStartGame(selectedDifficulty) }
-            )
-            .accessibilityIdentifier("start_game_button")
+                style: .primary,
+                accessibilityId: "start_game_button"
+            ) {
+                onStartGame(selectedDifficulty)
+            }
         }
         .padding(.horizontal, GameTheme.Layout.mediumPadding)
     }

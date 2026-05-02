@@ -11,7 +11,7 @@ struct GameOverOverlayView: View {
         GoldHeaderCard(title: "game_over".localized) {
             VStack(spacing: GameTheme.Layout.largePadding) {
                 Text("game_over_quote".localized)
-                    .font(GameTheme.Typography.body.italic())
+                    .font(GameTheme.Typography.body)
                     .foregroundColor(GameTheme.Colors.secondaryText)
                     .multilineTextAlignment(.center)
 
@@ -21,19 +21,21 @@ struct GameOverOverlayView: View {
                     .lineLimit(1)
                     .minimumScaleFactor(0.7)
 
-                HStack(spacing: GameTheme.Layout.extraLargeSpacing) {
-                    CircularIconButton(
+                VStack(spacing: GameTheme.Layout.mediumPadding) {
+                    FullWidthActionButton(
+                        title: "new_game".localized,
                         icon: "play.fill",
-                        accessibilityLabel: "new_game".localized,
-                        color: GameTheme.Colors.success,
-                        action: onNewGame
+                        style: .primary,
+                        accessibilityId: "game_over_new_game_button",
+                        onTap: onNewGame
                     )
 
-                    CircularIconButton(
+                    FullWidthActionButton(
+                        title: "view_summary".localized,
                         icon: "list.bullet",
-                        accessibilityLabel: "view_summary".localized,
-                        color: GameTheme.Colors.accent,
-                        action: onViewSummary
+                        style: .secondary,
+                        accessibilityId: "game_over_view_summary_button",
+                        onTap: onViewSummary
                     )
                 }
             }
