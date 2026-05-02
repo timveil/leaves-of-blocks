@@ -607,8 +607,8 @@ while true; do
                 fi
             else
                 # Create new file from example
-                if [ -f "$PROJECT_ROOT/fastlane/.env.example" ]; then
-                    cp "$PROJECT_ROOT/fastlane/.env.example" "$ENV_FILE"
+                if [ -f "$PROJECT_ROOT/fastlane/.env.template" ]; then
+                    cp "$PROJECT_ROOT/fastlane/.env.template" "$ENV_FILE"
                     sed -i '' "s/^ANTHROPIC_API_KEY=.*/ANTHROPIC_API_KEY=$api_key/" "$ENV_FILE"
                 else
                     # Create minimal file

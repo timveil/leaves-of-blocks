@@ -439,7 +439,8 @@ platform :ios do
     build_app(
       project: XCODE_PROJECT,
       scheme: MAIN_SCHEME,
-      export_method: EXPORT_METHOD
+      export_method: EXPORT_METHOD,
+      export_options: export_options
     )
   end
 
@@ -451,13 +452,14 @@ platform :ios do
     # Increment marketing version to create new release train
     increment_version_number(
       xcodeproj: XCODE_PROJECT,
-      version_number: "1.0.3"  # Explicitly set new version to resolve closed train
+      version_number: "2.0.0"  # 2.0 release train; bump when starting the next major
     )
     increment_build_number(xcodeproj: XCODE_PROJECT)
     build_app(
       project: XCODE_PROJECT,
       scheme: MAIN_SCHEME,
-      export_method: EXPORT_METHOD
+      export_method: EXPORT_METHOD,
+      export_options: export_options
     )
     upload_to_testflight(
       api_key: api_key,
@@ -474,7 +476,8 @@ platform :ios do
     build_app(
       project: XCODE_PROJECT,
       scheme: MAIN_SCHEME,
-      export_method: EXPORT_METHOD
+      export_method: EXPORT_METHOD,
+      export_options: export_options
     )
     upload_to_app_store(
       api_key: api_key,
@@ -555,7 +558,8 @@ platform :ios do
     build_app(
       project: XCODE_PROJECT,
       scheme: MAIN_SCHEME,
-      export_method: EXPORT_METHOD
+      export_method: EXPORT_METHOD,
+      export_options: export_options
     )
 
     UI.success("Build App Complete")
@@ -644,7 +648,8 @@ platform :ios do
     build_app(
       project: XCODE_PROJECT,
       scheme: MAIN_SCHEME,
-      export_method: EXPORT_METHOD
+      export_method: EXPORT_METHOD,
+      export_options: export_options
     )
 
     # Upload everything and submit for review

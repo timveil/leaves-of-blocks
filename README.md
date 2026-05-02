@@ -169,7 +169,7 @@ For advanced users, direct Fastlane commands are available.
 
 #### One-time setup
 
-The Fastlane lanes that talk to App Store Connect (TestFlight, App Store, Game Center) need an API key. Set these env vars (typically in `fastlane/.env` — see `.env.example`):
+The Fastlane lanes that talk to App Store Connect (TestFlight, App Store, Game Center) need an API key. Set these env vars (typically in `fastlane/.env` — see `.env.template`):
 
 ```bash
 LOCAL_APP_STORE_CONNECT_API_KEY_ID=...

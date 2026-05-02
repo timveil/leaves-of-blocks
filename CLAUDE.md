@@ -218,7 +218,7 @@ Production deployments run through Fastlane lanes defined in `fastlane/Fastfile`
 
 ### One-time setup
 
-Required env vars (typically loaded from `fastlane/.env`, see `.env.example`):
+Required env vars (typically loaded from `fastlane/.env`, see `.env.template`):
 
 - `LOCAL_APP_STORE_CONNECT_API_KEY_ID` — App Store Connect API key ID
 - `LOCAL_APP_STORE_CONNECT_ISSUER_ID` — issuer ID for the API key

@@ -12,7 +12,7 @@ MAIN_SCHEME = "LeavesOfBlocks"
 # Developer Information
 # These are used in App Store Connect review submissions (see app_review_info below).
 # Sourced from environment variables so personal contact details are not committed to the repo.
-# Set them in fastlane/.env (see fastlane/.env.example).
+# Set them in fastlane/.env (see fastlane/.env.template).
 DEVELOPER_NAME = ENV["LOCAL_FASTLANE_DEVELOPER_FIRST_NAME"]
 DEVELOPER_LAST_NAME = ENV["LOCAL_FASTLANE_DEVELOPER_LAST_NAME"]
 DEVELOPER_PHONE = ENV["LOCAL_FASTLANE_DEVELOPER_PHONE"]
@@ -26,6 +26,20 @@ XCODE_VERSION = "26.4.1"
 IOS_VERSION = "26.4.1"
 IOS_SIMULATOR = "iPhone 17 Pro"
 EXPORT_METHOD = "app-store"
+TEAM_ID = "85U9MWUBJL"
+
+# gym/xcodebuild needs `signingStyle: automatic` + `teamID` in the export
+# options plist when exporting an archive whose targets use automatic signing.
+# Without it, xcodebuild's exportArchive step looks for a manual distribution
+# profile and fails with "No profiles for '<bundle id>' were found".
+# Not frozen: gym mutates this hash internally while assembling the export
+# options plist (PackageCommandGeneratorXcode7), so freezing raises FrozenError.
+def export_options
+  {
+    signingStyle: "automatic",
+    teamID: TEAM_ID
+  }
+end
 
 # Screenshot Configuration
 SCREENSHOT_DEVICES = [

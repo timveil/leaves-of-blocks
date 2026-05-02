@@ -123,6 +123,20 @@ Generate manual screenshots (simulator only)
 
 Test App Store Connect API authentication
 
+### ios setup_game_center
+
+```sh
+[bundle exec] fastlane ios setup_game_center
+```
+
+Create or verify Game Center leaderboards and achievements in App Store Connect
+
+Reads from fastlane/GameCenterConfig.rb. Idempotent — entries with matching
+
+vendor identifiers are skipped; new entries are POSTed via the App Store
+
+Connect API. fastlane has no native action for this; see issue #9082.
+
 ### ios clean
 
 ```sh
