@@ -13,6 +13,58 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [2.0.1] - 2026-05-02
+
+### Added
+- Contentcard modifier; replace folkartcard
+- Headerband color and update header typography
+- Extended statistics and ui components
+- Statistics screen & menu; update history
+- Background to continuegamecard
+- In-progress game persistence and resume ui
+- Optional game center integration
+- Compactstatcard and refactor summary/history
+- Subtitle and compact stat tiles
+- Accessibility labels and localized strings
+- Goldheadercard and unify folk-art card style
+- Swiftui previews for ui components
+- Top spacer and points caption to header
+- Slide-down menu, top bar & acorn asset
+- Replace grass/ground textures with full tree background image
+- Refresh visual theme with paper/ink palette and whitman portrait
+- Add ambient leaves, game-over sweep, and high-score celebration (phase 3)
+- Add spritekit visual effects and drag ghost (phase 2)
+- Add spritekit game grid renderer (phase 1 foundation)
+
+### Changed
+- Compactgoldheadercard.swift
+- Layout radii and history row ui
+- Fastlane config, simulator & tooling
+- App icons and logo.svg
+- App icons; remove textures & docs images
+- Block colors and dim overlay
+- History ui and add past games locale
+- Tree assets; tweak ui colors & demo score
+- Ui tests, add helpers & robust nav
+- Ui, reuse score formatter, clean views
+- Address code review findings from /simplify
+- Improve code quality and fix simulator detection
+
+### Fixed
+- Block accessibility identifiers cascading from container
+- Swift 6 isolation warnings in screenshotfixtures
+- Testnavigationflow on ios 26 toolbar menu
+- Use environment-aware simulator detection in build script
+
+### Removed
+- Remove
+- Delete
+### Added
+
+### Changed
+
+### Fixed
+
 ## [1.0.10] - 2025-11-27
 
 ### Added
@@ -142,7 +194,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - COPPA compliant with no data collection
 - iPhone-optimized experience with portrait orientation
 
-[Unreleased]: https://github.com/timveil/leaves-of-blocks/compare/v1.0.10...HEAD
+[Unreleased]: https://github.com/timveil/leaves-of-blocks/compare/v2.0.1...HEAD
+[2.0.1]: https://github.com/timveil/leaves-of-blocks/compare/v1.0.10...v2.0.1
 [1.0.10]: https://github.com/timveil/leaves-of-blocks/compare/v1.0.9...v1.0.10
 [1.0.9]: https://github.com/timveil/leaves-of-blocks/compare/v1.0.8...v1.0.9
 [1.0.8]: https://github.com/timveil/leaves-of-blocks/compare/v1.0.7...v1.0.8
