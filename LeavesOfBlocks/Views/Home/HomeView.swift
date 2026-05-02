@@ -7,7 +7,6 @@ struct HomeView: View {
     let hasInProgressGame: Bool
     let onResumeGame: () -> Void
     let onStartGame: (DifficultyMode) -> Void
-    let onShowHistory: () -> Void
 
     private var sectionTitle: String {
         hasInProgressGame ? "new_game_section_title".localized : "ready_to_play".localized
@@ -16,13 +15,6 @@ struct HomeView: View {
     var body: some View {
         BaseScreenView(showsStatusBar: false) {
             VStack(spacing: GameTheme.Layout.largePadding) {
-                ScoreDisplayView(
-                    score: gameState.highScore,
-                    lastScore: gameState.score > 0 ? gameState.score : nil,
-                    showHistoryHint: true,
-                    action: onShowHistory
-                )
-
                 if hasInProgressGame {
                     ContinueGameCard(
                         score: gameState.score,
@@ -84,15 +76,10 @@ private struct ContinueGameCard: View {
 
 #Preview("No In-Progress Game") {
     HomeView(
-        gameState: {
-            let state = GameState()
-            state.previewHighScore = 10_350
-            return state
-        }(),
+        gameState: GameState(),
         hasInProgressGame: false,
         onResumeGame: { },
-        onStartGame: { _ in },
-        onShowHistory: { }
+        onStartGame: { _ in }
     )
 }
 
@@ -100,13 +87,11 @@ private struct ContinueGameCard: View {
     HomeView(
         gameState: {
             let state = GameState()
-            state.previewHighScore = 10_350
             state.score = 4_280
             return state
         }(),
         hasInProgressGame: true,
         onResumeGame: { },
-        onStartGame: { _ in },
-        onShowHistory: { }
+        onStartGame: { _ in }
     )
 }

@@ -701,6 +701,23 @@
         }
       }
     },
+    "history_menu" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Game History"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Historial"
+          }
+        }
+      }
+    },
     "new_game_section_title" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -714,6 +731,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Empezar Nueva Partida"
+          }
+        }
+      }
+    },
+    "no_games_yet" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "No games yet — finish a run to see it here."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aún no hay partidas — termina una para verla aquí."
+          }
+        }
+      }
+    },
+    "statistics_menu" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Statistics"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estadísticas"
           }
         }
       }

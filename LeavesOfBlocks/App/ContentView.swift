@@ -8,6 +8,7 @@ enum AppScreen: Equatable {
     case summary(GameSession?)
     case about
     case history
+    case statistics
     case howToPlay
     case settings
 }
@@ -47,6 +48,18 @@ struct ContentView: View {
                                 Label("new_game_menu".localized, systemImage: "play")
                             }
                             .accessibilityIdentifier("new_game_button")
+
+                            Divider()
+
+                            Button(action: { handleNavigation(to: .history) }) {
+                                Label("history_menu".localized, systemImage: "clock.arrow.circlepath")
+                            }
+                            .accessibilityIdentifier("history_button")
+
+                            Button(action: { handleNavigation(to: .statistics) }) {
+                                Label("statistics_menu".localized, systemImage: "chart.bar.fill")
+                            }
+                            .accessibilityIdentifier("statistics_button")
 
                             Divider()
 
@@ -106,9 +119,6 @@ struct ContentView: View {
                         } else {
                             startNewGame(difficulty)
                         }
-                    },
-                    onShowHistory: {
-                        currentScreen = .history
                     }
                 )
 
@@ -139,6 +149,9 @@ struct ContentView: View {
                         currentScreen = .summary(session)
                     }
                 )
+
+            case .statistics:
+                StatisticsView()
 
             case .howToPlay:
                 HowToPlayView()

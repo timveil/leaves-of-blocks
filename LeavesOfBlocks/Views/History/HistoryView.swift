@@ -4,7 +4,7 @@ struct HistoryView: View {
     var gameState: GameState
     let onSelectSession: (GameSession) -> Void
     @State private var gameHistory: [GameSession] = []
-    @State private var statistics = GameHistoryStatistics(totalGames: 0, totalScore: 0, averageScore: 0, totalBlocksPlaced: 0, highScore: 0)
+    @State private var highScore: Int = 0
 
     private func loadGameHistory() {
         let records = CoreDataManager.shared.fetchGameHistory()
@@ -35,70 +35,32 @@ struct HistoryView: View {
         }
 
         gameHistory = sessions.sorted { $0.date > $1.date }
-        statistics = CoreDataManager.shared.calculateStatistics()
+        highScore = CoreDataManager.shared.calculateStatistics().highScore
     }
-
-    private var totalGames: Int {
-        gameHistory.count
-    }
-
-    private var averageScore: Int {
-        guard totalGames > 0 else { return 0 }
-        return gameHistory.reduce(0) { $0 + $1.score } / totalGames
-    }
-
-    private var totalBlocksPlaced: Int {
-        gameHistory.reduce(0) { $0 + $1.blocksPlaced }
-    }
-
-    private let statColumns = [
-        GridItem(.flexible(), spacing: GameTheme.Layout.mediumPadding),
-        GridItem(.flexible(), spacing: GameTheme.Layout.mediumPadding)
-    ]
 
     var body: some View {
         BaseScreenView {
             ScrollView {
                 VStack(spacing: GameTheme.Layout.mediumPadding) {
-                    LazyVGrid(columns: statColumns, spacing: GameTheme.Layout.mediumPadding) {
-                        CompactStatCard(
-                            title: "high_score".localized,
-                            value: statistics.highScore.abbreviatedScore
-                        )
-                        CompactStatCard(
-                            title: "games_played".localized,
-                            value: totalGames.abbreviatedScore
-                        )
-                        CompactStatCard(
-                            title: "average_score".localized,
-                            value: averageScore.abbreviatedScore
-                        )
-                        CompactStatCard(
-                            title: "total_blocks".localized,
-                            value: totalBlocksPlaced.abbreviatedScore
-                        )
-                    }
-
-                    // Section divider
-                    Text("past_games".localized)
-                        .font(GameTheme.Typography.title)
-                        .foregroundColor(GameTheme.Colors.buttonText)
-                        .frame(maxWidth: .infinity)
-                        .padding(.vertical, GameTheme.Layout.mediumPadding)
-                        .background(GameTheme.Colors.accent)
-                        .folkArtCard()
-
-                    ForEach(gameHistory.indices, id: \.self) { index in
-                        Button(action: {
-                            onSelectSession(gameHistory[index])
-                        }) {
-                            GameSessionRow(
-                                session: gameHistory[index],
-                                isHighScore: gameHistory[index].score == statistics.highScore
-                            )
+                    if gameHistory.isEmpty {
+                        Text("no_games_yet".localized)
+                            .font(GameTheme.Typography.body)
+                            .foregroundColor(GameTheme.Colors.secondaryText)
+                            .frame(maxWidth: .infinity)
+                            .padding(.vertical, GameTheme.Layout.extraLargePadding)
+                    } else {
+                        ForEach(gameHistory.indices, id: \.self) { index in
+                            Button(action: {
+                                onSelectSession(gameHistory[index])
+                            }) {
+                                GameSessionRow(
+                                    session: gameHistory[index],
+                                    isHighScore: gameHistory[index].score == highScore
+                                )
+                            }
+                            .buttonStyle(PlainButtonStyle())
+                            .accessibilityIdentifier("game_history_button_\(index)")
                         }
-                        .buttonStyle(PlainButtonStyle())
-                        .accessibilityIdentifier("game_history_button_\(index)")
                     }
                 }
                 .padding(.horizontal, GameTheme.Layout.largePadding)
