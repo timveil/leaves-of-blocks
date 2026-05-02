@@ -91,7 +91,12 @@ final class GameState {
         grid = GameLogic.createEmptyGrid()
         currentBlocks = []
 
-        if let snapshot = self.inProgressStore.load() {
+        // UI tests and screenshot runs always start from a clean state so
+        // tests aren't affected by a saved in-progress game from a prior run.
+        if AppConfiguration.Runtime.isUITesting {
+            self.inProgressStore.clear()
+            generateNewBlocks()
+        } else if let snapshot = self.inProgressStore.load() {
             apply(snapshot: snapshot)
         } else {
             generateNewBlocks()

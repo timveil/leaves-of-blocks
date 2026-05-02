@@ -73,9 +73,9 @@ struct ComboNotificationOverlay: View {
     var body: some View {
         ZStack {
             if let combo = activeCombo {
-                // Match the dim used by GameOver overlay so the combo popup
-                // reads with the same visual weight as a modal.
-                Color.black.opacity(0.7)
+                // Fully-opaque backdrop so no game UI bleeds through during
+                // the combo celebration, matching the GameOver modal weight.
+                Color.black
                     .ignoresSafeArea()
                     .transition(.opacity)
 

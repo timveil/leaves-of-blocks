@@ -133,7 +133,7 @@ struct BoardView: View {
             // Game Over Overlay - highest priority, appears above everything
             if gameState.isGameOver {
                 ZStack {
-                    Color.black.opacity(0.7)
+                    Color.black
                         .ignoresSafeArea()
                     
                     VStack {
