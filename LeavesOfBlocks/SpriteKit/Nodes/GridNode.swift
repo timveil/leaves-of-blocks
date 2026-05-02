@@ -149,12 +149,14 @@ class GridNode: SKNode {
 
         switch block.type {
         case .horizontalClear:
+            // Special block clears the whole row, including already-filled cells —
+            // tint them all so the user sees the full impact zone.
             for col in 0..<gridSize {
-                highlightCell(row: position.row, col: col, color: previewColor)
+                highlightCell(row: position.row, col: col, color: previewColor, overrideFilled: true)
             }
         case .verticalClear:
             for row in 0..<gridSize {
-                highlightCell(row: row, col: position.col, color: previewColor)
+                highlightCell(row: row, col: position.col, color: previewColor, overrideFilled: true)
             }
         case .areaClear:
             for dRow in -1...1 {
@@ -162,25 +164,27 @@ class GridNode: SKNode {
                     let r = position.row + dRow
                     let c = position.col + dCol
                     if r >= 0 && r < gridSize && c >= 0 && c < gridSize {
-                        highlightCell(row: r, col: c, color: previewColor)
+                        highlightCell(row: r, col: c, color: previewColor, overrideFilled: true)
                     }
                 }
             }
         case .normal:
+            // Normal blocks can't be placed over filled cells; preserve the
+            // existing fill so the player still sees the obstruction.
             for blockPos in block.positions {
                 let r = position.row + blockPos.row
                 let c = position.col + blockPos.col
                 if r >= 0 && r < gridSize && c >= 0 && c < gridSize {
-                    highlightCell(row: r, col: c, color: previewColor)
+                    highlightCell(row: r, col: c, color: previewColor, overrideFilled: false)
                 }
             }
         }
     }
 
-    private func highlightCell(row: Int, col: Int, color: UIColor) {
+    private func highlightCell(row: Int, col: Int, color: UIColor, overrideFilled: Bool) {
         guard row >= 0 && row < gridSize && col >= 0 && col < gridSize else { return }
         let node = cellNodes[row][col]
-        if node.fillColor == SpriteKitColors.gridCellEmpty {
+        if overrideFilled || node.fillColor == SpriteKitColors.gridCellEmpty {
             node.fillColor = color
         }
     }
