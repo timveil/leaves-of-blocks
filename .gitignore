@@ -119,3 +119,7 @@ Thumbs.db
 # Temporary files
 *.tmp
 *.temp
+*.p12
+*.certSigningRequest
+*.cer
+*.mobileprovision

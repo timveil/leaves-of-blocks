@@ -28,16 +28,31 @@ IOS_SIMULATOR = "iPhone 17 Pro"
 EXPORT_METHOD = "app-store"
 TEAM_ID = "85U9MWUBJL"
 
-# gym/xcodebuild needs `signingStyle: automatic` + `teamID` in the export
-# options plist when exporting an archive whose targets use automatic signing.
-# Without it, xcodebuild's exportArchive step looks for a manual distribution
-# profile and fails with "No profiles for '<bundle id>' were found".
-# Not frozen: gym mutates this hash internally while assembling the export
-# options plist (PackageCommandGeneratorXcode7), so freezing raises FrozenError.
-def export_options
+# Distribution signing helper used by every lane that calls `build_app` for
+# App Store export. Calls `cert` + `sigh` via the App Store Connect API key
+# (App Manager role required) to materialize an Apple Distribution cert and
+# an App Store provisioning profile, then returns a gym `export_options`
+# hash that points the export step at that profile by name.
+#
+# Why this exists: `xcodebuild -exportArchive` (the CLI used by gym) cannot
+# auto-create distribution profiles — only Xcode IDE can. Without local
+# cert + profile, automatic signing fails with "No profiles for '<bundle
+# id>' were found". Manual signing with a known-good profile name works
+# regardless of what's in the keychain at the start of the run.
+#
+# Not frozen: gym mutates this hash while writing the export options plist.
+def app_store_signing_options(api_key:)
+  get_certificates(api_key: api_key)
+  get_provisioning_profile(
+    api_key: api_key,
+    app_identifier: APP_IDENTIFIER
+  )
   {
-    signingStyle: "automatic",
-    teamID: TEAM_ID
+    signingStyle: "manual",
+    teamID: TEAM_ID,
+    provisioningProfiles: {
+      APP_IDENTIFIER => lane_context[Fastlane::Actions::SharedValues::SIGH_NAME]
+    }
   }
 end
 
