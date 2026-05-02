@@ -7,25 +7,27 @@ struct GameSessionRow: View {
     let isHighScore: Bool
 
     var body: some View {
-        HStack(spacing: GameTheme.Layout.mediumSpacing) {
-            AcornCountView(count: session.difficulty.acornCount, height: 24, spacing: 4)
+        HStack(alignment: .center, spacing: GameTheme.Layout.mediumSpacing) {
+            VStack(alignment: .leading, spacing: GameTheme.Layout.smallSpacing) {
+                Text(session.score.abbreviatedScore)
+                    .font(GameTheme.Typography.title)
+                    .foregroundColor(isHighScore ? GameTheme.Colors.accent : GameTheme.Colors.primaryText)
+                    .lineLimit(1)
+                    .minimumScaleFactor(0.7)
 
-            Text(session.score.abbreviatedScore)
-                .font(GameTheme.Typography.title)
-                .foregroundColor(isHighScore ? GameTheme.Colors.accent : GameTheme.Colors.primaryText)
-                .lineLimit(1)
-                .minimumScaleFactor(0.7)
+                Text(session.formattedDate)
+                    .font(GameTheme.Typography.caption)
+                    .foregroundColor(GameTheme.Colors.secondaryText)
+                    .lineLimit(1)
+            }
 
             Spacer(minLength: GameTheme.Layout.mediumSpacing)
 
-            Text(session.formattedDate)
-                .font(GameTheme.Typography.caption)
-                .foregroundColor(GameTheme.Colors.secondaryText)
-                .lineLimit(1)
+            AcornCountView(count: session.difficulty.acornCount, height: 28, spacing: 4)
         }
         .frame(maxWidth: .infinity)
         .padding(.horizontal, GameTheme.Layout.mediumPadding)
-        .padding(.vertical, GameTheme.Layout.smallPadding)
+        .padding(.vertical, GameTheme.Layout.mediumPadding)
         .background(Color.white)
         .folkArtCard(borderColor: isHighScore ? GameTheme.Colors.accent : .black)
         .accessibilityIdentifier("game_session_row")

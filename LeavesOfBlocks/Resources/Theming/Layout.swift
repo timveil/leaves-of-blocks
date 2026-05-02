@@ -20,9 +20,9 @@ extension GameTheme {
         static let extraLargeSpacing: CGFloat = 24
 
         // Corner Radius
-        static let mediumRadius: CGFloat = 16
-        static let cardCornerRadius: CGFloat = 24
-        static let buttonCornerRadius: CGFloat = 16
+        static let mediumRadius: CGFloat = 10
+        static let cardCornerRadius: CGFloat = 12
+        static let buttonCornerRadius: CGFloat = 10
 
         // Stroke and Borders
         static let cardBorderWidth: CGFloat = 2.5
