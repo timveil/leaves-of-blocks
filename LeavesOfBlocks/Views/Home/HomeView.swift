@@ -4,8 +4,14 @@ import SwiftUI
 
 struct HomeView: View {
     var gameState: GameState
+    let hasInProgressGame: Bool
+    let onResumeGame: () -> Void
     let onStartGame: (DifficultyMode) -> Void
     let onShowHistory: () -> Void
+
+    private var sectionTitle: String {
+        hasInProgressGame ? "new_game_section_title".localized : "ready_to_play".localized
+    }
 
     var body: some View {
         BaseScreenView(showsStatusBar: false) {
@@ -17,7 +23,14 @@ struct HomeView: View {
                     action: onShowHistory
                 )
 
-                GoldHeaderCard(title: "ready_to_play".localized) {
+                if hasInProgressGame {
+                    ContinueGameCard(
+                        score: gameState.score,
+                        action: onResumeGame
+                    )
+                }
+
+                GoldHeaderCard(title: sectionTitle) {
                     DifficultySelectionView(
                         onStartGame: onStartGame
                     )
@@ -31,14 +44,67 @@ struct HomeView: View {
     }
 }
 
-#Preview {
+// MARK: - Continue Game Card
+
+private struct ContinueGameCard: View {
+    let score: Int
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            HStack(spacing: GameTheme.Layout.mediumPadding) {
+                Image(systemName: "arrow.uturn.forward.circle.fill")
+                    .font(.system(size: 32, weight: .bold))
+                    .foregroundColor(GameTheme.Colors.success)
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text("continue_game".localized)
+                        .font(GameTheme.Typography.headline)
+                        .foregroundColor(GameTheme.Colors.primaryText)
+                    Text("continue_game_format".localized(with: score))
+                        .font(GameTheme.Typography.body)
+                        .foregroundColor(GameTheme.Colors.secondaryText)
+                }
+
+                Spacer()
+
+                Image(systemName: "chevron.right")
+                    .font(.system(size: 18, weight: .bold))
+                    .foregroundColor(GameTheme.Colors.secondaryText)
+            }
+            .padding(.horizontal, GameTheme.Layout.largePadding)
+            .padding(.vertical, GameTheme.Layout.mediumPadding)
+            .folkArtCard()
+        }
+        .buttonStyle(.plain)
+        .accessibilityIdentifier("continue_game_button")
+    }
+}
+
+#Preview("No In-Progress Game") {
     HomeView(
         gameState: {
             let state = GameState()
             state.previewHighScore = 10_350
-            state.score = 87_200
             return state
         }(),
+        hasInProgressGame: false,
+        onResumeGame: { },
+        onStartGame: { _ in },
+        onShowHistory: { }
+    )
+}
+
+#Preview("With In-Progress Game") {
+    HomeView(
+        gameState: {
+            let state = GameState()
+            state.previewHighScore = 10_350
+            state.score = 4_280
+            return state
+        }(),
+        hasInProgressGame: true,
+        onResumeGame: { },
         onStartGame: { _ in },
         onShowHistory: { }
     )

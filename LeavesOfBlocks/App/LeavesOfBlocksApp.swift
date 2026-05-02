@@ -4,6 +4,7 @@ import SwiftUI
 struct Main: App {
     @State private var showLaunchScreen = true
     @State private var gameState = GameState()
+    @Environment(\.scenePhase) private var scenePhase
     let coreDataManager = CoreDataManager.shared
 
     var body: some Scene {
@@ -33,6 +34,11 @@ struct Main: App {
                 showLaunchScreen = false
                 if AppConfiguration.Runtime.isScreenshotMode {
                     await ScreenshotFixtures.install(into: coreDataManager)
+                }
+            }
+            .onChange(of: scenePhase) { _, newPhase in
+                if newPhase == .background || newPhase == .inactive {
+                    gameState.persistInProgressGame()
                 }
             }
         }

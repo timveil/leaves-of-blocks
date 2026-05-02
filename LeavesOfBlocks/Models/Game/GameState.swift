@@ -21,7 +21,6 @@ final class GameState {
     var currentBlocks: [BlockShape]
     var score: Int = 0
     var isGameOver: Bool = false
-    var showSaveGameOverlay: Bool = false
     var linesCleared: Int = 0
     var lastClearedCells: [ClearedCell] = []
 
@@ -40,6 +39,7 @@ final class GameState {
 
     private let gameService: GameService
     private let behaviorTracker: PlayerBehaviorTracker
+    private let inProgressStore: InProgressGameStore
     
     // MARK: - Computed Properties
     
@@ -73,18 +73,83 @@ final class GameState {
     /// Service dependencies are injected so tests can pass fakes or capture side effects.
     /// Pass `nil` (the default) to get a freshly constructed production service.
     ///
+    /// On launch, if the in-progress store holds a saved snapshot, the game state
+    /// is rehydrated from it instead of starting fresh.
+    ///
     /// - Parameters:
     ///   - gameService: Timing, persistence, and haptics. `nil` constructs a default `GameService`.
     ///   - behaviorTracker: Per-session efficiency/strategy tracker. `nil` constructs a default `PlayerBehaviorTracker`.
+    ///   - inProgressStore: Single-slot store for the active run. `nil` uses the shared instance.
     init(
         gameService: GameService? = nil,
-        behaviorTracker: PlayerBehaviorTracker? = nil
+        behaviorTracker: PlayerBehaviorTracker? = nil,
+        inProgressStore: InProgressGameStore? = nil
     ) {
         self.gameService = gameService ?? GameService()
         self.behaviorTracker = behaviorTracker ?? PlayerBehaviorTracker()
+        self.inProgressStore = inProgressStore ?? InProgressGameStore.shared
         grid = GameLogic.createEmptyGrid()
         currentBlocks = []
-        generateNewBlocks()
+
+        if let snapshot = self.inProgressStore.load() {
+            apply(snapshot: snapshot)
+        } else {
+            generateNewBlocks()
+        }
+    }
+
+    /// Rehydrates this `GameState` from a saved snapshot.
+    private func apply(snapshot: InProgressGameSnapshot) {
+        grid = snapshot.grid
+        currentBlocks = snapshot.currentBlocks
+        score = snapshot.score
+        linesCleared = snapshot.linesCleared
+        blocksPlaced = snapshot.blocksPlaced
+        longestCombo = snapshot.longestCombo
+        currentCombo = snapshot.currentCombo
+        specialShapesUsed = snapshot.specialShapesUsed
+        currentDifficulty = snapshot.difficulty
+        isGameOver = false
+        lastClearedCells = []
+        isNewHighScore = false
+        gameStartTime = snapshot.savedAt.addingTimeInterval(-snapshot.elapsedGameTime)
+
+        // Behavior tracker starts fresh on resume; analytics reflect post-resume play only.
+        behaviorTracker.startSession()
+        behaviorTracker.recordGridState(grid)
+
+        gameService.startGameSession(
+            difficulty: snapshot.difficulty,
+            resumingFromElapsed: snapshot.elapsedGameTime
+        )
+    }
+
+    /// Captures the current in-flight game state for persistence.
+    func snapshot() -> InProgressGameSnapshot {
+        InProgressGameSnapshot(
+            grid: grid,
+            currentBlocks: currentBlocks,
+            score: score,
+            linesCleared: linesCleared,
+            blocksPlaced: blocksPlaced,
+            longestCombo: longestCombo,
+            currentCombo: currentCombo,
+            specialShapesUsed: specialShapesUsed,
+            difficulty: currentDifficulty,
+            elapsedGameTime: currentGameTime,
+            savedAt: Date()
+        )
+    }
+
+    /// Whether a meaningful run is currently in progress (worth persisting / resuming).
+    var hasActiveRun: Bool {
+        score > 0 && !isGameOver
+    }
+
+    /// Persists the current run to the in-progress store, if there is one to save.
+    func persistInProgressGame() {
+        guard hasActiveRun else { return }
+        inProgressStore.save(snapshot())
     }
     
     // MARK: - Game Actions
@@ -187,6 +252,13 @@ final class GameState {
         // Always check for game over after placing a block
         // This ensures immediate detection when no moves are available
         checkGameOver()
+
+        // Auto-save the in-flight game so we can resume after backgrounding or
+        // navigating away. On natural game-over `checkGameOver()` already cleared
+        // the slot, so skip then.
+        if !isGameOver {
+            inProgressStore.save(snapshot())
+        }
     }
     
     func clearCompletedLines() -> (clearedRows: Set<Int>, clearedCols: Set<Int>, clearedCells: [ClearedCell]) {
@@ -264,6 +336,10 @@ final class GameState {
                 longestCombo: longestCombo,
                 sessionMetrics: sessionMetrics
             )
+
+            // The run is finalized — clear the in-progress slot so the next
+            // launch starts fresh.
+            inProgressStore.clear()
         } else if !gameOverState {
             // Game is still active
             isGameOver = false
@@ -301,9 +377,12 @@ final class GameState {
     /// - Note: This method is called automatically by `startGame(difficulty:)`
     ///   and can be used to restart the current game without changing difficulty.
     func resetGame() {
+        // Discard any persisted in-progress game; the new run starts from scratch.
+        inProgressStore.clear()
+
         // Reset grid using GameLogic
         grid = GameLogic.createEmptyGrid()
-        
+
         // Reset game state
         score = 0
         linesCleared = 0
@@ -346,62 +425,6 @@ final class GameState {
         gameService.blockReturnFeedback()
     }
     
-    // MARK: - Save Game Actions
-    
-    /// Shows the save game overlay dialog.
-    ///
-    /// This method displays a modal overlay that allows the user to choose between
-    /// saving the current game or exiting without saving.
-    func showSaveGameDialog() {
-        showSaveGameOverlay = true
-    }
-    
-    /// Saves the current game and ends the session.
-    ///
-    /// This method saves the current game state as a completed game record
-    /// and ends the current session. The navigation completion should be handled
-    /// by the calling view.
-    ///
-    /// - Parameter onComplete: Callback to execute after save is complete
-    func saveAndEndGame(onComplete: @escaping () -> Void = {}) {
-        gameService.endGameSession()
-        
-        // Save game record with current progress
-        let sessionMetrics = behaviorTracker.finalizeSession(
-            score: score,
-            blocksPlaced: blocksPlaced,
-            linesCleared: linesCleared,
-            longestCombo: longestCombo,
-            gameTime: currentGameTime,
-            difficulty: currentDifficulty
-        )
-        
-        gameService.saveGameRecord(
-            score: score,
-            linesCleared: linesCleared,
-            blocksPlaced: blocksPlaced,
-            gameTime: currentGameTime,
-            difficulty: currentDifficulty,
-            longestCombo: longestCombo,
-            sessionMetrics: sessionMetrics
-        )
-        
-        showSaveGameOverlay = false
-        onComplete()
-    }
-    
-    /// Exits the current game without saving.
-    ///
-    /// This method ends the current game session without creating a game record.
-    /// The navigation completion should be handled by the calling view.
-    ///
-    /// - Parameter onComplete: Callback to execute after exit is complete
-    func exitWithoutSaving(onComplete: @escaping () -> Void = {}) {
-        gameService.endGameSession()
-        showSaveGameOverlay = false
-        onComplete()
-    }
-
     // MARK: - Data Management
 
     /// Clears all persisted game history.

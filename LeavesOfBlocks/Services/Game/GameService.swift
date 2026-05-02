@@ -27,12 +27,15 @@ final class GameService {
 
     // MARK: - Timer Management
 
-    /// Starts the game timer to track elapsed time
-    func startGameTimer() {
+    /// Starts the game timer to track elapsed time.
+    ///
+    /// - Parameter elapsed: Seconds already accumulated for this run, when resuming
+    ///   a saved game. Defaults to `0` (fresh game).
+    func startGameTimer(resumingFromElapsed elapsed: TimeInterval = 0) {
         guard !isTimerActive else { return }
 
-        gameStartTime = Date()
-        currentGameTime = 0
+        gameStartTime = Date().addingTimeInterval(-elapsed)
+        currentGameTime = elapsed
         isTimerActive = true
 
         timerTask = Task { @MainActor [weak self] in
@@ -51,12 +54,15 @@ final class GameService {
         isTimerActive = false
     }
 
-    /// Resets the game timer
-    func resetGameTimer() {
+    /// Resets the game timer.
+    ///
+    /// - Parameter elapsed: Seconds already accumulated for this run, when resuming
+    ///   a saved game. Defaults to `0` (fresh game).
+    func resetGameTimer(resumingFromElapsed elapsed: TimeInterval = 0) {
         stopGameTimer()
-        currentGameTime = 0
-        gameStartTime = Date()
-        startGameTimer()
+        currentGameTime = elapsed
+        gameStartTime = Date().addingTimeInterval(-elapsed)
+        startGameTimer(resumingFromElapsed: elapsed)
     }
     
     // MARK: - Game Time Utilities
@@ -153,9 +159,14 @@ final class GameService {
     
     // MARK: - Game Session Management
     
-    /// Starts a new game session
-    func startGameSession(difficulty: DifficultyMode) {
-        resetGameTimer()
+    /// Starts a new game session.
+    ///
+    /// - Parameters:
+    ///   - difficulty: The difficulty mode for the session.
+    ///   - resumingFromElapsed: Seconds already accumulated for this run, when
+    ///     resuming a saved game. Defaults to `0` (fresh game).
+    func startGameSession(difficulty: DifficultyMode, resumingFromElapsed elapsed: TimeInterval = 0) {
+        resetGameTimer(resumingFromElapsed: elapsed)
         // Any other session initialization logic
     }
     

@@ -5,7 +5,7 @@ struct GridPosition: Equatable, Codable, Hashable {
     let col: Int
 }
 
-struct GridCell {
+struct GridCell: Codable, Equatable {
     var isFilled: Bool = false
     var color: BlockColor = .blue
 }

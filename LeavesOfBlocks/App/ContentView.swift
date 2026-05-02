@@ -17,7 +17,11 @@ enum AppScreen: Equatable {
 struct ContentView: View {
     var gameState: GameState
     @State private var currentScreen: AppScreen = .home
-    @State private var pendingNavigation: AppScreen?
+    @State private var showDiscardConfirmation: Bool = false
+
+    private var hasInProgressGame: Bool {
+        gameState.hasActiveRun
+    }
 
     // MARK: - View Body
 
@@ -32,6 +36,12 @@ struct ContentView: View {
                             }
                             .disabled(currentScreen == .home)
                             .accessibilityIdentifier("home_button")
+
+                            Button(action: { resumeGame() }) {
+                                Label("resume_game_menu".localized, systemImage: "arrow.uturn.forward")
+                            }
+                            .disabled(!hasInProgressGame || currentScreen == .game)
+                            .accessibilityIdentifier("resume_game_button")
 
                             Button(action: { handleNewGame() }) {
                                 Label("new_game_menu".localized, systemImage: "play")
@@ -66,6 +76,17 @@ struct ContentView: View {
                     }
                 }
                 .toolbarBackground(.hidden, for: .navigationBar)
+                .alert(
+                    "discard_game_title".localized,
+                    isPresented: $showDiscardConfirmation
+                ) {
+                    Button("cancel".localized, role: .cancel) {}
+                    Button("discard_confirm".localized, role: .destructive) {
+                        startNewGame(.moderate)
+                    }
+                } message: {
+                    Text("discard_game_message".localized)
+                }
         }
     }
 
@@ -77,9 +98,14 @@ struct ContentView: View {
             case .home:
                 HomeView(
                     gameState: gameState,
+                    hasInProgressGame: hasInProgressGame,
+                    onResumeGame: { resumeGame() },
                     onStartGame: { difficulty in
-                        gameState.startGame(difficulty: difficulty)
-                        currentScreen = .game
+                        if hasInProgressGame {
+                            showDiscardConfirmation = true
+                        } else {
+                            startNewGame(difficulty)
+                        }
                     },
                     onShowHistory: {
                         currentScreen = .history
@@ -94,16 +120,6 @@ struct ContentView: View {
                     },
                     onNewGame: {
                         gameState.resetGame()
-                    },
-                    onSaveAndExit: {
-                        gameState.saveAndEndGame {
-                            completePendingNavigation()
-                        }
-                    },
-                    onExitWithoutSaving: {
-                        gameState.exitWithoutSaving {
-                            completePendingNavigation()
-                        }
                     }
                 )
 
@@ -136,34 +152,24 @@ struct ContentView: View {
     // MARK: - Navigation Helpers
 
     private func handleNavigation(to destination: AppScreen) {
-        if currentScreen == .game && !gameState.isGameOver && gameState.score > 0 {
-            pendingNavigation = destination
-            gameState.showSaveGameDialog()
-        } else {
-            currentScreen = destination
-        }
+        currentScreen = destination
     }
 
     private func handleNewGame() {
-        if currentScreen != .game {
-            gameState.startGame(difficulty: .moderate)
-            currentScreen = .game
-        } else if !gameState.isGameOver && gameState.score > 0 {
-            pendingNavigation = .game
-            gameState.showSaveGameDialog()
+        if hasInProgressGame {
+            showDiscardConfirmation = true
         } else {
-            gameState.resetGame()
+            startNewGame(.moderate)
         }
     }
 
-    private func completePendingNavigation() {
-        guard let destination = pendingNavigation else { return }
-        if destination == .game {
-            gameState.resetGame()
-        } else {
-            currentScreen = destination
-        }
-        pendingNavigation = nil
+    private func startNewGame(_ difficulty: DifficultyMode) {
+        gameState.startGame(difficulty: difficulty)
+        currentScreen = .game
+    }
+
+    private func resumeGame() {
+        currentScreen = .game
     }
 }
 

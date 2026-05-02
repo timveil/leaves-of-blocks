@@ -11,25 +11,6 @@ struct HistoryView: View {
 
         var sessions: [GameSession] = []
 
-        if gameState.score > 0 && !gameState.isGameOver {
-            sessions.append(GameSession(
-                date: Date(),
-                score: gameState.score,
-                blocksPlaced: gameState.blocksPlaced,
-                linesCleared: gameState.linesCleared,
-                difficulty: gameState.currentDifficulty,
-                gameTime: gameState.currentGameTime,
-                averageGridEfficiency: nil,
-                averageFragmentation: nil,
-                strategicPlayRating: nil,
-                challengeMaintained: nil,
-                fallbackActivations: nil,
-                efficiencyGrade: nil,
-                strategicGrade: nil,
-                tierUsageDistribution: nil
-            ))
-        }
-
         for record in records {
             if let date = record.date,
                let difficultyString = record.difficulty,
