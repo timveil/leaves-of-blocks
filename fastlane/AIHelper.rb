@@ -220,14 +220,14 @@ module AIHelper
       return nil unless content
 
       # Handle potential markdown code block wrapping
-      json_content = content.strip
-      json_content = json_content.gsub(/^```json\s*/, '').gsub(/\s*```$/, '')
+      json_content = content.strip.delete_prefix('```json').delete_suffix('```').strip
 
-      # Extract JSON object if wrapped in other text
-      json_match = json_content.match(/\{[\s\S]*\}/)
-      return nil unless json_match
+      # Extract outermost JSON object if wrapped in other text
+      first_brace = json_content.index('{')
+      last_brace = json_content.rindex('}')
+      return nil unless first_brace && last_brace && last_brace > first_brace
 
-      parsed = JSON.parse(json_match[0])
+      parsed = JSON.parse(json_content[first_brace..last_brace])
 
       # Normalize to expected structure with symbol keys
       {
@@ -249,8 +249,8 @@ module AIHelper
       # Clean up the response
       prose = content.strip
 
-      # Remove any accidental markdown formatting
-      prose = prose.gsub(/^\*+/, '').gsub(/\*+$/, '')
+      # Remove any accidental markdown formatting (possessive quantifiers prevent ReDoS)
+      prose = prose.gsub(/^\*++/, '').gsub(/\*++$/, '')
       prose = prose.gsub(/^#+\s*/, '')
 
       # Enforce character limit with intelligent truncation
