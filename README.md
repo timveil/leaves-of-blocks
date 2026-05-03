@@ -270,5 +270,4 @@ For questions, bugs, or feature requests, please [open an issue](https://github.
 <div align="center">
   <img src="whitman-logo.svg" alt="Leaves of Blocks" width="60" height="60" />
   <p><strong>Leaves of Blocks</strong> - An ad-free, privacy-first Block Blast alternative</p>
-  <p><em>Built with SwiftUI • Powered by advanced algorithms • Designed for delight</em></p>
 </div>
