@@ -4,10 +4,20 @@
   # Leaves of Blocks
   
   [![iOS Build and Test](https://github.com/timveil/leaves-of-blocks/actions/workflows/ios.yml/badge.svg)](https://github.com/timveil/leaves-of-blocks/actions/workflows/ios.yml)
+  [![Swift 5](https://img.shields.io/badge/Swift-5.0-F05138?logo=swift&logoColor=white)](https://swift.org)
+  [![Platform](https://img.shields.io/badge/platform-iOS%2018.5%2B-007AFF?logo=apple)](https://developer.apple.com/ios/)
+  [![License: MIT](https://img.shields.io/github/license/timveil/leaves-of-blocks)](LICENSE)
+  [![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-FE5196?logo=conventionalcommits&logoColor=white)](https://www.conventionalcommits.org)
+  [![No Ads](https://img.shields.io/badge/ads-none-success)](#privacy-by-default)
+  [![No Trackers](https://img.shields.io/badge/trackers-none-success)](#privacy-by-default)
   
   **A Whitman-inspired, privacy-first Block Blast alternative for iOS — zero ads, zero tracking, zero in-app purchases.**
   
   Players drag and drop block shapes onto an 8x8 grid to clear lines while the game adapts to their skill level
+
+  <a href="https://apps.apple.com/us/app/leaves-of-blocks/id6749193006">
+    <img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" alt="Download on the App Store" height="50">
+  </a>
 
   [Website](https://www.leavesofblocks.com/) · [Play in browser](https://www.leavesofblocks.com/play/) · [vs. Block Blast](https://www.leavesofblocks.com/vs/) · [Support](https://www.leavesofblocks.com/support/)
 </div>
