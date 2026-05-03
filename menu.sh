@@ -123,7 +123,7 @@ while true; do
     echo ""
 
     echo -e "${BLUE}Asset Generation:${NC}"
-    echo " 18) Generate & Copy App Icons"
+    echo " 18) Generate App Icons (light + dark + tinted)"
     echo ""
 
     echo -e "${BLUE}Development Environment:${NC}"
@@ -265,7 +265,7 @@ while true; do
             ;;
         18)
             run_command "./scripts/generate_icons.sh" \
-                       "Generate & Copy App Icons"
+                       "Generate App Icons from whitman-logo.svg (light + dark + tinted)"
             ;;
         19)
             # Environment Status Check

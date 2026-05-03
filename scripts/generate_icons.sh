@@ -1,193 +1,158 @@
 #!/bin/bash
+#
+# generate_icons.sh
+# Generates the iOS AppIcon set from whitman-logo.svg using the iOS 18+
+# single-size 1024x1024 layout. iOS scales the 1024 master down to every
+# device size at install time, so we no longer ship per-size PNGs.
+#
+# Variants:
+#   - Light (default):    pale-blue background, original figure colors
+#   - Dark (luminosity):  same figure colors as light, but transparent
+#                         background so iOS's dark home-screen platter shows
+#                         through. No path recoloring — the asymmetric source
+#                         geometry made color-swap dark recolors look uneven.
+#   - Tinted (luminosity): white silhouette on transparent for iOS to recolor
 
-# Icon Generation Script for Leaves of Blocks
-# This script generates all required iOS app icons from the SVG logo
+set -euo pipefail
 
-# Check if rsvg-convert is installed
-if ! command -v rsvg-convert &> /dev/null; then
-    echo "rsvg-convert is required but not installed."
-    echo "Install it with: brew install librsvg"
-    exit 1
-fi
+SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+PROJECT_ROOT="$( cd "$SCRIPT_DIR/.." && pwd )"
+cd "$PROJECT_ROOT"
 
-# Create tmp directory if it doesn't exist
-mkdir -p tmp
-
-# Source SVG file
-SVG_FILE="logo.svg"
-
-if [ ! -f "$SVG_FILE" ]; then
-    echo "Error: $SVG_FILE not found!"
-    exit 1
-fi
-
-echo "Generating iOS app icons from $SVG_FILE..."
-
-# iOS App Icon sizes (all square with white background)
-# iPhone App Icons
-rsvg-convert -w 180 -h 180 "$SVG_FILE" > tmp/AppIcon-60@3x.png  # iPhone 180x180
-rsvg-convert -w 120 -h 120 "$SVG_FILE" > tmp/AppIcon-60@2x.png  # iPhone 120x120
-rsvg-convert -w 87 -h 87 "$SVG_FILE" > tmp/AppIcon-29@3x.png    # iPhone Settings 87x87
-rsvg-convert -w 58 -h 58 "$SVG_FILE" > tmp/AppIcon-29@2x.png    # iPhone Settings 58x58
-rsvg-convert -w 80 -h 80 "$SVG_FILE" > tmp/AppIcon-40@2x.png    # iPhone Spotlight 80x80
-rsvg-convert -w 120 -h 120 "$SVG_FILE" > tmp/AppIcon-40@3x.png  # iPhone Spotlight 120x120
-rsvg-convert -w 40 -h 40 "$SVG_FILE" > tmp/AppIcon-20@2x.png    # iPhone Notifications 40x40
-rsvg-convert -w 60 -h 60 "$SVG_FILE" > tmp/AppIcon-20@3x.png    # iPhone Notifications 60x60
-
-# iPad App Icons
-rsvg-convert -w 152 -h 152 "$SVG_FILE" > tmp/AppIcon-76@2x.png  # iPad 152x152
-rsvg-convert -w 76 -h 76 "$SVG_FILE" > tmp/AppIcon-76.png       # iPad 76x76
-rsvg-convert -w 167 -h 167 "$SVG_FILE" > tmp/AppIcon-83.5@2x.png # iPad Pro 167x167
-
-# Universal Settings and Spotlight
-rsvg-convert -w 29 -h 29 "$SVG_FILE" > tmp/AppIcon-29.png       # Settings 29x29
-rsvg-convert -w 40 -h 40 "$SVG_FILE" > tmp/AppIcon-40.png       # Spotlight 40x40
-
-# App Store Icon (1024x1024)
-rsvg-convert -w 1024 -h 1024 "$SVG_FILE" > tmp/AppIcon-1024.png
-
-# Additional common sizes
-rsvg-convert -w 512 -h 512 "$SVG_FILE" > tmp/AppIcon-512.png
-rsvg-convert -w 256 -h 256 "$SVG_FILE" > tmp/AppIcon-256.png
-rsvg-convert -w 128 -h 128 "$SVG_FILE" > tmp/AppIcon-128.png
-rsvg-convert -w 64 -h 64 "$SVG_FILE" > tmp/AppIcon-64.png
-rsvg-convert -w 32 -h 32 "$SVG_FILE" > tmp/AppIcon-32.png
-rsvg-convert -w 16 -h 16 "$SVG_FILE" > tmp/AppIcon-16.png
-
-echo "✅ Generated all iOS app icons successfully!"
-echo "📁 Icons saved in ./tmp/ directory"
-echo ""
-echo "Generated icon sizes:"
-ls -la tmp/ | awk '{print $9, $5}' | grep -v "^$" | sort
-
-echo ""
-echo "📱 Copying icons to iOS project..."
-
-# Define the Assets directory paths
+SRC_SVG="whitman-logo.svg"
 ASSETS_DIR="LeavesOfBlocks/Assets.xcassets/AppIcon.appiconset"
+TMP_DIR="tmp"
 
-# Create directories if they don't exist
+# Background color for the light variant. Matches the prior logo.svg wrapper
+# (a soft autumn-sky blue) so the App Store icon visually doesn't change.
+LIGHT_BG="#E0EAF2"
+
+# Square viewBox that pads the figure (figure's own viewBox is "219 159 589
+# 713"). 113.5/115.5 + 800x800 leaves comfortable breathing room around the
+# Whitman silhouette inside the iOS rounded-corner mask.
+WRAPPED_VIEWBOX="113.5 115.5 800 800"
+WRAPPED_RECT_X="113.5"
+WRAPPED_RECT_Y="115.5"
+WRAPPED_RECT_SIZE="800"
+
+if ! command -v rsvg-convert &>/dev/null; then
+    echo "Error: rsvg-convert is required but not installed." >&2
+    echo "  Install with: brew install librsvg" >&2
+    exit 1
+fi
+
+if [ ! -f "$SRC_SVG" ]; then
+    echo "Error: $SRC_SVG not found in $(pwd)" >&2
+    exit 1
+fi
+
+mkdir -p "$TMP_DIR"
+
+# Pull out the inner content of whitman-logo.svg so we can rewrap it with our
+# own outer <svg> element per variant (each variant needs a different
+# viewBox/background/color palette).
+INNER_FILE="$TMP_DIR/.inner.svg"
+sed -E 's|^[[:space:]]*<\?xml[^?]*\?>||' "$SRC_SVG" \
+    | sed -E 's|<svg[^>]*>||' \
+    | sed -E 's|</svg>[[:space:]]*$||' > "$INNER_FILE"
+
+write_outer() {
+    # write_outer <output-svg> <bg-or-"transparent"> <inner-svg-fragment>
+    local out="$1"
+    local bg="$2"
+    local inner_path="$3"
+
+    {
+        echo '<?xml version="1.0" encoding="utf-8" ?>'
+        echo "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"1024\" height=\"1024\" viewBox=\"$WRAPPED_VIEWBOX\">"
+        if [ "$bg" != "transparent" ]; then
+            echo "<rect x=\"$WRAPPED_RECT_X\" y=\"$WRAPPED_RECT_Y\" width=\"$WRAPPED_RECT_SIZE\" height=\"$WRAPPED_RECT_SIZE\" fill=\"$bg\"/>"
+        fi
+        cat "$inner_path"
+        echo '</svg>'
+    } > "$out"
+}
+
+# --- Light variant ---------------------------------------------------------
+# Opaque pale-blue background, original figure colors.
+write_outer "$TMP_DIR/icon-light.svg" "$LIGHT_BG" "$INNER_FILE"
+
+# --- Dark variant ----------------------------------------------------------
+# Same figure as the light variant, just rendered onto iOS's dark home-screen
+# platter (transparent background, no path recoloring).
+write_outer "$TMP_DIR/icon-dark.svg" "transparent" "$INNER_FILE"
+
+# --- Tinted variant --------------------------------------------------------
+# Transparent background, every fill flattened to white. iOS recolors white
+# pixels with the user's chosen tint, producing a single-tone silhouette.
+TINTED_INNER="$TMP_DIR/.inner-tinted.svg"
+sed -E \
+    -e 's|fill="#[0-9A-Fa-f]{6}"|fill="#FFFFFF"|g' \
+    -e 's|fill="url\([^)]*\)"|fill="#FFFFFF"|g' \
+    "$INNER_FILE" > "$TINTED_INNER"
+write_outer "$TMP_DIR/icon-tinted.svg" "transparent" "$TINTED_INNER"
+
+# Render the variant SVGs to 1024x1024 PNGs.
+echo "Rendering icon variants from $SRC_SVG..."
+rsvg-convert -w 1024 -h 1024 "$TMP_DIR/icon-light.svg"   > "$TMP_DIR/AppIcon-1024.png"
+rsvg-convert -w 1024 -h 1024 "$TMP_DIR/icon-dark.svg"    > "$TMP_DIR/AppIcon-1024-Dark.png"
+rsvg-convert -w 1024 -h 1024 "$TMP_DIR/icon-tinted.svg"  > "$TMP_DIR/AppIcon-1024-Tinted.png"
+echo "  ✓ tmp/AppIcon-1024.png"
+echo "  ✓ tmp/AppIcon-1024-Dark.png"
+echo "  ✓ tmp/AppIcon-1024-Tinted.png"
+
+# Sweep stale icons (legacy per-size PNGs and any prior dark variant) out of
+# the appiconset — only the entries referenced by the new Contents.json
+# should remain on disk.
 mkdir -p "$ASSETS_DIR"
+echo ""
+echo "Cleaning stale icons from $ASSETS_DIR..."
+shopt -s nullglob
+for legacy in "$ASSETS_DIR"/AppIcon-*.png; do
+    case "$(basename "$legacy")" in
+        AppIcon-1024.png|AppIcon-1024-Dark.png|AppIcon-1024-Tinted.png) ;;
+        *)
+            rm -f "$legacy"
+            echo "  Removed $(basename "$legacy")"
+            ;;
+    esac
+done
 
-# Copy main app icons
-echo "📱 Copying main app icons..."
-cp tmp/AppIcon-60@3x.png "$ASSETS_DIR/AppIcon-60@3x.png"      # iPhone App 180x180
-cp tmp/AppIcon-60@2x.png "$ASSETS_DIR/AppIcon-60@2x.png"      # iPhone App 120x120
-cp tmp/AppIcon-40@3x.png "$ASSETS_DIR/AppIcon-40@3x.png"      # iPhone Spotlight 120x120
-cp tmp/AppIcon-40@2x.png "$ASSETS_DIR/AppIcon-40@2x.png"      # iPhone/iPad Spotlight 80x80
-cp tmp/AppIcon-40.png "$ASSETS_DIR/AppIcon-40.png"            # iPad Spotlight 40x40
-cp tmp/AppIcon-29@3x.png "$ASSETS_DIR/AppIcon-29@3x.png"      # iPhone Settings 87x87
-cp tmp/AppIcon-29@2x.png "$ASSETS_DIR/AppIcon-29@2x.png"      # iPhone/iPad Settings 58x58
-cp tmp/AppIcon-29.png "$ASSETS_DIR/AppIcon-29.png"            # iPad Settings 29x29
-cp tmp/AppIcon-20@3x.png "$ASSETS_DIR/AppIcon-20@3x.png"      # iPhone Notifications 60x60
-cp tmp/AppIcon-20@2x.png "$ASSETS_DIR/AppIcon-20@2x.png"      # iPhone Notifications 40x40
+cp "$TMP_DIR/AppIcon-1024.png"        "$ASSETS_DIR/AppIcon-1024.png"
+cp "$TMP_DIR/AppIcon-1024-Dark.png"   "$ASSETS_DIR/AppIcon-1024-Dark.png"
+cp "$TMP_DIR/AppIcon-1024-Tinted.png" "$ASSETS_DIR/AppIcon-1024-Tinted.png"
 
-# iPad specific icons
-cp tmp/AppIcon-83.5@2x.png "$ASSETS_DIR/AppIcon-83.5@2x.png"  # iPad Pro 167x167
-cp tmp/AppIcon-76@2x.png "$ASSETS_DIR/AppIcon-76@2x.png"      # iPad 152x152
-cp tmp/AppIcon-76.png "$ASSETS_DIR/AppIcon-76.png"            # iPad 76x76
-
-# App Store icon
-cp tmp/AppIcon-1024.png "$ASSETS_DIR/AppIcon-1024.png"        # App Store 1024x1024
-
-# Create Contents.json for the icon set
-cat > "$ASSETS_DIR/Contents.json" << 'EOF'
+cat > "$ASSETS_DIR/Contents.json" <<'EOF'
 {
   "images" : [
     {
-      "filename" : "AppIcon-20@2x.png",
-      "idiom" : "iphone",
-      "scale" : "2x",
-      "size" : "20x20"
-    },
-    {
-      "filename" : "AppIcon-20@3x.png",
-      "idiom" : "iphone",
-      "scale" : "3x",
-      "size" : "20x20"
-    },
-    {
-      "filename" : "AppIcon-40.png",
-      "idiom" : "ipad",
-      "scale" : "1x",
-      "size" : "40x40"
-    },
-    {
-      "filename" : "AppIcon-40@2x.png",
-      "idiom" : "ipad",
-      "scale" : "2x",
-      "size" : "40x40"
-    },
-    {
-      "filename" : "AppIcon-60@2x.png",
-      "idiom" : "iphone",
-      "scale" : "2x",
-      "size" : "60x60"
-    },
-    {
-      "filename" : "AppIcon-60@3x.png",
-      "idiom" : "iphone",
-      "scale" : "3x",
-      "size" : "60x60"
-    },
-    {
-      "filename" : "AppIcon-76.png",
-      "idiom" : "ipad",
-      "scale" : "1x",
-      "size" : "76x76"
-    },
-    {
-      "filename" : "AppIcon-76@2x.png",
-      "idiom" : "ipad",
-      "scale" : "2x",
-      "size" : "76x76"
-    },
-    {
-      "filename" : "AppIcon-83.5@2x.png",
-      "idiom" : "ipad",
-      "scale" : "2x",
-      "size" : "83.5x83.5"
-    },
-    {
-      "filename" : "AppIcon-40@2x.png",
-      "idiom" : "iphone",
-      "scale" : "2x",
-      "size" : "40x40"
-    },
-    {
-      "filename" : "AppIcon-40@3x.png",
-      "idiom" : "iphone",
-      "scale" : "3x",
-      "size" : "40x40"
-    },
-    {
-      "filename" : "AppIcon-29.png",
-      "idiom" : "ipad",
-      "scale" : "1x",
-      "size" : "29x29"
-    },
-    {
-      "filename" : "AppIcon-29@2x.png",
-      "idiom" : "iphone",
-      "scale" : "2x",
-      "size" : "29x29"
-    },
-    {
-      "filename" : "AppIcon-29@2x.png",
-      "idiom" : "ipad",
-      "scale" : "2x",
-      "size" : "29x29"
-    },
-    {
-      "filename" : "AppIcon-29@3x.png",
-      "idiom" : "iphone",
-      "scale" : "3x",
-      "size" : "29x29"
-    },
-    {
       "filename" : "AppIcon-1024.png",
-      "idiom" : "ios-marketing",
-      "scale" : "1x",
+      "idiom" : "universal",
+      "platform" : "ios",
+      "size" : "1024x1024"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "dark"
+        }
+      ],
+      "filename" : "AppIcon-1024-Dark.png",
+      "idiom" : "universal",
+      "platform" : "ios",
+      "size" : "1024x1024"
+    },
+    {
+      "appearances" : [
+        {
+          "appearance" : "luminosity",
+          "value" : "tinted"
+        }
+      ],
+      "filename" : "AppIcon-1024-Tinted.png",
+      "idiom" : "universal",
+      "platform" : "ios",
       "size" : "1024x1024"
     }
   ],
@@ -199,20 +164,8 @@ cat > "$ASSETS_DIR/Contents.json" << 'EOF'
 EOF
 
 echo ""
-echo "✅ Icons generated and copied to iOS project successfully!"
-echo "📁 App Icons location: $ASSETS_DIR"
-echo ""
-echo "🚀 Next steps:"
-echo "1. Open your Xcode project"
-echo "2. Navigate to Assets.xcassets"
-echo "3. The AppIcon should now show the new icons"
-echo "4. Build and test your app to see the new icons!"
-echo ""
-echo "📱 iOS App Icon Requirements:"
-echo "• iPhone App: 180x180, 120x120"
-echo "• iPhone Notifications: 60x60, 40x40"
-echo "• iPhone Settings: 87x87, 58x58, 29x29"
-echo "• iPhone Spotlight: 120x120, 80x80, 40x40"
-echo "• iPad App: 167x167, 152x152, 76x76"
-echo "• App Store: 1024x1024"
-echo "• App icons have white background (Apple requirement)"
+echo "✅ App icons regenerated from $SRC_SVG"
+echo "📁 $ASSETS_DIR"
+echo "    AppIcon-1024.png         (light: pale-blue background, original colors)"
+echo "    AppIcon-1024-Dark.png    (transparent: original colors on iOS dark platter)"
+echo "    AppIcon-1024-Tinted.png  (transparent: white silhouette for system tinting)"
