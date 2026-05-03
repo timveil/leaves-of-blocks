@@ -74,7 +74,7 @@ def _resolve_bump(current:, bump_type:)
   when SEMVER_REGEX
     bump_type
   else
-    UI.user_error!(
+    FastlaneCore::UI.user_error!(
       "Invalid version bump '#{bump_type}'. Expected one of: " \
       "'patch', 'minor', 'major', or a semver string like '1.2.3'."
     )
@@ -94,12 +94,12 @@ def bump_marketing_version(xcodeproj:, target_name:, bump_type:)
   project = Xcodeproj::Project.open(project_path)
 
   target = project.targets.find { |t| t.name == target_name }
-  UI.user_error!("Target '#{target_name}' not found") unless target
+  FastlaneCore::UI.user_error!("Target '#{target_name}' not found") unless target
 
   release_config = target.build_configurations.find { |c| c.name == 'Release' }
   current_version = release_config.build_settings['MARKETING_VERSION'] || '1.0.0'
 
-  UI.message("Current version: #{current_version}")
+  FastlaneCore::UI.message("Current version: #{current_version}")
   new_version = _resolve_bump(current: current_version, bump_type: bump_type)
 
   target.build_configurations.each do |config|
@@ -107,7 +107,7 @@ def bump_marketing_version(xcodeproj:, target_name:, bump_type:)
   end
   project.save
 
-  UI.message("Version bumped: #{current_version} → #{new_version}")
+  FastlaneCore::UI.message("Version bumped: #{current_version} → #{new_version}")
   new_version
 end
 
@@ -120,7 +120,7 @@ def calculate_new_version(xcodeproj:, target_name:, bump_type:)
   project = Xcodeproj::Project.open(project_path)
 
   target = project.targets.find { |t| t.name == target_name }
-  UI.user_error!("Target '#{target_name}' not found") unless target
+  FastlaneCore::UI.user_error!("Target '#{target_name}' not found") unless target
 
   release_config = target.build_configurations.find { |c| c.name == 'Release' }
   current_version = release_config.build_settings['MARKETING_VERSION'] || '1.0.0'
@@ -179,7 +179,7 @@ def generate_release_notes(version:)
   release_notes_path = File.join(Dir.pwd, 'metadata', 'en-US', 'release_notes.txt')
 
   unless File.exist?(changelog_path)
-    UI.important("CHANGELOG.md not found, skipping release notes generation")
+    FastlaneCore::UI.important("CHANGELOG.md not found, skipping release notes generation")
     return nil
   end
 
@@ -193,7 +193,7 @@ def generate_release_notes(version:)
   section = content.match(unreleased_pattern) if section.nil? || section[1].strip.empty?
 
   if section.nil? || section[1].strip.empty?
-    UI.important("No changelog entries found for version #{version}")
+    FastlaneCore::UI.important("No changelog entries found for version #{version}")
     return nil
   end
 
@@ -202,16 +202,16 @@ def generate_release_notes(version:)
   # === AI PROSE GENERATION ATTEMPT ===
   prose = nil
   if AIHelper.available?
-    UI.message("Attempting AI-generated release notes...")
+    FastlaneCore::UI.message("Attempting AI-generated release notes...")
     prose = AIHelper.generate_prose(changelog_section: section_content, version: version)
 
     if prose
-      UI.message("AI prose generation succeeded")
+      FastlaneCore::UI.message("AI prose generation succeeded")
     else
-      UI.important("AI prose generation returned no results, using template fallback")
+      FastlaneCore::UI.important("AI prose generation returned no results, using template fallback")
     end
   else
-    UI.message("ANTHROPIC_API_KEY not set, using template-based release notes")
+    FastlaneCore::UI.message("ANTHROPIC_API_KEY not set, using template-based release notes")
   end
 
   # === FALLBACK: Template-based generation ===
@@ -258,8 +258,8 @@ def generate_release_notes(version:)
   end
 
   File.write(release_notes_path, prose)
-  UI.message("Release notes generated: #{version}")
-  UI.message("Preview:\n#{prose}")
+  FastlaneCore::UI.message("Release notes generated: #{version}")
+  FastlaneCore::UI.message("Preview:\n#{prose}")
 
   prose
 end
@@ -275,7 +275,7 @@ def update_changelog_from_commits(new_version:)
   changelog_path = File.join(Dir.pwd, '..', 'CHANGELOG.md')
 
   unless File.exist?(changelog_path)
-    UI.user_error!("CHANGELOG.md not found at #{changelog_path}")
+    FastlaneCore::UI.user_error!("CHANGELOG.md not found at #{changelog_path}")
   end
   content = File.read(changelog_path)
 
@@ -286,38 +286,38 @@ def update_changelog_from_commits(new_version:)
   manual_sections = _parse_unreleased_subsections(content)
   if manual_sections.any?
     summary = manual_sections.transform_values(&:length)
-    UI.important("Carrying over manual [Unreleased] entries: #{summary.inspect}")
+    FastlaneCore::UI.important("Carrying over manual [Unreleased] entries: #{summary.inspect}")
   end
 
   last_tag = `git describe --tags --abbrev=0 2>/dev/null`.strip
 
   if last_tag.empty?
-    UI.message("No previous tags found, using all commits")
+    FastlaneCore::UI.message("No previous tags found, using all commits")
     range = ""
   else
-    UI.message("Finding commits since #{last_tag}")
+    FastlaneCore::UI.message("Finding commits since #{last_tag}")
     range = "#{last_tag}..HEAD"
   end
 
   commits = `git log #{range} --pretty=format:"%s"`.split("\n")
-  UI.message("Found #{commits.length} commits to process")
+  FastlaneCore::UI.message("Found #{commits.length} commits to process")
 
   filtered_commits = commits.reject { |c| c.match?(/^chore: Release v/i) }
-  UI.message("#{filtered_commits.length} commits after filtering release commits")
+  FastlaneCore::UI.message("#{filtered_commits.length} commits after filtering release commits")
 
   # === AI ENHANCEMENT ATTEMPT ===
   ai_result = nil
   if AIHelper.available?
-    UI.message("Attempting AI-enhanced changelog generation...")
+    FastlaneCore::UI.message("Attempting AI-enhanced changelog generation...")
     ai_result = AIHelper.enhance_changelog(commits: filtered_commits, new_version: new_version)
 
     if ai_result
-      UI.message("AI enhancement succeeded")
+      FastlaneCore::UI.message("AI enhancement succeeded")
     else
-      UI.important("AI enhancement returned no results, using template fallback")
+      FastlaneCore::UI.important("AI enhancement returned no results, using template fallback")
     end
   else
-    UI.message("ANTHROPIC_API_KEY not set, using template-based generation")
+    FastlaneCore::UI.message("ANTHROPIC_API_KEY not set, using template-based generation")
   end
 
   if ai_result
@@ -374,8 +374,8 @@ def update_changelog_from_commits(new_version:)
 
   # Bail out only if neither commits NOR manual notes produced anything.
   if added.empty? && changed.empty? && fixed.empty? && removed.empty? && extra_sections.empty?
-    UI.important("No changelog entries derived from commits or [Unreleased] notes.")
-    UI.important("Release notes will be left blank — add them manually in App Store Connect.")
+    FastlaneCore::UI.important("No changelog entries derived from commits or [Unreleased] notes.")
+    FastlaneCore::UI.important("Release notes will be left blank — add them manually in App Store Connect.")
 
     release_notes_path = File.join(Dir.pwd, 'metadata', 'en-US', 'release_notes.txt')
     File.write(release_notes_path, '') if File.exist?(release_notes_path)
@@ -429,7 +429,7 @@ def update_changelog_from_commits(new_version:)
   end
 
   File.write(changelog_path, new_content)
-  UI.message("CHANGELOG.md updated: #{new_version}")
+  FastlaneCore::UI.message("CHANGELOG.md updated: #{new_version}")
 
   section
 end
@@ -443,7 +443,7 @@ def ensure_tag_available!(version:)
   tag = "v#{version}"
 
   if system("git rev-parse --verify --quiet refs/tags/#{tag} > /dev/null")
-    UI.user_error!(
+    FastlaneCore::UI.user_error!(
       "Tag #{tag} already exists locally. " \
       "Delete it (`git tag -d #{tag}`) and any orphan release commit on main " \
       "before retrying. If the remote also has the tag, also run " \
@@ -453,7 +453,7 @@ def ensure_tag_available!(version:)
 
   remote_ref = `git ls-remote origin refs/tags/#{tag} 2>/dev/null`.strip
   unless remote_ref.empty?
-    UI.user_error!(
+    FastlaneCore::UI.user_error!(
       "Tag #{tag} already exists on origin. " \
       "Delete it with `git push origin :refs/tags/#{tag}` before retrying " \
       "(or pick a different version)."
@@ -474,7 +474,7 @@ def ensure_version_available_on_app_store!(version:)
   require "spaceship"
 
   app = Spaceship::ConnectAPI::App.find(APP_IDENTIFIER)
-  UI.user_error!("Could not find app '#{APP_IDENTIFIER}' on App Store Connect.") unless app
+  FastlaneCore::UI.user_error!("Could not find app '#{APP_IDENTIFIER}' on App Store Connect.") unless app
 
   existing = app.get_app_store_versions(filter: { versionString: version })
   return if existing.empty?
@@ -487,7 +487,7 @@ def ensure_version_available_on_app_store!(version:)
   # actual ASC state behind a useless error message.
   record = existing.first
   state = record.app_version_state || record.app_store_state || "unknown state"
-  UI.user_error!(
+  FastlaneCore::UI.user_error!(
     "Version #{version} already exists on App Store Connect (state: #{state}). " \
     "App Store Connect rejects duplicate versionString values even when the " \
     "earlier upload was incomplete. Bump the marketing version higher than " \
@@ -510,7 +510,7 @@ def commit_release_local(version:)
   # "nothing to commit" run for a partial success and run finalize_release.
   staged = sh("git diff --cached --name-only", log: false).strip
   if staged.empty?
-    UI.user_error!(
+    FastlaneCore::UI.user_error!(
       "No staged changes to commit for release v#{version}. " \
       "Did the version bump / changelog generation actually mutate disk? " \
       "Run `git status` to investigate."
@@ -518,7 +518,7 @@ def commit_release_local(version:)
   end
 
   sh("git commit -m 'chore: Release v#{version}'")
-  UI.success("Created local release commit for v#{version} (not yet pushed)")
+  FastlaneCore::UI.success("Created local release commit for v#{version} (not yet pushed)")
 end
 
 # Tag the commit at HEAD and push commit + tag to origin/main. Run ONLY after
@@ -529,7 +529,7 @@ def finalize_release(version:)
   head_subject = sh("git log -1 --pretty=%s", log: false).strip
   expected = "chore: Release v#{version}"
   unless head_subject == expected
-    UI.user_error!(
+    FastlaneCore::UI.user_error!(
       "Refusing to tag: HEAD commit subject is '#{head_subject}', expected '#{expected}'. " \
       "The release commit appears to be missing or out of order — investigate before retrying."
     )
@@ -539,7 +539,7 @@ def finalize_release(version:)
   sh("git push origin main")
   sh("git push origin v#{version}")
 
-  UI.success("Tagged and pushed v#{version}")
+  FastlaneCore::UI.success("Tagged and pushed v#{version}")
 end
 
 # Canonical release flow shared by `deploy` and `deploy_and_submit`. The
@@ -557,40 +557,40 @@ end
 def _release_core(api_key:, options:, submit:)
   unless options[:version]
     lane_name = submit ? 'deploy_and_submit' : 'deploy'
-    UI.user_error!("Version bump required. Use: fastlane #{lane_name} version:patch|minor|major")
+    FastlaneCore::UI.user_error!("Version bump required. Use: fastlane #{lane_name} version:patch|minor|major")
   end
 
-  UI.message("▸ Pre-flight: git status + branch")
+  FastlaneCore::UI.message("▸ Pre-flight: git status + branch")
   ensure_git_status_clean
   ensure_git_branch(branch: 'main')
 
-  UI.message("▸ Resolving target version")
+  FastlaneCore::UI.message("▸ Resolving target version")
   new_version = calculate_new_version(
     xcodeproj: XCODE_PROJECT,
     target_name: MAIN_SCHEME,
     bump_type: options[:version]
   )
-  UI.message("Target version: #{new_version}")
+  FastlaneCore::UI.message("Target version: #{new_version}")
 
-  UI.message("▸ Verifying tag availability (local + origin)")
+  FastlaneCore::UI.message("▸ Verifying tag availability (local + origin)")
   ensure_tag_available!(version: new_version)
 
-  UI.message("▸ Verifying version availability on App Store Connect")
+  FastlaneCore::UI.message("▸ Verifying version availability on App Store Connect")
   ensure_version_available_on_app_store!(version: new_version)
 
   # Screenshots before disk mutations — UI tests are flaky enough that we'd
   # rather find out before bumping CHANGELOG/version.
-  UI.message("▸ Capturing screenshots")
+  FastlaneCore::UI.message("▸ Capturing screenshots")
   build_for_testing
   capture_screenshots(
     number_of_retries: 0,
     only_testing: ["LeavesOfBlocksUITests/LeavesOfBlocksUITests/testCaptureScreenshots"]
   )
 
-  UI.message("▸ Updating changelog from commits")
+  FastlaneCore::UI.message("▸ Updating changelog from commits")
   changelog_updated = update_changelog_from_commits(new_version: new_version)
 
-  UI.message("▸ Bumping marketing version + build number")
+  FastlaneCore::UI.message("▸ Bumping marketing version + build number")
   bump_marketing_version(
     xcodeproj: XCODE_PROJECT,
     target_name: MAIN_SCHEME,
@@ -599,16 +599,16 @@ def _release_core(api_key:, options:, submit:)
   increment_build_number(xcodeproj: XCODE_PROJECT)
 
   if changelog_updated
-    UI.message("▸ Generating release notes")
+    FastlaneCore::UI.message("▸ Generating release notes")
     generate_release_notes(version: new_version)
   end
 
   # Local commit only. If anything below fails, recovery is one
   # `git reset --hard HEAD~1` — no public artifacts created yet.
-  UI.message("▸ Creating local release commit")
+  FastlaneCore::UI.message("▸ Creating local release commit")
   commit_release_local(version: new_version)
 
-  UI.message("▸ Archiving")
+  FastlaneCore::UI.message("▸ Archiving")
   build_app(
     project: XCODE_PROJECT,
     scheme: MAIN_SCHEME,
@@ -616,7 +616,7 @@ def _release_core(api_key:, options:, submit:)
     export_options: app_store_signing_options(api_key: api_key)
   )
 
-  UI.message("▸ Uploading to App Store Connect")
+  FastlaneCore::UI.message("▸ Uploading to App Store Connect")
   deliver(
     api_key: api_key,
     submit_for_review: submit,
@@ -625,18 +625,18 @@ def _release_core(api_key:, options:, submit:)
     skip_metadata: false,
     skip_screenshots: false
   )
-  UI.success("Delivered to App Store Connect")
+  FastlaneCore::UI.success("Delivered to App Store Connect")
 
   # Point of no return passed: tag + push to origin.
-  UI.message("▸ Finalizing release (tag + push)")
+  FastlaneCore::UI.message("▸ Finalizing release (tag + push)")
   finalize_release(version: new_version)
 
   # Lane-level summary. Emoji used as semantic icons here, not decoration:
   # 📱 binary state, 🏷️ git tag state, ⏳ what to wait for next.
-  UI.success(submit ? "🎉 Release deployed and submitted for review" : "Release deployed")
-  UI.message("📱 Binary, metadata, and screenshots uploaded")
-  UI.message("🏷️  Git tag v#{new_version} pushed to origin")
-  UI.message(submit ? "⏳ Apple will review within 24-48 hours" : "⏳ Check App Store Connect for build processing")
+  FastlaneCore::UI.success(submit ? "🎉 Release deployed and submitted for review" : "Release deployed")
+  FastlaneCore::UI.message("📱 Binary, metadata, and screenshots uploaded")
+  FastlaneCore::UI.message("🏷️  Git tag v#{new_version} pushed to origin")
+  FastlaneCore::UI.message(submit ? "⏳ Apple will review within 24-48 hours" : "⏳ Check App Store Connect for build processing")
 
   new_version
 end

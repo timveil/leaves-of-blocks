@@ -50,7 +50,7 @@ class GameCenterClient
       return detail if detail
     end
 
-    UI.message("  Creating new gameCenterDetail for app #{app_id}")
+    FastlaneCore::UI.message("  Creating new gameCenterDetail for app #{app_id}")
     body = {
       data: {
         type: 'gameCenterDetails',

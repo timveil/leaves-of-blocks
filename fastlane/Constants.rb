@@ -118,17 +118,19 @@ end
 def api_key_config(in_house: false)
   # Check if required environment variables are set. Use UI.user_error! so
   # the failure prints with fastlane's standard formatting and the lane's
-  # `error do` hook fires (a plain `raise` skips both).
+  # `error do` hook fires (a plain `raise` skips both). Constants.rb is
+  # loaded via `require` (outside fastlane's eval scope), so the bare `UI`
+  # constant is not in lexical scope here — call FastlaneCore::UI directly.
   unless API_KEY_ID && ISSUER_ID
-    UI.user_error!("Missing required environment variables: LOCAL_APP_STORE_CONNECT_API_KEY_ID and LOCAL_APP_STORE_CONNECT_ISSUER_ID must be set in fastlane/.env")
+    FastlaneCore::UI.user_error!("Missing required environment variables: LOCAL_APP_STORE_CONNECT_API_KEY_ID and LOCAL_APP_STORE_CONNECT_ISSUER_ID must be set in fastlane/.env")
   end
 
   unless API_KEY_FILE_PATH
-    UI.user_error!("Missing required environment variable: LOCAL_APP_STORE_CONNECT_API_KEY_PATH must be set in fastlane/.env")
+    FastlaneCore::UI.user_error!("Missing required environment variable: LOCAL_APP_STORE_CONNECT_API_KEY_PATH must be set in fastlane/.env")
   end
 
   unless File.exist?(API_KEY_FILE_PATH)
-    UI.user_error!("API key file not found at: #{API_KEY_FILE_PATH}")
+    FastlaneCore::UI.user_error!("API key file not found at: #{API_KEY_FILE_PATH}")
   end
 
   app_store_connect_api_key(
