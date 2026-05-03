@@ -414,6 +414,34 @@ def ensure_tag_available!(version:)
   end
 end
 
+# Pre-flight: query App Store Connect to ensure the new version isn't
+# already in use. App Store Connect rejects duplicate versionString values
+# (even if the earlier upload was incomplete), and that rejection comes
+# from `deliver` at the very end of the lane — after ~2 min of screenshots
+# + archive, with the release commit and tag already pushed. Catching it
+# here avoids the same expensive failure mode.
+#
+# Requires `app_store_connect_api_key` to have been called first so
+# Spaceship is authenticated.
+def ensure_version_available_on_app_store!(version:)
+  require "spaceship"
+
+  app = Spaceship::ConnectAPI::App.find(APP_IDENTIFIER)
+  UI.user_error!("Could not find app '#{APP_IDENTIFIER}' on App Store Connect.") unless app
+
+  existing = app.get_app_store_versions(filter: { versionString: version })
+  return if existing.empty?
+
+  state = existing.first.app_store_state || "unknown state"
+  UI.user_error!(
+    "Version #{version} already exists on App Store Connect (state: #{state}). " \
+    "App Store Connect rejects duplicate versionString values even when the " \
+    "earlier upload was incomplete. Bump the marketing version higher than " \
+    "#{version} before retrying, or remove the existing record on App Store " \
+    "Connect."
+  )
+end
+
 # Commit changelog and project changes, then create git tag
 def commit_release(version:)
   # Stage changelog and metadata
@@ -571,6 +599,12 @@ platform :ios do
     # stranded release commit on local main.
     ensure_tag_available!(version: new_version)
 
+    # Fail fast if App Store Connect already has this versionString.
+    # Without this guard the lane runs ~2min of screenshots + archive before
+    # `deliver` rejects the upload, leaving a pushed release commit + tag
+    # for a version that can never be delivered.
+    ensure_version_available_on_app_store!(version: new_version)
+
     # Update changelog from commits. Returns false when no entries were
     # derived — in that case we skip release-notes generation and let
     # them be entered manually in App Store Connect.
@@ -679,6 +713,12 @@ platform :ios do
     # before crashing at `git tag -a` with "tag already exists", leaving a
     # stranded release commit on local main.
     ensure_tag_available!(version: new_version)
+
+    # Fail fast if App Store Connect already has this versionString.
+    # Without this guard the lane runs ~2min of screenshots + archive before
+    # `deliver` rejects the upload, leaving a pushed release commit + tag
+    # for a version that can never be delivered.
+    ensure_version_available_on_app_store!(version: new_version)
 
     # Update changelog from commits. Returns false when no entries were
     # derived — in that case we skip release-notes generation and let
