@@ -158,8 +158,7 @@ LeavesOfBlocks/
 scripts/                    # Development utilities
 ├── build.sh                # Unified build/test entry point
 ├── cleanup-project.sh      # Comprehensive project cleanup
-├── generate_icons.sh       # Icon generation and copying
-└── generate_grass_images.py # Grass texture generation
+└── generate_icons.sh       # Icon generation and copying
 
 menu.sh                     # Interactive development menu
 ```
@@ -269,7 +268,6 @@ For questions, bugs, or feature requests, please [open an issue](https://github.
 ---
 
 <div align="center">
-  <hr>
   <img src="LeavesOfBlocks/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png" alt="Leaves of Blocks" width="60" height="60" />
   <p><strong>Leaves of Blocks</strong> - Where autumn meets intelligent puzzle design</p>
   <p><em>Built with SwiftUI • Powered by advanced algorithms • Designed for delight</em></p>

@@ -8,100 +8,100 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Achievement prompt UI and runtime version check
+- Background suspend/resume handling for the SpriteKit scene
 
 ### Changed
+- Refreshed README: link to public website, vs. Block Blast comparison, and updated project structure
+- Extracted Fastlane release helpers and hardened the release flow
+- Removed `bump_marketing_version` from the beta lane (TestFlight builds no longer touch the marketing version)
 
-### Fixed
+### Removed
+- Falling-leaves SpriteKit effect
+
+## [2.0.3] - 2026-05-03
+
+### Changed
+- Re-publish of 2.0.2 with a marketing version bump (no functional changes)
 
 ## [2.0.2] - 2026-05-03
 
 ### Added
-- Line-clear drag preview & banner tweaks
-- Pressdarken button style and apply to buttons
-- Ui haptics and relax fastfile changelog
-
-### Fixed
-- Timezone-dependent date constants in extendedstatisticstests
-### Added
+- Line-clear drag preview and combo banner refinements
+- `PressDarken` button style applied across primary buttons
+- UI haptics on additional interactions
+- Single 1024-pt App Icon with dark and tinted variants
 
 ### Changed
+- Combo banner moved from SwiftUI to SpriteKit for smoother animation
+- Fastlane changelog generation relaxed; release flow fails fast if the target tag already exists
 
 ### Fixed
-
-## [2.0.1] - 2026-05-03
-
-### Added
-- Line-clear drag preview & banner tweaks
-- Pressdarken button style and apply to buttons
-- Ui haptics and relax fastfile changelog
-
-### Fixed
-- Timezone-dependent date constants in extendedstatisticstests
-### Added
-
-### Changed
-
-### Fixed
+- Timezone-dependent date constants in `ExtendedStatisticsTests`
 
 ## [2.0.1] - 2026-05-02
 
 ### Added
-- Contentcard modifier; replace folkartcard
-- Headerband color and update header typography
-- Extended statistics and ui components
-- Statistics screen & menu; update history
-- Background to continuegamecard
-- In-progress game persistence and resume ui
-- Optional game center integration
-- Compactstatcard and refactor summary/history
-- Subtitle and compact stat tiles
-- Accessibility labels and localized strings
-- Goldheadercard and unify folk-art card style
-- Swiftui previews for ui components
-- Top spacer and points caption to header
-- Slide-down menu, top bar & acorn asset
-- Replace grass/ground textures with full tree background image
-- Refresh visual theme with paper/ink palette and whitman portrait
-- Add ambient leaves, game-over sweep, and high-score celebration (phase 3)
-- Add spritekit visual effects and drag ghost (phase 2)
-- Add spritekit game grid renderer (phase 1 foundation)
+- Optional, opt-in Game Center integration: leaderboards, achievements, and dashboard presentation gated behind `GameCenterPreference`
+- In-progress game persistence with resume UI (`ContinueGameCard`)
+- Statistics screen and menu entry, with extended statistics components (`CompactStatCard`, etc.)
+- SpriteKit game grid renderer (Phase 1), visual effects and drag ghost (Phase 2), ambient leaves, game-over sweep, and high-score celebration (Phase 3)
+- Slide-down menu, top bar, and acorn asset (later replaced by a toolbar `Menu`)
+- `GoldHeaderCard`, `CompactGoldHeaderCard`, `contentCard` modifier, and `headerBand` color tokens — unified folk-art card styling
+- `WhitmanSticker` component and Whitman portrait theming
+- SwiftUI previews for UI components
+- Accessibility labels and localized strings across screens
+- Subtitle and compact stat tiles on the home screen
+- Top spacer and points caption to the game header
 
 ### Changed
-- Compactgoldheadercard.swift
-- Layout radii and history row ui
-- Fastlane config, simulator & tooling
-- App icons and logo.svg
-- App icons; remove textures & docs images
-- Block colors and dim overlay
-- History ui and add past games locale
-- Tree assets; tweak ui colors & demo score
-- Ui tests, add helpers & robust nav
-- Ui, reuse score formatter, clean views
-- Address code review findings from /simplify
-- Improve code quality and fix simulator detection
+- Refreshed visual theme with a paper/ink palette and Whitman portrait
+- Replaced grass/ground textures with a full tree background image
+- Redesigned About screen and `QuoteView`
+- Revamped HowToPlay and Settings UI and localizations
+- Refactored History UI and added Past Games localizations
+- Replaced save/exit buttons with circular icons
+- Switched from slide-down overlay to a toolbar `Menu`
+- Modernized launch screen (removed old square LaunchIcon, aligned Home/Board to the top)
+- Adjusted theme accent and button text colors
+- Bolder grid lines, content-node layout, and removed shadows
+- `GameTheme` colors applied to SpriteKit effects
+- Layout corner radii and history row UI updates
+- Combo notification UI revamp and faster animations
+- Allowed preview highlights to override filled cells
+- Reduced drag offset above the finger
+- Injected `GameState` and cleaned up `GameScene`
+- Switched async sleeps to Swift `Task` and added a geometry helper
+- Open-source readiness pass: documentation, dead code removal, DRY, accessibility
+- P2 polish: code coverage, accessibility, `os.Logger`, expanded tests
+- P2 round 2: Core Data `perform`, layering, more tests
+- Manual App Store signing; `.env.template` for Fastlane; export options
+- Snapshot device mappings extended for newer iPhones
+- Fastlane config, simulator selection, and tooling updates
+- App icons and `logo.svg` refresh
+- Block colors and dim overlay tuning
+- Tree assets, UI colors, and demo score tweaks
 
 ### Fixed
 - Block accessibility identifiers cascading from container
-- Swift 6 isolation warnings in screenshotfixtures
-- Testnavigationflow on ios 26 toolbar menu
-- Use environment-aware simulator detection in build script
+- Swift 6 isolation warnings in `ScreenshotFixtures`
+- `testNavigationFlow` on iOS 26 toolbar `Menu`
+- Environment-aware simulator detection in the build script
+- Missing localizations and Game Center config sanitization
 
 ### Removed
-- Remove
-- Delete
-### Added
-
-### Changed
-
-### Fixed
+- Legacy SwiftUI grid views and the SpriteKit feature flag
+- Unused extensions and dev utilities
+- GitHub Pages `docs/` folder and `CNAME` (moved to standalone marketing site)
+- Empty string entry from `Localizable.xcstrings`
 
 ## [1.0.10] - 2025-11-27
 
 ### Added
-- Add version information and developer links to the About screen for better transparency
+- Version information and developer links on the About screen for better transparency
 
 ### Changed
-- Improve app store discoverability with enhanced Games category metadata
+- Improved App Store discoverability with enhanced Games category metadata
 
 ## [1.0.9] - 2025-11-27
 
@@ -111,7 +111,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.8] - 2025-11-27
 
 ### Added
-- Add automated changelog and conventional commit enforcement
+- Automated changelog and conventional commit enforcement
 
 ## [1.0.7] - 2025-11-27
 
@@ -224,7 +224,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - COPPA compliant with no data collection
 - iPhone-optimized experience with portrait orientation
 
-[Unreleased]: https://github.com/timveil/leaves-of-blocks/compare/v2.0.2...HEAD
+[Unreleased]: https://github.com/timveil/leaves-of-blocks/compare/v2.0.3...HEAD
+[2.0.3]: https://github.com/timveil/leaves-of-blocks/compare/v2.0.2...v2.0.3
 [2.0.2]: https://github.com/timveil/leaves-of-blocks/compare/v2.0.1...v2.0.2
 [2.0.1]: https://github.com/timveil/leaves-of-blocks/compare/v1.0.10...v2.0.1
 [1.0.10]: https://github.com/timveil/leaves-of-blocks/compare/v1.0.9...v1.0.10
