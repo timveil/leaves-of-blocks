@@ -1,0 +1,22 @@
+#!/usr/bin/env bash
+#
+# commit-msg - Reject commits whose subject doesn't match the project's
+# Conventional Commits format. Activated per-clone with:
+#
+#   git config core.hooksPath .githooks
+#
+# All format rules live in scripts/check-commit-subject.sh — this hook only
+# extracts the subject line from the commit-msg file that git hands us.
+
+set -euo pipefail
+
+commit_msg_file="$1"
+
+# Subject = first non-comment, non-blank line.
+# `|| true` swallows grep's exit-1-on-no-matches so empty / comment-only
+# messages reach the validator (which has a friendlier empty-message error)
+# instead of aborting silently via set -e.
+subject=$(grep -v '^#' "$commit_msg_file" | sed '/^[[:space:]]*$/d' | head -n1 || true)
+
+repo_root=$(git rev-parse --show-toplevel)
+exec "$repo_root/scripts/check-commit-subject.sh" "$subject"

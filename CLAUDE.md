@@ -24,6 +24,41 @@ Text("score_format".localized(with: score))
 
 This applies to `Text`, `Button`, `navigationTitle`, accessibility labels, and previews. Add new keys via Xcode's String Catalog editor.
 
+## Commit Message Format (Strict)
+
+Every commit must follow Conventional Commits. The format rules (regex, allowed types, max width) live in [`scripts/check-commit-subject.sh`](scripts/check-commit-subject.sh) and are invoked from two places: locally by [`.githooks/commit-msg`](.githooks/commit-msg) and on every PR by [`.github/workflows/commit-lint.yml`](.github/workflows/commit-lint.yml). Malformed messages are rejected; the format also drives changelog generation.
+
+```
+<type>(<scope>): <description>
+```
+
+- **Allowed types:** `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `chore`, `revert`, `build`, `ci`.
+- **Scope** is optional, in parentheses, lowercase (e.g. `fix(grid):`, `feat(game-center):`).
+- **Subject** is required, no trailing period, ≤ 72 characters total.
+- **Never** bypass the hook with `--no-verify`. The CI check will reject the PR anyway.
+
+```
+# Wrong
+Update CHANGELOG and CLAUDE docs
+Bump CURRENT_PROJECT_VERSION to 19
+
+# Right
+docs: Update CHANGELOG and CLAUDE docs
+chore: Bump CURRENT_PROJECT_VERSION to 19
+fix(grid): Resolve block placement bug
+feat(game-center): Submit final score on game over
+```
+
+The `Co-Authored-By` trailer that Claude Code appends still belongs in the commit body, not the subject — it does not interfere with the format check.
+
+The local hook runs only if you've pointed git at the checked-in hooks directory once per clone:
+
+```bash
+git config core.hooksPath .githooks
+```
+
+See [`CONTRIBUTING.md`](CONTRIBUTING.md#enable-the-local-commit-message-hook) for the contributor-facing version of this setup.
+
 ## Project Overview
 
 A SwiftUI + SpriteKit iOS puzzle game ("Leaves of Blocks") in the Block Blast genre. Players drag block shapes onto an 8×8 grid to clear lines. The game includes weighted block generation that adapts to player skill, autumn-themed visuals, particle effects via SpriteKit, and Core Data-backed game history.

@@ -10,6 +10,16 @@ Thank you for your interest in contributing! This document explains how to get t
 - Ruby (managed by `.ruby-version`) and Bundler — only needed for Fastlane workflows
 - Optional: `bundle install` if you plan to run Fastlane lanes
 
+### Enable the local commit-message hook
+
+Run this once per clone so every commit (from the CLI, Xcode, GitHub Desktop, Claude Code, or any other client that calls git locally) is checked against the project's commit-message format:
+
+```bash
+git config core.hooksPath .githooks
+```
+
+That points git at the checked-in [`.githooks/commit-msg`](.githooks/commit-msg) — a small bash hook with no Ruby/Bundler dependency. Both the local hook and the CI workflow ([`.github/workflows/commit-lint.yml`](.github/workflows/commit-lint.yml)) call the same validator script ([`scripts/check-commit-subject.sh`](scripts/check-commit-subject.sh)), so the regex and rules live in exactly one place. CI is the gate, so even contributors who skip the local hook can't merge a malformed message; the local hook just gives faster feedback.
+
 ### Building and Running
 ```bash
 # Build the app for the simulator
@@ -54,6 +64,40 @@ team / bundle ID changes in your fork.
 3. **Run the suite locally.** `./scripts/build.sh test` should pass before you push.
 4. **Open a pull request.** Fill out the PR template — describe the change, list the verification steps you ran, and link any related issues.
 5. **Be responsive to review.** Reviewers may ask for changes; small follow-up commits are fine and we'll squash on merge.
+
+### Commit Message Format
+
+All commits must follow [Conventional Commits](https://www.conventionalcommits.org/). The format rules (regex, allowed types, max width) are defined in [`scripts/check-commit-subject.sh`](scripts/check-commit-subject.sh) and enforced by the local [`.githooks/commit-msg`](.githooks/commit-msg) hook (see [Enable the local commit-message hook](#enable-the-local-commit-message-hook)) plus the CI workflow on every PR. The format also drives changelog generation.
+
+```
+<type>(<scope>): <description>
+```
+
+- **type** is required and must be one of:
+  - `feat` — new feature *(→ Added in changelog)*
+  - `fix` — bug fix *(→ Fixed)*
+  - `docs` — documentation only
+  - `style` — formatting, whitespace, no code change
+  - `refactor` — code restructuring with no behavior change *(→ Changed)*
+  - `perf` — performance improvement *(→ Changed)*
+  - `test` — adding or updating tests
+  - `chore` — maintenance / housekeeping
+  - `revert` — reverting a previous commit *(→ Removed)*
+  - `build` — build system or external dependencies
+  - `ci` — CI configuration
+- **scope** is optional and goes in parentheses (e.g. `(grid)`, `(game-center)`).
+- **subject** is required, no trailing period, and the full subject line must be ≤ 72 characters.
+
+Examples:
+
+```
+feat: Add dark mode support
+fix(grid): Resolve block placement bug
+chore: Release v2.0.4
+docs: Clarify Game Center setup steps
+```
+
+If you need to amend a non-conforming commit message, use `git commit --amend` (latest commit) or `git rebase -i <base>` and `reword` the offending commits. Don't bypass the hook with `--no-verify` — the CI check will reject the PR anyway.
 
 ## Reporting Bugs / Requesting Features
 
