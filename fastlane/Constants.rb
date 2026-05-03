@@ -9,6 +9,10 @@ APP_IDENTIFIER = ENV["LOCAL_FASTLANE_APP_IDENTIFIER"] || "timothy.veil.LeavesOfB
 XCODE_PROJECT = "LeavesOfBlocks.xcodeproj"
 MAIN_SCHEME = "LeavesOfBlocks"
 
+# Public repository URL — used by the changelog updater to build compare
+# links in CHANGELOG.md footers ([1.2.3]: <url>/compare/v1.2.2...v1.2.3).
+REPO_URL = "https://github.com/timveil/leaves-of-blocks"
+
 # Developer Information
 # These are used in App Store Connect review submissions (see app_review_info below).
 # Sourced from environment variables so personal contact details are not committed to the repo.
@@ -112,19 +116,21 @@ end
 # Helper method for API key configuration
 # The in_house parameter may be required for match/sigh actions
 def api_key_config(in_house: false)
-  # Check if required environment variables are set
+  # Check if required environment variables are set. Use UI.user_error! so
+  # the failure prints with fastlane's standard formatting and the lane's
+  # `error do` hook fires (a plain `raise` skips both).
   unless API_KEY_ID && ISSUER_ID
-    raise "Missing required environment variables: APP_STORE_CONNECT_API_KEY_ID and APP_STORE_CONNECT_ISSUER_ID must be set"
+    UI.user_error!("Missing required environment variables: LOCAL_APP_STORE_CONNECT_API_KEY_ID and LOCAL_APP_STORE_CONNECT_ISSUER_ID must be set in fastlane/.env")
   end
-  
+
   unless API_KEY_FILE_PATH
-    raise "Missing required environment variable: APP_STORE_CONNECT_API_KEY_PATH must be set"
+    UI.user_error!("Missing required environment variable: LOCAL_APP_STORE_CONNECT_API_KEY_PATH must be set in fastlane/.env")
   end
-  
+
   unless File.exist?(API_KEY_FILE_PATH)
-    raise "API key file not found at: #{API_KEY_FILE_PATH}"
+    UI.user_error!("API key file not found at: #{API_KEY_FILE_PATH}")
   end
-  
+
   app_store_connect_api_key(
     key_id: API_KEY_ID,
     issuer_id: ISSUER_ID,

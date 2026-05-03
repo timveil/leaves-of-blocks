@@ -76,7 +76,11 @@ module AIHelper
       response = call_claude_api(prompt, MAX_TOKENS_CHANGELOG)
       parse_changelog_response(response)
     rescue StandardError => e
-      AIHelper.ui_important("AI changelog enhancement failed: #{e.message}")
+      # FALLBACK marker: ANTHROPIC_API_KEY was set so we attempted the API
+      # call, but it failed. The lane will degrade to template-based output;
+      # surfacing this distinctly makes a revoked/expired key visible at a
+      # glance instead of only at App Store review time.
+      AIHelper.ui_important("FALLBACK: AI changelog enhancement failed (#{e.message}) — using template-based generation")
       nil
     end
 
@@ -89,7 +93,8 @@ module AIHelper
       response = call_claude_api(prompt, MAX_TOKENS_RELEASE_NOTES)
       parse_prose_response(response)
     rescue StandardError => e
-      AIHelper.ui_important("AI prose generation failed: #{e.message}")
+      # See FALLBACK note in enhance_changelog above.
+      AIHelper.ui_important("FALLBACK: AI prose generation failed (#{e.message}) — using template-based release notes")
       nil
     end
 
