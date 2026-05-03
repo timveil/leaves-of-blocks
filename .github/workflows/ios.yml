@@ -36,6 +36,9 @@ on:
       - '.github/workflows/ios.yml'
       - 'scripts/build.sh'
 
+permissions:
+  contents: read
+
 jobs:
   build:
     name: Build for Testing

@@ -4,6 +4,9 @@ on:
   pull_request:
     branches: [ "main" ]
 
+permissions:
+  contents: read
+
 # Format rules live in scripts/check-commit-subject.sh — both the local
 # .githooks/commit-msg hook and this Action invoke that single script, so the
 # regex / allowed types / width are defined exactly once.
