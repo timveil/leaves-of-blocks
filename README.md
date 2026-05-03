@@ -16,7 +16,7 @@
   Players drag and drop block shapes onto an 8x8 grid to clear lines while the game adapts to their skill level
 
   <a href="https://apps.apple.com/us/app/leaves-of-blocks/id6749193006">
-    <img src="https://developer.apple.com/assets/elements/badges/download-on-the-app-store.svg" alt="Download on the App Store" height="50">
+    <img src="app-store-badge.svg" alt="Download on the App Store" height="50">
   </a>
 
   [Website](https://www.leavesofblocks.com/) · [Play in browser](https://www.leavesofblocks.com/play/) · [vs. Block Blast](https://www.leavesofblocks.com/vs/) · [Support](https://www.leavesofblocks.com/support/)
