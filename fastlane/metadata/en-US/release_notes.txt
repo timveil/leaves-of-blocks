@@ -1,1 +1,0 @@
-This update brings line-clear drag preview & banner tweaks. We've also added pressdarken button style and apply to buttons. We've also added ui haptics and relax fastfile changelog. We've fixed timezone-dependent date constants in extendedstatisticstests. Thank you for playing Leaves of Blocks!
