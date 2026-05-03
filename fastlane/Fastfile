@@ -388,6 +388,32 @@ def update_changelog_from_commits(new_version:)
   section
 end
 
+# Abort the deploy lane immediately if v#{version} already exists as a tag.
+# Local tags can leak in from a previous failed run; remote tags survive a
+# `git tag -d` because git fetch will recreate them. Either way, the late
+# `git tag -a` would crash and strand a release commit on local main.
+def ensure_tag_available!(version:)
+  tag = "v#{version}"
+
+  if system("git rev-parse --verify --quiet refs/tags/#{tag} > /dev/null")
+    UI.user_error!(
+      "Tag #{tag} already exists locally. " \
+      "Delete it (`git tag -d #{tag}`) and any orphan release commit on main " \
+      "before retrying. If the remote also has the tag, also run " \
+      "`git push origin :refs/tags/#{tag}` so it doesn't refetch."
+    )
+  end
+
+  remote_ref = `git ls-remote origin refs/tags/#{tag} 2>/dev/null`.strip
+  unless remote_ref.empty?
+    UI.user_error!(
+      "Tag #{tag} already exists on origin. " \
+      "Delete it with `git push origin :refs/tags/#{tag}` before retrying " \
+      "(or pick a different version)."
+    )
+  end
+end
+
 # Commit changelog and project changes, then create git tag
 def commit_release(version:)
   # Stage changelog and metadata
@@ -539,6 +565,12 @@ platform :ios do
     )
     UI.message("Preparing release for version #{new_version}")
 
+    # Fail fast if a v#{new_version} tag already exists locally or on the
+    # remote. Without this guard the lane runs ~90s of screenshot capture
+    # before crashing at `git tag -a` with "tag already exists", leaving a
+    # stranded release commit on local main.
+    ensure_tag_available!(version: new_version)
+
     # Update changelog from commits. Returns false when no entries were
     # derived — in that case we skip release-notes generation and let
     # them be entered manually in App Store Connect.
@@ -641,6 +673,12 @@ platform :ios do
       bump_type: options[:version]
     )
     UI.message("Preparing release for version #{new_version}")
+
+    # Fail fast if a v#{new_version} tag already exists locally or on the
+    # remote. Without this guard the lane runs ~90s of screenshot capture
+    # before crashing at `git tag -a` with "tag already exists", leaving a
+    # stranded release commit on local main.
+    ensure_tag_available!(version: new_version)
 
     # Update changelog from commits. Returns false when no entries were
     # derived — in that case we skip release-notes generation and let
