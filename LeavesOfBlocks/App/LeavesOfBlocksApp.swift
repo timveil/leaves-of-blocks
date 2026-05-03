@@ -1,3 +1,4 @@
+import AVFoundation
 import SwiftUI
 
 @main
@@ -6,6 +7,14 @@ struct Main: App {
     @State private var gameState = GameState()
     @Environment(\.scenePhase) private var scenePhase
     let coreDataManager = CoreDataManager.shared
+
+    init() {
+        // .ambient lets background audio (Apple Music, Spotify, Podcasts) keep
+        // playing while the game is open. SpriteKit otherwise claims the
+        // session with .soloAmbient and silences other apps.
+        try? AVAudioSession.sharedInstance()
+            .setCategory(.ambient, options: [.mixWithOthers])
+    }
 
     var body: some Scene {
         WindowGroup {
