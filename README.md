@@ -5,7 +5,7 @@
   
   [![iOS Build and Test](https://github.com/timveil/leaves-of-blocks/actions/workflows/ios.yml/badge.svg)](https://github.com/timveil/leaves-of-blocks/actions/workflows/ios.yml)
   
-  **A SwiftUI iOS puzzle game with autumn-themed visuals and intelligent difficulty balancing**
+  **An ad-free SwiftUI iOS block puzzle game — a privacy-first Block Blast alternative with intelligent difficulty balancing**
   
   Players drag and drop block shapes onto an 8x8 grid to clear lines while the game adapts to their skill level
 
@@ -34,8 +34,8 @@
 - **Solvability Guarantee**: Advanced algorithms ensure every puzzle is solvable
 - **Progressive Challenge**: Consequence-based difficulty that maintains engagement
 
-### Beautiful Design
-- **Autumn Theme**: Stunning seasonal visuals with custom animations
+### Polished Design
+- **Custom Animations**: Hand-crafted visuals and particle effects
 - **Intuitive Controls**: Smooth drag-and-drop with haptic feedback
 - **Responsive UI**: Optimized for all iPhone sizes with 60fps performance
 - **Accessibility**: Full accessibility support built-in
@@ -269,6 +269,6 @@ For questions, bugs, or feature requests, please [open an issue](https://github.
 
 <div align="center">
   <img src="LeavesOfBlocks/Assets.xcassets/AppIcon.appiconset/AppIcon-1024.png" alt="Leaves of Blocks" width="60" height="60" />
-  <p><strong>Leaves of Blocks</strong> - Where autumn meets intelligent puzzle design</p>
+  <p><strong>Leaves of Blocks</strong> - An ad-free, privacy-first Block Blast alternative</p>
   <p><em>Built with SwiftUI • Powered by advanced algorithms • Designed for delight</em></p>
 </div>

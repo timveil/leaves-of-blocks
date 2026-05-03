@@ -61,7 +61,7 @@ See [`CONTRIBUTING.md`](CONTRIBUTING.md#enable-the-local-commit-message-hook) fo
 
 ## Project Overview
 
-A SwiftUI + SpriteKit iOS puzzle game ("Leaves of Blocks") in the Block Blast genre. Players drag block shapes onto an 8×8 grid to clear lines. The game includes weighted block generation that adapts to player skill, autumn-themed visuals, particle effects via SpriteKit, and Core Data-backed game history.
+A SwiftUI + SpriteKit iOS puzzle game ("Leaves of Blocks") in the Block Blast genre. Players drag block shapes onto an 8×8 grid to clear lines. The game includes weighted block generation that adapts to player skill, particle effects via SpriteKit, and Core Data-backed game history.
 
 - Bundle ID: `timothy.veil.LeavesOfBlocks`
 - Deployment target: iOS 18.5+

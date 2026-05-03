@@ -5,7 +5,6 @@ import Foundation
 /// Represents the visual color of game blocks.
 ///
 /// Each block in the game is assigned one of these colors for visual distinction.
-/// Colors follow an autumn theme that matches the game's visual design.
 ///
 /// - Note: All cases are `Codable` for persistence and `Hashable` for efficient collections.
 enum BlockColor: String, CaseIterable, Codable, Hashable {

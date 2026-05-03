@@ -53,11 +53,11 @@ module AIHelper
   APP_CONTEXT = <<~CONTEXT
     App Name: Leaves of Blocks
     Type: iOS puzzle game (Block Blast style)
-    Theme: Autumn/fall aesthetic with warm seasonal colors
+    Positioning: Ad-free, privacy-first Block Blast alternative
     Gameplay: Drag and drop block shapes onto an 8x8 grid to clear horizontal and vertical lines
     Audience: Casual gamers of all ages
     Key Features: Offline gameplay with optional Game Center opt-in (off by default) for leaderboards and achievements; no ads, no third-party tracking, no data sold, no in-app purchases
-    Tone for communications: Friendly, warm, inviting - like a cozy autumn day
+    Tone for communications: Friendly, warm, inviting
   CONTEXT
 
   class << self
@@ -201,8 +201,7 @@ module AIHelper
         1. Start with a warm, brief opening (1-2 sentences) that sets the tone
         2. Naturally mention the most important changes in flowing prose
         3. Use conversational, accessible language that any user can understand
-        4. Subtly reference the autumn/cozy theme when it fits naturally
-        5. End with exactly: "Thank you for playing Leaves of Blocks!"
+        4. End with exactly: "Thank you for playing Leaves of Blocks!"
 
         CRITICAL CONSTRAINTS:
         - MUST be under 3800 characters total (App Store limit is 4000)

@@ -201,7 +201,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [1.0.1] - 2025-07-15
 
 ### Added
-- Autumn-themed visual design with seasonal colors
+- Initial visual design with custom color palette
 - Haptic feedback for enhanced gameplay experience
 - High score persistence with Core Data integration
 
