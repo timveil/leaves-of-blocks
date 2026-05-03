@@ -64,9 +64,9 @@ enum ComboBannerEffect {
         let titleOffset = bonusFontSize * 0.55
         let bonusOffset = -titleFontSize * 0.55
 
-        let textColor = SpriteKitColors.lineCompletionPrimary
+        let textColor = SpriteKitColors.lineCompletionSecondary
 
-        addOutlinedLabel(
+        addLabel(
             text: title,
             fontSize: titleFontSize,
             color: textColor,
@@ -75,7 +75,7 @@ enum ComboBannerEffect {
             into: container
         )
 
-        addOutlinedLabel(
+        addLabel(
             text: "+\(bonus)",
             fontSize: bonusFontSize,
             color: textColor,
@@ -130,10 +130,7 @@ enum ComboBannerEffect {
         }
     }
 
-    /// Adds a label rendered with a fill + black stroke via NSAttributedString,
-    /// so the text reads cleanly over the white grid cells without the muddy
-    /// fringe that a 1px shadow twin produces.
-    private static func addOutlinedLabel(
+    private static func addLabel(
         text: String,
         fontSize: CGFloat,
         color: UIColor,
@@ -141,30 +138,16 @@ enum ComboBannerEffect {
         maxWidth: CGFloat,
         into container: SKNode
     ) {
-        let label = SKLabelNode()
-        label.attributedText = outlinedAttributedString(text: text, fontSize: fontSize, color: color)
+        let label = SKLabelNode(text: text)
+        label.fontName = "Helvetica-Bold"
+        label.fontSize = fontSize
+        label.fontColor = color
         label.verticalAlignmentMode = .center
         label.horizontalAlignmentMode = .center
         label.numberOfLines = 1
         label.position = CGPoint(x: 0, y: yPosition)
         clampWidth(label: label, maxWidth: maxWidth)
         container.addChild(label)
-    }
-
-    /// Builds an attributed string that renders both the fill color and a
-    /// thick black outline. `strokeWidth` is negative so the glyph is filled
-    /// AND stroked (positive values render outline only). Width scales with
-    /// font size so larger text gets a proportionally heavier outline.
-    private static func outlinedAttributedString(text: String, fontSize: CGFloat, color: UIColor) -> NSAttributedString {
-        let font = UIFont(name: "Helvetica-Bold", size: fontSize)
-            ?? UIFont.boldSystemFont(ofSize: fontSize)
-        let attributes: [NSAttributedString.Key: Any] = [
-            .font: font,
-            .foregroundColor: color,
-            .strokeColor: UIColor.black,
-            .strokeWidth: -8.0
-        ]
-        return NSAttributedString(string: text, attributes: attributes)
     }
 
     private static func clampWidth(label: SKLabelNode, maxWidth: CGFloat) {

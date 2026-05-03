@@ -198,6 +198,13 @@ class GameScene: SKScene {
 
         let canPlace = gameState.canPlaceBlock(block, at: position)
         gridNode.showPreview(block: block, at: position, canPlace: canPlace)
+
+        if canPlace {
+            let preview = GameLogic.linesThatWouldClear(placing: block, at: position, in: gameState.grid)
+            if !preview.rows.isEmpty || !preview.cols.isEmpty {
+                gridNode.showLineClearPreview(rows: preview.rows, cols: preview.cols)
+            }
+        }
     }
 
     // MARK: - Ghost Block (Drag Preview in Scene)

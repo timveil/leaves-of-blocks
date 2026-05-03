@@ -197,7 +197,32 @@ enum GameLogic {
         
         return (clearedRows, clearedCols, clearedCells)
     }
-    
+
+    /// Determines which rows and columns would be fully filled if the given
+    /// block were placed at the given position, without mutating the grid.
+    ///
+    /// Used by the drag preview to highlight "good move" placements before
+    /// the player commits.
+    static func linesThatWouldClear(placing block: BlockShape, at position: GridPosition, in grid: [[GridCell]]) -> (rows: Set<Int>, cols: Set<Int>) {
+        guard canPlaceBlock(block, at: position, in: grid) else { return ([], []) }
+
+        var simulated = grid
+        placeBlock(block, at: position, in: &simulated)
+
+        let size = GameTheme.GameConfig.gridSize
+        var rows: Set<Int> = []
+        var cols: Set<Int> = []
+
+        for row in 0..<size where simulated[row].allSatisfy({ $0.isFilled }) {
+            rows.insert(row)
+        }
+        for col in 0..<size where (0..<size).allSatisfy({ simulated[$0][col].isFilled }) {
+            cols.insert(col)
+        }
+
+        return (rows, cols)
+    }
+
     // MARK: - Game Over Logic
     
     /// Checks if any of the current blocks can be placed on the grid

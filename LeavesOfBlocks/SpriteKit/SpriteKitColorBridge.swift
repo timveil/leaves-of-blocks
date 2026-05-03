@@ -36,6 +36,9 @@ enum SpriteKitColors {
     /// Line completion highlight color (warm gold)
     static let lineCompletionPrimary = UIColor(GameTheme.Colors.lineCompletionPrimary)
 
+    /// Line completion secondary (deeper, more saturated gold)
+    static let lineCompletionSecondary = UIColor(GameTheme.Colors.lineCompletionSecondary)
+
     /// Line completion accent color
     static let lineCompletionAccent = UIColor(GameTheme.Colors.lineCompletionAccent)
 

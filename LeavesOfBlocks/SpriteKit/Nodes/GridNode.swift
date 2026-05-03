@@ -35,6 +35,9 @@ class GridNode: SKNode {
     /// Content container offset by borderWidth — cells and effects share this coordinate space.
     let contentNode: SKNode
 
+    /// Holds line-clear preview overlay tiles during drag. Cleared on every grid sync.
+    private let previewOverlayNode = SKNode()
+
     private let borderWidth = GameTheme.Layout.gridBorderWidth
 
     /// Content dimension (cells + internal spacing, no border)
@@ -80,6 +83,8 @@ class GridNode: SKNode {
 
         addChild(gridBackgroundNode)
         addChild(contentNode)
+        previewOverlayNode.zPosition = 2
+        contentNode.addChild(previewOverlayNode)
         buildGrid()
     }
 
@@ -124,6 +129,7 @@ class GridNode: SKNode {
     // MARK: - Grid Synchronization
 
     func syncGrid(_ grid: [[GridCell]]) {
+        clearLineClearPreview()
         for row in 0..<min(gridSize, grid.count) {
             for col in 0..<min(gridSize, grid[row].count) {
                 let cell = grid[row][col]
@@ -189,19 +195,56 @@ class GridNode: SKNode {
         }
     }
 
-    func highlightCompletedLines(rows: Set<Int>, cols: Set<Int>) {
-        let gold = SpriteKitColors.lineCompletionPrimary
+    /// Overlays a thick gold border + warm tint across every cell in any row
+    /// or column that would clear if the in-flight drag were committed. A
+    /// gentle pulse on the overlay container draws the eye toward the
+    /// "good move" feedback without being noisy.
+    func showLineClearPreview(rows: Set<Int>, cols: Set<Int>) {
+        clearLineClearPreview()
+
+        let strokeColor = SpriteKitColors.lineCompletionSecondary
+        let fillColor = SpriteKitColors.lineCompletionPrimary.withAlphaComponent(0.35)
+        var painted: Set<GridPosition> = []
 
         for row in rows {
             for col in 0..<gridSize {
-                cellNodes[row][col].fillColor = gold
+                addPreviewOverlay(row: row, col: col, fill: fillColor, stroke: strokeColor)
+                painted.insert(GridPosition(row: row, col: col))
             }
         }
 
         for col in cols {
             for row in 0..<gridSize {
-                cellNodes[row][col].fillColor = gold
+                let pos = GridPosition(row: row, col: col)
+                guard !painted.contains(pos) else { continue }
+                addPreviewOverlay(row: row, col: col, fill: fillColor, stroke: strokeColor)
+                painted.insert(pos)
             }
         }
+
+        let pulse = SKAction.repeatForever(SKAction.sequence([
+            SKAction.fadeAlpha(to: 0.7, duration: 0.5),
+            SKAction.fadeAlpha(to: 1.0, duration: 0.5)
+        ]))
+        previewOverlayNode.removeAllActions()
+        previewOverlayNode.alpha = 1.0
+        previewOverlayNode.run(pulse)
+    }
+
+    /// Removes any line-clear preview tint applied by `showLineClearPreview`.
+    func clearLineClearPreview() {
+        previewOverlayNode.removeAllActions()
+        previewOverlayNode.alpha = 1.0
+        previewOverlayNode.removeAllChildren()
+    }
+
+    private func addPreviewOverlay(row: Int, col: Int, fill: UIColor, stroke: UIColor) {
+        let rect = CGRect(x: 0, y: 0, width: cellSize, height: cellSize)
+        let overlay = SKShapeNode(rect: rect, cornerRadius: GameTheme.Layout.cellCornerRadius)
+        overlay.fillColor = fill
+        overlay.strokeColor = stroke
+        overlay.lineWidth = 4
+        overlay.position = cellPosition(row: row, col: col)
+        previewOverlayNode.addChild(overlay)
     }
 }
