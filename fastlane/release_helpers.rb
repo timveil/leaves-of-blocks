@@ -408,8 +408,10 @@ def update_changelog_from_commits(new_version:)
   end
 
   # Update footer links using the centralized REPO_URL from Constants.rb.
+  # Patterns are anchored to start-of-line and use possessive [^\n]*+ to prevent
+  # ReDoS on inputs with many repetitions of "[Unreleased]: ".
   new_content.gsub!(
-    /\[Unreleased\]: .+/,
+    /^\[Unreleased\]: [^\n]*+/,
     "[Unreleased]: #{REPO_URL}/compare/v#{new_version}...HEAD"
   )
 
@@ -419,10 +421,10 @@ def update_changelog_from_commits(new_version:)
     if prev_version_match
       prev_version = prev_version_match[1]
       new_link = "[#{new_version}]: #{REPO_URL}/compare/v#{prev_version}...v#{new_version}\n"
-      new_content.sub!(/(\[Unreleased\]: .+\n)/, "\\1#{new_link}")
+      new_content.sub!(/(^\[Unreleased\]: [^\n]*+\n)/, "\\1#{new_link}")
     else
       new_link = "[#{new_version}]: #{REPO_URL}/releases/tag/v#{new_version}\n"
-      new_content.sub!(/(\[Unreleased\]: .+\n)/, "\\1#{new_link}")
+      new_content.sub!(/(^\[Unreleased\]: [^\n]*+\n)/, "\\1#{new_link}")
     end
   end
 
