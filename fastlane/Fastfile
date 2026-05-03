@@ -503,17 +503,13 @@ platform :ios do
   lane :beta do
     # Configure App Store Connect API key for TestFlight
     api_key = app_store_api_key
-    
-    # Set marketing version directly via xcodeproj gem. fastlane's
-    # increment_version_number shells out to agvtool, which fails to write
-    # MARKETING_VERSION when GENERATE_INFOPLIST_FILE=YES (it tries to update
-    # an Info.plist that doesn't exist as a file and aborts before persisting
-    # the project setting), silently leaving the old version on the build.
-    bump_marketing_version(
-      xcodeproj: XCODE_PROJECT,
-      target_name: MAIN_SCHEME,
-      bump_type: "2.0.0"  # 2.0 release train; change when starting the next major
-    )
+
+    # TestFlight only requires a unique build number. The marketing version
+    # is owned by the `deploy` lane (and CHANGELOG/git tag flow) — we don't
+    # touch it here. An older `bump_marketing_version("2.0.0")` call in this
+    # lane was hard-overwriting MARKETING_VERSION to 2.0.0 on every beta
+    # upload, which App Store Connect rejected once 2.0.x had advanced past
+    # 2.0.0 (CFBundleShortVersionString must be > last approved version).
     increment_build_number(xcodeproj: XCODE_PROJECT)
     build_app(
       project: XCODE_PROJECT,
