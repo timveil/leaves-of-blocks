@@ -5,7 +5,7 @@
   
   [![iOS Build and Test](https://github.com/timveil/leaves-of-blocks/actions/workflows/ios.yml/badge.svg)](https://github.com/timveil/leaves-of-blocks/actions/workflows/ios.yml)
   
-  **An ad-free SwiftUI iOS block puzzle game — a privacy-first Block Blast alternative with intelligent difficulty balancing**
+  **A Whitman-inspired, privacy-first Block Blast alternative for iOS — zero ads, zero tracking, zero in-app purchases.**
   
   Players drag and drop block shapes onto an 8x8 grid to clear lines while the game adapts to their skill level
 
