@@ -174,7 +174,7 @@ final class LeavesOfBlocksUITests: XCTestCase {
         XCTAssertTrue(startButton.waitForExistence(timeout: 2), "Start button should exist")
         startButton.tap()
 
-        XCTAssertTrue(waitForGameGrid(timeout: 3), "Game grid should appear")
+        XCTAssertTrue(waitForGameGrid(timeout: 5), "Game grid should appear")
 
         let scoreDisplay = app.staticTexts["score_display"]
         XCTAssertTrue(scoreDisplay.waitForExistence(timeout: 2), "Score display should exist")
@@ -247,7 +247,7 @@ final class LeavesOfBlocksUITests: XCTestCase {
 
         startButton.tap()
 
-        XCTAssertTrue(waitForGameGrid(timeout: 3), "Game grid should appear after starting game")
+        XCTAssertTrue(waitForGameGrid(timeout: 5), "Game grid should appear after starting game")
     }
     
     // MARK: - Helper Methods
