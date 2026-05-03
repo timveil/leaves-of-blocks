@@ -8,6 +8,8 @@
   **A SwiftUI iOS puzzle game with autumn-themed visuals and intelligent difficulty balancing**
   
   Players drag and drop block shapes onto an 8x8 grid to clear lines while the game adapts to their skill level
+
+  [Website](https://www.leavesofblocks.com/) · [Play in browser](https://www.leavesofblocks.com/play/) · [vs. Block Blast](https://www.leavesofblocks.com/vs/) · [Support](https://www.leavesofblocks.com/support/)
 </div>
 
 ---
@@ -15,13 +17,13 @@
 ## Table of Contents
 
 - [Key Features](#key-features)
+- [Why Leaves of Blocks?](#why-leaves-of-blocks)
 - [Quick Start](#quick-start)
 - [Game Mechanics](#game-mechanics)
 - [Architecture](#architecture)
 - [Documentation](#documentation)
 - [Deployment](#deployment)
 - [Configuration](#configuration)
-- [Future Enhancements](#future-enhancements)
 - [License](#license)
 
 ## Key Features
@@ -49,6 +51,24 @@
 - **Offline-first**: gameplay never requires a network connection
 - **Local persistence**: history and high scores live in Core Data on the device
 - **Opt-in Game Center**: leaderboard and achievement sync to Apple only when the user explicitly enables it in Settings
+
+## Why Leaves of Blocks?
+
+Built as a privacy-respecting alternative to ad-heavy puzzle games in the same genre. The full pitch — including a try-it-now web build — lives at [leavesofblocks.com](https://www.leavesofblocks.com/). The headline:
+
+> **Zero ads. Zero data collected. Zero in-app purchases. The puzzle is the puzzle.**
+
+### vs. Block Blast
+
+|                          | Leaves of Blocks                                                  | Block Blast                                                              |
+|--------------------------|-------------------------------------------------------------------|--------------------------------------------------------------------------|
+| **Ads**                  | None — no banners, no interstitials, no rewarded video            | Banners, interstitials, and rewarded video between rounds                |
+| **In-app purchases**     | None                                                              | Yes                                                                      |
+| **Data collection**      | None in-app — no analytics, no ad identifiers                     | Tracks device, gameplay, and ad interactions; shared with ad partners    |
+| **Network required**     | No — fully offline; Game Center is opt-in                         | Yes                                                                      |
+| **Developer**            | One independent developer (USA)                                   | Hungry Studio (Hong Kong / Singapore / Beijing)                          |
+
+For the full side-by-side (and a less serious version of the comparison), see [leavesofblocks.com/vs](https://www.leavesofblocks.com/vs/).
 
 ## Quick Start
 
@@ -120,23 +140,28 @@ All utility scripts are organized in the `scripts/` directory for advanced users
 ```
 LeavesOfBlocks/
 ├── App/                    # Application entry and navigation
-├── Views/                  # Modular UI components
-│   ├── Components/         # Reusable UI elements
-│   ├── Game/              # Game-specific views
-│   └── History/           # Analytics and history
-├── Models/                # Data models and game state
-├── Logic/                 # Game algorithms, grid analysis, behavior tracking
-├── Services/              # Infrastructure services (Core Data, timing, haptics)
-├── SpriteKit/             # GameScene, nodes, particle effects
-├── Resources/             # Themes, assets, localization
-└── Documentation/         # Project documentation
+├── Views/                  # SwiftUI screens and components
+│   ├── Components/         # Cross-screen reusable UI
+│   ├── Game/               # Board, overlays, game-specific UI
+│   ├── History/            # Game history and analytics
+│   ├── Statistics/         # Aggregate stats screens
+│   ├── Home/, About/, HowToPlay/, Settings/
+│   └── ViewModifiers/      # Shared style modifiers
+├── Models/                 # Game state and Core Data entities
+├── Logic/                  # Game algorithms, grid analysis, behavior tracking
+├── Services/               # Configuration, Core Data, GameKit, gameplay services
+├── SpriteKit/              # GameScene, nodes, particle effects
+├── Extensions/             # Foundation, SwiftUI, UIKit extensions
+├── Resources/              # Themes, Localizable.xcstrings, PrivacyInfo
+└── Documentation/          # Coding standards and project docs
 
-scripts/                   # Development utilities
-├── cleanup-project.sh     # Comprehensive project cleanup
-├── generate_icons.sh      # Icon generation and copying
+scripts/                    # Development utilities
+├── build.sh                # Unified build/test entry point
+├── cleanup-project.sh      # Comprehensive project cleanup
+├── generate_icons.sh       # Icon generation and copying
 └── generate_grass_images.py # Grass texture generation
 
-menu.sh                    # Interactive development menu
+menu.sh                     # Interactive development menu
 ```
 
 ### Key Innovations
@@ -204,6 +229,7 @@ See [CLAUDE.md](./CLAUDE.md) for full lane internals and deployment procedures.
 
 ## Documentation
 
+- **[Public website](https://www.leavesofblocks.com/)**: Marketing site, in-browser demo, and FAQ
 - **[CONTRIBUTING.md](./CONTRIBUTING.md)**: How to set up the project, run tests, and submit changes
 - **[CHANGELOG.md](./CHANGELOG.md)**: Release notes and version history
 - **[Coding Standards](./LeavesOfBlocks/Documentation/CodingStandards.md)**: Swift style guide and conventions
@@ -211,11 +237,10 @@ See [CLAUDE.md](./CLAUDE.md) for full lane internals and deployment procedures.
 
 ## Configuration
 
-The game includes a flexible configuration system for:
-- **Feature Flags**: Enable/disable experimental features
-- **Performance Tuning**: Adjust algorithm parameters
-- **Debug Options**: Enhanced logging and development tools
-- **Difficulty Balance**: Fine-tune tier thresholds and weights
+Build-time tuning lives in `Services/Configuration/`:
+- **`AppConfiguration`** — feature flags, performance constants (e.g. animation frame rate), and runtime flags driven by launch arguments (UI testing, screenshot mode)
+- **`BuildConfiguration`** — compile-time DEBUG/RELEASE detection
+- **`GameCenterPreference`** — UserDefaults-backed opt-in toggle (`gameCenter.enabled`, default `false`)
 
 ## Design Philosophy
 
@@ -230,20 +255,6 @@ The game includes a flexible configuration system for:
 - **Code Quality**: Extensive documentation, comprehensive testing, clean architecture
 - **Maintainability**: Modular design enables easy feature additions and modifications
 - **Future-Ready**: Extensible systems support planned enhancements
-
-## Future Enhancements
-
-### Short-term
-- [ ] Advanced configuration system for difficulty tuning
-- [ ] Enhanced logging and analytics dashboard
-- [ ] Export functionality for performance data
-- [ ] Achievement images uploaded automatically by `setup_game_center` (currently uploaded via App Store Connect web UI)
-
-### Long-term
-- [ ] Machine learning-based adaptive difficulty
-- [ ] Friends-only and recurring (daily/weekly) Game Center leaderboards
-- [ ] AI-powered coaching and suggestions
-- [ ] iCloud save sync (separate from Game Center)
 
 ## License
 
