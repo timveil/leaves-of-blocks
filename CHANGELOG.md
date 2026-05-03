@@ -13,6 +13,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [2.0.2] - 2026-05-03
+
+### Added
+- Line-clear drag preview & banner tweaks
+- Pressdarken button style and apply to buttons
+- Ui haptics and relax fastfile changelog
+
+### Fixed
+- Timezone-dependent date constants in extendedstatisticstests
+### Added
+
+### Changed
+
+### Fixed
+
 ## [2.0.1] - 2026-05-03
 
 ### Added
@@ -209,7 +224,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - COPPA compliant with no data collection
 - iPhone-optimized experience with portrait orientation
 
-[Unreleased]: https://github.com/timveil/leaves-of-blocks/compare/v2.0.1...HEAD
+[Unreleased]: https://github.com/timveil/leaves-of-blocks/compare/v2.0.2...HEAD
+[2.0.2]: https://github.com/timveil/leaves-of-blocks/compare/v2.0.1...v2.0.2
 [2.0.1]: https://github.com/timveil/leaves-of-blocks/compare/v1.0.10...v2.0.1
 [1.0.10]: https://github.com/timveil/leaves-of-blocks/compare/v1.0.9...v1.0.10
 [1.0.9]: https://github.com/timveil/leaves-of-blocks/compare/v1.0.8...v1.0.9
