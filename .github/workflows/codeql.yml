@@ -1,10 +1,18 @@
 name: CodeQL
 
 on:
-  push:
-    branches: [ "main" ]
+  # Push trigger removed deliberately. Every push to main lands via PR, and the
+  # PR run already gates code into main, so a second run on the merge commit is
+  # duplicative — paying ~13 min of macOS Swift trace overhead twice for the
+  # same diff. The weekly cron keeps drift coverage if a query suite update
+  # surfaces new findings against unchanged code.
   pull_request:
     branches: [ "main" ]
+    paths-ignore:
+      - '**.md'
+      - 'LICENSE'
+      - 'fastlane/metadata/**'
+      - 'fastlane/screenshots/**'
   schedule:
     - cron: '21 6 * * 1'
 
