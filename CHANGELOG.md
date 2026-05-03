@@ -8,16 +8,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Achievement prompt UI and runtime version check
-- Background suspend/resume handling for the SpriteKit scene
+- SpriteKit scene now suspends and resumes on app background/foreground
+- `fastlane/AchievementPrompts.md` — Recraft prompt set for generating Game Center achievement icons
+- Release lanes fail fast via `ensure_version_available_on_app_store!` when the target version already exists in App Store Connect
 
 ### Changed
 - Refreshed README: link to public website, vs. Block Blast comparison, and updated project structure
+- Refreshed and corrected `CHANGELOG.md`
 - Extracted Fastlane release helpers and hardened the release flow
 - Removed `bump_marketing_version` from the beta lane (TestFlight builds no longer touch the marketing version)
 
 ### Removed
 - Falling-leaves SpriteKit effect
+- `scripts/generate_grass_images.py` (orphaned since the texture-based grass background was retired in 2.0.1)
 
 ## [2.0.3] - 2026-05-03
 

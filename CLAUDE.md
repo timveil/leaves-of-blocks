@@ -114,14 +114,15 @@ LeavesOfBlocks/
 ├── SpriteKit/
 │   ├── GameScene.swift           # SKScene, observes GameState via withObservationTracking
 │   ├── GameSceneBridge.swift     # SwiftUI ↔ SKScene drag-state bridge
+│   ├── SpriteKitColorBridge.swift # SwiftUI Color ↔ SKColor helpers
 │   ├── Nodes/                    # GridNode, BlockNode
 │   └── Effects/                  # Particle and animation effects
 ├── Views/
 │   ├── BaseScreenView.swift      # Foundation layout container
-│   ├── ViewModifiers/            # ScreenModifiers (folkArtCard, etc.)
-│   ├── Components/               # Cross-screen UI (Cards, Buttons, Displays, Effects, Tables)
+│   ├── ViewModifiers/            # ScreenModifiers (folkArtCard, contentCard)
+│   ├── Components/               # Cross-screen UI (Cards, Buttons, Displays, WhitmanSticker, etc.)
 │   ├── Game/                     # Board, SpriteKit host, overlays, game-specific components
-│   ├── Home/, History/, About/, HowToPlay/, Settings/
+│   ├── Home/, History/, About/, HowToPlay/, Settings/, Statistics/
 ├── Extensions/
 │   ├── Foundation/               # Date, Int, String (.localized)
 │   ├── SwiftUI/                  # BlockModels+, View+
@@ -141,7 +142,7 @@ Tests live outside the app target:
 ## Architecture
 
 ### Navigation
-`ContentView` owns an `AppScreen` enum and switches between `HomeView`, `BoardView` (game), `SummaryView`, `HistoryView`, `AboutView`, `HowToPlayView`, `SettingsView`. Uses `NavigationStack` with a top-trailing menu for navigation. The launch screen shows for ~2.5s before transitioning into `ContentView`.
+`ContentView` owns an `AppScreen` enum and switches between `HomeView`, `BoardView` (game), `SummaryView`, `HistoryView`, `StatisticsView`, `AboutView`, `HowToPlayView`, `SettingsView`. Uses `NavigationStack` with a top-trailing menu for navigation. The launch screen shows for ~2.5s before transitioning into `ContentView`.
 
 ### State Management
 
@@ -184,7 +185,7 @@ The bridge is read-only from the SpriteKit side: SwiftUI mutates `GameState`; th
 
 ### UI System
 
-`ScreenModifiers.swift` collects shared SwiftUI styling (e.g. `folkArtCard`). `Theme.swift` orchestrates `Colors`, `Typography`, `Layout`, and `Animations`. `BaseScreenView` provides a consistent background + grass decoration + content layout container that all screens use.
+`ScreenModifiers.swift` collects shared SwiftUI styling (`folkArtCard` is the primitive; `contentCard` is the preferred wrapper for new code). `Theme.swift` orchestrates `Colors`, `Typography`, `Layout`, and `Animations`. `BaseScreenView` wraps screens with `GameBackgroundView` (full-bleed tree illustration) and a centered content container.
 
 Reusable components live under `Views/Components/` (cross-screen) or `Views/Game/Components/` (gameplay-specific).
 
