@@ -70,13 +70,13 @@ Built as a privacy-respecting alternative to ad-heavy puzzle games in the same g
 
 ### vs. Block Blast
 
-|                          | Leaves of Blocks                                                  | Block Blast                                                              |
-|--------------------------|-------------------------------------------------------------------|--------------------------------------------------------------------------|
-| **Ads**                  | None — no banners, no interstitials, no rewarded video            | Banners, interstitials, and rewarded video between rounds                |
-| **In-app purchases**     | None                                                              | Yes                                                                      |
-| **Data collection**      | None in-app — no analytics, no ad identifiers                     | Tracks device, gameplay, and ad interactions; shared with ad partners    |
-| **Network required**     | No — fully offline; Game Center is opt-in                         | Yes                                                                      |
-| **Developer**            | One independent developer (USA)                                   | Hungry Studio (Hong Kong / Singapore / Beijing)                          |
+|                          | Leaves of Blocks                                                                                                                  | Block Blast                                                                                                                            |
+|--------------------------|-----------------------------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------|
+| **Ads**                  | ![None](https://img.shields.io/badge/none-success?style=flat-square)                                                              | ![Banners + interstitials + video](https://img.shields.io/badge/banners%20%2B%20interstitials%20%2B%20video-critical?style=flat-square) |
+| **In-app purchases**     | ![None](https://img.shields.io/badge/none-success?style=flat-square)                                                              | ![Yes](https://img.shields.io/badge/yes-critical?style=flat-square)                                                                    |
+| **Data collection**      | ![None in-app](https://img.shields.io/badge/none%20in--app-success?style=flat-square)                                             | ![Tracks & shares with ad partners](https://img.shields.io/badge/tracks%20%26%20shares%20with%20ad%20partners-critical?style=flat-square) |
+| **Network required**     | ![Offline first](https://img.shields.io/badge/offline%20first-success?style=flat-square) ![Game Center opt-in](https://img.shields.io/badge/Game%20Center-opt--in-blue?style=flat-square) | ![Required](https://img.shields.io/badge/required-critical?style=flat-square)                                                          |
+| **Developer**            | ![Independent — USA](https://img.shields.io/badge/independent%20%E2%80%94%20USA-blue?style=flat-square)                           | ![Hungry Studio — HK / SG / BJ](https://img.shields.io/badge/Hungry%20Studio%20%E2%80%94%20HK%20%2F%20SG%20%2F%20BJ-lightgrey?style=flat-square) |
 
 For the full side-by-side (and a less serious version of the comparison), see [leavesofblocks.com/vs](https://www.leavesofblocks.com/vs/).
 
