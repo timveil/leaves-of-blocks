@@ -110,7 +110,7 @@ struct SummaryView: View {
                             style: .success,
                             accessibilityId: "view_leaderboard_button"
                         ) {
-                            gameCenterService.presentDashboard()
+                            gameCenterService.presentDashboard(leaderboardID: GameCenterIDs.Leaderboards.allTimeHigh)
                         }
                         .padding(.top, GameTheme.Layout.mediumPadding)
                     }

@@ -145,9 +145,25 @@ final class GameCenterService {
     // MARK: - Dashboard
 
     /// Presents the system Game Center dashboard. No-op when not authenticated.
-    func presentDashboard(from presenter: UIViewController? = nil) {
+    ///
+    /// - Parameters:
+    ///   - leaderboardID: When non-nil, opens directly to that leaderboard
+    ///     instead of the generic dashboard home. Use this from "View
+    ///     Leaderboard" entry points so users land on the scores instead of
+    ///     the empty profile placeholder.
+    ///   - presenter: Host view controller. Defaults to the topmost VC.
+    func presentDashboard(leaderboardID: String? = nil, from presenter: UIViewController? = nil) {
         guard isAuthenticated else { return }
-        let viewController = GKGameCenterViewController(state: .default)
+        let viewController: GKGameCenterViewController
+        if let leaderboardID {
+            viewController = GKGameCenterViewController(
+                leaderboardID: leaderboardID,
+                playerScope: .global,
+                timeScope: .allTime
+            )
+        } else {
+            viewController = GKGameCenterViewController(state: .default)
+        }
         viewController.gameCenterDelegate = GameCenterDismissCoordinator.shared
 
         let host = presenter ?? Self.topViewController()

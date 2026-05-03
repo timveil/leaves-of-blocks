@@ -13,6 +13,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [2.0.1] - 2026-05-03
+
+### Added
+- Line-clear drag preview & banner tweaks
+- Pressdarken button style and apply to buttons
+- Ui haptics and relax fastfile changelog
+
+### Fixed
+- Timezone-dependent date constants in extendedstatisticstests
+### Added
+
+### Changed
+
+### Fixed
+
 ## [2.0.1] - 2026-05-02
 
 ### Added
