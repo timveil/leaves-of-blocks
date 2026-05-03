@@ -19,7 +19,7 @@
     <img src="app-store-badge.svg" alt="Download on the App Store" height="50">
   </a>
 
-  [Website](https://www.leavesofblocks.com/) · [Play in browser](https://www.leavesofblocks.com/play/) · [vs. Block Blast](https://www.leavesofblocks.com/vs/) · [Support](https://www.leavesofblocks.com/support/)
+  [Website](https://www.leavesofblocks.com/) · [Play in browser](https://www.leavesofblocks.com/play/) · [vs. Block Blast](https://www.leavesofblocks.com/vs/) · [Support](https://www.leavesofblocks.com/support/) · [Issues](https://github.com/timveil/leaves-of-blocks/issues)
 </div>
 
 ---
