@@ -295,6 +295,10 @@ class GameScene: SKScene {
             in: gridNode.contentNode
         )
 
+        if totalLines >= 2 {
+            ComboBannerEffect.play(comboCount: totalLines, gridNode: gridNode)
+        }
+
         // Force grid sync after effects start to show cleared state
         lastGridHash = 0
         needsGridSync = true
