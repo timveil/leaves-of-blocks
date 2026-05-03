@@ -53,9 +53,6 @@ class GameScene: SKScene {
     /// Tracks the last ghost block identity to avoid recreating on every drag move
     private var lastGhostBlockId: String?
 
-    /// Tracks whether falling leaves have been set up
-    private var leavesSetUp = false
-
     // MARK: - Initialization
 
     /// Creates a new game scene bound to the given game state.
@@ -84,7 +81,6 @@ class GameScene: SKScene {
         super.didMove(to: view)
         view.allowsTransparency = true
         setupGrid()
-        setupFallingLeaves()
         observationActive = true
         observeGameState()
         syncGridFromModel()
@@ -104,16 +100,6 @@ class GameScene: SKScene {
         gridNode.position = .zero
         gridNode.zPosition = 0
         addChild(gridNode)
-    }
-
-    /// Sets up the ambient falling leaves particle emitter.
-    private func setupFallingLeaves() {
-        guard !leavesSetUp else { return }
-        leavesSetUp = true
-
-        let sceneWidth = GameScene.sceneSize(cellSize: cellSize).width
-        let emitter = FallingLeavesEffect.createEmitter(sceneWidth: sceneWidth)
-        addChild(emitter)
     }
 
     /// Tracks `GameState.grid` mutations and flags the scene for re-render.
@@ -315,10 +301,8 @@ class GameScene: SKScene {
 
     /// Plays the game-over grid sweep effect.
     ///
-    /// Cascades a desaturated overlay across each row and pauses falling leaves.
+    /// Cascades a desaturated overlay across each row.
     func playGameOverEffect() {
-        FallingLeavesEffect.setPaused(true, in: self)
-
         GameOverEffect.playGameOver(
             in: gridNode.contentNode,
             cellSize: cellSize,
@@ -337,10 +321,31 @@ class GameScene: SKScene {
         )
     }
 
-    /// Clears game-over overlays and resumes falling leaves (e.g., on new game).
+    /// Clears game-over overlays (e.g., on new game).
     func clearGameOverEffects() {
         GameOverEffect.clearGameOver(in: gridNode.contentNode)
-        FallingLeavesEffect.setPaused(false, in: self)
+    }
+
+    // MARK: - Background / Foreground
+
+    /// Stops the SpriteKit render loop to shrink the suspended-app memory
+    /// footprint. Called when the app enters background.
+    func suspendForBackground() {
+        ghostBlockNode?.removeFromParent()
+        ghostBlockNode = nil
+        lastGhostBlockId = nil
+
+        isPaused = true
+        view?.isPaused = true
+    }
+
+    /// Restarts the render loop on return to foreground.
+    func resumeFromBackground() {
+        view?.isPaused = false
+        isPaused = false
+        // Force a grid re-render in case state mutated while suspended.
+        lastGridHash = 0
+        needsGridSync = true
     }
 
     // MARK: - Scene Sizing

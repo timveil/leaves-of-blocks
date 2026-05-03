@@ -161,7 +161,7 @@ The visible board is an `SKScene` (`GameScene`) hosted by `SpriteView` inside `S
 1. Receives drag state from SwiftUI (`BoardView` / `BlockViews`).
 2. Forwards previews and confirmed placements into the scene.
 3. Re-registers `withObservationTracking` callbacks when `GameState.grid` or `isGameOver` change, so the scene re-renders on state mutations without polling.
-4. Triggers particle effects (line clear, combo pulse, game over, falling leaves) declared under `SpriteKit/Effects/`.
+4. Triggers particle effects (line clear, combo pulse, game over) declared under `SpriteKit/Effects/`.
 
 The bridge is read-only from the SpriteKit side: SwiftUI mutates `GameState`; the scene observes.
 

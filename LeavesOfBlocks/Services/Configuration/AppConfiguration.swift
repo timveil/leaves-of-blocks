@@ -17,7 +17,6 @@ enum AppConfiguration {
     // MARK: - Performance Settings
 
     enum Performance {
-        static let maxFallingLeaves = 50
         static let animationFrameRate = 60.0
         static var dragUpdateThrottleInterval: TimeInterval { 1.0 / animationFrameRate }
     }

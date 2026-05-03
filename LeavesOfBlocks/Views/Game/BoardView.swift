@@ -9,6 +9,7 @@ struct BoardView: View {
     @State private var gridFrame: CGRect = .zero
     @State private var blockSlotsFrame: CGRect = .zero
     @State private var viewBounds: CGRect = .zero
+    @Environment(\.scenePhase) private var scenePhase
 
     /// Bridge for SpriteKit scene communication
     @State private var sceneBridge: GameSceneBridge?
@@ -160,6 +161,21 @@ struct BoardView: View {
         proxy.frame(in: .global)
     } action: { newValue in
         viewBounds = newValue
+    }
+    .onChange(of: scenePhase) { _, newPhase in
+        // SwiftUI doesn't reliably deliver DragGesture.onEnded when the app
+        // is backgrounded mid-drag. Without this reset, the dragged-block
+        // overlay can stay rendered at zIndex 1000 on return, masking taps.
+        if newPhase != .active {
+            dragState.reset()
+            sceneBridge?.clearPreview()
+            // Pause SpriteKit so the suspended app drops GPU/CPU state and
+            // is a less attractive jetsam target. Both reports we have were
+            // jetsam kills while suspended at ~70-90 MB resident.
+            sceneBridge?.suspendForBackground()
+        } else {
+            sceneBridge?.resumeFromBackground()
+        }
     }
     }
 

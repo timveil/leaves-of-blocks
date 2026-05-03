@@ -96,6 +96,19 @@ final class GameSceneBridge {
         scene.playLineClearEffect(clearedRows: rows, clearedCols: cols)
     }
 
+    // MARK: - Background / Foreground
+
+    /// Pauses the SpriteKit scene so the suspended app holds less GPU/CPU
+    /// state and is a less attractive jetsam target.
+    func suspendForBackground() {
+        scene.suspendForBackground()
+    }
+
+    /// Resumes the SpriteKit scene when the app returns to the foreground.
+    func resumeFromBackground() {
+        scene.resumeFromBackground()
+    }
+
     // MARK: - Game-Over Observation
 
     /// Observes `gameState.isGameOver` and triggers scene effects when it changes.

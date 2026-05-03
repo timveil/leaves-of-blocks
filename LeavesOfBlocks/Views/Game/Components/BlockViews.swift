@@ -151,6 +151,7 @@ private struct DraggableBlockView: View {
     @State private var isDragging: Bool = false
     @State private var throttleTask: Task<Void, Never>?
     @State private var pendingLocation: CGPoint?
+    @Environment(\.scenePhase) private var scenePhase
 
     private let frameInterval: TimeInterval = AppConfiguration.Performance.dragUpdateThrottleInterval
     
@@ -186,6 +187,15 @@ private struct DraggableBlockView: View {
         )
         .onDisappear {
             stopThrottledUpdates()
+        }
+        .onChange(of: scenePhase) { _, newPhase in
+            // If the app is backgrounded mid-drag, DragGesture.onEnded may
+            // never fire — leaving local state stuck. The next drag would
+            // skip onDragStart and the parent would never see it.
+            if newPhase != .active && isDragging {
+                isDragging = false
+                stopThrottledUpdates()
+            }
         }
     }
     
