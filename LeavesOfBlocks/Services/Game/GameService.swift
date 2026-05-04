@@ -15,11 +15,18 @@ final class GameService {
     @ObservationIgnored private var gameStartTime: Date = Date()
     @ObservationIgnored private var isTimerActive: Bool = false
 
-    private let coreDataManager = CoreDataManager.shared
+    private let coreDataManager: CoreDataManager
 
     // MARK: - Initialization
 
-    init() {}
+    /// Creates a `GameService`.
+    ///
+    /// - Parameter coreDataManager: Storage backend for high scores and game
+    ///   history. Defaults to the production singleton; tests can pass
+    ///   `CoreDataManager.makeInMemoryForTests()` for isolation.
+    init(coreDataManager: CoreDataManager = .shared) {
+        self.coreDataManager = coreDataManager
+    }
 
     deinit {
         timerTask?.cancel()

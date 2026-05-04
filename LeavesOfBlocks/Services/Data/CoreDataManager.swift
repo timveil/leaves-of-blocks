@@ -7,15 +7,37 @@ extension Notification.Name {
 
 @MainActor
 final class CoreDataManager {
-    static let shared = CoreDataManager()
+    static let shared = CoreDataManager(inMemory: false)
 
-    private init() {}
+    private let inMemory: Bool
+
+    private init(inMemory: Bool) {
+        self.inMemory = inMemory
+    }
+
+    /// Test-only factory: constructs an isolated `CoreDataManager` backed by
+    /// an in-memory store. Each instance has its own context — no state is
+    /// shared with `.shared` or other instances. Use only from tests so we
+    /// never touch the user's real game history.
+    static func makeInMemoryForTests() -> CoreDataManager {
+        CoreDataManager(inMemory: true)
+    }
 
     lazy var persistentContainer: NSPersistentContainer = {
         let container = NSPersistentContainer(name: "LeavesOfBlocks")
 
-        // Enable lightweight migration for additive schema changes.
-        if let description = container.persistentStoreDescriptions.first {
+        if inMemory {
+            // SQLite store pointed at /dev/null — gives true isolation per
+            // instance (writes go nowhere, no on-disk state) while still
+            // supporting all SQLite-only Core Data features that the
+            // production code uses, including NSBatchDeleteRequest in
+            // deleteAllGameRecords (which NSInMemoryStoreType does NOT
+            // support and would crash with an unhandled exception).
+            let description = NSPersistentStoreDescription()
+            description.url = URL(fileURLWithPath: "/dev/null")
+            container.persistentStoreDescriptions = [description]
+        } else if let description = container.persistentStoreDescriptions.first {
+            // Production: enable lightweight migration for additive schema changes.
             description.shouldMigrateStoreAutomatically = true
             description.shouldInferMappingModelAutomatically = true
         }

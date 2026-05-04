@@ -86,3 +86,86 @@ struct GameServiceTimerLifecycleTests {
         service.endGameSession()
     }
 }
+
+// MARK: - High Score + Persistence (with in-memory CoreDataManager)
+
+@Suite("GameService.isNewHighScore / getHighScore / saveGameRecord")
+struct GameServicePersistenceTests {
+    @Test @MainActor
+    func isNewHighScoreOnEmptyStoreIsAlwaysTrueForPositiveScore() {
+        let store = CoreDataManager.makeInMemoryForTests()
+        let service = GameService(coreDataManager: store)
+        #expect(service.isNewHighScore(1))
+        #expect(service.isNewHighScore(99999))
+    }
+
+    @Test @MainActor
+    func isNewHighScoreReturnsFalseWhenScoreIsBelowOrEqualToCurrent() {
+        let store = CoreDataManager.makeInMemoryForTests()
+        let service = GameService(coreDataManager: store)
+        service.saveGameRecord(score: 500, linesCleared: 5, blocksPlaced: 20,
+                               gameTime: 100, difficulty: .easy, longestCombo: 1)
+        #expect(!service.isNewHighScore(500))
+        #expect(!service.isNewHighScore(499))
+        #expect(service.isNewHighScore(501))
+    }
+
+    @Test @MainActor
+    func getHighScoreReturnsPersistedHighScore() {
+        let store = CoreDataManager.makeInMemoryForTests()
+        let service = GameService(coreDataManager: store)
+        #expect(service.getHighScore() == 0)
+
+        service.saveGameRecord(score: 100, linesCleared: 1, blocksPlaced: 5,
+                               gameTime: 30, difficulty: .easy, longestCombo: 1)
+        service.saveGameRecord(score: 350, linesCleared: 3, blocksPlaced: 12,
+                               gameTime: 60, difficulty: .moderate, longestCombo: 2)
+
+        #expect(service.getHighScore() == 350)
+    }
+
+    @Test @MainActor
+    func saveGameRecordPersistsToTheInjectedStore() {
+        let store = CoreDataManager.makeInMemoryForTests()
+        let service = GameService(coreDataManager: store)
+
+        service.saveGameRecord(score: 222, linesCleared: 2, blocksPlaced: 8,
+                               gameTime: 45, difficulty: .hard, longestCombo: 1)
+
+        // Read directly from the same store to verify the write landed there.
+        let records = store.fetchGameHistory()
+        #expect(records.count == 1)
+        #expect(records.first?.score == 222)
+        #expect(records.first?.difficulty == DifficultyMode.hard.rawValue)
+    }
+
+    @Test @MainActor
+    func clearGameHistoryEmptiesTheStore() {
+        let store = CoreDataManager.makeInMemoryForTests()
+        let service = GameService(coreDataManager: store)
+        service.saveGameRecord(score: 100, linesCleared: 1, blocksPlaced: 5,
+                               gameTime: 30, difficulty: .easy, longestCombo: 1)
+        service.saveGameRecord(score: 200, linesCleared: 2, blocksPlaced: 10,
+                               gameTime: 60, difficulty: .moderate, longestCombo: 1)
+        #expect(store.fetchGameHistory().count == 2)
+
+        service.clearGameHistory()
+
+        #expect(store.fetchGameHistory().isEmpty)
+        #expect(service.getHighScore() == 0)
+    }
+
+    @Test @MainActor
+    func resetAllDataClearsHistoryToo() {
+        // resetAllData currently delegates to clearGameHistory plus a future
+        // hook for UserDefaults — verify the history side is cleared.
+        let store = CoreDataManager.makeInMemoryForTests()
+        let service = GameService(coreDataManager: store)
+        service.saveGameRecord(score: 50, linesCleared: 1, blocksPlaced: 5,
+                               gameTime: 30, difficulty: .easy, longestCombo: 1)
+
+        service.resetAllData()
+
+        #expect(store.fetchGameHistory().isEmpty)
+    }
+}
