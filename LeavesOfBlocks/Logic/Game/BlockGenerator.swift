@@ -462,12 +462,12 @@ extension BlockGenerator {
     private static func generateMinimumViableChallenge(count: Int, grid: [[GridCell]]) -> [BlockShape] {
         var challengeBlocks: [BlockShape] = []
         let baseWeights = getBlockWeights(for: .easy)
-        
-        // Try to use 2-3 cell blocks if they can fit
+
+        // Candidate small blocks that fit *individually* in the current grid.
         let smallBlocks = baseWeights.keys.filter { block in
             block.positions.count <= 3 && !GameLogic.findValidPositions(for: block, in: grid).isEmpty
         }
-        
+
         for _ in 0..<count {
             if let selectedBlock = smallBlocks.randomElement(), !smallBlocks.isEmpty {
                 let randomColor = BlockColor.allCases.randomElement()!
@@ -477,7 +477,20 @@ extension BlockGenerator {
                 challengeBlocks.append(createSingleBlock())
             }
         }
-        
+
+        // The picks above check each block's individual placement, not the set
+        // as a whole. On tight grids (e.g. one row of empty cells with three
+        // 3-cell blocks selected: 9 cells > 8 available), each block fits alone
+        // but the set does not. Verify and degrade to single-cell blocks if so:
+        // 1-cell blocks always fit individually as long as any cell is empty,
+        // and they never collectively oversubscribe the empty count any worse
+        // than the originals would have. This is the terminal fallback — past
+        // here the only correct outcome is "no moves" / game over.
+        if !GameLogic.canAllBlocksBePlaced(challengeBlocks, in: grid) {
+            BuildConfiguration.logSolvability("Minimum viable challenge unsolvable as a set, degrading to single-cell blocks", level: .warning)
+            return createSingleBlocks(count: count)
+        }
+
         return challengeBlocks
     }
 }
@@ -845,206 +858,4 @@ struct BlockGenerator {
         return generateTieredBlocks(count: count, difficulty: difficulty, grid: grid)
     }
     
-    /// Generates initial blocks using enhanced duplicate prevention
-    private static func generateInitialBlocks(count: Int, difficulty: DifficultyMode) -> [BlockShape] {
-        var blocks: [BlockShape] = []
-        var usedShapeTypes: [String] = []
-        var usedOrientations: [ShapeOrientation] = []
-        var usedExactShapes: [String] = []
-        var hasSpecialShape = false
-        
-        for blockIndex in 0..<count {
-            // Check if we should generate a special shape
-            let specialProbability = specialShapeProbability[difficulty] ?? 0.1
-            let shouldGenerateSpecial = Double.random(in: 0...1) < specialProbability && !hasSpecialShape
-            
-            if shouldGenerateSpecial {
-                // Generate a special shape (equal chance between all special types)
-                let specialBlock = SpecialBlockType.allCases.randomElement()!.blockShape
-                blocks.append(specialBlock)
-                hasSpecialShape = true
-                
-                // Track exact shape to prevent duplicates
-                let shapeSignature = getShapeSignature(specialBlock)
-                usedExactShapes.append(shapeSignature)
-            } else {
-                // Generate a normal block with enhanced variety
-                let newBlock = generateVariedBlockWithDuplicatePrevention(
-                    difficulty: difficulty,
-                    excludeShapeTypes: usedShapeTypes,
-                    excludeOrientations: usedOrientations,
-                    excludeExactShapes: usedExactShapes,
-                    attempt: blockIndex
-                )
-                
-                blocks.append(newBlock)
-                
-                // Track what we've used to ensure variety
-                let shapeType = getShapeType(newBlock)
-                let orientation = getShapeOrientation(newBlock)
-                let shapeSignature = getShapeSignature(newBlock)
-                
-                usedShapeTypes.append(shapeType)
-                usedOrientations.append(orientation)
-                usedExactShapes.append(shapeSignature)
-            }
-        }
-        
-        return blocks
-    }
-    
-    /// Ensures the generated blocks are solvable, applying fallback strategy if needed
-    /// Includes performance monitoring and comprehensive error handling
-    private static func ensureSolvableBlocks(_ blocks: [BlockShape], difficulty: DifficultyMode, grid: [[GridCell]]) -> [BlockShape] {
-        let startTime = CFAbsoluteTimeGetCurrent()
-        
-        // Check if blocks can be placed as-is
-        if GameLogic.canAllBlocksBePlaced(blocks, in: grid) {
-            BuildConfiguration.logSolvability("Generated blocks are solvable without fallback", level: .debug)
-            return blocks
-        }
-        
-        // Log unsolvable situation detected with context
-        let blockSizes = blocks.map { $0.positions.count }
-        let emptyCells = grid.flatMap { $0 }.filter { !$0.isFilled }.count
-        let totalBlockCells = blockSizes.reduce(0, +)
-        
-        BuildConfiguration.logSolvability("🚨 UNSOLVABLE BLOCKS DETECTED - Block sizes: \(blockSizes), Empty cells: \(emptyCells), Required cells: \(totalBlockCells), Difficulty: \(difficulty)", level: .warning)
-        
-        // Apply fallback strategy with retry limit
-        let maxRetries = 3
-        var currentBlocks = blocks
-        
-        for attempt in 0..<maxRetries {
-            BuildConfiguration.logSolvability("Applying fallback strategy - Attempt \(attempt + 1)/\(maxRetries)", level: .info)
-            currentBlocks = applyFallbackStrategy(currentBlocks, difficulty: difficulty, grid: grid)
-            
-            if GameLogic.canAllBlocksBePlaced(currentBlocks, in: grid) {
-                let newBlockSizes = currentBlocks.map { $0.positions.count }
-                let elapsedTime = CFAbsoluteTimeGetCurrent() - startTime
-                BuildConfiguration.logSolvability("✅ Fallback successful after \(attempt + 1) attempts - New block sizes: \(newBlockSizes), Time: \(String(format: "%.3f", elapsedTime))s", level: .info)
-                return currentBlocks
-            }
-            
-            BuildConfiguration.logSolvability("Fallback attempt \(attempt + 1) still unsolvable, trying again...", level: .debug)
-        }
-        
-        // Final fallback: ensure at least single blocks that can fit
-        BuildConfiguration.logSolvability("⚠️ All fallback attempts failed, using guaranteed solvable blocks (single blocks)", level: .warning)
-        let guaranteedBlocks = generateGuaranteedSolvableBlocks(count: blocks.count, grid: grid)
-        let elapsedTime = CFAbsoluteTimeGetCurrent() - startTime
-        BuildConfiguration.logSolvability("Generated \(guaranteedBlocks.count) guaranteed single blocks as final fallback, Total time: \(String(format: "%.3f", elapsedTime))s", level: .info)
-        return guaranteedBlocks
-    }
-    
-    /// Applies fallback strategy by replacing problematic blocks with smaller alternatives
-    private static func applyFallbackStrategy(_ blocks: [BlockShape], difficulty: DifficultyMode, grid: [[GridCell]]) -> [BlockShape] {
-        var modifiedBlocks = blocks
-        
-        // Sort blocks by size (largest first) to identify problematic ones
-        let sortedIndices = blocks.indices.sorted { blocks[$0].positions.count > blocks[$1].positions.count }
-        
-        if BuildConfiguration.currentLogLevel.rawValue <= BuildConfiguration.LogLevel.debug.rawValue {
-            BuildConfiguration.logSolvability("Analyzing blocks for replacement - Block sizes: \(blocks.map { $0.positions.count })", level: .debug)
-        }
-        
-        // Replace the largest block that can't be placed anywhere
-        for index in sortedIndices {
-            let block = blocks[index]
-            let validPositions = GameLogic.findValidPositions(for: block, in: grid)
-            
-            if BuildConfiguration.currentLogLevel.rawValue <= BuildConfiguration.LogLevel.verbose.rawValue {
-                BuildConfiguration.logSolvability("Block at index \(index) (size: \(block.positions.count)) has \(validPositions.count) valid positions", level: .verbose)
-            }
-            
-            if validPositions.isEmpty {
-                // This block can't be placed anywhere, replace with a smaller one
-                BuildConfiguration.logSolvability("🔄 Replacing impossible block at index \(index) (size: \(block.positions.count))", level: .info)
-                let replacementBlock = generateSmallerAlternative(for: block, difficulty: difficulty, grid: grid)
-                modifiedBlocks[index] = replacementBlock
-                BuildConfiguration.logSolvability("Replaced with smaller block (size: \(replacementBlock.positions.count))", level: .info)
-                break
-            }
-        }
-        
-        return modifiedBlocks
-    }
-    
-    /// Generates a smaller alternative block that can fit on the grid
-    private static func generateSmallerAlternative(for originalBlock: BlockShape, difficulty: DifficultyMode, grid: [[GridCell]]) -> BlockShape {
-        let blockWeights = getBlockWeights(for: difficulty)
-        
-        BuildConfiguration.logSolvability("Searching for smaller alternative to replace block of size \(originalBlock.positions.count)", level: .debug)
-        
-        // Try progressively smaller blocks until we find one that fits
-        let sizePreference = [1, 2, 3, 4] // Prefer smaller sizes for fallback
-        
-        for targetSize in sizePreference {
-            let candidateBlocks = blockWeights.keys.filter { $0.positions.count == targetSize }
-            BuildConfiguration.logSolvability("Trying \(candidateBlocks.count) candidates of size \(targetSize)", level: .verbose)
-            
-            for candidate in candidateBlocks.shuffled() {
-                let validPositions = GameLogic.findValidPositions(for: candidate, in: grid)
-                if !validPositions.isEmpty {
-                    let randomColor = BlockColor.allCases.randomElement()!
-                    BuildConfiguration.logSolvability("Found suitable replacement: size \(targetSize) with \(validPositions.count) valid positions", level: .debug)
-                    return BlockShape(positions: candidate.positions, color: randomColor)
-                }
-            }
-        }
-        
-        // Ultimate fallback: single block
-        BuildConfiguration.logSolvability("⚠️ Using ultimate fallback: single block", level: .warning)
-        return createSingleBlock()
-    }
-    
-    /// Generates blocks that are guaranteed to be solvable as final fallback
-    private static func generateGuaranteedSolvableBlocks(count: Int, grid: [[GridCell]]) -> [BlockShape] {
-        let emptyPositions = findEmptyPositions(in: grid)
-        BuildConfiguration.logSolvability("Generating guaranteed solvable blocks - Empty positions available: \(emptyPositions.count)", level: .info)
-        
-        // Generate single blocks up to the requested count
-        let guaranteedBlocks = createSingleBlocks(count: count)
-        
-        if emptyPositions.count < count {
-            BuildConfiguration.logSolvability("⚠️ Only \(emptyPositions.count) empty positions available for \(count) requested blocks", level: .warning)
-        }
-        
-        return guaranteedBlocks
-    }
-    
-    /// Helper function to find all empty positions in the grid
-    private static func findEmptyPositions(in grid: [[GridCell]]) -> [GridPosition] {
-        var emptyPositions: [GridPosition] = []
-        
-        for row in 0..<GameTheme.GameConfig.gridSize {
-            for col in 0..<GameTheme.GameConfig.gridSize {
-                if !grid[row][col].isFilled {
-                    emptyPositions.append(GridPosition(row: row, col: col))
-                }
-            }
-        }
-        
-        return emptyPositions
-    }
-    
-    private static func generateWeightedBlock(difficulty: DifficultyMode) -> BlockShape {
-        let blockWeights = getBlockWeights(for: difficulty)
-        let totalWeight = blockWeights.values.reduce(0, +)
-        let randomValue = Double.random(in: 0...totalWeight)
-        
-        var currentWeight: Double = 0
-        
-        for (block, weight) in blockWeights {
-            currentWeight += weight
-            if randomValue <= currentWeight {
-                let randomColor = BlockColor.allCases.randomElement()!
-                return BlockShape(positions: block.positions, color: randomColor)
-            }
-        }
-        
-        // Fallback to first block if something goes wrong
-        let randomColor = BlockColor.allCases.randomElement()!
-        return BlockShape(positions: BlockShape.allShapes[0].positions, color: randomColor)
-    }
 }

@@ -244,7 +244,9 @@ struct TierDrivenGenerationTests {
     func ultimateFallbackPath() {
         // Fill everything except a few isolated single cells. No multi-cell
         // shape can fit; the generator must end up emitting single-cell
-        // blocks via generateGuaranteedSolvableBlocks / generateMinimumViableChallenge.
+        // blocks via the generateSmallerBlockForTier / generateMinimumViableChallenge
+        // fallback chain (each multi-cell candidate has zero valid positions,
+        // so adjustBlocksForTier degrades each block down to size 1).
         var grid = GameLogic.createEmptyGrid()
         for row in 0..<8 {
             for col in 0..<8 {
@@ -262,6 +264,24 @@ struct TierDrivenGenerationTests {
         // collapse to a 1-cell shape to remain placeable.
         #expect(blocks.allSatisfy { $0.positions.count == 1 })
         #expect(GameLogic.canAllBlocksBePlaced(blocks, in: grid))
+    }
+
+    @Test("One-row-empty grid: generator degrades to single-cell blocks rather than emitting an unsolvable set")
+    func oneRowEmptyForcesSetSolvableFallback() {
+        // Regression test. Previously: 7 rows filled (8 cells empty in row 7)
+        // + count: 3 could yield three triominoes (9 cells > 8 available).
+        // adjustBlocksForTier saw each triomino fits *individually* in row 7
+        // and did nothing; the terminal generateMinimumViableChallenge then
+        // re-picked size-≤3 blocks without verifying set placement, so the
+        // generator handed back an unsolvable set. Fix: the terminal fallback
+        // now re-checks GameLogic.canAllBlocksBePlaced and degrades to single
+        // cells when the picks oversubscribe the available empty cells.
+        let grid = gridFilled(rows: 0..<7)
+        for _ in 0..<10 {
+            let blocks = BlockGenerator.generateTieredBlocks(count: 3, grid: grid)
+            #expect(blocks.count == 3)
+            #expect(GameLogic.canAllBlocksBePlaced(blocks, in: grid))
+        }
     }
 }
 
