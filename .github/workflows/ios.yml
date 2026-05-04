@@ -85,6 +85,21 @@ jobs:
       - name: Run Unit Tests
         run: ./scripts/build.sh test-unit-without-building
 
+      - name: Render Test Summary
+        if: always()
+        run: python3 scripts/test_summary.py >> "$GITHUB_STEP_SUMMARY" || true
+
+      - name: Upload Test Results (xcresult + log)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: unit-test-results
+          path: |
+            build/results/test-unit-*.xcresult
+            build/logs/test-unit-*.log
+          retention-days: 14
+          if-no-files-found: warn
+
   ui-tests:
     name: UI Tests
     runs-on: macos-latest
@@ -102,3 +117,18 @@ jobs:
 
       - name: Run UI Tests
         run: ./scripts/build.sh test-ui-without-building
+
+      - name: Render Test Summary
+        if: always()
+        run: python3 scripts/test_summary.py >> "$GITHUB_STEP_SUMMARY" || true
+
+      - name: Upload Test Results (xcresult + log)
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ui-test-results
+          path: |
+            build/results/test-ui-*.xcresult
+            build/logs/test-ui-*.log
+          retention-days: 14
+          if-no-files-found: warn
