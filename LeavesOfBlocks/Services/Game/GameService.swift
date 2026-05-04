@@ -22,10 +22,15 @@ final class GameService {
     /// Creates a `GameService`.
     ///
     /// - Parameter coreDataManager: Storage backend for high scores and game
-    ///   history. Defaults to the production singleton; tests can pass
-    ///   `CoreDataManager.makeInMemoryForTests()` for isolation.
-    init(coreDataManager: CoreDataManager = .shared) {
-        self.coreDataManager = coreDataManager
+    ///   history. Pass `nil` (the default) to use the production singleton;
+    ///   tests can pass `CoreDataManager.makeInMemoryForTests()` for isolation.
+    ///   The `nil` default + `?? .shared` resolution sidesteps a Swift 6
+    ///   warning: a default expression of `.shared` would be evaluated in a
+    ///   nonisolated caller context, but `.shared` is `@MainActor`-isolated.
+    ///   Resolving inside the init body inherits the class's `@MainActor`
+    ///   isolation and stays Swift 6-compliant.
+    init(coreDataManager: CoreDataManager? = nil) {
+        self.coreDataManager = coreDataManager ?? .shared
     }
 
     deinit {
