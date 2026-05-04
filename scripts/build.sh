@@ -159,6 +159,19 @@ run_tests() {
             ;;
     esac
 
+    # Test artifacts: text log (via tee, for tail/grep during the run) plus
+    # an .xcresult bundle (via -resultBundlePath, for structured analysis
+    # afterward — query with `xcrun xcresulttool get test-results tests
+    # --path <bundle>`). xcodebuild errors if -resultBundlePath already
+    # exists, so always emit a fresh timestamped bundle. Both directories
+    # live under build/ and are wiped by cleanup-project.sh and by
+    # prepare_test_environment in menu.sh.
+    local ts
+    ts=$(date +%Y%m%d-%H%M%S)
+    mkdir -p "$PROJECT_ROOT/build/logs" "$PROJECT_ROOT/build/results"
+    local log_file="$PROJECT_ROOT/build/logs/test-${test_type}-${ts}.log"
+    local result_bundle="$PROJECT_ROOT/build/results/test-${test_type}-${ts}.xcresult"
+
     # Handle test-without-building mode
     if [[ "$without_building" == "true" ]]; then
         xctestrun_file=$(find build/DerivedData -name "*.xctestrun" -print -quit 2>/dev/null)
@@ -167,27 +180,33 @@ run_tests() {
             exit 1
         fi
         echo -e "${GREEN}Running $test_label on: $sim_name ($destination) (parallel=$parallel_testing, workers=$workers)${NC}"
+        echo -e "${CYAN}  Log:    $log_file${NC}"
+        echo -e "${CYAN}  Result: $result_bundle${NC}"
 
         xcodebuild test-without-building \
             -xctestrun "$xctestrun_file" \
             -destination "$destination" \
+            -resultBundlePath "$result_bundle" \
             ${only_testing:+"$only_testing"} \
             ${skip_testing:+"$skip_testing"} \
             -parallel-testing-enabled "$parallel_testing" \
             -maximum-parallel-testing-workers "$workers" \
-            CODE_SIGNING_ALLOWED='NO'
+            CODE_SIGNING_ALLOWED='NO' 2>&1 | tee "$log_file"
     else
         echo -e "${GREEN}Running $test_label on: $sim_name ($destination) (parallel=$parallel_testing, workers=$workers)${NC}"
+        echo -e "${CYAN}  Log:    $log_file${NC}"
+        echo -e "${CYAN}  Result: $result_bundle${NC}"
 
         xcodebuild test \
             -project "$PROJECT" \
             -scheme "$SCHEME" \
             -destination "$destination" \
+            -resultBundlePath "$result_bundle" \
             ${only_testing:+"$only_testing"} \
             ${skip_testing:+"$skip_testing"} \
             -parallel-testing-enabled "$parallel_testing" \
             -maximum-parallel-testing-workers "$workers" \
-            CODE_SIGNING_ALLOWED='NO'
+            CODE_SIGNING_ALLOWED='NO' 2>&1 | tee "$log_file"
     fi
 }
 
