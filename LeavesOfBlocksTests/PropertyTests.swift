@@ -309,3 +309,153 @@ struct GridAnalysisPropertyTests {
         }
     }
 }
+
+// MARK: - Scoring Properties
+
+@Suite("GameLogic scoring: invariants of calculateBlockScore / calculateLineScore")
+struct ScoringPropertyTests {
+    private let baseBlockScore = GameTheme.GameConfig.baseBlockScore
+    private let lineScore = GameTheme.GameConfig.lineScore
+    private let comboBonus = GameTheme.GameConfig.comboBonus
+
+    @Test("Normal block score = positions.count × baseBlockScore for every standard shape")
+    func normalBlockScoreFormula() {
+        for shape in BlockShape.allShapes {
+            // allShapes are normal — verify by reconstructing as .normal and scoring.
+            let block = BlockShape(positions: shape.positions, color: .red)
+            let expected = shape.positions.count * baseBlockScore
+            let actual = GameLogic.calculateBlockScore(block: block)
+            #expect(actual == expected, "shape with \(shape.positions.count) cells scored \(actual), expected \(expected)")
+        }
+    }
+
+    @Test("Special block scores use their fixed bonus values")
+    func specialBlockScores() {
+        let h = BlockShape(positions: [GridPosition(row: 0, col: 0)], color: .red, type: .horizontalClear)
+        let v = BlockShape(positions: [GridPosition(row: 0, col: 0)], color: .red, type: .verticalClear)
+        let a = BlockShape(positions: [GridPosition(row: 0, col: 0)], color: .red, type: .areaClear)
+        #expect(GameLogic.calculateBlockScore(block: h) == lineScore)
+        #expect(GameLogic.calculateBlockScore(block: v) == lineScore)
+        #expect(GameLogic.calculateBlockScore(block: a) == lineScore * 2)
+    }
+
+    @Test("calculateLineScore(0, 0) is exactly 0")
+    func zeroLinesIsZeroScore() {
+        #expect(GameLogic.calculateLineScore(clearedRows: 0, clearedCols: 0) == 0)
+    }
+
+    @Test("Single line clear awards lineScore with no combo bonus")
+    func singleLineNoCombo() {
+        #expect(GameLogic.calculateLineScore(clearedRows: 1, clearedCols: 0) == lineScore)
+        #expect(GameLogic.calculateLineScore(clearedRows: 0, clearedCols: 1) == lineScore)
+    }
+
+    @Test("calculateLineScore is symmetric in (rows, cols)")
+    func symmetric() {
+        for r in 0...8 {
+            for c in 0...8 {
+                let rc = GameLogic.calculateLineScore(clearedRows: r, clearedCols: c)
+                let cr = GameLogic.calculateLineScore(clearedRows: c, clearedCols: r)
+                #expect(rc == cr, "asymmetry: score(\(r), \(c))=\(rc) vs score(\(c), \(r))=\(cr)")
+            }
+        }
+    }
+
+    @Test("calculateLineScore is monotonically non-decreasing in each argument")
+    func monotonic() {
+        for r in 0..<8 {
+            for c in 0..<8 {
+                let base = GameLogic.calculateLineScore(clearedRows: r, clearedCols: c)
+                let r1 = GameLogic.calculateLineScore(clearedRows: r + 1, clearedCols: c)
+                let c1 = GameLogic.calculateLineScore(clearedRows: r, clearedCols: c + 1)
+                #expect(r1 >= base, "score decreased when rows went \(r)→\(r+1) at cols=\(c)")
+                #expect(c1 >= base, "score decreased when cols went \(c)→\(c+1) at rows=\(r)")
+            }
+        }
+    }
+
+    @Test("Combo bonus is awarded only when totalLines ≥ 2")
+    func comboKicksInAtTwoLines() {
+        // The closed-form formula combines base + combo: totalLines * lineScore
+        // + max(0, totalLines - 1) * comboBonus. Verify that the difference
+        // between successive totals matches comboBonus (after the first line).
+        let s0 = GameLogic.calculateLineScore(clearedRows: 0, clearedCols: 0) // 0
+        let s1 = GameLogic.calculateLineScore(clearedRows: 1, clearedCols: 0) // lineScore, no combo
+        let s2 = GameLogic.calculateLineScore(clearedRows: 2, clearedCols: 0) // 2*lineScore + 1*combo
+        let s3 = GameLogic.calculateLineScore(clearedRows: 3, clearedCols: 0) // 3*lineScore + 2*combo
+
+        #expect(s1 - s0 == lineScore)
+        #expect(s2 - s1 == lineScore + comboBonus)
+        #expect(s3 - s2 == lineScore + comboBonus)
+    }
+}
+
+// MARK: - BlockShape Geometry Properties
+
+@Suite("BlockShape geometry invariants")
+struct BlockShapeGeometryTests {
+    @Test("Every BlockShape.allShapes entry has at least one position")
+    func allShapesNonEmpty() {
+        for (index, shape) in BlockShape.allShapes.enumerated() {
+            #expect(!shape.positions.isEmpty, "allShapes[\(index)] has empty positions")
+        }
+    }
+
+    @Test("Every shape's positions sit within the bounds it reports")
+    func positionsRespectBounds() {
+        for (index, shape) in BlockShape.allShapes.enumerated() {
+            let b = shape.getBounds()
+            for pos in shape.positions {
+                #expect(pos.row >= b.minRow && pos.row <= b.maxRow,
+                    "allShapes[\(index)]: row \(pos.row) out of bounds [\(b.minRow), \(b.maxRow)]")
+                #expect(pos.col >= b.minCol && pos.col <= b.maxCol,
+                    "allShapes[\(index)]: col \(pos.col) out of bounds [\(b.minCol), \(b.maxCol)]")
+            }
+        }
+    }
+
+    @Test("Width and height are exactly maxRow-minRow+1 and maxCol-minCol+1")
+    func boundsArithmetic() {
+        for (index, shape) in BlockShape.allShapes.enumerated() {
+            let b = shape.getBounds()
+            #expect(b.height == b.maxRow - b.minRow + 1, "allShapes[\(index)] height arithmetic broken")
+            #expect(b.width == b.maxCol - b.minCol + 1, "allShapes[\(index)] width arithmetic broken")
+        }
+    }
+
+    @Test("Every standard shape fits within an 8×8 grid")
+    func fitsIn8x8Grid() {
+        for (index, shape) in BlockShape.allShapes.enumerated() {
+            let b = shape.getBounds()
+            #expect(b.width <= 8, "allShapes[\(index)] width \(b.width) > 8")
+            #expect(b.height <= 8, "allShapes[\(index)] height \(b.height) > 8")
+        }
+    }
+
+    @Test("Each shape's positions are distinct (no overlapping cells within one block)")
+    func positionsAreDistinct() {
+        for (index, shape) in BlockShape.allShapes.enumerated() {
+            let unique = Set(shape.positions.map { "\($0.row),\($0.col)" })
+            #expect(unique.count == shape.positions.count,
+                "allShapes[\(index)] has duplicate positions: \(shape.positions)")
+        }
+    }
+
+    @Test("All standard shape positions are non-negative")
+    func positionsNonNegative() {
+        for (index, shape) in BlockShape.allShapes.enumerated() {
+            for pos in shape.positions {
+                #expect(pos.row >= 0, "allShapes[\(index)] has negative row \(pos.row)")
+                #expect(pos.col >= 0, "allShapes[\(index)] has negative col \(pos.col)")
+            }
+        }
+    }
+
+    @Test("getBounds() on an empty-positions shape returns the documented degenerate value")
+    func emptyShapeDegenerateBounds() {
+        let empty = BlockShape(positions: [], color: .red)
+        let b = empty.getBounds()
+        #expect(b.minRow == 0 && b.maxRow == 0 && b.minCol == 0 && b.maxCol == 0)
+        #expect(b.width == 0 && b.height == 0)
+    }
+}
