@@ -29,6 +29,7 @@ struct Main: App {
                     ContentView(gameState: gameState)
                         .transition(.opacity)
                         .environment(\.managedObjectContext, coreDataManager.viewContext)
+                        .environment(\.coreDataManager, coreDataManager)
                 }
             }
             .task {

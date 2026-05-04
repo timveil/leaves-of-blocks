@@ -3,11 +3,12 @@ import SwiftUI
 struct HistoryView: View {
     var gameState: GameState
     let onSelectSession: (GameSession) -> Void
+    @Environment(\.coreDataManager) private var coreDataManager
     @State private var gameHistory: [GameSession] = []
     @State private var highScore: Int = 0
 
     private func loadGameHistory() {
-        let records = CoreDataManager.shared.fetchGameHistory()
+        let records = coreDataManager.fetchGameHistory()
 
         var sessions: [GameSession] = []
 
@@ -35,7 +36,7 @@ struct HistoryView: View {
         }
 
         gameHistory = sessions.sorted { $0.date > $1.date }
-        highScore = CoreDataManager.shared.calculateStatistics().highScore
+        highScore = coreDataManager.calculateStatistics().highScore
     }
 
     var body: some View {
@@ -84,14 +85,20 @@ struct HistoryView: View {
 }
 
 #Preview {
+    // Use an isolated in-memory CoreDataManager so previews don't write
+    // mock sessions into the developer's real game history (the previous
+    // version did — every preview render saved 5 sample records to the
+    // shared store).
     struct PreviewWrapper: View {
         @State private var hasLoadedData = false
+        let coreDataManager: CoreDataManager
 
         var body: some View {
             HistoryView(
                 gameState: GameState(),
                 onSelectSession: { _ in }
             )
+            .environment(\.coreDataManager, coreDataManager)
             .onAppear {
                 guard !hasLoadedData else { return }
                 hasLoadedData = true
@@ -120,7 +127,7 @@ struct HistoryView: View {
                         challengeMaintained: Double.random(in: 0.3...0.8)
                     )
 
-                    CoreDataManager.shared.saveGameRecord(
+                    coreDataManager.saveGameRecord(
                         score: session.score,
                         difficulty: session.difficulty,
                         blocksPlaced: session.blocks,
@@ -134,5 +141,5 @@ struct HistoryView: View {
         }
     }
 
-    return PreviewWrapper()
+    return PreviewWrapper(coreDataManager: CoreDataManager.makeInMemoryForTests())
 }

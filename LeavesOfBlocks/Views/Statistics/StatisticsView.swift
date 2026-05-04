@@ -6,6 +6,7 @@ import CoreData
 /// Aggregate stats across every persisted `GameRecord`. Refreshes when the
 /// Core Data context changes (e.g. a new run finishes while this screen is open).
 struct StatisticsView: View {
+    @Environment(\.coreDataManager) private var coreDataManager
     @State private var stats: ExtendedStatistics = .empty
 
     private let columns = [
@@ -101,7 +102,7 @@ struct StatisticsView: View {
     }
 
     private func loadStatistics() {
-        stats = CoreDataManager.shared.calculateExtendedStatistics()
+        stats = coreDataManager.calculateExtendedStatistics()
     }
 }
 
