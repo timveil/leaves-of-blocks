@@ -19,7 +19,7 @@
     <img src="app-store-badge.svg" alt="Download on the App Store" height="50">
   </a>
 
-  [Website](https://www.leavesofblocks.com/) · [Play in browser](https://www.leavesofblocks.com/play/) · [vs. Block Blast](https://www.leavesofblocks.com/vs/) · [Support](https://www.leavesofblocks.com/support/) · [Issues](https://github.com/timveil/leaves-of-blocks/issues)
+  [Website](https://www.leavesofblocks.com/) · [Play in browser](https://www.leavesofblocks.com/play/) · [vs. Block Blast](https://www.leavesofblocks.com/vs/) · [Support](https://www.leavesofblocks.com/support/) · [Instagram](https://www.instagram.com/leavesofblocks/) · [Issues](https://github.com/timveil/leaves-of-blocks/issues)
 </div>
 
 ---
@@ -273,7 +273,12 @@ This project is licensed under the [MIT License](LICENSE).
 
 **Tim Veil** — [@timveil](https://github.com/timveil)
 
-For questions, bugs, or feature requests, please [open an issue](https://github.com/timveil/leaves-of-blocks/issues).
+## Contact
+
+- General: [info@leavesofblocks.com](mailto:info@leavesofblocks.com)
+- Support: [support@leavesofblocks.com](mailto:support@leavesofblocks.com)
+- Instagram: [@leavesofblocks](https://www.instagram.com/leavesofblocks/)
+- Bugs & feature requests: [open an issue](https://github.com/timveil/leaves-of-blocks/issues)
 
 ---
 
