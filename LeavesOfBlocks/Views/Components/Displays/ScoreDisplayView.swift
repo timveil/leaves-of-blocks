@@ -77,11 +77,11 @@ struct ScoreDisplayView: View {
                 }
                 
                 Text(score.abbreviatedScore)
-                    .font(GameTheme.Typography.display)
-                    .foregroundColor(GameTheme.Colors.primaryText)
                     .lineLimit(1)
                     .minimumScaleFactor(0.7)
                     .padding(.top, showIcon ? 0 : GameTheme.Layout.mediumPadding)
+                    .font(GameTheme.Typography.display)
+                    .foregroundColor(GameTheme.Colors.primaryText)
 
                 if let subtitle = subtitle {
                     Text(subtitle)

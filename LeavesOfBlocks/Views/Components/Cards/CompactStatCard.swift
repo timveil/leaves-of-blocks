@@ -9,10 +9,10 @@ struct CompactStatCard: View {
     var body: some View {
         GoldHeaderCard(title: title, style: .compact) {
             Text(value)
-                .font(GameTheme.Typography.title)
-                .foregroundColor(GameTheme.Colors.primaryText)
                 .lineLimit(1)
                 .minimumScaleFactor(0.6)
+                .font(GameTheme.Typography.title)
+                .foregroundColor(GameTheme.Colors.primaryText)
         }
     }
 }
