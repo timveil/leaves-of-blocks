@@ -134,7 +134,11 @@ extension BlockGenerator {
             let shouldGenerateSpecial = Double.random(in: 0...1) < config.specialShapeChance && !hasSpecialShape
             
             if shouldGenerateSpecial {
-                let specialBlock = (SpecialBlockType.allCases.randomElement() ?? .horizontal).blockShape
+                // Pick uniformly from the three special-block templates. Each
+                // `BlockShape.*ClearShape` access mints a fresh BlockShape
+                // (with its own UUID id), so two draws of the same type
+                // are still distinct instances.
+                let specialBlock = Self.specialBlockPool.randomElement() ?? BlockShape.horizontalClearShape
                 blocks.append(specialBlock)
                 hasSpecialShape = true
                 
@@ -508,22 +512,23 @@ struct BlockGenerator {
         .hard: 0.02       // 2% chance in hard mode (reduced from 5%)
     ]
     
-    // MARK: - Special Block Types
-    
-    /// Enumeration of available special block types for cleaner generation logic
-    private enum SpecialBlockType: CaseIterable {
-        case horizontal, vertical, area
-        
-        var blockShape: BlockShape {
-            switch self {
-            case .horizontal:
-                return BlockShape.horizontalClearShape
-            case .vertical:
-                return BlockShape.verticalClearShape
-            case .area:
-                return BlockShape.areaClearShape
-            }
-        }
+    // MARK: - Special Block Pool
+
+    /// The three special-block templates the generator draws from. Computed
+    /// each access via `BlockShape.*ClearShape`'s `static var`, so a draw
+    /// returns a freshly-minted shape with its own UUID — duplicate-type
+    /// special blocks across draws are still distinct instances.
+    ///
+    /// Previously a private `SpecialBlockType` enum wrapped these three
+    /// values with a `.blockShape` computed property; the enum was pure
+    /// indirection once `BlockShape.*ClearShape` became static-var
+    /// templates (H7), so it collapses to a `[BlockShape]` literal.
+    private static var specialBlockPool: [BlockShape] {
+        [
+            BlockShape.horizontalClearShape,
+            BlockShape.verticalClearShape,
+            BlockShape.areaClearShape
+        ]
     }
     
     // MARK: - Core Data Structures

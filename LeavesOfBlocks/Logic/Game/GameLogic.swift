@@ -293,20 +293,18 @@ enum GameLogic {
     ///
     /// - Parameter grid: The grid to fill with patterns (modified in place)
     /// - Parameter difficulty: The difficulty mode determining pattern strategy
-    /// - Parameter targetPercentage: Optional override for target fill percentage
     ///
     /// ## Available Patterns by Difficulty
     /// - **Easy**: Lines, diagonals, small corners
-    /// - **Moderate**: All patterns with balanced distribution  
+    /// - **Moderate**: All patterns with balanced distribution
     /// - **Hard**: Complex crosses, squares, zigzags, triangles
     ///
     /// - Note: Patterns avoid line completion and ensure solvability regardless of difficulty.
-    static func randomlyFillGrid(_ grid: inout [[GridCell]], difficulty: DifficultyMode = .easy, targetPercentage: Double? = nil) {
+    static func randomlyFillGrid(_ grid: inout [[GridCell]], difficulty: DifficultyMode = .easy) {
         let difficultyConfig = DifficultyPatternConfig.forDifficulty(difficulty)
-        let finalPercentage = targetPercentage ?? difficultyConfig.targetFillPercentage
-        
-        fillGridWithGeometricPatterns(&grid, 
-                                    targetPercentage: finalPercentage,
+
+        fillGridWithGeometricPatterns(&grid,
+                                    targetPercentage: difficultyConfig.targetFillPercentage,
                                     allowedPatterns: difficultyConfig.allowedPatterns,
                                     patternWeights: difficultyConfig.patternWeights)
     }

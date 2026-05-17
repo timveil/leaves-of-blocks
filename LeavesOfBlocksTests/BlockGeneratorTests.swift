@@ -98,6 +98,30 @@ struct GeneratedBlockValidityTests {
             }
         }
     }
+
+    @Test("Over enough draws, all three special-block types appear at least once")
+    func specialBlockDistributionCoversAllThreeTypes() {
+        // Contract pin (U3): the generator picks special blocks uniformly
+        // across `.horizontalClear`, `.verticalClear`, and `.areaClear`.
+        // A future refactor to the special-shape pool (the round 2 plan
+        // collapses `SpecialBlockType` enum into a `[BlockShape]` literal)
+        // shouldn't accidentally drop a case. 400 draws on hard difficulty
+        // (2% special-shape chance) gives ~24 specials in expectation —
+        // well above the threshold needed to cover three uniform buckets.
+        var observed: Set<BlockType> = []
+        for _ in 0..<400 {
+            let blocks = BlockGenerator.generateTieredBlocks(
+                count: 3, difficulty: .hard, grid: emptyGrid()
+            )
+            for block in blocks where block.type != .normal {
+                observed.insert(block.type)
+            }
+            if observed.count == 3 { break }
+        }
+        #expect(observed.contains(.horizontalClear))
+        #expect(observed.contains(.verticalClear))
+        #expect(observed.contains(.areaClear))
+    }
 }
 
 // MARK: - Solvability
