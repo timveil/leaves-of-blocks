@@ -22,7 +22,9 @@ struct DifficultySelectionView: View {
 
     var body: some View {
         VStack(spacing: GameTheme.Layout.extraLargeSpacing) {
-            // Acorn display
+            // Acorn display — visual indicator only; the slider below is the
+            // interactive element with full accessibility wiring, so hide
+            // these icons from VoiceOver to avoid duplicate announcements.
             HStack(spacing: GameTheme.Layout.mediumSpacing) {
                 ForEach(1...3, id: \.self) { index in
                     Image("AcornIcon")
@@ -33,6 +35,7 @@ struct DifficultySelectionView: View {
                         .animation(GameTheme.Animations.difficultySelection, value: acornCount)
                 }
             }
+            .accessibilityHidden(true)
 
             // Difficulty label
             Text(selectedDifficulty.displayName)
@@ -76,8 +79,6 @@ struct DifficultySelectionView: View {
 
 private struct AcornSlider: View {
     @Binding var value: Double
-
-    @GestureState private var isDragging = false
 
     var body: some View {
         GeometryReader { geo in
