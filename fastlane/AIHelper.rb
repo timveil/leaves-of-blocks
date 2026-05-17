@@ -45,7 +45,7 @@ module AIHelper
   end
 
   ANTHROPIC_API_URL = "https://api.anthropic.com/v1/messages"
-  ANTHROPIC_MODEL = "claude-sonnet-4-20250514"
+  ANTHROPIC_MODEL = "claude-sonnet-4-6"
   MAX_TOKENS_CHANGELOG = 2000
   MAX_TOKENS_RELEASE_NOTES = 1500
 
