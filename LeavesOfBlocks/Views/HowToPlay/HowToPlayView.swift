@@ -48,7 +48,7 @@ struct HowToPlayView: View {
 
                     // Scoring table card
                     VStack(spacing: 0) {
-                        ScoringTableHeaderView()
+                        GameTableHeaderView(titleKey: "scoring_header")
 
                         ScoringTableRowView(
                             points: "10",
@@ -70,7 +70,7 @@ struct HowToPlayView: View {
 
                     // Difficulty table card
                     VStack(spacing: 0) {
-                        DifficultyTableHeaderView()
+                        GameTableHeaderView(titleKey: "difficulty_header")
 
                         DifficultyTableRowView(
                             mode: .easy,
@@ -89,7 +89,7 @@ struct HowToPlayView: View {
 
                     // Block Shapes table card
                     VStack(spacing: 0) {
-                        ShapesTableHeaderView()
+                        GameTableHeaderView(titleKey: "shapes_header")
 
                         ShapesTableRowView(
                             shapeType: .normalBlocks,

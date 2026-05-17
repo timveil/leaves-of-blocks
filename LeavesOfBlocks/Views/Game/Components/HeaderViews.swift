@@ -15,20 +15,11 @@ struct SimpleScoreView: View {
     
     var body: some View {
         VStack(spacing: 0) {
-            // Gold header
-            Text("score".localized)
-                .font(GameTheme.Typography.headline)
-                .foregroundColor(GameTheme.Colors.primaryText)
-                .frame(maxWidth: .infinity)
-                .padding(.horizontal, GameTheme.Layout.largePadding)
-                .padding(.vertical, GameTheme.Layout.smallPadding)
-                .background(GameTheme.Colors.headerBand)
-                .overlay(
-                    Rectangle()
-                        .frame(height: GameTheme.Layout.dividerHeight)
-                        .foregroundColor(.black),
-                    alignment: .bottom
-                )
+            GoldHeaderBand(
+                title: "score".localized,
+                titleFont: GameTheme.Typography.headline,
+                verticalPadding: GameTheme.Layout.smallPadding
+            )
 
             // Score and lines content
             HStack {

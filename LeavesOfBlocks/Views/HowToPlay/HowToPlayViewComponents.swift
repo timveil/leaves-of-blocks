@@ -21,11 +21,17 @@ struct TipRow: View {
     }
 }
 
-// MARK: - Scoring Table
+// MARK: - Shared Table Header
 
-struct ScoringTableHeaderView: View {
+/// Gold band at the top of each How-To-Play table card. The three sites
+/// (scoring / difficulty / shapes) used to be three identical structs
+/// differing only in the localized title key — one parameterized component
+/// covers all of them.
+struct GameTableHeaderView: View {
+    let titleKey: String
+
     var body: some View {
-        Text("scoring_header".localized)
+        Text(titleKey.localized)
             .font(GameTheme.Typography.title)
             .foregroundColor(GameTheme.Colors.primaryText)
             .frame(maxWidth: .infinity)
@@ -33,6 +39,8 @@ struct ScoringTableHeaderView: View {
             .gameTableHeaderStyle()
     }
 }
+
+// MARK: - Scoring Table
 
 struct ScoringTableRowView: View {
     let points: String
@@ -66,17 +74,6 @@ struct ScoringTableRowView: View {
 
 // MARK: - Difficulty Table
 
-struct DifficultyTableHeaderView: View {
-    var body: some View {
-        Text("difficulty_header".localized)
-            .font(GameTheme.Typography.title)
-            .foregroundColor(GameTheme.Colors.primaryText)
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, GameTheme.Layout.mediumPadding)
-            .gameTableHeaderStyle()
-    }
-}
-
 struct DifficultyTableRowView: View {
     let mode: DifficultyMode
     let description: String
@@ -105,17 +102,6 @@ struct DifficultyTableRowView: View {
 }
 
 // MARK: - Shapes Table
-
-struct ShapesTableHeaderView: View {
-    var body: some View {
-        Text("shapes_header".localized)
-            .font(GameTheme.Typography.title)
-            .foregroundColor(GameTheme.Colors.primaryText)
-            .frame(maxWidth: .infinity)
-            .padding(.vertical, GameTheme.Layout.mediumPadding)
-            .gameTableHeaderStyle()
-    }
-}
 
 struct ShapesTableRowView: View {
     let shapeType: ShapeType
@@ -212,7 +198,7 @@ enum ShapeType {
 
 #Preview("Scoring Table Row") {
     VStack(spacing: 0) {
-        ScoringTableHeaderView()
+        GameTableHeaderView(titleKey: "scoring_header")
         ScoringTableRowView(points: "+10", description: "scoring_block_placement".localized, color: GameTheme.Colors.accent)
         ScoringTableRowView(points: "+100", description: "scoring_line_clear".localized, color: GameTheme.Colors.success)
     }
@@ -223,7 +209,7 @@ enum ShapeType {
 
 #Preview("Difficulty Table Row") {
     VStack(spacing: 0) {
-        DifficultyTableHeaderView()
+        GameTableHeaderView(titleKey: "difficulty_header")
         DifficultyTableRowView(mode: .easy, description: "difficulty_easy_desc".localized)
         DifficultyTableRowView(mode: .moderate, description: "difficulty_moderate_desc".localized)
     }
@@ -234,7 +220,7 @@ enum ShapeType {
 
 #Preview("Shapes Table Row") {
     VStack(spacing: 0) {
-        ShapesTableHeaderView()
+        GameTableHeaderView(titleKey: "shapes_header")
         ShapesTableRowView(shapeType: .normalBlocks, description: "shape_normal_desc".localized)
         ShapesTableRowView(shapeType: .horizontalClear, description: "shape_row_clear_desc".localized)
     }

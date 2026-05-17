@@ -1,13 +1,13 @@
 import SwiftUI
 
-/// A compact title + value tile for stat grids. Wraps `CompactGoldHeaderCard`
-/// with a single-line value rendered in `Typography.title`.
+/// A compact title + value tile for stat grids. Wraps `GoldHeaderCard` in
+/// its `.compact` style with a single-line value rendered in `Typography.title`.
 struct CompactStatCard: View {
     let title: String
     let value: String
 
     var body: some View {
-        CompactGoldHeaderCard(title: title) {
+        GoldHeaderCard(title: title, style: .compact) {
             Text(value)
                 .font(GameTheme.Typography.title)
                 .foregroundColor(GameTheme.Colors.primaryText)
