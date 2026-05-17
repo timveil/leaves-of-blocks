@@ -8,15 +8,33 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
+### Changed
+
+### Fixed
+
+## [2.0.5] - 2026-05-17
+
+### Added
 - SpriteKit scene now suspends and resumes on app background/foreground
 - `fastlane/AchievementPrompts.md` — Recraft prompt set for generating Game Center achievement icons
 - Release lanes fail fast via `ensure_version_available_on_app_store!` when the target version already exists in App Store Connect
+- Add background audio mixing so your music keeps playing while you enjoy the game
+- Add automatic retry for Game Center score and achievement submissions so your progress is always recorded
 
 ### Changed
 - Refreshed README: link to public website, vs. Block Blast comparison, and updated project structure
 - Refreshed and corrected `CHANGELOG.md`
 - Extracted Fastlane release helpers and hardened the release flow
 - Removed `bump_marketing_version` from the beta lane (TestFlight builds no longer touch the marketing version)
+- Improve Game Center integration for more reliable leaderboard and achievement updates
+
+### Fixed
+- Fix an issue where dragging blocks near the edge of the board could cause unexpected behavior
+- Fix a bug where removing a placed block could affect the wrong piece on the board
+- Fix decorative icons so VoiceOver focuses only on meaningful content, improving accessibility
+- Fix an issue where game history stats could be calculated incorrectly in certain sessions
+- Fix a rare puzzle generation edge case to ensure the board always has a valid solution
 
 ### Removed
 - Falling-leaves SpriteKit effect
@@ -227,7 +245,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - COPPA compliant with no data collection
 - iPhone-optimized experience with portrait orientation
 
-[Unreleased]: https://github.com/timveil/leaves-of-blocks/compare/v2.0.3...HEAD
+[Unreleased]: https://github.com/timveil/leaves-of-blocks/compare/v2.0.5...HEAD
+[2.0.5]: https://github.com/timveil/leaves-of-blocks/compare/v2.0.3...v2.0.5
 [2.0.3]: https://github.com/timveil/leaves-of-blocks/compare/v2.0.2...v2.0.3
 [2.0.2]: https://github.com/timveil/leaves-of-blocks/compare/v2.0.1...v2.0.2
 [2.0.1]: https://github.com/timveil/leaves-of-blocks/compare/v1.0.10...v2.0.1
