@@ -92,6 +92,10 @@ private struct ContinueGameCard: View {
     )
 }
 
+#if DEBUG
+// Preview wraps the body in #if DEBUG because the `_setTestState(...)` seam
+// on GameState is itself DEBUG-only. Without the guard, release-config
+// archive builds (Xcode Cloud) fail to compile this preview.
 #Preview("With In-Progress Game") {
     HomeView(
         gameState: {
@@ -104,3 +108,4 @@ private struct ContinueGameCard: View {
         onStartGame: { _ in }
     )
 }
+#endif

@@ -45,6 +45,11 @@ struct GameOverOverlayView: View {
     }
 }
 
+#if DEBUG
+// Preview wraps the body in #if DEBUG because the `_setTestState(...)` seam
+// on GameState is itself DEBUG-only (it's a test/preview hook that the
+// release surface deliberately doesn't expose). Without the guard the
+// release-config archive used by Xcode Cloud fails to compile.
 #Preview {
     ZStack {
         GameTheme.Gradients.background
@@ -61,3 +66,4 @@ struct GameOverOverlayView: View {
         )
     }
 }
+#endif

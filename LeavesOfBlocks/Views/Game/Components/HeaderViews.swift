@@ -56,6 +56,10 @@ struct SimpleScoreView: View {
 
 // MARK: - Previews
 
+#if DEBUG
+// Preview wraps the body in #if DEBUG because the `_setTestState(...)` seam
+// on GameState is itself DEBUG-only. Without the guard, release-config
+// archive builds (Xcode Cloud) fail to compile this preview.
 #Preview("Score View") {
     let state: GameState = {
         let s = GameState()
@@ -66,3 +70,4 @@ struct SimpleScoreView: View {
         .frame(width: 350)
         .padding()
 }
+#endif
