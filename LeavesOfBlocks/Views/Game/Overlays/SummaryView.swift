@@ -64,6 +64,7 @@ struct SummaryView: View {
                         showIcon: isNewHighScore,
                         iconName: "crown.fill"
                     )
+                    .accessibilityIdentifier("summary_screen")
 
                     LazyVGrid(columns: gridColumns, spacing: GameTheme.Layout.mediumPadding) {
                         CompactStatCard(

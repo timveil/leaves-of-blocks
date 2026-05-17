@@ -100,8 +100,7 @@ final class LeavesOfBlocksUITests: XCTestCase {
     private func captureHomeScreen() {
         let startButton = app.buttons["start_game_button"]
         XCTAssertTrue(startButton.waitForExistence(timeout: 5), "Home screen should be visible")
-
-        sleep(2)
+        XCTAssertTrue(startButton.isHittable, "Start button should be hittable (animations finished)")
 
         takeScreenshot(named: "01_HomeScreen")
     }
@@ -110,7 +109,8 @@ final class LeavesOfBlocksUITests: XCTestCase {
     private func captureHowToPlayScreen() {
         navigateViaMenu(to: "how_to_play_button")
 
-        sleep(2)
+        let screen = app.staticTexts["how_to_play_screen"]
+        XCTAssertTrue(screen.waitForExistence(timeout: 5), "How To Play screen should appear")
 
         takeScreenshot(named: "02_HowToPlay")
 
@@ -139,15 +139,18 @@ final class LeavesOfBlocksUITests: XCTestCase {
     private func captureGameHistoryScreen() {
         navigateViaMenu(to: "history_button")
 
-        sleep(3)
+        // History rows or the "no history" empty state mount inside this
+        // window; waiting for the first row covers the populated path.
+        let firstGameButton = app.buttons["game_history_button_0"]
+        _ = firstGameButton.waitForExistence(timeout: 5)
 
         takeScreenshot(named: "03_GameHistory")
 
-        let firstGameButton = app.buttons["game_history_button_0"]
-        if firstGameButton.waitForExistence(timeout: 10) {
+        if firstGameButton.exists {
             firstGameButton.tap()
 
-            sleep(3)
+            let detailScreen = app.staticTexts["summary_screen"]
+            XCTAssertTrue(detailScreen.waitForExistence(timeout: 5), "Game detail screen should appear")
 
             takeScreenshot(named: "04_GameDetail")
         }
@@ -159,7 +162,8 @@ final class LeavesOfBlocksUITests: XCTestCase {
     private func captureAboutScreen() {
         navigateViaMenu(to: "about_button")
 
-        sleep(2)
+        let screen = app.staticTexts["about_screen"]
+        XCTAssertTrue(screen.waitForExistence(timeout: 5), "About screen should appear")
 
         takeScreenshot(named: "06_About")
 

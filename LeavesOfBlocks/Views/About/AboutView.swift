@@ -19,6 +19,7 @@ struct AboutView: View {
                 VStack(alignment: .leading, spacing: GameTheme.Layout.mediumPadding) {
                     VStack(alignment: .leading, spacing: 4) {
                         StrokedTitle(text: "about_the_game".localized)
+                            .accessibilityIdentifier("about_screen")
 
                         Text("version_format".localized(with: Bundle.main.appVersion))
                             .font(GameTheme.Typography.caption)

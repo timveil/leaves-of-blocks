@@ -7,6 +7,7 @@ struct HowToPlayView: View {
             ScrollView {
                 VStack(alignment: .leading, spacing: GameTheme.Layout.mediumPadding) {
                     StrokedTitle(text: "how_to_play".localized)
+                        .accessibilityIdentifier("how_to_play_screen")
                         .padding(.bottom, GameTheme.Layout.smallSpacing)
 
                     WhitmanQuoteCard(
