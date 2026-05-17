@@ -78,8 +78,8 @@ enum GameLogic {
                 let finalCol = gridPosition.col + blockPos.col
                 
                 // Check bounds
-                if finalRow < 0 || finalRow >= GameTheme.GameConfig.gridSize || 
-                   finalCol < 0 || finalCol >= GameTheme.GameConfig.gridSize {
+                if finalRow < 0 || finalRow >= AppConfiguration.GameRules.gridSize || 
+                   finalCol < 0 || finalCol >= AppConfiguration.GameRules.gridSize {
                     return false
                 }
                 
@@ -98,8 +98,8 @@ enum GameLogic {
         case .horizontalClear:
             // Clear the entire row where the special block is placed
             let targetRow = gridPosition.row
-            if targetRow >= 0 && targetRow < GameTheme.GameConfig.gridSize {
-                for col in 0..<GameTheme.GameConfig.gridSize {
+            if targetRow >= 0 && targetRow < AppConfiguration.GameRules.gridSize {
+                for col in 0..<AppConfiguration.GameRules.gridSize {
                     grid[targetRow][col] = GridCell()  // Reset to default state
                 }
             }
@@ -107,8 +107,8 @@ enum GameLogic {
         case .verticalClear:
             // Clear the entire column where the special block is placed
             let targetCol = gridPosition.col
-            if targetCol >= 0 && targetCol < GameTheme.GameConfig.gridSize {
-                for row in 0..<GameTheme.GameConfig.gridSize {
+            if targetCol >= 0 && targetCol < AppConfiguration.GameRules.gridSize {
+                for row in 0..<AppConfiguration.GameRules.gridSize {
                     grid[row][targetCol] = GridCell()  // Reset to default state
                 }
             }
@@ -153,28 +153,28 @@ enum GameLogic {
         var clearedCells: [ClearedCell] = []
         
         // Check rows
-        for row in 0..<GameTheme.GameConfig.gridSize {
+        for row in 0..<AppConfiguration.GameRules.gridSize {
             if grid[row].allSatisfy({ $0.isFilled }) {
                 clearedRows.insert(row)
             }
         }
         
         // Check columns
-        for col in 0..<GameTheme.GameConfig.gridSize {
-            if (0..<GameTheme.GameConfig.gridSize).allSatisfy({ grid[$0][col].isFilled }) {
+        for col in 0..<AppConfiguration.GameRules.gridSize {
+            if (0..<AppConfiguration.GameRules.gridSize).allSatisfy({ grid[$0][col].isFilled }) {
                 clearedCols.insert(col)
             }
         }
         
         // Collect cell information before clearing
         for row in clearedRows {
-            for col in 0..<GameTheme.GameConfig.gridSize {
+            for col in 0..<AppConfiguration.GameRules.gridSize {
                 clearedCells.append(ClearedCell(row: row, col: col, color: grid[row][col].color))
             }
         }
         
         for col in clearedCols {
-            for row in 0..<GameTheme.GameConfig.gridSize {
+            for row in 0..<AppConfiguration.GameRules.gridSize {
                 // Avoid double-counting cells that are in both cleared rows and columns
                 if !clearedRows.contains(row) {
                     clearedCells.append(ClearedCell(row: row, col: col, color: grid[row][col].color))
@@ -184,13 +184,13 @@ enum GameLogic {
         
         // Clear the lines
         for row in clearedRows {
-            for col in 0..<GameTheme.GameConfig.gridSize {
+            for col in 0..<AppConfiguration.GameRules.gridSize {
                 grid[row][col] = GridCell()
             }
         }
         
         for col in clearedCols {
-            for row in 0..<GameTheme.GameConfig.gridSize {
+            for row in 0..<AppConfiguration.GameRules.gridSize {
                 grid[row][col] = GridCell()
             }
         }
@@ -209,7 +209,7 @@ enum GameLogic {
         var simulated = grid
         placeBlock(block, at: position, in: &simulated)
 
-        let size = GameTheme.GameConfig.gridSize
+        let size = AppConfiguration.GameRules.gridSize
         var rows: Set<Int> = []
         var cols: Set<Int> = []
 
@@ -237,8 +237,8 @@ enum GameLogic {
     
     /// Checks if a specific block can be placed anywhere on the grid
     private static func canPlaceAnyBlock(_ block: BlockShape, in grid: [[GridCell]]) -> Bool {
-        for row in 0..<GameTheme.GameConfig.gridSize {
-            for col in 0..<GameTheme.GameConfig.gridSize {
+        for row in 0..<AppConfiguration.GameRules.gridSize {
+            for col in 0..<AppConfiguration.GameRules.gridSize {
                 let position = GridPosition(row: row, col: col)
                 if canPlaceBlock(block, at: position, in: grid) {
                     return true
@@ -255,22 +255,22 @@ enum GameLogic {
         switch block.type {
         case .horizontalClear, .verticalClear:
             // Special shapes give bonus points
-            return GameTheme.GameConfig.lineScore  // Same as clearing one line
+            return AppConfiguration.GameRules.lineScore  // Same as clearing one line
         case .areaClear:
             // Area clear gives higher bonus points (equivalent to clearing 2 lines)
-            return GameTheme.GameConfig.lineScore * 2
+            return AppConfiguration.GameRules.lineScore * 2
         case .normal:
-            return block.positions.count * GameTheme.GameConfig.baseBlockScore
+            return block.positions.count * AppConfiguration.GameRules.baseBlockScore
         }
     }
     
     /// Calculates score for clearing lines with combo bonus
     static func calculateLineScore(clearedRows: Int, clearedCols: Int) -> Int {
         let totalLines = clearedRows + clearedCols
-        let baseScore = totalLines * GameTheme.GameConfig.lineScore
+        let baseScore = totalLines * AppConfiguration.GameRules.lineScore
         
         // Combo bonus for multiple lines
-        let comboBonus = max(0, totalLines - 1) * GameTheme.GameConfig.comboBonus
+        let comboBonus = max(0, totalLines - 1) * AppConfiguration.GameRules.comboBonus
         
         return baseScore + comboBonus
     }
@@ -279,7 +279,7 @@ enum GameLogic {
     
     /// Creates an empty grid
     static func createEmptyGrid() -> [[GridCell]] {
-        return Array(repeating: Array(repeating: GridCell(), count: GameTheme.GameConfig.gridSize), count: GameTheme.GameConfig.gridSize)
+        return Array(repeating: Array(repeating: GridCell(), count: AppConfiguration.GameRules.gridSize), count: AppConfiguration.GameRules.gridSize)
     }
     
     /// Fills grid with geometric patterns based on difficulty mode
@@ -318,7 +318,7 @@ enum GameLogic {
         allowedPatterns: [GeometricPattern] = GeometricPattern.allCases,
         patternWeights: [GeometricPattern: Double] = [:]
     ) {
-        let totalCells = GameTheme.GameConfig.gridSize * GameTheme.GameConfig.gridSize
+        let totalCells = AppConfiguration.GameRules.gridSize * AppConfiguration.GameRules.gridSize
         let targetCells = Int(Double(totalCells) * targetPercentage)
         
         var cellsPlaced = 0
@@ -388,8 +388,8 @@ enum GameLogic {
         
         for _ in 0..<maxAttempts {
             // Generate random placement position
-            let baseRow = Int.random(in: 0..<GameTheme.GameConfig.gridSize)
-            let baseCol = Int.random(in: 0..<GameTheme.GameConfig.gridSize)
+            let baseRow = Int.random(in: 0..<AppConfiguration.GameRules.gridSize)
+            let baseCol = Int.random(in: 0..<AppConfiguration.GameRules.gridSize)
             let basePosition = GridPosition(row: baseRow, col: baseCol)
             
             // Check if pattern can be placed without going out of bounds or overlapping
@@ -401,8 +401,8 @@ enum GameLogic {
                 let finalCol = basePosition.col + patternPos.col
                 
                 // Check bounds
-                if finalRow < 0 || finalRow >= GameTheme.GameConfig.gridSize ||
-                   finalCol < 0 || finalCol >= GameTheme.GameConfig.gridSize {
+                if finalRow < 0 || finalRow >= AppConfiguration.GameRules.gridSize ||
+                   finalCol < 0 || finalCol >= AppConfiguration.GameRules.gridSize {
                     canPlace = false
                     break
                 }
@@ -447,15 +447,15 @@ enum GameLogic {
     /// Checks if placing cells would create complete lines
     private static func wouldCreateCompleteLines(in testGrid: [[GridCell]]) -> Bool {
         // Check rows
-        for row in 0..<GameTheme.GameConfig.gridSize {
+        for row in 0..<AppConfiguration.GameRules.gridSize {
             if testGrid[row].allSatisfy({ $0.isFilled }) {
                 return true
             }
         }
         
         // Check columns
-        for col in 0..<GameTheme.GameConfig.gridSize {
-            if (0..<GameTheme.GameConfig.gridSize).allSatisfy({ testGrid[$0][col].isFilled }) {
+        for col in 0..<AppConfiguration.GameRules.gridSize {
+            if (0..<AppConfiguration.GameRules.gridSize).allSatisfy({ testGrid[$0][col].isFilled }) {
                 return true
             }
         }
@@ -506,8 +506,8 @@ enum GameLogic {
         let currentBlock = blocks[index]
         
         // Try placing the current block at each valid position (inline validation)
-        for row in 0..<GameTheme.GameConfig.gridSize {
-            for col in 0..<GameTheme.GameConfig.gridSize {
+        for row in 0..<AppConfiguration.GameRules.gridSize {
+            for col in 0..<AppConfiguration.GameRules.gridSize {
                 let position = GridPosition(row: row, col: col)
                 
                 // Inline placement validation for better performance
@@ -536,8 +536,8 @@ enum GameLogic {
     static func findValidPositions(for block: BlockShape, in grid: [[GridCell]]) -> [GridPosition] {
         var validPositions: [GridPosition] = []
         
-        for row in 0..<GameTheme.GameConfig.gridSize {
-            for col in 0..<GameTheme.GameConfig.gridSize {
+        for row in 0..<AppConfiguration.GameRules.gridSize {
+            for col in 0..<AppConfiguration.GameRules.gridSize {
                 let position = GridPosition(row: row, col: col)
                 if canPlaceBlock(block, at: position, in: grid) {
                     validPositions.append(position)
@@ -575,8 +575,8 @@ enum GameLogic {
                 let finalCol = gridPosition.col + blockPos.col
                 
                 // Check bounds and occupancy in one step
-                if finalRow < 0 || finalRow >= GameTheme.GameConfig.gridSize || 
-                   finalCol < 0 || finalCol >= GameTheme.GameConfig.gridSize ||
+                if finalRow < 0 || finalRow >= AppConfiguration.GameRules.gridSize || 
+                   finalCol < 0 || finalCol >= AppConfiguration.GameRules.gridSize ||
                    grid[finalRow][finalCol].isFilled {
                     return false
                 }
@@ -592,8 +592,8 @@ enum GameLogic {
         switch block.type {
         case .horizontalClear:
             let targetRow = gridPosition.row
-            if targetRow >= 0 && targetRow < GameTheme.GameConfig.gridSize {
-                for col in 0..<GameTheme.GameConfig.gridSize {
+            if targetRow >= 0 && targetRow < AppConfiguration.GameRules.gridSize {
+                for col in 0..<AppConfiguration.GameRules.gridSize {
                     if grid[targetRow][col].isFilled {
                         placedPositions.append((targetRow, col))
                         grid[targetRow][col] = GridCell()
@@ -603,8 +603,8 @@ enum GameLogic {
             
         case .verticalClear:
             let targetCol = gridPosition.col
-            if targetCol >= 0 && targetCol < GameTheme.GameConfig.gridSize {
-                for row in 0..<GameTheme.GameConfig.gridSize {
+            if targetCol >= 0 && targetCol < AppConfiguration.GameRules.gridSize {
+                for row in 0..<AppConfiguration.GameRules.gridSize {
                     if grid[row][targetCol].isFilled {
                         placedPositions.append((row, targetCol))
                         grid[row][targetCol] = GridCell()
@@ -652,7 +652,7 @@ enum GameLogic {
     
     /// Validates if a grid position is within valid bounds
     private static func isValidGridPosition(_ position: GridPosition) -> Bool {
-        let size = GameTheme.GameConfig.gridSize
+        let size = AppConfiguration.GameRules.gridSize
         return position.row.isValidGridIndex(in: size) && position.col.isValidGridIndex(in: size)
     }
 }

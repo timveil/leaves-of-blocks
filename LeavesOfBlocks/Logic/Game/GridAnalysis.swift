@@ -92,7 +92,7 @@ struct GridAnalysis {
     
     /// Calculates how efficiently the grid space is being used
     private static func calculateEfficiency(_ grid: [[GridCell]]) -> Double {
-        let gridSize = GameTheme.GameConfig.gridSize
+        let gridSize = AppConfiguration.GameRules.gridSize
         var filledCells = 0
         var totalClusters = 0
         var largestCluster = 0
@@ -125,7 +125,7 @@ struct GridAnalysis {
     
     /// Calculates how fragmented (scattered) the filled cells are
     private static func calculateFragmentation(_ grid: [[GridCell]]) -> Double {
-        let gridSize = GameTheme.GameConfig.gridSize
+        let gridSize = AppConfiguration.GameRules.gridSize
         var fragmentationScore = 0.0
         var filledCells = 0
         
@@ -162,7 +162,7 @@ struct GridAnalysis {
     
     /// Calculates potential for strategic line clearing
     private static func calculateStrategicPotential(_ grid: [[GridCell]]) -> Double {
-        let gridSize = GameTheme.GameConfig.gridSize
+        let gridSize = AppConfiguration.GameRules.gridSize
         var potentialScore = 0.0
         
         // Analyze rows for near-completion
@@ -187,7 +187,7 @@ struct GridAnalysis {
     
     /// Calculates complexity of current grid patterns
     private static func calculateComplexity(_ grid: [[GridCell]]) -> Double {
-        let gridSize = GameTheme.GameConfig.gridSize
+        let gridSize = AppConfiguration.GameRules.gridSize
         var complexityScore = 0.0
         
         // Count different patterns and shapes
@@ -212,7 +212,7 @@ struct GridAnalysis {
     
     /// Calculates grid density (percentage filled)
     private static func calculateDensity(_ grid: [[GridCell]]) -> Double {
-        let gridSize = GameTheme.GameConfig.gridSize
+        let gridSize = AppConfiguration.GameRules.gridSize
         let filledCells = grid.flatMap { $0 }.filter { $0.isFilled }.count
         return Double(filledCells) / Double(gridSize * gridSize)
     }
@@ -221,7 +221,7 @@ struct GridAnalysis {
     
     /// Explores a cluster of connected filled cells using DFS
     private static func exploreCluster(_ grid: [[GridCell]], visited: inout [[Bool]], row: Int, col: Int) -> Int {
-        let gridSize = GameTheme.GameConfig.gridSize
+        let gridSize = AppConfiguration.GameRules.gridSize
         
         if row < 0 || row >= gridSize || col < 0 || col >= gridSize ||
            visited[row][col] || !grid[row][col].isFilled {

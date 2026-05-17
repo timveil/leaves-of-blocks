@@ -64,7 +64,7 @@ class GameScene: SKScene {
     init(gameState: GameState, size: CGSize, cellSize: CGFloat = 40) {
         self.gameState = gameState
         self.cellSize = cellSize
-        self.gridNode = GridNode(cellSize: cellSize, spacing: gridSpacing, gridSize: GameTheme.GameConfig.gridSize)
+        self.gridNode = GridNode(cellSize: cellSize, spacing: gridSpacing, gridSize: AppConfiguration.GameRules.gridSize)
         super.init(size: size)
         self.scaleMode = .resizeFill
         self.backgroundColor = SpriteKitColors.sceneBackground
@@ -279,7 +279,7 @@ class GameScene: SKScene {
             in: gridNode.contentNode,
             cellSize: cellSize,
             spacing: gridSpacing,
-            gridSize: GameTheme.GameConfig.gridSize
+            gridSize: AppConfiguration.GameRules.gridSize
         )
 
         ComboPulseEffect.play(
@@ -307,7 +307,7 @@ class GameScene: SKScene {
             in: gridNode.contentNode,
             cellSize: cellSize,
             spacing: gridSpacing,
-            gridSize: GameTheme.GameConfig.gridSize
+            gridSize: AppConfiguration.GameRules.gridSize
         )
     }
 

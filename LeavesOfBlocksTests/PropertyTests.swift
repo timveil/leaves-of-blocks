@@ -314,9 +314,9 @@ struct GridAnalysisPropertyTests {
 
 @Suite("GameLogic scoring: invariants of calculateBlockScore / calculateLineScore")
 struct ScoringPropertyTests {
-    private let baseBlockScore = GameTheme.GameConfig.baseBlockScore
-    private let lineScore = GameTheme.GameConfig.lineScore
-    private let comboBonus = GameTheme.GameConfig.comboBonus
+    private let baseBlockScore = AppConfiguration.GameRules.baseBlockScore
+    private let lineScore = AppConfiguration.GameRules.lineScore
+    private let comboBonus = AppConfiguration.GameRules.comboBonus
 
     @Test("Normal block score = positions.count × baseBlockScore for every standard shape")
     func normalBlockScoreFormula() {

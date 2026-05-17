@@ -150,13 +150,13 @@ struct SpecialBlockScoreTests {
     @Test
     func horizontalClearScoresOneLine() {
         let score = GameLogic.calculateBlockScore(block: BlockShape.horizontalClearShape)
-        #expect(score == GameTheme.GameConfig.lineScore)
+        #expect(score == AppConfiguration.GameRules.lineScore)
     }
 
     @Test
     func verticalClearScoresOneLine() {
         let score = GameLogic.calculateBlockScore(block: BlockShape.verticalClearShape)
-        #expect(score == GameTheme.GameConfig.lineScore)
+        #expect(score == AppConfiguration.GameRules.lineScore)
     }
 
     @Test

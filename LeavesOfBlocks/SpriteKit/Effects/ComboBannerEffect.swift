@@ -35,7 +35,7 @@ enum ComboBannerEffect {
     ///   - gridNode: The grid node — used as the parent so text isn't subject
     ///     to the content node's vertical flip.
     static func play(comboCount: Int, gridNode: GridNode) {
-        let bonus = max(0, comboCount - 1) * GameTheme.GameConfig.comboBonus
+        let bonus = max(0, comboCount - 1) * AppConfiguration.GameRules.comboBonus
         let title = comboTitle(for: comboCount)
 
         UIAccessibility.post(

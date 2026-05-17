@@ -56,7 +56,7 @@ struct BoardView: View {
 
     // Computed property - simple calculation, no need for lazy loading in SwiftUI
     private var gameWidth: CGFloat {
-        let gridSize = CGFloat(GameTheme.GameConfig.gridSize)
+        let gridSize = CGFloat(AppConfiguration.GameRules.gridSize)
         return (gridSize * cellSize) + ((gridSize - 1) * GridConstants.cellSpacing) + (2 * GridConstants.gridPadding)
     }
     
@@ -237,7 +237,7 @@ struct BoardView: View {
                     rowCounts[cell.row, default: 0] += 1
                     colCounts[cell.col, default: 0] += 1
                 }
-                let gridSize = GameTheme.GameConfig.gridSize
+                let gridSize = AppConfiguration.GameRules.gridSize
                 let confirmedRows = Set(rowCounts.filter { $0.value >= gridSize }.keys)
                 let confirmedCols = Set(colCounts.filter { $0.value >= gridSize }.keys)
                 sceneBridge?.triggerLineClearEffect(clearedRows: confirmedRows, clearedCols: confirmedCols)
@@ -318,9 +318,9 @@ struct BoardView: View {
         let searchRadius = max(bounds.width, bounds.height) + 2
         
         let startRow = max(0, centerRow - searchRadius)
-        let endRow = min(GameTheme.GameConfig.gridSize - 1, centerRow + searchRadius)
+        let endRow = min(AppConfiguration.GameRules.gridSize - 1, centerRow + searchRadius)
         let startCol = max(0, centerCol - searchRadius)
-        let endCol = min(GameTheme.GameConfig.gridSize - 1, centerCol + searchRadius)
+        let endCol = min(AppConfiguration.GameRules.gridSize - 1, centerCol + searchRadius)
         
         for row in startRow...endRow {
             for col in startCol...endCol {

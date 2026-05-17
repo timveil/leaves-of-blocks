@@ -2,22 +2,10 @@ import SwiftUI
 
 // MARK: - Game Theme System
 
-struct GameTheme {
-
-    // MARK: - Game Configuration
-
-    struct GameConfig {
-        static let gridSize: Int = 8
-        static let baseBlockScore: Int = 10
-        static let lineScore: Int = 100
-        static let comboBonus: Int = 50
-        static let horizontalDriftRange: ClosedRange<Double> = -30...30
-
-        // Animation timing
-        static let lineClearDelay: Double = 0.05
-        static let blockFadeOutDuration: Double = 0.2
-    }
-}
+/// Visual theming root. Pure styling — no gameplay rules live here.
+/// Rule constants (grid size, scoring) live in `AppConfiguration.GameRules`
+/// so `GameLogic` doesn't depend on the theme layer.
+struct GameTheme {}
 
 // MARK: - Gradient Extensions
 

@@ -21,6 +21,27 @@ enum AppConfiguration {
         static var dragUpdateThrottleInterval: TimeInterval { 1.0 / animationFrameRate }
     }
 
+    // MARK: - Game Rules
+
+    /// Core gameplay rule constants. Distinct from `GameTheme` (visual
+    /// tuning) because rules belong with logic, not theming — `GameLogic`
+    /// and `GridAnalysis` depend on this namespace rather than reaching
+    /// into the theme.
+    enum GameRules {
+        /// Side length of the square play grid.
+        static let gridSize: Int = 8
+
+        /// Points awarded per cell of a placed block (before line clears).
+        static let baseBlockScore: Int = 10
+
+        /// Points awarded per cleared row or column.
+        static let lineScore: Int = 100
+
+        /// Bonus added per cleared line *beyond* the first in a single
+        /// placement, on top of the per-line score.
+        static let comboBonus: Int = 50
+    }
+
     // MARK: - Gameplay Tuning
 
     /// Constants the gameplay layer used to inline. Centralizing here so the

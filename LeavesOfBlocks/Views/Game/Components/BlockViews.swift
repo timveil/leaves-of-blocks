@@ -16,7 +16,7 @@ struct CurrentBlocksView: View {
     // Fixed dimensions to prevent layout shifts
     private let containerHeight: CGFloat = 50 // Reduced height for more compact layout
     private var gridWidth: CGFloat {
-        let gridSize = CGFloat(GameTheme.GameConfig.gridSize)
+        let gridSize = CGFloat(AppConfiguration.GameRules.gridSize)
         return (gridSize * cellSize) + ((gridSize - 1) * GameTheme.Layout.gridLineWidth)
     }
     private var slotWidth: CGFloat {
