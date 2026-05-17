@@ -30,7 +30,7 @@ extension GameSession {
             averageFragmentation: record.averageFragmentation > 0 ? record.averageFragmentation : nil,
             strategicPlayRating: record.strategicPlayRating > 0 ? record.strategicPlayRating : nil,
             challengeMaintained: record.challengeMaintained > 0 ? record.challengeMaintained : nil,
-            fallbackActivations: nil,
+            fallbackActivations: record.fallbackActivations > 0 ? Int(record.fallbackActivations) : nil,
             efficiencyGrade: record.efficiencyGrade?.nilIfEmpty,
             strategicGrade: record.strategicGrade?.nilIfEmpty
         )

@@ -30,6 +30,7 @@ private func makeRecord(
     averageFragmentation: Double = 0,
     strategicPlayRating: Double = 0,
     challengeMaintained: Double = 0,
+    fallbackActivations: Int = 0,
     efficiencyGrade: String? = nil,
     strategicGrade: String? = nil
 ) -> GameRecord {
@@ -46,6 +47,7 @@ private func makeRecord(
     record.averageFragmentation = averageFragmentation
     record.strategicPlayRating = strategicPlayRating
     record.challengeMaintained = challengeMaintained
+    record.fallbackActivations = Int32(fallbackActivations)
     record.efficiencyGrade = efficiencyGrade
     record.strategicGrade = strategicGrade
     return record
@@ -132,6 +134,43 @@ struct GameSessionFromRecordOptionalCoercionTests {
 
         #expect(session?.efficiencyGrade == nil)
         #expect(session?.strategicGrade == nil)
+    }
+
+    @Test @MainActor
+    func zeroFallbackActivationsBecomesNil() {
+        // Mirror the convention used for the Double metrics: a stored 0
+        // means "no fallbacks triggered" or "field absent on this record"
+        // — either way, surface as nil so the UI hides the field rather
+        // than rendering "0 fallbacks" with no in-band signal that the
+        // datum is meaningless.
+        let manager = CoreDataManager.makeInMemoryForTests()
+        let record = makeRecord(in: manager, fallbackActivations: 0)
+
+        let session = GameSession(record: record)
+
+        #expect(session?.fallbackActivations == nil)
+    }
+}
+
+// MARK: - Fallback Activations (R1)
+
+@Suite("GameSession(record:): fallbackActivations projection")
+struct GameSessionFromRecordFallbackActivationsTests {
+    @Test @MainActor
+    func fallbackActivationsCarryThroughTheProjection() {
+        // R1 regression: the projection used to hardcode `nil` here, so
+        // every persisted run reported `fallbackActivations == nil`
+        // regardless of what CoreDataManager.saveGameRecord wrote.
+        // History / Summary screens that show fallback counts therefore
+        // silently displayed nothing. Round 3 fix: thread the column
+        // through with the same "zero means absent" convention as the
+        // neighboring Double metrics.
+        let manager = CoreDataManager.makeInMemoryForTests()
+        let record = makeRecord(in: manager, fallbackActivations: 3)
+
+        let session = GameSession(record: record)
+
+        #expect(session?.fallbackActivations == 3)
     }
 }
 
