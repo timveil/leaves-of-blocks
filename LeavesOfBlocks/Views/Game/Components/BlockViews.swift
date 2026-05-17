@@ -26,7 +26,7 @@ struct CurrentBlocksView: View {
     
     var body: some View {
         HStack(spacing: GameTheme.Layout.mediumSpacing) {
-            ForEach(Array(gameState.currentBlocks.enumerated()), id: \.offset) { index, block in
+            ForEach(Array(gameState.currentBlocks.enumerated()), id: \.element.id) { index, block in
                 DraggableBlockView(
                     block: block,
                     cellSize: scaledCellSize(for: block),

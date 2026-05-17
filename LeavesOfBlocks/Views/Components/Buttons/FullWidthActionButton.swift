@@ -7,6 +7,8 @@
 
 import SwiftUI
 
+// MARK: - Full-Width Action Button
+
 /// A full-width action button component that expands to fill available width
 struct FullWidthActionButton: View {
     let title: String
@@ -22,7 +24,9 @@ struct FullWidthActionButton: View {
         self.accessibilityId = accessibilityId
         self.onTap = onTap
     }
-    
+
+    // MARK: - Style
+
     enum ActionButtonStyle {
         case primary
         case secondary
@@ -57,7 +61,9 @@ struct FullWidthActionButton: View {
             }
         }
     }
-    
+
+    // MARK: - View Body
+
     var body: some View {
         Button(action: {
             HapticFeedback.tap()
@@ -89,6 +95,8 @@ struct FullWidthActionButton: View {
         .accessibilityIdentifier(accessibilityId ?? "")
     }
 }
+
+// MARK: - Preview
 
 #Preview {
     VStack(spacing: 16) {

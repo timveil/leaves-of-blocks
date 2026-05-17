@@ -54,7 +54,10 @@ struct WhitmanQuoteCard: View {
                             Spacer()
                             HStack(spacing: 4) {
                                 if let title = title {
-                                    Text("\"\(title)\"")
+                                    // Typographic quotes are baked in — fine for English (the
+                                    // only shipping locale). Locales that use guillemets («»)
+                                    // would need a Localizable.xcstrings format key here.
+                                    Text("\u{201C}\(title)\u{201D}")
                                         .font(GameTheme.Typography.caption)
                                         .foregroundColor(GameTheme.Colors.secondaryText)
                                 }

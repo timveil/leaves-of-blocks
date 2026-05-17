@@ -127,56 +127,65 @@ struct BoardView: View {
                     }
                 }
             
-            // Game Over Overlay - highest priority, appears above everything
-            if gameState.isGameOver {
-                ZStack {
-                    Color.black
-                        .ignoresSafeArea()
-                    
-                    VStack {
-                        GameOverOverlayView(
-                            gameState: gameState,
-                            onViewSummary: onViewSummary,
-                            onNewGame: onNewGame
-                        )
-                        .padding(.top, 100) // Position closer to top
-                        
-                        Spacer()
-                    }
-                }
-                .zIndex(2000) // Higher than dragged blocks
+                gameOverOverlay
+                draggedBlockOverlay
             }
-            
-        // Dragged block following finger - positioned with flexible offset for better visibility
+        }
+        .onGeometryChange(for: CGRect.self) { proxy in
+            proxy.frame(in: .global)
+        } action: { newValue in
+            viewBounds = newValue
+        }
+        .onChange(of: scenePhase) { _, newPhase in
+            // SwiftUI doesn't reliably deliver DragGesture.onEnded when the app
+            // is backgrounded mid-drag. Without this reset, the dragged-block
+            // overlay can stay rendered at zIndex 1000 on return, masking taps.
+            if newPhase != .active {
+                dragState.reset()
+                sceneBridge?.clearPreview()
+                // Pause SpriteKit so the suspended app drops GPU/CPU state and
+                // is a less attractive jetsam target. Both reports we have were
+                // jetsam kills while suspended at ~70-90 MB resident.
+                sceneBridge?.suspendForBackground()
+            } else {
+                sceneBridge?.resumeFromBackground()
+            }
+        }
+    }
+
+    // MARK: - Overlays
+
+    @ViewBuilder
+    private var gameOverOverlay: some View {
+        if gameState.isGameOver {
+            ZStack {
+                Color.black
+                    .ignoresSafeArea()
+
+                VStack {
+                    GameOverOverlayView(
+                        gameState: gameState,
+                        onViewSummary: onViewSummary,
+                        onNewGame: onNewGame
+                    )
+                    .padding(.top, 100) // Position closer to top
+
+                    Spacer()
+                }
+            }
+            .zIndex(2000) // Higher than dragged blocks
+        }
+    }
+
+    @ViewBuilder
+    private var draggedBlockOverlay: some View {
         if let draggedBlock = dragState.draggedBlock, dragState.isDragging {
             BlockView(block: draggedBlock, cellSize: cellSize)
                 .position(getDraggedBlockVisualCenter())
                 .allowsHitTesting(false)
                 .zIndex(1000)
                 .scaleEffect(1.1)
-            }
         }
-    }
-    .onGeometryChange(for: CGRect.self) { proxy in
-        proxy.frame(in: .global)
-    } action: { newValue in
-        viewBounds = newValue
-    }
-    .onChange(of: scenePhase) { _, newPhase in
-        // SwiftUI doesn't reliably deliver DragGesture.onEnded when the app
-        // is backgrounded mid-drag. Without this reset, the dragged-block
-        // overlay can stay rendered at zIndex 1000 on return, masking taps.
-        if newPhase != .active {
-            dragState.reset()
-            sceneBridge?.clearPreview()
-            // Pause SpriteKit so the suspended app drops GPU/CPU state and
-            // is a less attractive jetsam target. Both reports we have were
-            // jetsam kills while suspended at ~70-90 MB resident.
-            sceneBridge?.suspendForBackground()
-        } else {
-            sceneBridge?.resumeFromBackground()
-        }
-    }
     }
 
     // MARK: - Drag Lifecycle Methods
