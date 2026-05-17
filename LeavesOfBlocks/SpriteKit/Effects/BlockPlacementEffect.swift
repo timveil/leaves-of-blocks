@@ -70,6 +70,10 @@ enum BlockPlacementEffect {
             let cellName = GridNode.cellName(row: row, col: col)
             if let cellNode = parent.childNode(withName: cellName) as? SKShapeNode {
                 animateCellPop(cellNode, delay: delay)
+            } else {
+                // Surface unexpected misses so a regression in cell naming
+                // doesn't silently skip the pop animation.
+                BuildConfiguration.log("Block-placement: no SKShapeNode at \(cellName)", level: .warning)
             }
 
             // Add a glow overlay at the cell position

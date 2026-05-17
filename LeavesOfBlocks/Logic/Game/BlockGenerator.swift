@@ -18,7 +18,7 @@ extension BuildConfiguration {
 extension BlockGenerator {
     /// Creates a single block with random color - reduces code duplication
     private static func createSingleBlock() -> BlockShape {
-        let randomColor = BlockColor.allCases.randomElement()!
+        let randomColor = BlockColor.allCases.randomElement() ?? .blue
         return BlockShape(positions: [GridPosition(row: 0, col: 0)], color: randomColor)
     }
     
@@ -134,7 +134,7 @@ extension BlockGenerator {
             let shouldGenerateSpecial = Double.random(in: 0...1) < config.specialShapeChance && !hasSpecialShape
             
             if shouldGenerateSpecial {
-                let specialBlock = SpecialBlockType.allCases.randomElement()!.blockShape
+                let specialBlock = (SpecialBlockType.allCases.randomElement() ?? .horizontal).blockShape
                 blocks.append(specialBlock)
                 hasSpecialShape = true
                 
@@ -272,7 +272,7 @@ extension BlockGenerator {
         for (block, weight) in weights {
             currentWeight += weight
             if randomValue <= currentWeight {
-                let randomColor = BlockColor.allCases.randomElement()!
+                let randomColor = BlockColor.allCases.randomElement() ?? .blue
                 return BlockShape(positions: block.positions, color: randomColor)
             }
         }
@@ -409,7 +409,7 @@ extension BlockGenerator {
             }
             
             if let selectedBlock = candidates.randomElement() {
-                let randomColor = BlockColor.allCases.randomElement()!
+                let randomColor = BlockColor.allCases.randomElement() ?? .blue
                 return BlockShape(positions: selectedBlock.positions, color: randomColor)
             }
         }
@@ -470,7 +470,7 @@ extension BlockGenerator {
 
         for _ in 0..<count {
             if let selectedBlock = smallBlocks.randomElement(), !smallBlocks.isEmpty {
-                let randomColor = BlockColor.allCases.randomElement()!
+                let randomColor = BlockColor.allCases.randomElement() ?? .blue
                 challengeBlocks.append(BlockShape(positions: selectedBlock.positions, color: randomColor))
             } else {
                 // Only use single blocks as last resort
@@ -739,7 +739,7 @@ struct BlockGenerator {
         }
         
         if let selectedBlock = availableBlocks.randomElement() {
-            let randomColor = BlockColor.allCases.randomElement()!
+            let randomColor = BlockColor.allCases.randomElement() ?? .blue
             return BlockShape(positions: selectedBlock.positions, color: randomColor)
         }
         
