@@ -17,12 +17,20 @@ struct GridAnalysis {
         let density: Double             // 0.0 to 1.0, percentage of grid filled
         
         /// Overall grid quality score (0.0 to 1.0)
+        ///
+        /// Positive weights sum to 1.0, so an ideal grid (max efficiency,
+        /// strategic potential, complexity; zero fragmentation) lands at
+        /// the top of the documented range. Pre-normalization the weights
+        /// summed to 0.8 and the `min(1.0, …)` clamp was dead; the tier
+        /// thresholds in `AppConfiguration.Gameplay` were rebalanced
+        /// alongside this change to keep each tier covering the same
+        /// fraction of the achievable range.
         var qualityScore: Double {
-            let weights: (efficiency: Double, fragmentation: Double, strategicPotential: Double, complexity: Double) = (0.3, -0.2, 0.3, 0.2)
-            return max(0.0, min(1.0, 
-                efficiency * weights.efficiency + 
-                fragmentation * weights.fragmentation + 
-                strategicPotential * weights.strategicPotential + 
+            let weights: (efficiency: Double, fragmentation: Double, strategicPotential: Double, complexity: Double) = (0.375, -0.25, 0.375, 0.25)
+            return max(0.0, min(1.0,
+                efficiency * weights.efficiency +
+                fragmentation * weights.fragmentation +
+                strategicPotential * weights.strategicPotential +
                 complexity * weights.complexity
             ))
         }

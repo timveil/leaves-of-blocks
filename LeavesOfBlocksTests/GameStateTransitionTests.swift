@@ -118,9 +118,14 @@ struct SuccessfulPlacementInvariantsTests {
 
     @Test @MainActor
     func normalBlockScoreMatchesGameLogicFormula() {
-        // A placement on an empty grid (no line clear possible from a single
+        // A placement on an EMPTY grid (no line clear possible from a single
         // small block) should bump score by exactly the block-score formula.
+        // makeFreshState's grid is pre-filled by randomlyFillGrid, so we
+        // explicitly clear it to make this test deterministic — without the
+        // clear, the random pre-fill could combine with the chosen placement
+        // to complete a row/column and inflate the delta past the formula.
         let (state, _) = makeFreshState()
+        state._setTestState(grid: GameLogic.createEmptyGrid())
         guard let block = state.currentBlocks.first(where: {
                 $0.type == .normal && $0.positions.count <= 4
             }),

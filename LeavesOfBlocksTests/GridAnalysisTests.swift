@@ -150,8 +150,8 @@ struct QualityScoreTests {
     func empty() {
         let metrics = GridAnalysis.analyzeGrid(makeGrid())
         // Empty grid: efficiency = 1.0, fragmentation = 0, strategicPotential = 0,
-        // complexity = 0. qualityScore = 1.0 * 0.3 = 0.3, clamped to [0, 1].
-        #expect(metrics.qualityScore == 0.3)
+        // complexity = 0. qualityScore = 1.0 * 0.375 = 0.375, clamped to [0, 1].
+        #expect(metrics.qualityScore == 0.375)
     }
 
     @Test("Quality score is always in [0, 1]")
@@ -167,6 +167,23 @@ struct QualityScoreTests {
             #expect(score >= 0.0 && score <= 1.0)
         }
     }
+
+    @Test("Ideal metrics yield a perfect quality score of 1.0")
+    func idealScore() {
+        // R2: the weights tuple is normalized so the theoretical "best
+        // grid" (max efficiency / strategic / complexity, zero
+        // fragmentation) maps to the top of the documented [0, 1] range.
+        // Pre-fix this returned 0.8 because the positive weights summed
+        // to 0.8, capping the achievable range below the docstring.
+        let metrics = GridAnalysis.GridStateMetrics(
+            efficiency: 1.0,
+            fragmentation: 0.0,
+            strategicPotential: 1.0,
+            complexity: 1.0,
+            density: 0.5
+        )
+        #expect(metrics.qualityScore == 1.0)
+    }
 }
 
 // MARK: - DifficultyTier
@@ -178,9 +195,9 @@ struct DifficultyTierTests {
         #expect(GridAnalysis.DifficultyTier.fromQualityScore(1.0) == .diverse)
     }
 
-    @Test("0.7 lands in .diverse (inclusive lower bound)")
+    @Test("0.875 lands in .diverse (inclusive lower bound)")
     func diverseLowerBound() {
-        #expect(GridAnalysis.DifficultyTier.fromQualityScore(0.7) == .diverse)
+        #expect(GridAnalysis.DifficultyTier.fromQualityScore(0.875) == .diverse)
     }
 
     @Test("0.5 lands in .constrained")

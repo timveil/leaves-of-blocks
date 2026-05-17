@@ -52,9 +52,15 @@ enum AppConfiguration {
         /// `constrainedThreshold..<diverseThreshold` map to `.constrained`,
         /// `minimalThreshold..<constrainedThreshold` map to `.minimal`, and
         /// anything below maps to `.emergency`.
-        static let difficultyTierDiverseThreshold: Double = 0.7
-        static let difficultyTierConstrainedThreshold: Double = 0.4
-        static let difficultyTierMinimalThreshold: Double = 0.15
+        ///
+        /// Rebalanced alongside the qualityScore weight normalization (R2):
+        /// the original boundaries (0.7 / 0.4 / 0.15) were calibrated for
+        /// an effective range capped at 0.8. After normalizing the weights
+        /// to sum to 1.0 the boundaries are scaled by 1.25 so each tier
+        /// covers the same fraction of the achievable range as before.
+        static let difficultyTierDiverseThreshold: Double = 0.875
+        static let difficultyTierConstrainedThreshold: Double = 0.5
+        static let difficultyTierMinimalThreshold: Double = 0.1875
 
         /// Backtracking call budget used by `GameLogic.canAllBlocksBePlaced`.
         /// At 1000 calls, an 8x8 grid with three reasonably-sized blocks
