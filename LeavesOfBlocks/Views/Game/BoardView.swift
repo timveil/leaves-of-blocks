@@ -317,36 +317,43 @@ struct BoardView: View {
         let maxDistance = DragConfiguration.maxSnapDistance
         var bestPosition: GridPosition?
         var bestDistance = CGFloat.greatestFiniteMagnitude
-        
+
         let bounds = block.getBounds()
         let cellWithSpacing = GridConstants.cellWithSpacing(cellSize: cellSize)
-        
-        // Optimize search area - only check positions near the drag location
+
+        // Optimize search area - only check positions near the drag location.
+        // The drag can produce a grid-local `nearPoint` deep outside the grid
+        // (see BoardLayout.placementSearchRanges doc + the production crash
+        // it traces back to); the helper returns nil in that case.
         let centerRow = Int(nearPoint.y / cellWithSpacing)
         let centerCol = Int(nearPoint.x / cellWithSpacing)
         let searchRadius = max(bounds.width, bounds.height) + 2
-        
-        let startRow = max(0, centerRow - searchRadius)
-        let endRow = min(AppConfiguration.GameRules.gridSize - 1, centerRow + searchRadius)
-        let startCol = max(0, centerCol - searchRadius)
-        let endCol = min(AppConfiguration.GameRules.gridSize - 1, centerCol + searchRadius)
-        
-        for row in startRow...endRow {
-            for col in startCol...endCol {
+
+        guard let ranges = BoardLayout.placementSearchRanges(
+            centerRow: centerRow,
+            centerCol: centerCol,
+            searchRadius: searchRadius,
+            gridSize: AppConfiguration.GameRules.gridSize
+        ) else {
+            return nil
+        }
+
+        for row in ranges.rows {
+            for col in ranges.cols {
                 let position = GridPosition(row: row, col: col)
-                
+
                 guard gameState.canPlaceBlock(block, at: position) else { continue }
-                
+
                 let blockCenter = calculateBlockCenter(block: block, at: position)
                 let distance = hypot(blockCenter.x - nearPoint.x, blockCenter.y - nearPoint.y)
-                
+
                 if distance < bestDistance && distance <= maxDistance {
                     bestDistance = distance
                     bestPosition = position
                 }
             }
         }
-        
+
         return bestPosition
     }
     
