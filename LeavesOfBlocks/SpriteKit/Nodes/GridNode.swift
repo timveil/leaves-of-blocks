@@ -8,12 +8,28 @@ import SpriteKit
 /// in the gaps between lines. Empty cells use a solid white fill.
 ///
 /// ## Coordinate System
-/// Effects and cells share a content-local coordinate system where (0,0) is the
-/// top-left of the first cell. The border is handled externally by the crop node.
+///
+/// SpriteKit natively uses a bottom-left origin with Y increasing upward.
+/// `contentNode` is flipped (`yScale = -1`) and translated so the public
+/// surface behaves like top-down: row 0 is at the top, row index grows
+/// downward, matching the SwiftUI grid model that drives this layer.
+///
+/// Effects and cells share this **content-local** coordinate system,
+/// rooted at `contentNode`, where (0, 0) is the top-left of the first cell
+/// (the outer border is handled separately by `contentNode.position`):
+///
 /// ```
 /// x = col * (cellSize + spacing)
 /// y = row * (cellSize + spacing)
 /// ```
+///
+/// **Always parent effect nodes to `contentNode`** (not to `GridNode`
+/// itself) so they inherit the flip. Effects that compute their own
+/// positions must use `cellPosition(row:col:)` or
+/// `SpriteKitEffects.cellPoint(row:col:cellSize:spacing:)` — both return
+/// content-local coordinates that respect the flip. The one deliberate
+/// exception is `ComboBannerEffect`, which attaches text to `GridNode`
+/// directly so the label isn't rendered upside-down by the flip.
 class GridNode: SKNode {
 
     // MARK: - Node Name Constants
@@ -120,7 +136,16 @@ class GridNode: SKNode {
     }
 
     /// Returns the cell position in content-local coordinates (no border offset).
+    ///
+    /// Callers are expected to pass row/col within `0..<gridSize` — out-of-bounds
+    /// indices yield a CGPoint that's silently off-screen, which is almost
+    /// always a bug. A DEBUG precondition fails fast; release builds keep the
+    /// permissive arithmetic so a regression doesn't crash the app.
     func cellPosition(row: Int, col: Int) -> CGPoint {
+        assert(
+            (0..<gridSize).contains(row) && (0..<gridSize).contains(col),
+            "cellPosition out of bounds: row=\(row), col=\(col), gridSize=\(gridSize)"
+        )
         let x = CGFloat(col) * (cellSize + spacing)
         let y = CGFloat(row) * (cellSize + spacing)
         return CGPoint(x: x, y: y)
