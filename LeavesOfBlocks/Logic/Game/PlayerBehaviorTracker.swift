@@ -97,11 +97,8 @@ final class PlayerBehaviorTracker {
         gameTime: TimeInterval,
         difficulty: DifficultyMode
     ) -> SessionMetrics {
-        let averageEfficiency = gridEfficiencyHistory.isEmpty ? 0.0 : gridEfficiencyHistory.reduce(0, +) / Double(gridEfficiencyHistory.count)
-        let averageFragmentation = fragmentationHistory.isEmpty ? 0.0 : fragmentationHistory.reduce(0, +) / Double(fragmentationHistory.count)
-        let averageStrategic = strategicOpportunities.isEmpty ? 0.0 : strategicOpportunities.reduce(0, +) / Double(strategicOpportunities.count)
-        let challengeMaintained = totalMeasurements > 0 ? Double(highTierMeasurements) / Double(totalMeasurements) : 0.0
-        
+        let averages = currentAverages()
+
         return SessionMetrics(
             score: score,
             blocksPlaced: blocksPlaced,
@@ -109,13 +106,38 @@ final class PlayerBehaviorTracker {
             longestCombo: longestCombo,
             gameTime: gameTime,
             difficulty: difficulty,
-            averageGridEfficiency: averageEfficiency,
-            averageFragmentation: averageFragmentation,
-            strategicPlayRating: averageStrategic,
+            averageGridEfficiency: averages.efficiency,
+            averageFragmentation: averages.fragmentation,
+            strategicPlayRating: averages.strategic,
             tierUsageDistribution: tierUsageCount,
             fallbackActivations: fallbackCount,
-            challengeMaintained: challengeMaintained
+            challengeMaintained: averages.challengeMaintained
         )
+    }
+
+    /// Snapshot of the four session aggregates, computed identically from
+    /// `getCurrentMetrics` (in-flight read) and `finalizeSession` (terminal
+    /// read). Kept private so both paths can't drift.
+    private struct SessionAverages {
+        let efficiency: Double
+        let fragmentation: Double
+        let strategic: Double
+        let challengeMaintained: Double
+    }
+
+    private func currentAverages() -> SessionAverages {
+        SessionAverages(
+            efficiency: mean(gridEfficiencyHistory),
+            fragmentation: mean(fragmentationHistory),
+            strategic: mean(strategicOpportunities),
+            challengeMaintained: totalMeasurements > 0
+                ? Double(highTierMeasurements) / Double(totalMeasurements)
+                : 0
+        )
+    }
+
+    private func mean(_ values: [Double]) -> Double {
+        values.isEmpty ? 0 : values.reduce(0, +) / Double(values.count)
     }
     
     // MARK: - Session Management
@@ -180,11 +202,8 @@ final class PlayerBehaviorTracker {
         gameTime: TimeInterval,
         difficulty: DifficultyMode
     ) -> SessionMetrics {
-        let averageEfficiency = gridEfficiencyHistory.isEmpty ? 0.0 : gridEfficiencyHistory.reduce(0, +) / Double(gridEfficiencyHistory.count)
-        let averageFragmentation = fragmentationHistory.isEmpty ? 0.0 : fragmentationHistory.reduce(0, +) / Double(fragmentationHistory.count)
-        let averageStrategic = strategicOpportunities.isEmpty ? 0.0 : strategicOpportunities.reduce(0, +) / Double(strategicOpportunities.count)
-        let challengeMaintained = totalMeasurements > 0 ? Double(highTierMeasurements) / Double(totalMeasurements) : 0.0
-        
+        let averages = currentAverages()
+
         let sessionMetrics = SessionMetrics(
             score: score,
             blocksPlaced: blocksPlaced,
@@ -192,18 +211,18 @@ final class PlayerBehaviorTracker {
             longestCombo: longestCombo,
             gameTime: gameTime,
             difficulty: difficulty,
-            averageGridEfficiency: averageEfficiency,
-            averageFragmentation: averageFragmentation,
-            strategicPlayRating: averageStrategic,
+            averageGridEfficiency: averages.efficiency,
+            averageFragmentation: averages.fragmentation,
+            strategicPlayRating: averages.strategic,
             tierUsageDistribution: tierUsageCount,
             fallbackActivations: fallbackCount,
-            challengeMaintained: challengeMaintained
+            challengeMaintained: averages.challengeMaintained
         )
-        
+
         currentSessionMetrics = sessionMetrics
-        
-        BuildConfiguration.log("Session finalized - Efficiency: \(String(format: "%.3f", averageEfficiency)), Strategic: \(String(format: "%.3f", averageStrategic)), Grade: \(sessionMetrics.efficiencyGrade)", level: .info)
-        
+
+        BuildConfiguration.log("Session finalized - Efficiency: \(String(format: "%.3f", averages.efficiency)), Strategic: \(String(format: "%.3f", averages.strategic)), Grade: \(sessionMetrics.efficiencyGrade)", level: .info)
+
         return sessionMetrics
     }
     
