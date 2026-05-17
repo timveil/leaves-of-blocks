@@ -68,8 +68,7 @@ struct SimpleScoreView: View {
 #Preview("Score View") {
     let state: GameState = {
         let s = GameState()
-        s.score = 1250
-        s.linesCleared = 7
+        s._setTestState(score: 1250, linesCleared: 7)
         return s
     }()
     SimpleScoreView(gameState: state)

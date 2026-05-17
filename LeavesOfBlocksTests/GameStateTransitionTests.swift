@@ -24,7 +24,7 @@ private func makeFreshState(difficulty: DifficultyMode = .easy) -> (GameState, U
         .appendingPathComponent("GameStateTransitionTests-\(UUID().uuidString).json")
     let store = InProgressGameStore(fileURL: url)
     let state = GameState(inProgressStore: store)
-    state.currentDifficulty = difficulty
+    state._setTestState(currentDifficulty: difficulty)
     return (state, url)
 }
 
@@ -64,7 +64,9 @@ struct InvalidPlacementIsNoOpTests {
     func placingOntoOccupiedCellsDoesNothing() {
         let (state, _) = makeFreshState()
         // Fill the entire grid so no normal block can be placed.
-        for r in 0..<8 { for c in 0..<8 { state.grid[r][c].isFilled = true } }
+        var fullGrid = GameLogic.createEmptyGrid()
+        for r in 0..<8 { for c in 0..<8 { fullGrid[r][c].isFilled = true } }
+        state._setTestState(grid: fullGrid)
         guard let normalBlock = state.currentBlocks.first(where: { $0.type == .normal }) else {
             Issue.record("expected at least one normal block in currentBlocks")
             return
@@ -204,7 +206,7 @@ struct ComboAndSpecialsTrackingTests {
         let (state, _) = makeFreshState()
         // Inject a special block manually.
         let special = BlockShape.horizontalClearShape
-        state.currentBlocks = [special]
+        state._setTestState(currentBlocks: [special])
         let before = state.specialShapesUsed
         state.placeBlock(special, at: GridPosition(row: 0, col: 0))
         #expect(state.specialShapesUsed == before + 1)

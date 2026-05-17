@@ -177,9 +177,7 @@ struct GameStateRestoreTests {
         defer { try? FileManager.default.removeItem(at: url) }
 
         let state = GameState(inProgressStore: store)
-        state.score = 500
-        state.blocksPlaced = 3
-        state.linesCleared = 1
+        state._setTestState(score: 500, blocksPlaced: 3, linesCleared: 1)
 
         let snap = state.snapshot()
 
@@ -197,10 +195,10 @@ struct GameStateRestoreTests {
         let state = GameState(inProgressStore: store)
         #expect(state.hasActiveRun == false)
 
-        state.score = 100
+        state._setTestState(score: 100)
         #expect(state.hasActiveRun == true)
 
-        state.isGameOver = true
+        state._setTestState(isGameOver: true)
         #expect(state.hasActiveRun == false)
     }
 
@@ -221,7 +219,7 @@ struct GameStateRestoreTests {
         defer { try? FileManager.default.removeItem(at: url) }
 
         let state = GameState(inProgressStore: store)
-        state.score = 250
+        state._setTestState(score: 250)
         state.persistInProgressGame()
 
         #expect(store.hasSavedGame == true)

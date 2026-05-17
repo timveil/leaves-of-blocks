@@ -53,8 +53,7 @@ struct GameOverOverlayView: View {
         GameOverOverlayView(
             gameState: {
                 let state = GameState()
-                state.score = 100250
-                state.isNewHighScore = true
+                state._setTestState(score: 100250, isNewHighScore: true)
                 return state
             }(),
             onViewSummary: {},

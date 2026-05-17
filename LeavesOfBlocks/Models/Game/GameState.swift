@@ -17,40 +17,43 @@ final class GameState {
 
     // MARK: - Observable Properties
 
-    var grid: [[GridCell]]
-    var currentBlocks: [BlockShape]
-    var score: Int = 0
-    var isGameOver: Bool = false
-    var linesCleared: Int = 0
-    var lastClearedCells: [ClearedCell] = []
+    /// State writes go through the methods on this type (placeBlock, resetGame,
+    /// etc.) so callers can't accidentally bypass `GameLogic` and corrupt
+    /// invariants like score monotonicity or grid validity. Tests and
+    /// previews that need to inject arbitrary state use the DEBUG-only
+    /// `_setTestState(...)` seam.
+    private(set) var grid: [[GridCell]]
+    private(set) var currentBlocks: [BlockShape]
+    private(set) var score: Int = 0
+    private(set) var isGameOver: Bool = false
+    private(set) var linesCleared: Int = 0
+    private(set) var lastClearedCells: [ClearedCell] = []
 
     // Game Statistics
-    var blocksPlaced: Int = 0
-    var gameStartTime: Date = Date()
-    var longestCombo: Int = 0
-    var currentCombo: Int = 0
-    var isNewHighScore: Bool = false
-    var specialShapesUsed: Int = 0  // Track special shape usage
+    private(set) var blocksPlaced: Int = 0
+    private(set) var gameStartTime: Date = Date()
+    private(set) var longestCombo: Int = 0
+    private(set) var currentCombo: Int = 0
+    private(set) var isNewHighScore: Bool = false
+    private(set) var specialShapesUsed: Int = 0  // Track special shape usage
 
     // Difficulty mode
-    var currentDifficulty: DifficultyMode = .easy
-    
+    private(set) var currentDifficulty: DifficultyMode = .easy
+
     // MARK: - Services
 
     private let gameService: GameService
     private let behaviorTracker: PlayerBehaviorTracker
     private let inProgressStore: InProgressGameStore
-    
+
     // MARK: - Computed Properties
-    
+
     var currentGameTime: TimeInterval {
         return gameService.currentGameTime
     }
-    
-    var previewHighScore: Int?
 
     var highScore: Int {
-        return previewHighScore ?? gameService.getHighScore()
+        return gameService.getHighScore()
     }
     
     var statistics: GameSessionStatistics {
@@ -448,4 +451,43 @@ final class GameState {
         defer { resetGame() }
         try gameService.resetAllData()
     }
+
+#if DEBUG
+    // MARK: - Test / Preview Seam
+
+    /// Injects state directly for tests and previews. Compiled out of release
+    /// builds so production code can't accidentally use it to bypass the
+    /// `GameLogic`-mediated transitions. Each parameter is optional — passing
+    /// `nil` leaves the corresponding field untouched.
+    ///
+    /// For production state setup, prefer `startGame(difficulty:)` or
+    /// rehydrating from an `InProgressGameSnapshot` via the init.
+    func _setTestState(
+        score: Int? = nil,
+        blocksPlaced: Int? = nil,
+        linesCleared: Int? = nil,
+        longestCombo: Int? = nil,
+        currentCombo: Int? = nil,
+        specialShapesUsed: Int? = nil,
+        isGameOver: Bool? = nil,
+        isNewHighScore: Bool? = nil,
+        currentDifficulty: DifficultyMode? = nil,
+        currentBlocks: [BlockShape]? = nil,
+        grid: [[GridCell]]? = nil,
+        lastClearedCells: [ClearedCell]? = nil
+    ) {
+        if let score { self.score = score }
+        if let blocksPlaced { self.blocksPlaced = blocksPlaced }
+        if let linesCleared { self.linesCleared = linesCleared }
+        if let longestCombo { self.longestCombo = longestCombo }
+        if let currentCombo { self.currentCombo = currentCombo }
+        if let specialShapesUsed { self.specialShapesUsed = specialShapesUsed }
+        if let isGameOver { self.isGameOver = isGameOver }
+        if let isNewHighScore { self.isNewHighScore = isNewHighScore }
+        if let currentDifficulty { self.currentDifficulty = currentDifficulty }
+        if let currentBlocks { self.currentBlocks = currentBlocks }
+        if let grid { self.grid = grid }
+        if let lastClearedCells { self.lastClearedCells = lastClearedCells }
+    }
+#endif
 }

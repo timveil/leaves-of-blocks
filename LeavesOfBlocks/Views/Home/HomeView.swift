@@ -96,7 +96,7 @@ private struct ContinueGameCard: View {
     HomeView(
         gameState: {
             let state = GameState()
-            state.score = 4_280
+            state._setTestState(score: 4_280)
             return state
         }(),
         hasInProgressGame: true,
