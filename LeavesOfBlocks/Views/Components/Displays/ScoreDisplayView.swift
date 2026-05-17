@@ -74,6 +74,10 @@ struct ScoreDisplayView: View {
                         .font(GameTheme.Typography.body)
                         .foregroundColor(GameTheme.Colors.accent)
                         .padding(.top, GameTheme.Layout.mediumPadding)
+                        // Decorative — the high-score achievement is already
+                        // conveyed by the surrounding score text and haptic.
+                        // VoiceOver would otherwise announce a bare "crown".
+                        .accessibilityHidden(true)
                 }
                 
                 Text(score.abbreviatedScore)
