@@ -69,6 +69,42 @@ struct SessionLifecycleTests {
     }
 
     @Test @MainActor
+    func initialSeedRecordDoesNotAdvanceChallengeCounters() {
+        // N3: GameState.apply(snapshot:) and GameState.resetGame() both
+        // seed the tracker with `recordGridState(grid)` immediately after
+        // `startSession()` so the rolling averages aren't empty. That seed
+        // also bumps `totalMeasurements` and possibly `highTierMeasurements`,
+        // which biases `challengeMaintained` — "challenge maintained over
+        // GAMEPLAY" shouldn't include the initial-state sample. The fix is
+        // an `isInitialSeed: Bool = false` flag that updates the efficiency
+        // histories (so they aren't empty) but skips the challenge counters.
+        //
+        // This test asserts the contract via the now-internal totalMeasurements
+        // accessor; the seed must populate efficiency averages while leaving
+        // totalMeasurements at zero.
+        let tracker = makeTracker()
+        tracker.recordGridState(emptyGrid(), isInitialSeed: true)
+
+        #expect(tracker.totalMeasurements == 0, "initial seed should not count as a challenge measurement")
+        let metrics = tracker.getCurrentMetrics(
+            score: 0, blocksPlaced: 0, linesCleared: 0,
+            longestCombo: 0, gameTime: 0, difficulty: .easy
+        )
+        #expect(metrics.averageGridEfficiency > 0, "initial seed should populate efficiency averages")
+    }
+
+    @Test @MainActor
+    func inGameRecordStillAdvancesChallengeCounters() {
+        // Companion to initialSeedRecordDoesNotAdvanceChallengeCounters:
+        // verify the default-path (no `isInitialSeed` flag) preserves the
+        // existing recordGridState behavior.
+        let tracker = makeTracker()
+        tracker.recordGridState(emptyGrid())
+
+        #expect(tracker.totalMeasurements == 1)
+    }
+
+    @Test @MainActor
     func recordingFallbackIncrementsCount() {
         let tracker = makeTracker()
         tracker.recordFallbackActivation(from: .diverse, to: .constrained)

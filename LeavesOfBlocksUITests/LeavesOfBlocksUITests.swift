@@ -11,6 +11,14 @@ final class LeavesOfBlocksUITests: XCTestCase {
 
     var app: XCUIApplication!
 
+    /// Default timeout for `waitForExistence` / `waitForNonExistence`. The
+    /// suite previously sprinkled 2 / 3 / 5-second values across methods
+    /// with no documented rationale; using a single value reduces flake risk
+    /// on slower CI runners and makes intent uniform. The history-data wait
+    /// keeps its own longer timeout because Core Data load latency is
+    /// genuinely the long pole there.
+    private let defaultTimeout: TimeInterval = 5
+
     /// Check if running in CI environment
     private var isCI: Bool {
         ProcessInfo.processInfo.environment["CI"] != nil
@@ -38,7 +46,7 @@ final class LeavesOfBlocksUITests: XCTestCase {
 
         // Wait for home screen to be ready
         let startButton = app.buttons["start_game_button"]
-        _ = startButton.waitForExistence(timeout: 3)
+        _ = startButton.waitForExistence(timeout: defaultTimeout)
     }
 
     @MainActor
@@ -64,7 +72,7 @@ final class LeavesOfBlocksUITests: XCTestCase {
     @MainActor
     private func openMenu() {
         let menuButton = app.buttons["menu_button"]
-        XCTAssertTrue(menuButton.waitForExistence(timeout: 2), "Menu button should exist")
+        XCTAssertTrue(menuButton.waitForExistence(timeout: defaultTimeout), "Menu button should exist")
         // Workaround: SwiftUI toolbar `Menu` (the `Menu { ... } label: { ... }`
         // form) returns an invalid accessibility hit point on iOS 26.0–26.x,
         // so XCUIElement.tap() lands outside the element and the menu never
@@ -83,17 +91,17 @@ final class LeavesOfBlocksUITests: XCTestCase {
     private func navigateViaMenu(to accessibilityId: String) {
         openMenu()
         let button = app.buttons[accessibilityId]
-        XCTAssertTrue(button.waitForExistence(timeout: 2), "\(accessibilityId) should exist in menu")
+        XCTAssertTrue(button.waitForExistence(timeout: defaultTimeout), "\(accessibilityId) should exist in menu")
         button.tap()
         // Wait for the menu to dismiss before the next interaction.
-        _ = button.waitForNonExistence(timeout: 2)
+        _ = button.waitForNonExistence(timeout: defaultTimeout)
     }
 
     @MainActor
     private func navigateHome() {
         navigateViaMenu(to: "home_button")
         let startButton = app.buttons["start_game_button"]
-        _ = startButton.waitForExistence(timeout: 3)
+        _ = startButton.waitForExistence(timeout: defaultTimeout)
     }
 
     // MARK: - Screenshot Tests
@@ -108,7 +116,7 @@ final class LeavesOfBlocksUITests: XCTestCase {
     @MainActor
     private func captureHomeScreen() {
         let startButton = app.buttons["start_game_button"]
-        XCTAssertTrue(startButton.waitForExistence(timeout: 5), "Home screen should be visible")
+        XCTAssertTrue(startButton.waitForExistence(timeout: defaultTimeout), "Home screen should be visible")
         XCTAssertTrue(startButton.isHittable, "Start button should be hittable (animations finished)")
 
         takeScreenshot(named: "01_HomeScreen")
@@ -119,7 +127,7 @@ final class LeavesOfBlocksUITests: XCTestCase {
         navigateViaMenu(to: "how_to_play_button")
 
         let screen = app.staticTexts["how_to_play_screen"]
-        XCTAssertTrue(screen.waitForExistence(timeout: 5), "How To Play screen should appear")
+        XCTAssertTrue(screen.waitForExistence(timeout: defaultTimeout), "How To Play screen should appear")
 
         takeScreenshot(named: "02_HowToPlay")
 
@@ -134,7 +142,7 @@ final class LeavesOfBlocksUITests: XCTestCase {
     @MainActor
     private func captureGameplay(screenshotName: String) {
         let startButton = app.buttons["start_game_button"]
-        XCTAssertTrue(startButton.waitForExistence(timeout: 3), "Start game button should exist")
+        XCTAssertTrue(startButton.waitForExistence(timeout: defaultTimeout), "Start game button should exist")
         startButton.tap()
 
         XCTAssertTrue(waitForGameGrid(), "Game grid should appear")
@@ -151,7 +159,7 @@ final class LeavesOfBlocksUITests: XCTestCase {
         // History rows or the "no history" empty state mount inside this
         // window; waiting for the first row covers the populated path.
         let firstGameButton = app.buttons["game_history_button_0"]
-        _ = firstGameButton.waitForExistence(timeout: 5)
+        _ = firstGameButton.waitForExistence(timeout: defaultTimeout)
 
         takeScreenshot(named: "03_GameHistory")
 
@@ -159,7 +167,7 @@ final class LeavesOfBlocksUITests: XCTestCase {
             firstGameButton.tap()
 
             let detailScreen = app.staticTexts["summary_screen"]
-            XCTAssertTrue(detailScreen.waitForExistence(timeout: 5), "Game detail screen should appear")
+            XCTAssertTrue(detailScreen.waitForExistence(timeout: defaultTimeout), "Game detail screen should appear")
 
             takeScreenshot(named: "04_GameDetail")
         }
@@ -172,7 +180,7 @@ final class LeavesOfBlocksUITests: XCTestCase {
         navigateViaMenu(to: "about_button")
 
         let screen = app.staticTexts["about_screen"]
-        XCTAssertTrue(screen.waitForExistence(timeout: 5), "About screen should appear")
+        XCTAssertTrue(screen.waitForExistence(timeout: defaultTimeout), "About screen should appear")
 
         takeScreenshot(named: "06_About")
 
@@ -184,13 +192,13 @@ final class LeavesOfBlocksUITests: XCTestCase {
     @MainActor
     func testStartNewGame() throws {
         let startButton = app.buttons["start_game_button"]
-        XCTAssertTrue(startButton.waitForExistence(timeout: 2), "Start button should exist")
+        XCTAssertTrue(startButton.waitForExistence(timeout: defaultTimeout), "Start button should exist")
         startButton.tap()
 
-        XCTAssertTrue(waitForGameGrid(timeout: 5), "Game grid should appear")
+        XCTAssertTrue(waitForGameGrid(timeout: defaultTimeout), "Game grid should appear")
 
         let scoreDisplay = app.staticTexts["score_display"]
-        XCTAssertTrue(scoreDisplay.waitForExistence(timeout: 2), "Score display should exist")
+        XCTAssertTrue(scoreDisplay.waitForExistence(timeout: defaultTimeout), "Score display should exist")
 
         let blockContainer = app.otherElements["block_container"]
         XCTAssertTrue(blockContainer.exists, "Block container should exist")
@@ -199,10 +207,10 @@ final class LeavesOfBlocksUITests: XCTestCase {
     @MainActor
     func testDragAndDropBlock() throws {
         let startButton = app.buttons["start_game_button"]
-        XCTAssertTrue(startButton.waitForExistence(timeout: 2))
+        XCTAssertTrue(startButton.waitForExistence(timeout: defaultTimeout))
         startButton.tap()
 
-        XCTAssertTrue(waitForGameGrid(timeout: 5))
+        XCTAssertTrue(waitForGameGrid(timeout: defaultTimeout))
 
         let gridElement = app.otherElements["spritekit_game_grid"].exists
             ? app.otherElements["spritekit_game_grid"]
@@ -211,10 +219,10 @@ final class LeavesOfBlocksUITests: XCTestCase {
         // The holding area mounts after the grid; wait for the container
         // before querying its descendants.
         let blockContainer = app.otherElements["block_container"]
-        XCTAssertTrue(blockContainer.waitForExistence(timeout: 5), "Block container should exist after game starts")
+        XCTAssertTrue(blockContainer.waitForExistence(timeout: defaultTimeout), "Block container should exist after game starts")
 
         let firstBlock = app.otherElements.matching(identifier: "draggable_block").element(boundBy: 0)
-        XCTAssertTrue(firstBlock.waitForExistence(timeout: 5), "First draggable block should appear")
+        XCTAssertTrue(firstBlock.waitForExistence(timeout: defaultTimeout), "First draggable block should appear")
 
         let startCoordinate = firstBlock.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
         let endCoordinate = gridElement.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5))
@@ -222,7 +230,7 @@ final class LeavesOfBlocksUITests: XCTestCase {
         startCoordinate.press(forDuration: 0.1, thenDragTo: endCoordinate)
 
         let scoreDisplay = app.staticTexts["score_display"]
-        XCTAssertTrue(scoreDisplay.waitForExistence(timeout: 2), "Score display should exist")
+        XCTAssertTrue(scoreDisplay.waitForExistence(timeout: defaultTimeout), "Score display should exist")
         let scoreText = scoreDisplay.label
         let score = Int(scoreText.components(separatedBy: CharacterSet.decimalDigits.inverted).joined())
         XCTAssertNotNil(score, "Score display should contain a parseable integer; got '\(scoreText)'")
@@ -237,10 +245,10 @@ final class LeavesOfBlocksUITests: XCTestCase {
 
         // History (via score display on home screen)
         let historyButton = app.buttons["history_button"]
-        if historyButton.waitForExistence(timeout: 2) {
+        if historyButton.waitForExistence(timeout: defaultTimeout) {
             historyButton.tap()
             // Wait for the history button to dismiss (we navigated away from home).
-            _ = historyButton.waitForNonExistence(timeout: 2)
+            _ = historyButton.waitForNonExistence(timeout: defaultTimeout)
             navigateHome()
         }
 
@@ -249,18 +257,18 @@ final class LeavesOfBlocksUITests: XCTestCase {
         navigateHome()
 
         let startButton = app.buttons["start_game_button"]
-        XCTAssertTrue(startButton.waitForExistence(timeout: 2), "Should be back on home screen")
+        XCTAssertTrue(startButton.waitForExistence(timeout: defaultTimeout), "Should be back on home screen")
     }
 
     @MainActor
     func testDifficultySelection() throws {
         let startButton = app.buttons["start_game_button"]
-        XCTAssertTrue(startButton.waitForExistence(timeout: 2), "Start game button should exist")
+        XCTAssertTrue(startButton.waitForExistence(timeout: defaultTimeout), "Start game button should exist")
         XCTAssertTrue(startButton.isEnabled, "Start game button should be enabled")
 
         startButton.tap()
 
-        XCTAssertTrue(waitForGameGrid(timeout: 5), "Game grid should appear after starting game")
+        XCTAssertTrue(waitForGameGrid(timeout: defaultTimeout), "Game grid should appear after starting game")
     }
     
     // MARK: - Helper Methods

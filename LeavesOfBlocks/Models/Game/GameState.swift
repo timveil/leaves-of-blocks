@@ -125,8 +125,10 @@ final class GameState {
         gameStartTime = snapshot.savedAt.addingTimeInterval(-snapshot.elapsedGameTime)
 
         // Behavior tracker starts fresh on resume; analytics reflect post-resume play only.
+        // `isInitialSeed: true` populates the rolling averages without counting
+        // the just-resumed grid toward `challengeMaintained`.
         behaviorTracker.startSession()
-        behaviorTracker.recordGridState(grid)
+        behaviorTracker.recordGridState(grid, isInitialSeed: true)
 
         gameService.startGameSession(
             difficulty: snapshot.difficulty,
@@ -420,8 +422,10 @@ final class GameState {
         // Pre-fill the grid with geometric patterns based on difficulty
         GameLogic.randomlyFillGrid(&grid, difficulty: currentDifficulty)
         
-        // Record initial grid state for tracking
-        behaviorTracker.recordGridState(grid)
+        // Record initial grid state for tracking. `isInitialSeed: true` so
+        // the pre-fill doesn't skew `challengeMaintained` — the metric is
+        // about player choices over the run, not the starting board.
+        behaviorTracker.recordGridState(grid, isInitialSeed: true)
         
         generateNewBlocks()
         

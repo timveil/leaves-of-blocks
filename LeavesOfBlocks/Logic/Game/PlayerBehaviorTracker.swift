@@ -77,8 +77,12 @@ final class PlayerBehaviorTracker {
     @ObservationIgnored private var fragmentationHistory: [Double] = []
     @ObservationIgnored private var strategicOpportunities: [Double] = []
     @ObservationIgnored private var fallbackCount: Int = 0
-    @ObservationIgnored private var totalMeasurements: Int = 0
-    @ObservationIgnored private var highTierMeasurements: Int = 0
+    /// In-game "challenge measurement" count — the denominator of
+    /// `challengeMaintained`. `private(set)` (rather than `private`) so
+    /// tests can observe the counter without exporting a side-door API; the
+    /// setter remains internal-only.
+    @ObservationIgnored private(set) var totalMeasurements: Int = 0
+    @ObservationIgnored private(set) var highTierMeasurements: Int = 0
 
     /// Cap on per-session metric history. Prevents unbounded memory growth in
     /// very long sessions; older measurements are dropped from the front.
@@ -152,8 +156,17 @@ final class PlayerBehaviorTracker {
         BuildConfiguration.log("Player behavior tracking session started", level: .debug)
     }
 
-    /// Records grid state metrics during gameplay
-    func recordGridState(_ grid: [[GridCell]]) {
+    /// Records grid state metrics during gameplay.
+    ///
+    /// - Parameters:
+    ///   - grid: The grid to analyze.
+    ///   - isInitialSeed: Pass `true` for the one-time seed at session start
+    ///     (used by `GameState.resetGame()` and `GameState.apply(snapshot:)`).
+    ///     Initial seeds populate the rolling efficiency/fragmentation/strategic
+    ///     histories so they aren't empty for early reads, but they don't
+    ///     count toward `challengeMaintained` — that metric reflects in-game
+    ///     play, not the starting grid the player was dealt.
+    func recordGridState(_ grid: [[GridCell]], isInitialSeed: Bool = false) {
         let metrics = GridAnalysis.analyzeGrid(grid)
         let tier = GridAnalysis.determineDifficultyTier(for: grid)
 
@@ -162,13 +175,15 @@ final class PlayerBehaviorTracker {
         appendBounded(&fragmentationHistory, metrics.fragmentation)
         appendBounded(&strategicOpportunities, metrics.strategicPotential)
 
-        // Track challenge level
-        totalMeasurements += 1
-        if tier == .diverse || tier == .constrained {
-            highTierMeasurements += 1
+        if !isInitialSeed {
+            // Track challenge level — only in-game measurements count.
+            totalMeasurements += 1
+            if tier == .diverse || tier == .constrained {
+                highTierMeasurements += 1
+            }
         }
 
-        BuildConfiguration.log("Recorded grid state - Efficiency: \(String(format: "%.3f", metrics.efficiency)), Tier: \(tier.description)", level: .verbose)
+        BuildConfiguration.log("Recorded grid state - Efficiency: \(String(format: "%.3f", metrics.efficiency)), Tier: \(tier.description)\(isInitialSeed ? " (seed)" : "")", level: .verbose)
     }
     
     /// Appends `value` to `history`, dropping the oldest entry once the cap is exceeded.
