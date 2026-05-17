@@ -240,8 +240,11 @@ final class GameState {
         // Add points for placing block
         score += GameLogic.calculateBlockScore(block: block)
         
-        // Remove the placed block from current blocks
-        if let index = currentBlocks.firstIndex(where: { $0.positions == block.positions && $0.color == block.color }) {
+        // Remove the placed block from current blocks by stable instance id.
+        // Matching on shape (positions + color) alone would silently remove a
+        // look-alike twin if the generator offered two blocks with the same
+        // shape and color — see H7 in the code review.
+        if let index = currentBlocks.firstIndex(where: { $0.id == block.id }) {
             currentBlocks.remove(at: index)
         }
         

@@ -213,6 +213,27 @@ struct ComboAndSpecialsTrackingTests {
     }
 
     @Test @MainActor
+    func placeBlockRemovesTheExactInstanceWhenDuplicateShapesExist() {
+        // H7: two BlockShape instances with identical positions+color but
+        // distinct IDs. Placing one should remove that one specifically —
+        // not whichever came first in currentBlocks. Pre-H7, removal matched
+        // on positions+color and would remove the earlier-indexed twin.
+        let (state, _) = makeFreshState()
+        let positions = [GridPosition(row: 0, col: 0)]
+        let blockA = BlockShape(positions: positions, color: .red)
+        let blockB = BlockShape(positions: positions, color: .red)
+        #expect(blockA.id != blockB.id, "test setup: distinct IDs required")
+
+        state._setTestState(currentBlocks: [blockA, blockB])
+        state.placeBlock(blockB, at: GridPosition(row: 4, col: 4))
+
+        #expect(state.currentBlocks.contains(where: { $0.id == blockA.id }),
+                "blockA should still be present in the holding area")
+        #expect(!state.currentBlocks.contains(where: { $0.id == blockB.id }),
+                "blockB (the placed one) should have been removed")
+    }
+
+    @Test @MainActor
     func normalBlockDoesNotIncrementSpecialShapesUsed() {
         let (state, _) = makeFreshState()
         guard let normal = state.currentBlocks.first(where: { $0.type == .normal }),

@@ -173,14 +173,23 @@ enum GeometricPattern: String, CaseIterable {
 ///     color: .blue
 /// )
 /// ```
-struct BlockShape: Codable, Equatable, Hashable {
+struct BlockShape: Codable, Equatable, Hashable, Identifiable {
+    /// Stable instance identity assigned at construction time. Two blocks with
+    /// the same shape, color, and type still receive distinct `id`s — this is
+    /// what `GameState.placeBlock` keys removal on, so placing one of two
+    /// look-alike offered blocks doesn't accidentally remove the other.
+    ///
+    /// `Equatable` and `Hashable` deliberately ignore `id` so that
+    /// `[BlockShape: Weight]` dictionaries (BlockGenerator) and snapshot
+    /// equality continue to compare blocks by shape.
+    let id: UUID
     /// The grid positions that make up this block shape, relative to the block's origin
     let positions: [GridPosition]
     /// The visual color of this block
     let color: BlockColor
     /// The functional type determining special abilities
     let type: BlockType
-    
+
     /// Creates a normal block with the specified positions and color.
     ///
     /// This convenience initializer automatically sets the block type to `.normal`,
@@ -190,11 +199,12 @@ struct BlockShape: Codable, Equatable, Hashable {
     ///   - positions: Array of `GridPosition` values defining the block's shape
     ///   - color: The `BlockColor` for visual appearance
     init(positions: [GridPosition], color: BlockColor) {
+        self.id = UUID()
         self.positions = positions
         self.color = color
         self.type = .normal
     }
-    
+
     /// Creates a block with full specification of all properties.
     ///
     /// This initializer allows creation of special blocks with unique behaviors,
@@ -205,9 +215,38 @@ struct BlockShape: Codable, Equatable, Hashable {
     ///   - color: The `BlockColor` for visual appearance
     ///   - type: The `BlockType` determining special abilities
     init(positions: [GridPosition], color: BlockColor, type: BlockType) {
+        self.id = UUID()
         self.positions = positions
         self.color = color
         self.type = type
+    }
+
+    // MARK: - Equatable / Hashable (value-based)
+
+    static func == (lhs: BlockShape, rhs: BlockShape) -> Bool {
+        lhs.positions == rhs.positions && lhs.color == rhs.color && lhs.type == rhs.type
+    }
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(positions)
+        hasher.combine(color)
+        hasher.combine(type)
+    }
+
+    // MARK: - Codable
+
+    private enum CodingKeys: String, CodingKey {
+        case id, positions, color, type
+    }
+
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        // Older snapshots predate `id`; decoding gracefully assigns a fresh
+        // UUID so the rest of the snapshot still loads.
+        self.id = try container.decodeIfPresent(UUID.self, forKey: .id) ?? UUID()
+        self.positions = try container.decode([GridPosition].self, forKey: .positions)
+        self.color = try container.decode(BlockColor.self, forKey: .color)
+        self.type = try container.decode(BlockType.self, forKey: .type)
     }
     
     var accessibilityLabel: String {
@@ -305,43 +344,40 @@ struct BlockShape: Codable, Equatable, Hashable {
     
     /// Special power-up block that clears an entire horizontal row.
     ///
-    /// When placed, this block clears all cells in its row regardless of their state.
-    /// Represented visually as a single red cell with special marking.
-    static let horizontalClearShape = BlockShape(
-        positions: [GridPosition(row: 0, col: 0)],  // Single cell representation
-        color: .red,
-        type: .horizontalClear
-    )
-    
+    /// Each access mints a fresh `BlockShape` so the `id` is unique per
+    /// generated instance — required for `GameState.placeBlock` to remove the
+    /// exact block the player dragged.
+    static var horizontalClearShape: BlockShape {
+        BlockShape(
+            positions: [GridPosition(row: 0, col: 0)],
+            color: .red,
+            type: .horizontalClear
+        )
+    }
+
     /// Special power-up block that clears an entire vertical column.
     ///
-    /// When placed, this block clears all cells in its column regardless of their state.
-    /// Represented visually as a single blue cell with special marking.
-    static let verticalClearShape = BlockShape(
-        positions: [GridPosition(row: 0, col: 0)],  // Single cell representation
-        color: .blue,
-        type: .verticalClear
-    )
-    
+    /// Each access mints a fresh `BlockShape`; see `horizontalClearShape`.
+    static var verticalClearShape: BlockShape {
+        BlockShape(
+            positions: [GridPosition(row: 0, col: 0)],
+            color: .blue,
+            type: .verticalClear
+        )
+    }
+
     /// Special power-up block that clears a 3x3 area centered on placement.
     ///
     /// When placed, this block clears all cells in a 3x3 area centered on the placement position.
     /// The clearing effect extends one cell in each direction from the center, creating a 3x3 grid
     /// of cleared cells. Cells outside the grid boundaries are safely ignored during clearing.
     ///
-    /// ## Visual Characteristics
-    /// - **Color**: Purple (`BlockColor.purple`)
-    /// - **Icon**: 3D layered cube (`square.3.layers.3d`)
-    /// - **Size**: Single cell representation with special visual effects
-    ///
-    /// ## Scoring
-    /// Awards 200 points when placed (equivalent to clearing 2 lines), making it more valuable
-    /// than single-line clearing blocks but requiring strategic placement for maximum effectiveness.
-    ///
-    /// - Note: This is the most powerful special block, capable of clearing up to 9 cells at once
-    static let areaClearShape = BlockShape(
-        positions: [GridPosition(row: 0, col: 0)],  // Single cell representation
-        color: .purple,
-        type: .areaClear
-    )
+    /// Each access mints a fresh `BlockShape`; see `horizontalClearShape`.
+    static var areaClearShape: BlockShape {
+        BlockShape(
+            positions: [GridPosition(row: 0, col: 0)],
+            color: .purple,
+            type: .areaClear
+        )
+    }
 }
