@@ -36,7 +36,7 @@ $1
 Format:  <type>(<scope>): <description>
 Types:   feat, fix, docs, style, refactor, perf, test,
          chore, revert, build, ci
-Subject: ≤ ${MAX_SUBJECT_WIDTH} characters, no trailing period
+Subject: ≤ ${MAX_SUBJECT_WIDTH} characters
 
 Examples:
   feat: Add dark mode support

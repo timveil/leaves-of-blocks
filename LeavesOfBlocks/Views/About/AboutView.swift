@@ -5,8 +5,12 @@ struct AboutView: View {
     // MARK: - Constants
 
     private enum URLs {
-        static let linkedin = URL(string: "https://www.linkedin.com/in/timveil?utm_source=leaves_of_blocks_app&utm_medium=ios_app&utm_campaign=about_screen")!
-        static let website = URL(string: "https://www.leavesofblocks.com/?utm_source=leaves_of_blocks_app&utm_medium=ios_app&utm_campaign=about_screen")!
+        // Typed-optional + guard-at-call-site rather than `URL(string: ...)!`.
+        // The strings are valid today, but the explicit form matches the rest
+        // of the codebase's "no silent force-unwraps" stance and means a typo
+        // in a future edit fails visibly at the call site instead of crashing.
+        static let linkedin: URL? = URL(string: "https://www.linkedin.com/in/timveil?utm_source=leaves_of_blocks_app&utm_medium=ios_app&utm_campaign=about_screen")
+        static let website: URL? = URL(string: "https://www.leavesofblocks.com/?utm_source=leaves_of_blocks_app&utm_medium=ios_app&utm_campaign=about_screen")
     }
 
     // MARK: - Environment
@@ -80,14 +84,16 @@ struct AboutView: View {
                         }
 
                         // Website
-                        VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
-                            Text("website".localized)
-                                .sectionHeaderStyle()
+                        if let websiteURL = URLs.website {
+                            VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
+                                Text("website".localized)
+                                    .sectionHeaderStyle()
 
-                            Link("company_website".localized, destination: URLs.website)
-                                .font(GameTheme.Typography.body)
-                                .foregroundColor(GameTheme.Colors.primaryAccent)
-                                .underline()
+                                Link("company_website".localized, destination: websiteURL)
+                                    .font(GameTheme.Typography.body)
+                                    .foregroundColor(GameTheme.Colors.primaryAccent)
+                                    .underline()
+                            }
                         }
                     }
                     .padding(GameTheme.Layout.largePadding)

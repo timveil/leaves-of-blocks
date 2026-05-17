@@ -15,7 +15,6 @@ import SwiftUI
 struct SettingsView: View {
     var gameState: GameState
     var gameCenterService: GameCenterService = .shared
-    @State private var showingResetOptions = false
     @State private var showingClearHistoryConfirmation = false
     @State private var showingResetAllConfirmation = false
     @State private var resetCompletedMessage: String?
