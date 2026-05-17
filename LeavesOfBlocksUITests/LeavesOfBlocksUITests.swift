@@ -11,13 +11,18 @@ final class LeavesOfBlocksUITests: XCTestCase {
 
     var app: XCUIApplication!
 
-    /// Default timeout for `waitForExistence` / `waitForNonExistence`. The
-    /// suite previously sprinkled 2 / 3 / 5-second values across methods
-    /// with no documented rationale; using a single value reduces flake risk
-    /// on slower CI runners and makes intent uniform. The history-data wait
-    /// keeps its own longer timeout because Core Data load latency is
-    /// genuinely the long pole there.
-    private let defaultTimeout: TimeInterval = 5
+    /// Default timeout for `waitForExistence` / `waitForNonExistence`.
+    ///
+    /// The suite previously sprinkled 2 / 3 / 5-second values across methods
+    /// with no documented rationale; consolidating behind one constant kept
+    /// intent uniform. The initial 5-second value turned out too tight for
+    /// the first cold-simulator grid wait on CI's macos-15-arm64 runners —
+    /// `testDifficultySelection` failed at 5s in run 25997441219 while
+    /// later tests (warmed simulator) passed.
+    ///
+    /// 10 seconds covers the cold-start gap without slowing local feedback,
+    /// since `waitForExistence` only consumes the full window on failure.
+    private let defaultTimeout: TimeInterval = 10
 
     /// Check if running in CI environment
     private var isCI: Bool {
@@ -60,7 +65,7 @@ final class LeavesOfBlocksUITests: XCTestCase {
     // MARK: - Game Grid Helper
 
     @MainActor
-    private func waitForGameGrid(timeout: TimeInterval = 5) -> Bool {
+    private func waitForGameGrid(timeout: TimeInterval = 10) -> Bool {
         let spriteKitGrid = app.otherElements["spritekit_game_grid"]
         let swiftUIGrid = app.otherElements["game_grid"]
         return spriteKitGrid.waitForExistence(timeout: timeout) ||
