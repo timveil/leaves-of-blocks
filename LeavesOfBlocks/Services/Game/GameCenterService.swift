@@ -51,7 +51,11 @@ final class GameCenterService {
 
     @ObservationIgnored private var didStartAuthentication: Bool = false
 
-    private init() {}
+    @ObservationIgnored private let pendingStore: PendingGameCenterSubmissionStore
+
+    private init(pendingStore: PendingGameCenterSubmissionStore = .shared) {
+        self.pendingStore = pendingStore
+    }
 
     // MARK: - Authentication
 
@@ -87,6 +91,29 @@ final class GameCenterService {
             }
             self.isAuthenticated = player.isAuthenticated
             BuildConfiguration.log("Game Center authenticated: \(player.isAuthenticated)", level: .info)
+            if player.isAuthenticated {
+                self.retryPendingSubmissions()
+            }
+        }
+    }
+
+    // MARK: - Retry
+
+    /// Replays any score / achievement submissions that failed on previous
+    /// attempts. Called automatically when authentication succeeds; safe to
+    /// call manually. Idempotent: GameKit takes the max for leaderboards and
+    /// dedups already-completed achievements, so re-submitting is harmless.
+    func retryPendingSubmissions() {
+        guard GameCenterPreference.isEnabled, isAuthenticated else { return }
+
+        let pendingScore = pendingStore.pendingScore
+        if pendingScore > 0 {
+            submitScoreToLeaderboard(pendingScore)
+        }
+
+        let pendingAchievements = pendingStore.pendingAchievementIdentifiers
+        if !pendingAchievements.isEmpty {
+            reportAchievementIdentifiers(Array(pendingAchievements))
         }
     }
 
@@ -103,6 +130,8 @@ final class GameCenterService {
     /// earned achievements derived from the session metrics.
     ///
     /// No-op when the preference is off or the player isn't authenticated.
+    /// Submission failures are durably recorded in `pendingStore` so the
+    /// next successful authentication can replay them.
     func submitFinalScore(
         score: Int,
         sessionMetrics: PlayerBehaviorTracker.SessionMetrics?,
@@ -110,16 +139,7 @@ final class GameCenterService {
     ) {
         guard GameCenterPreference.isEnabled, isAuthenticated else { return }
 
-        GKLeaderboard.submitScore(
-            score,
-            context: 0,
-            player: GKLocalPlayer.local,
-            leaderboardIDs: [GameCenterIDs.Leaderboards.allTimeHigh]
-        ) { error in
-            if let error {
-                BuildConfiguration.log("Leaderboard submit failed: \(error.localizedDescription)", level: .error)
-            }
-        }
+        submitScoreToLeaderboard(score)
 
         let achievements = Self.evaluateAchievements(
             score: score,
@@ -128,18 +148,63 @@ final class GameCenterService {
         )
         guard !achievements.isEmpty else { return }
 
+        reportAchievements(achievements)
+    }
+
+    // MARK: - GameKit Wrappers
+
+    /// Submits a score and records / clears the pending store based on outcome.
+    private func submitScoreToLeaderboard(_ score: Int) {
+        pendingStore.recordScoreSubmission(score)
+        GKLeaderboard.submitScore(
+            score,
+            context: 0,
+            player: GKLocalPlayer.local,
+            leaderboardIDs: [GameCenterIDs.Leaderboards.allTimeHigh]
+        ) { [weak self] error in
+            Task { @MainActor [weak self] in
+                guard let self else { return }
+                if let error {
+                    BuildConfiguration.log("Leaderboard submit failed: \(error.localizedDescription)", level: .error)
+                } else {
+                    self.pendingStore.clearScore()
+                }
+            }
+        }
+    }
+
+    /// Reports achievements and records / clears the pending store based on outcome.
+    private func reportAchievements(_ achievements: [PendingAchievement]) {
+        let identifiers = achievements.map(\.identifier)
+        pendingStore.recordAchievementSubmissions(identifiers)
+
         let gkAchievements: [GKAchievement] = achievements.map { pending in
             let achievement = GKAchievement(identifier: pending.identifier)
             achievement.percentComplete = pending.percentComplete
             achievement.showsCompletionBanner = true
             return achievement
         }
-
-        GKAchievement.report(gkAchievements) { error in
-            if let error {
-                BuildConfiguration.log("Achievement report failed: \(error.localizedDescription)", level: .error)
+        GKAchievement.report(gkAchievements) { [weak self] error in
+            Task { @MainActor [weak self] in
+                guard let self else { return }
+                if let error {
+                    BuildConfiguration.log("Achievement report failed: \(error.localizedDescription)", level: .error)
+                } else {
+                    self.pendingStore.clearAchievements(identifiers)
+                }
             }
         }
+    }
+
+    /// Reports a set of identifier-only achievements (no per-session percent),
+    /// used by the retry path. Defaults each to 100% complete on the
+    /// assumption that the original `submitFinalScore` already established
+    /// that the achievement was earned.
+    private func reportAchievementIdentifiers(_ identifiers: [String]) {
+        let achievements = identifiers.map { id in
+            PendingAchievement(identifier: id, percentComplete: 100)
+        }
+        reportAchievements(achievements)
     }
 
     // MARK: - Dashboard

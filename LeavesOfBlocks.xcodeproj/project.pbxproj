@@ -50,22 +50,16 @@
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		3A3C932F2ED8D8B5009DDA6C /* LeavesOfBlocksTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
 			path = LeavesOfBlocksTests;
 			sourceTree = "<group>";
 		};
 		3A692C032E3460ED00451CB3 /* LeavesOfBlocks */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
 			path = LeavesOfBlocks;
 			sourceTree = "<group>";
 		};
 		3AF786F02E3D7C3800B1A3BE /* LeavesOfBlocksUITests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
-			exceptions = (
-			);
 			path = LeavesOfBlocksUITests;
 			sourceTree = "<group>";
 		};
