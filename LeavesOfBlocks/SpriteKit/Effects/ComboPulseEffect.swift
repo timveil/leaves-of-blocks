@@ -94,11 +94,7 @@ enum ComboPulseEffect {
             flash.zPosition = 6
             parent.addChild(flash)
 
-            let flashFade = SKAction.sequence([
-                SKAction.fadeOut(withDuration: 0.25),
-                SKAction.removeFromParent()
-            ])
-            flash.run(flashFade)
+            flash.run(.fadeOutAndRemove(duration: 0.25))
         }
     }
 

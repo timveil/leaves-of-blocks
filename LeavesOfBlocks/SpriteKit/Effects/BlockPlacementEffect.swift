@@ -73,9 +73,9 @@ enum BlockPlacementEffect {
             }
 
             // Add a glow overlay at the cell position
-            let cellPoint = CGPoint(
-                x: CGFloat(col) * (cellSize + spacing),
-                y: CGFloat(row) * (cellSize + spacing)
+            let cellPoint = SpriteKitEffects.cellPoint(
+                row: row, col: col,
+                cellSize: cellSize, spacing: spacing
             )
             addGlowOverlay(at: cellPoint, color: color, cellSize: cellSize, delay: delay, in: parent)
         }

@@ -50,9 +50,9 @@ enum GameOverEffect {
                 overlay.fillColor = desaturatedColor
                 overlay.strokeColor = .clear
                 overlay.alpha = 0
-                overlay.position = CGPoint(
-                    x: CGFloat(col) * (cellSize + spacing),
-                    y: CGFloat(row) * (cellSize + spacing)
+                overlay.position = SpriteKitEffects.cellPoint(
+                    row: row, col: col,
+                    cellSize: cellSize, spacing: spacing
                 )
                 overlay.zPosition = 15
                 overlay.name = GridNode.gameOverOverlayName
@@ -72,10 +72,7 @@ enum GameOverEffect {
     /// - Parameter parent: The parent node containing the overlays
     static func clearGameOver(in parent: SKNode) {
         parent.enumerateChildNodes(withName: GridNode.gameOverOverlayName) { node, _ in
-            node.run(SKAction.sequence([
-                SKAction.fadeOut(withDuration: 0.15),
-                SKAction.removeFromParent()
-            ]))
+            node.run(.fadeOutAndRemove(duration: 0.15))
         }
     }
 
@@ -163,15 +160,7 @@ enum GameOverEffect {
     // MARK: - Private Helpers
 
     /// Cached circle texture shared across celebration emitters
-    private static let celebrationTexture: SKTexture = {
-        let size: CGFloat = 5
-        let renderer = UIGraphicsImageRenderer(size: CGSize(width: size, height: size))
-        let image = renderer.image { context in
-            context.cgContext.setFillColor(UIColor.white.cgColor)
-            context.cgContext.fillEllipse(in: CGRect(origin: .zero, size: CGSize(width: size, height: size)))
-        }
-        return SKTexture(image: image)
-    }()
+    private static let celebrationTexture: SKTexture = SpriteKitEffects.makeCircleTexture(size: 5)
 
     private static func createCelebrationEmitter(
         color: UIColor,

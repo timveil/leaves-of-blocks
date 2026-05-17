@@ -31,15 +31,7 @@ enum LineClearEffect {
     private static let particleSize: CGFloat = 6
 
     /// Cached sparkle texture shared across all emitters to avoid per-emitter image creation
-    private static let sparkleTexture: SKTexture = {
-        let size = particleSize
-        let renderer = UIGraphicsImageRenderer(size: CGSize(width: size, height: size))
-        let image = renderer.image { context in
-            context.cgContext.setFillColor(UIColor.white.cgColor)
-            context.cgContext.fillEllipse(in: CGRect(origin: .zero, size: CGSize(width: size, height: size)))
-        }
-        return SKTexture(image: image)
-    }()
+    private static let sparkleTexture: SKTexture = SpriteKitEffects.makeCircleTexture(size: particleSize)
 
     // MARK: - Public API
 
@@ -160,18 +152,14 @@ enum LineClearEffect {
             let flash = SKShapeNode(rect: rect, cornerRadius: GameTheme.Layout.cellCornerRadius)
             flash.fillColor = SpriteKitColors.lineCompletionAccent.withAlphaComponent(0.5)
             flash.strokeColor = .clear
-            flash.position = CGPoint(
-                x: CGFloat(pos.col) * (cellSize + spacing),
-                y: CGFloat(pos.row) * (cellSize + spacing)
+            flash.position = SpriteKitEffects.cellPoint(
+                row: pos.row, col: pos.col,
+                cellSize: cellSize, spacing: spacing
             )
             flash.zPosition = 5
             parent.addChild(flash)
 
-            let fadeOut = SKAction.sequence([
-                SKAction.fadeOut(withDuration: 0.3),
-                SKAction.removeFromParent()
-            ])
-            flash.run(fadeOut)
+            flash.run(.fadeOutAndRemove(duration: 0.3))
         }
     }
 }
