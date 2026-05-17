@@ -2,120 +2,119 @@
 //  GridModelsTests.swift
 //  LeavesOfBlocksTests
 //
-//  Created by Claude on 11/27/25.
+//  Tests for GridPosition, GridCell, and ClearedCell value types.
 //
 
-import XCTest
+import Foundation
+import Testing
 @testable import LeavesOfBlocks
 
-// MARK: - GridPosition Tests
+// MARK: - GridPosition
 
-final class GridPositionTests: XCTestCase {
-
-    func testGridPositionInitialization() {
+@Suite("GridPosition")
+struct GridPositionTests {
+    @Test("Init stores row and column verbatim")
+    func initStoresRowAndColumn() {
         let position = GridPosition(row: 3, col: 5)
-
-        XCTAssertEqual(position.row, 3)
-        XCTAssertEqual(position.col, 5)
+        #expect(position.row == 3)
+        #expect(position.col == 5)
     }
 
-    func testGridPositionEquality() {
-        let position1 = GridPosition(row: 2, col: 4)
-        let position2 = GridPosition(row: 2, col: 4)
-        let position3 = GridPosition(row: 2, col: 5)
+    @Test("Equality compares row and column")
+    func equalityComparesRowAndColumn() {
+        let a = GridPosition(row: 2, col: 4)
+        let b = GridPosition(row: 2, col: 4)
+        let c = GridPosition(row: 2, col: 5)
 
-        XCTAssertEqual(position1, position2)
-        XCTAssertNotEqual(position1, position3)
+        #expect(a == b)
+        #expect(a != c)
     }
 
-    func testGridPositionHashable() {
-        let position1 = GridPosition(row: 1, col: 1)
-        let position2 = GridPosition(row: 1, col: 1)
-
+    @Test("Hashable: equal positions collapse in a Set")
+    func hashableEqualPositionsCollapseInSet() {
         var set = Set<GridPosition>()
-        set.insert(position1)
-        set.insert(position2)
+        set.insert(GridPosition(row: 1, col: 1))
+        set.insert(GridPosition(row: 1, col: 1))
 
-        XCTAssertEqual(set.count, 1)
+        #expect(set.count == 1)
     }
 
-    func testGridPositionCodable() throws {
+    @Test("Codable round-trip preserves row and column")
+    func codableRoundTripPreservesRowAndColumn() throws {
         let original = GridPosition(row: 4, col: 7)
-        let encoder = JSONEncoder()
-        let decoder = JSONDecoder()
 
-        let data = try encoder.encode(original)
-        let decoded = try decoder.decode(GridPosition.self, from: data)
+        let data = try JSONEncoder().encode(original)
+        let decoded = try JSONDecoder().decode(GridPosition.self, from: data)
 
-        XCTAssertEqual(decoded, original)
+        #expect(decoded == original)
     }
 
-    func testGridPositionCanBeNegative() {
+    @Test("Negative indices are permitted by the type")
+    func negativeIndicesArePermittedByTheType() {
         let position = GridPosition(row: -1, col: -2)
-
-        XCTAssertEqual(position.row, -1)
-        XCTAssertEqual(position.col, -2)
+        #expect(position.row == -1)
+        #expect(position.col == -2)
     }
 }
 
-// MARK: - GridCell Tests
+// MARK: - GridCell
 
-final class GridCellTests: XCTestCase {
-
-    func testGridCellDefaultValues() {
+@Suite("GridCell")
+struct GridCellTests {
+    @Test("Default cell is empty and blue")
+    func defaultCellIsEmptyAndBlue() {
         let cell = GridCell()
-
-        XCTAssertFalse(cell.isFilled)
-        XCTAssertEqual(cell.color, .blue)
+        #expect(cell.isFilled == false)
+        #expect(cell.color == .blue)
     }
 
-    func testGridCellCustomInitialization() {
+    @Test("Explicit init sets fill state and color")
+    func explicitInitSetsFillStateAndColor() {
         let cell = GridCell(isFilled: true, color: .red)
-
-        XCTAssertTrue(cell.isFilled)
-        XCTAssertEqual(cell.color, .red)
+        #expect(cell.isFilled == true)
+        #expect(cell.color == .red)
     }
 
-    func testGridCellMutation() {
+    @Test("Properties are mutable")
+    func propertiesAreMutable() {
         var cell = GridCell()
-
         cell.isFilled = true
         cell.color = .green
 
-        XCTAssertTrue(cell.isFilled)
-        XCTAssertEqual(cell.color, .green)
+        #expect(cell.isFilled == true)
+        #expect(cell.color == .green)
     }
 }
 
-// MARK: - ClearedCell Tests
+// MARK: - ClearedCell
 
-final class ClearedCellTests: XCTestCase {
-
-    func testClearedCellInitialization() {
+@Suite("ClearedCell")
+struct ClearedCellTests {
+    @Test("Init stores row, column, and color")
+    func initStoresRowColumnAndColor() {
         let cell = ClearedCell(row: 2, col: 3, color: .orange)
-
-        XCTAssertEqual(cell.row, 2)
-        XCTAssertEqual(cell.col, 3)
-        XCTAssertEqual(cell.color, .orange)
+        #expect(cell.row == 2)
+        #expect(cell.col == 3)
+        #expect(cell.color == .orange)
     }
 
-    func testClearedCellEquality() {
-        let cell1 = ClearedCell(row: 1, col: 2, color: .purple)
-        let cell2 = ClearedCell(row: 1, col: 2, color: .purple)
-        let cell3 = ClearedCell(row: 1, col: 2, color: .pink)
+    @Test("Equality compares row, column, and color")
+    func equalityComparesAllFields() {
+        let a = ClearedCell(row: 1, col: 2, color: .purple)
+        let b = ClearedCell(row: 1, col: 2, color: .purple)
+        let c = ClearedCell(row: 1, col: 2, color: .pink)
 
-        XCTAssertEqual(cell1, cell2)
-        XCTAssertNotEqual(cell1, cell3)
+        #expect(a == b)
+        #expect(a != c)
     }
 
-    func testClearedCellCodable() throws {
+    @Test("Codable round-trip preserves all fields")
+    func codableRoundTripPreservesAllFields() throws {
         let original = ClearedCell(row: 5, col: 6, color: .yellow)
-        let encoder = JSONEncoder()
-        let decoder = JSONDecoder()
 
-        let data = try encoder.encode(original)
-        let decoded = try decoder.decode(ClearedCell.self, from: data)
+        let data = try JSONEncoder().encode(original)
+        let decoded = try JSONDecoder().decode(ClearedCell.self, from: data)
 
-        XCTAssertEqual(decoded, original)
+        #expect(decoded == original)
     }
 }

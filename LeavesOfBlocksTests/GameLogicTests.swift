@@ -2,136 +2,134 @@
 //  GameLogicTests.swift
 //  LeavesOfBlocksTests
 //
-//  Unit tests for core game logic functions.
+//  Unit tests for the pure `GameLogic` static functions: grid creation,
+//  placement validation, placement, line clearing, scoring, game-over,
+//  and valid-position enumeration.
 //
 
-import XCTest
+import Foundation
+import Testing
 @testable import LeavesOfBlocks
 
-// MARK: - Grid Creation Tests
+// MARK: - Helpers
 
-final class GridCreationTests: XCTestCase {
+private func filledGrid() -> [[GridCell]] {
+    var grid = GameLogic.createEmptyGrid()
+    for row in 0..<grid.count {
+        for col in 0..<grid[row].count {
+            grid[row][col].isFilled = true
+        }
+    }
+    return grid
+}
 
-    func testCreateEmptyGridReturns8x8Grid() {
+// MARK: - Grid Creation
+
+@Suite("GameLogic.createEmptyGrid")
+struct GridCreationTests {
+    @Test("Returns an 8x8 grid")
+    func returnsAn8x8Grid() {
         let grid = GameLogic.createEmptyGrid()
-
-        XCTAssertEqual(grid.count, 8)
+        #expect(grid.count == 8)
         for row in grid {
-            XCTAssertEqual(row.count, 8)
+            #expect(row.count == 8)
         }
     }
 
-    func testCreateEmptyGridAllCellsUnfilled() {
+    @Test("All cells start unfilled")
+    func allCellsStartUnfilled() {
         let grid = GameLogic.createEmptyGrid()
-
         for row in grid {
             for cell in row {
-                XCTAssertFalse(cell.isFilled)
+                #expect(cell.isFilled == false)
             }
         }
     }
 }
 
-// MARK: - Block Placement Validation Tests
+// MARK: - Block Placement Validation
 
-final class BlockPlacementValidationTests: XCTestCase {
-
-    func testCanPlaceBlockAtValidPosition() {
+@Suite("GameLogic.canPlaceBlock")
+struct BlockPlacementValidationTests {
+    @Test("Origin of empty grid is a valid placement")
+    func originOfEmptyGridIsAValidPlacement() {
         let grid = GameLogic.createEmptyGrid()
         let block = BlockShape.allShapes[0]
-
-        let canPlace = GameLogic.canPlaceBlock(block, at: GridPosition(row: 0, col: 0), in: grid)
-
-        XCTAssertTrue(canPlace)
+        #expect(GameLogic.canPlaceBlock(block, at: GridPosition(row: 0, col: 0), in: grid))
     }
 
-    func testCanPlaceBlockAtCenterOfGrid() {
+    @Test("Center of empty grid is a valid placement")
+    func centerOfEmptyGridIsAValidPlacement() {
         let grid = GameLogic.createEmptyGrid()
         let block = BlockShape.allShapes[0]
-
-        let canPlace = GameLogic.canPlaceBlock(block, at: GridPosition(row: 4, col: 4), in: grid)
-
-        XCTAssertTrue(canPlace)
+        #expect(GameLogic.canPlaceBlock(block, at: GridPosition(row: 4, col: 4), in: grid))
     }
 
-    func testCannotPlaceBlockOutOfBoundsNegativeRow() {
+    @Test("Negative row is rejected")
+    func negativeRowIsRejected() {
         let grid = GameLogic.createEmptyGrid()
         let block = BlockShape.allShapes[0]
-
-        let canPlace = GameLogic.canPlaceBlock(block, at: GridPosition(row: -1, col: 0), in: grid)
-
-        XCTAssertFalse(canPlace)
+        #expect(!GameLogic.canPlaceBlock(block, at: GridPosition(row: -1, col: 0), in: grid))
     }
 
-    func testCannotPlaceBlockOutOfBoundsNegativeCol() {
+    @Test("Negative column is rejected")
+    func negativeColumnIsRejected() {
         let grid = GameLogic.createEmptyGrid()
         let block = BlockShape.allShapes[0]
-
-        let canPlace = GameLogic.canPlaceBlock(block, at: GridPosition(row: 0, col: -1), in: grid)
-
-        XCTAssertFalse(canPlace)
+        #expect(!GameLogic.canPlaceBlock(block, at: GridPosition(row: 0, col: -1), in: grid))
     }
 
-    func testCannotPlaceBlockOutOfBoundsTooLargeRow() {
+    @Test("Row past the grid is rejected")
+    func rowPastTheGridIsRejected() {
         let grid = GameLogic.createEmptyGrid()
         let block = BlockShape.allShapes[0]
-
-        let canPlace = GameLogic.canPlaceBlock(block, at: GridPosition(row: 8, col: 0), in: grid)
-
-        XCTAssertFalse(canPlace)
+        #expect(!GameLogic.canPlaceBlock(block, at: GridPosition(row: 8, col: 0), in: grid))
     }
 
-    func testCannotPlaceBlockOutOfBoundsTooLargeCol() {
+    @Test("Column past the grid is rejected")
+    func columnPastTheGridIsRejected() {
         let grid = GameLogic.createEmptyGrid()
         let block = BlockShape.allShapes[0]
-
-        let canPlace = GameLogic.canPlaceBlock(block, at: GridPosition(row: 0, col: 8), in: grid)
-
-        XCTAssertFalse(canPlace)
+        #expect(!GameLogic.canPlaceBlock(block, at: GridPosition(row: 0, col: 8), in: grid))
     }
 
-    func testCannotPlaceBlockOnFilledCell() {
+    @Test("Cannot overlap a filled cell")
+    func cannotOverlapAFilledCell() {
         var grid = GameLogic.createEmptyGrid()
         grid[0][0].isFilled = true
         let block = BlockShape.allShapes[0]
-
-        let canPlace = GameLogic.canPlaceBlock(block, at: GridPosition(row: 0, col: 0), in: grid)
-
-        XCTAssertFalse(canPlace)
+        #expect(!GameLogic.canPlaceBlock(block, at: GridPosition(row: 0, col: 0), in: grid))
     }
 }
 
-// MARK: - Block Placement Tests
+// MARK: - Block Placement
 
-final class BlockPlacementTests: XCTestCase {
-
-    func testPlaceBlockFillsCell() {
+@Suite("GameLogic.placeBlock")
+struct BlockPlacementTests {
+    @Test("Placement fills the origin cell")
+    func placementFillsTheOriginCell() {
         var grid = GameLogic.createEmptyGrid()
         let block = BlockShape.allShapes[0]
-
         GameLogic.placeBlock(block, at: GridPosition(row: 0, col: 0), in: &grid)
-
-        // Check that at least the origin cell is filled
-        XCTAssertTrue(grid[0][0].isFilled)
+        #expect(grid[0][0].isFilled)
     }
 
-    func testPlaceBlockSetsColor() {
+    @Test("Placement copies the block color to placed cells")
+    func placementCopiesTheBlockColorToPlacedCells() {
         var grid = GameLogic.createEmptyGrid()
         let block = BlockShape.allShapes[0]
-
         GameLogic.placeBlock(block, at: GridPosition(row: 0, col: 0), in: &grid)
-
-        XCTAssertEqual(grid[0][0].color, block.color)
+        #expect(grid[0][0].color == block.color)
     }
 }
 
-// MARK: - Line Clearing Tests
+// MARK: - Line Clearing
 
-final class LineClearingTests: XCTestCase {
-
-    func testClearCompletedLinesDetectsFullRow() {
+@Suite("GameLogic.clearCompletedLines")
+struct LineClearingTests {
+    @Test("Detects a full row")
+    func detectsAFullRow() {
         var grid = GameLogic.createEmptyGrid()
-        // Fill entire first row
         for col in 0..<8 {
             grid[0][col].isFilled = true
             grid[0][col].color = .red
@@ -139,13 +137,13 @@ final class LineClearingTests: XCTestCase {
 
         let result = GameLogic.clearCompletedLines(in: &grid)
 
-        XCTAssertTrue(result.clearedRows.contains(0))
-        XCTAssertEqual(result.clearedCells.count, 8)
+        #expect(result.clearedRows.contains(0))
+        #expect(result.clearedCells.count == 8)
     }
 
-    func testClearCompletedLinesDetectsFullColumn() {
+    @Test("Detects a full column")
+    func detectsAFullColumn() {
         var grid = GameLogic.createEmptyGrid()
-        // Fill entire first column
         for row in 0..<8 {
             grid[row][0].isFilled = true
             grid[row][0].color = .blue
@@ -153,31 +151,30 @@ final class LineClearingTests: XCTestCase {
 
         let result = GameLogic.clearCompletedLines(in: &grid)
 
-        XCTAssertTrue(result.clearedCols.contains(0))
-        XCTAssertEqual(result.clearedCells.count, 8)
+        #expect(result.clearedCols.contains(0))
+        #expect(result.clearedCells.count == 8)
     }
 
-    func testClearCompletedLinesDoesNotClearIncompleteRow() {
+    @Test("An incomplete row is not cleared")
+    func anIncompleteRowIsNotCleared() {
         var grid = GameLogic.createEmptyGrid()
-        // Fill 7 of 8 cells in row
         for col in 0..<7 {
             grid[0][col].isFilled = true
         }
 
         let result = GameLogic.clearCompletedLines(in: &grid)
 
-        XCTAssertTrue(result.clearedRows.isEmpty)
-        XCTAssertTrue(result.clearedCells.isEmpty)
+        #expect(result.clearedRows.isEmpty)
+        #expect(result.clearedCells.isEmpty)
     }
 
-    func testClearCompletedLinesHandlesRowAndColumnCombo() {
+    @Test("Row + column combo: shared cell isn't double-counted")
+    func rowPlusColumnComboSharedCellIsNotDoubleCounted() {
         var grid = GameLogic.createEmptyGrid()
-        // Fill first row
         for col in 0..<8 {
             grid[0][col].isFilled = true
             grid[0][col].color = .red
         }
-        // Fill first column
         for row in 0..<8 {
             grid[row][0].isFilled = true
             grid[row][0].color = .blue
@@ -185,135 +182,101 @@ final class LineClearingTests: XCTestCase {
 
         let result = GameLogic.clearCompletedLines(in: &grid)
 
-        // Both row 0 and column 0 should be cleared
-        XCTAssertTrue(result.clearedRows.contains(0))
-        XCTAssertTrue(result.clearedCols.contains(0))
+        #expect(result.clearedRows.contains(0))
+        #expect(result.clearedCols.contains(0))
         // 8 from row + 7 from column (one cell shared)
-        XCTAssertEqual(result.clearedCells.count, 15)
+        #expect(result.clearedCells.count == 15)
     }
 }
 
-// MARK: - Score Calculation Tests
+// MARK: - Score Calculation
 
-final class ScoreCalculationTests: XCTestCase {
-
-    func testCalculateBlockScoreReturnsTenPerCell() {
-        let singleCellBlock = BlockShape.allShapes[0]
-
-        let score = GameLogic.calculateBlockScore(block: singleCellBlock)
-
-        XCTAssertEqual(score, singleCellBlock.positions.count * 10)
+@Suite("GameLogic scoring")
+struct ScoreCalculationTests {
+    @Test("Block score is 10 points per cell")
+    func blockScoreIs10PointsPerCell() {
+        let block = BlockShape.allShapes[0]
+        #expect(GameLogic.calculateBlockScore(block: block) == block.positions.count * 10)
     }
 
-    func testCalculateLineScoreForSingleRow() {
-        let score = GameLogic.calculateLineScore(clearedRows: 1, clearedCols: 0)
-
-        XCTAssertEqual(score, 100)
+    @Test("Single cleared row scores 100")
+    func singleClearedRowScores100() {
+        #expect(GameLogic.calculateLineScore(clearedRows: 1, clearedCols: 0) == 100)
     }
 
-    func testCalculateLineScoreForSingleColumn() {
-        let score = GameLogic.calculateLineScore(clearedRows: 0, clearedCols: 1)
-
-        XCTAssertEqual(score, 100)
+    @Test("Single cleared column scores 100")
+    func singleClearedColumnScores100() {
+        #expect(GameLogic.calculateLineScore(clearedRows: 0, clearedCols: 1) == 100)
     }
 
-    func testCalculateLineScoreWithComboBonus() {
-        // 2 rows cleared = 200 base + 50 combo = 250
-        let score = GameLogic.calculateLineScore(clearedRows: 2, clearedCols: 0)
-
-        XCTAssertEqual(score, 250)
+    @Test("Two rows: 200 base + 50 combo = 250")
+    func twoRows200BasePlus50Combo() {
+        #expect(GameLogic.calculateLineScore(clearedRows: 2, clearedCols: 0) == 250)
     }
 
-    func testCalculateLineScoreWithMultipleComboBonus() {
-        // 3 lines = 300 base + 100 combo (50 * 2) = 400
-        let score = GameLogic.calculateLineScore(clearedRows: 2, clearedCols: 1)
-
-        XCTAssertEqual(score, 400)
+    @Test("Three lines: 300 base + 100 combo = 400")
+    func threeLines300BasePlus100Combo() {
+        #expect(GameLogic.calculateLineScore(clearedRows: 2, clearedCols: 1) == 400)
     }
 
-    func testCalculateLineScoreReturnsZeroForNoLines() {
-        let score = GameLogic.calculateLineScore(clearedRows: 0, clearedCols: 0)
-
-        XCTAssertEqual(score, 0)
+    @Test("No lines cleared scores zero")
+    func noLinesClearedScoresZero() {
+        #expect(GameLogic.calculateLineScore(clearedRows: 0, clearedCols: 0) == 0)
     }
 }
 
-// MARK: - Game Over Detection Tests
+// MARK: - Game Over Detection
 
-final class GameOverDetectionTests: XCTestCase {
-
-    func testIsGameOverReturnsFalseWithEmptyGrid() {
+@Suite("GameLogic.isGameOver")
+struct GameOverDetectionTests {
+    @Test("Empty grid with a placeable block is not game over")
+    func emptyGridWithAPlaceableBlockIsNotGameOver() {
         let grid = GameLogic.createEmptyGrid()
         let blocks = [BlockShape.allShapes[0]]
-
-        let gameOver = GameLogic.isGameOver(currentBlocks: blocks, grid: grid)
-
-        XCTAssertFalse(gameOver)
+        #expect(!GameLogic.isGameOver(currentBlocks: blocks, grid: grid))
     }
 
-    func testIsGameOverReturnsTrueWithNoBlocks() {
+    @Test("No blocks remaining is treated as game over")
+    func noBlocksRemainingIsTreatedAsGameOver() {
         let grid = GameLogic.createEmptyGrid()
-        let blocks: [BlockShape] = []
-
-        let gameOver = GameLogic.isGameOver(currentBlocks: blocks, grid: grid)
-
-        XCTAssertTrue(gameOver)
+        #expect(GameLogic.isGameOver(currentBlocks: [], grid: grid))
     }
 
-    func testIsGameOverReturnsTrueWhenGridFull() {
-        var grid = GameLogic.createEmptyGrid()
-        // Fill entire grid
-        for row in 0..<8 {
-            for col in 0..<8 {
-                grid[row][col].isFilled = true
-            }
-        }
+    @Test("Full grid is game over for any block")
+    func fullGridIsGameOverForAnyBlock() {
+        let grid = filledGrid()
         let blocks = [BlockShape.allShapes[0]]
-
-        let gameOver = GameLogic.isGameOver(currentBlocks: blocks, grid: grid)
-
-        XCTAssertTrue(gameOver)
+        #expect(GameLogic.isGameOver(currentBlocks: blocks, grid: grid))
     }
 }
 
-// MARK: - Find Valid Positions Tests
+// MARK: - Find Valid Positions
 
-final class FindValidPositionsTests: XCTestCase {
-
-    func testFindValidPositionsOnEmptyGrid() {
+@Suite("GameLogic.findValidPositions")
+struct FindValidPositionsTests {
+    @Test("Empty grid yields many valid positions")
+    func emptyGridYieldsManyValidPositions() {
         let grid = GameLogic.createEmptyGrid()
         let block = BlockShape.allShapes[0]
-
-        let positions = GameLogic.findValidPositions(for: block, in: grid)
-
-        // Should have many valid positions on empty grid
-        XCTAssertFalse(positions.isEmpty)
+        #expect(!GameLogic.findValidPositions(for: block, in: grid).isEmpty)
     }
 
-    func testFindValidPositionsWithPartiallyFilledGrid() {
+    @Test("Partially-filled grid has fewer valid positions than empty grid")
+    func partiallyFilledGridHasFewerValidPositionsThanEmptyGrid() {
         var grid = GameLogic.createEmptyGrid()
         grid[0][0].isFilled = true
         let block = BlockShape.allShapes[0]
 
-        let positions = GameLogic.findValidPositions(for: block, in: grid)
-        let positionsOnEmptyGrid = GameLogic.findValidPositions(for: block, in: GameLogic.createEmptyGrid())
+        let partial = GameLogic.findValidPositions(for: block, in: grid).count
+        let empty = GameLogic.findValidPositions(for: block, in: GameLogic.createEmptyGrid()).count
 
-        // Should have fewer positions than empty grid
-        XCTAssertLessThan(positions.count, positionsOnEmptyGrid.count)
+        #expect(partial < empty)
     }
 
-    func testFindValidPositionsReturnsEmptyWhenNoValidPlacements() {
-        var grid = GameLogic.createEmptyGrid()
-        // Fill entire grid
-        for row in 0..<8 {
-            for col in 0..<8 {
-                grid[row][col].isFilled = true
-            }
-        }
+    @Test("Full grid returns no valid positions")
+    func fullGridReturnsNoValidPositions() {
+        let grid = filledGrid()
         let block = BlockShape.allShapes[0]
-
-        let positions = GameLogic.findValidPositions(for: block, in: grid)
-
-        XCTAssertTrue(positions.isEmpty)
+        #expect(GameLogic.findValidPositions(for: block, in: grid).isEmpty)
     }
 }

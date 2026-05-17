@@ -2,169 +2,170 @@
 //  BlockModelsTests.swift
 //  LeavesOfBlocksTests
 //
-//  Created by Claude on 11/27/25.
+//  Tests for BlockColor, BlockType, GeometricPattern, and BlockShape value types.
 //
 
-import XCTest
+import Foundation
+import Testing
 @testable import LeavesOfBlocks
 
-// MARK: - BlockColor Tests
+// MARK: - BlockColor
 
-final class BlockColorTests: XCTestCase {
-
-    func testBlockColorHasSevenCases() {
-        let allColors: [BlockColor] = [.red, .orange, .yellow, .green, .blue, .purple, .pink]
-
-        XCTAssertEqual(allColors.count, 7)
+@Suite("BlockColor")
+struct BlockColorTests {
+    @Test("Has exactly seven cases")
+    func hasSevenCases() {
+        let all: [BlockColor] = [.red, .orange, .yellow, .green, .blue, .purple, .pink]
+        #expect(all.count == 7)
     }
 
-    func testBlockColorIsCodable() throws {
-        let original = BlockColor.red
-        let encoder = JSONEncoder()
-        let decoder = JSONDecoder()
-
-        let data = try encoder.encode(original)
-        let decoded = try decoder.decode(BlockColor.self, from: data)
-
-        XCTAssertEqual(decoded, original)
+    @Test("Single color round-trips through Codable")
+    func singleColorRoundTripsThroughCodable() throws {
+        let data = try JSONEncoder().encode(BlockColor.red)
+        let decoded = try JSONDecoder().decode(BlockColor.self, from: data)
+        #expect(decoded == .red)
     }
 
-    func testBlockColorAllCasesAreCodable() throws {
+    @Test("Every color round-trips through Codable")
+    func everyColorRoundTripsThroughCodable() throws {
         let encoder = JSONEncoder()
         let decoder = JSONDecoder()
 
         for color in [BlockColor.red, .orange, .yellow, .green, .blue, .purple, .pink] {
             let data = try encoder.encode(color)
             let decoded = try decoder.decode(BlockColor.self, from: data)
-            XCTAssertEqual(decoded, color)
+            #expect(decoded == color)
         }
     }
 }
 
-// MARK: - BlockType Tests
+// MARK: - BlockType
 
-final class BlockTypeTests: XCTestCase {
-
-    func testBlockTypeHasFourCases() {
-        let allTypes: [BlockType] = [.normal, .horizontalClear, .verticalClear, .areaClear]
-
-        XCTAssertEqual(allTypes.count, 4)
+@Suite("BlockType")
+struct BlockTypeTests {
+    @Test("Has exactly four cases")
+    func hasFourCases() {
+        let all: [BlockType] = [.normal, .horizontalClear, .verticalClear, .areaClear]
+        #expect(all.count == 4)
     }
 
-    func testNormalBlockTypeIsDefault() {
+    @Test("First shape in the catalog is a normal block")
+    func firstShapeInTheCatalogIsANormalBlock() {
         let block = BlockShape.allShapes[0]
-
-        XCTAssertEqual(block.type, .normal)
+        #expect(block.type == .normal)
     }
 }
 
-// MARK: - GeometricPattern Tests
+// MARK: - GeometricPattern
 
-final class GeometricPatternTests: XCTestCase {
-
-    func testGeometricPatternHasEightPatterns() {
+@Suite("GeometricPattern")
+struct GeometricPatternTests {
+    @Test("Has eight patterns")
+    func hasEightPatterns() {
         let patterns: [GeometricPattern] = [
             .line2, .line3, .corner, .diagonal,
             .square2x2, .cross, .triangle, .zigzag
         ]
-
-        XCTAssertEqual(patterns.count, 8)
+        #expect(patterns.count == 8)
     }
 
-    func testLine2PatternHasTwoPositions() {
+    @Test("line2 has two horizontally adjacent positions")
+    func line2HasTwoHorizontallyAdjacentPositions() {
         let positions = GeometricPattern.line2.positions
-
-        XCTAssertEqual(positions.count, 2)
-        XCTAssertTrue(positions.contains(GridPosition(row: 0, col: 0)))
-        XCTAssertTrue(positions.contains(GridPosition(row: 0, col: 1)))
+        #expect(positions.count == 2)
+        #expect(positions.contains(GridPosition(row: 0, col: 0)))
+        #expect(positions.contains(GridPosition(row: 0, col: 1)))
     }
 
-    func testLine3PatternHasThreePositions() {
-        let positions = GeometricPattern.line3.positions
-
-        XCTAssertEqual(positions.count, 3)
+    @Test("line3 has three positions")
+    func line3HasThreePositions() {
+        #expect(GeometricPattern.line3.positions.count == 3)
     }
 
-    func testSquare2x2PatternHasFourPositions() {
+    @Test("square2x2 covers the full 2x2 quadrant")
+    func square2x2CoversTheFull2x2Quadrant() {
         let positions = GeometricPattern.square2x2.positions
-
-        XCTAssertEqual(positions.count, 4)
-        XCTAssertTrue(positions.contains(GridPosition(row: 0, col: 0)))
-        XCTAssertTrue(positions.contains(GridPosition(row: 0, col: 1)))
-        XCTAssertTrue(positions.contains(GridPosition(row: 1, col: 0)))
-        XCTAssertTrue(positions.contains(GridPosition(row: 1, col: 1)))
+        #expect(positions.count == 4)
+        #expect(positions.contains(GridPosition(row: 0, col: 0)))
+        #expect(positions.contains(GridPosition(row: 0, col: 1)))
+        #expect(positions.contains(GridPosition(row: 1, col: 0)))
+        #expect(positions.contains(GridPosition(row: 1, col: 1)))
     }
 
-    func testAllPatternsHavePositions() {
+    @Test("Every pattern has at least one position")
+    func everyPatternHasAtLeastOnePosition() {
         for pattern in GeometricPattern.allCases {
-            XCTAssertFalse(pattern.positions.isEmpty)
+            #expect(!pattern.positions.isEmpty)
         }
     }
 }
 
-// MARK: - BlockShape Tests
+// MARK: - BlockShape
 
-final class BlockShapeTests: XCTestCase {
-
-    func testAllShapesIsNotEmpty() {
-        XCTAssertFalse(BlockShape.allShapes.isEmpty)
+@Suite("BlockShape")
+struct BlockShapeTests {
+    @Test("allShapes is non-empty")
+    func allShapesIsNonEmpty() {
+        #expect(!BlockShape.allShapes.isEmpty)
     }
 
-    func testAllShapesHasAtLeast21Shapes() {
-        XCTAssertGreaterThanOrEqual(BlockShape.allShapes.count, 21)
+    @Test("allShapes has at least 21 entries")
+    func allShapesHasAtLeast21Entries() {
+        #expect(BlockShape.allShapes.count >= 21)
     }
 
-    func testAllShapesHavePositions() {
+    @Test("Every shape declares at least one position")
+    func everyShapeDeclaresAtLeastOnePosition() {
         for shape in BlockShape.allShapes {
-            XCTAssertFalse(shape.positions.isEmpty)
+            #expect(!shape.positions.isEmpty)
         }
     }
 
-    func testAllShapesHaveValidColors() {
-        let validColors: Set<BlockColor> = [.red, .orange, .yellow, .green, .blue, .purple, .pink]
-
+    @Test("Every shape uses a known palette color")
+    func everyShapeUsesAKnownPaletteColor() {
+        let valid: Set<BlockColor> = [.red, .orange, .yellow, .green, .blue, .purple, .pink]
         for shape in BlockShape.allShapes {
-            XCTAssertTrue(validColors.contains(shape.color))
+            #expect(valid.contains(shape.color))
         }
     }
 
-    func testAllShapesHaveNormalType() {
+    @Test("Every catalog shape is of type .normal")
+    func everyCatalogShapeIsOfTypeNormal() {
         for shape in BlockShape.allShapes {
-            XCTAssertEqual(shape.type, .normal)
+            #expect(shape.type == .normal)
         }
     }
 
-    func testBlockShapePositionsAreNonNegative() {
+    @Test("Positions are non-negative")
+    func positionsAreNonNegative() {
         for shape in BlockShape.allShapes {
             for position in shape.positions {
-                XCTAssertGreaterThanOrEqual(position.row, 0)
-                XCTAssertGreaterThanOrEqual(position.col, 0)
+                #expect(position.row >= 0)
+                #expect(position.col >= 0)
             }
         }
     }
 
-    func testBlockShapeIsCodable() throws {
+    @Test("BlockShape round-trips through Codable")
+    func blockShapeRoundTripsThroughCodable() throws {
         let original = BlockShape.allShapes[0]
-        let encoder = JSONEncoder()
-        let decoder = JSONDecoder()
 
-        let data = try encoder.encode(original)
-        let decoded = try decoder.decode(BlockShape.self, from: data)
+        let data = try JSONEncoder().encode(original)
+        let decoded = try JSONDecoder().decode(BlockShape.self, from: data)
 
-        XCTAssertEqual(decoded.positions, original.positions)
-        XCTAssertEqual(decoded.color, original.color)
-        XCTAssertEqual(decoded.type, original.type)
+        #expect(decoded.positions == original.positions)
+        #expect(decoded.color == original.color)
+        #expect(decoded.type == original.type)
     }
 
-    func testBlockShapesHaveDistinctPositions() {
-        let shape1 = BlockShape.allShapes[0]
-        let shape2 = BlockShape.allShapes[1]
+    @Test("Catalog entries are not identical to each other")
+    func catalogEntriesAreNotIdenticalToEachOther() {
+        let a = BlockShape.allShapes[0]
+        let b = BlockShape.allShapes[1]
 
-        // Different shapes should have different position sets or colors
-        let samePositions = shape1.positions == shape2.positions
-        let sameColor = shape1.color == shape2.color
+        let samePositions = a.positions == b.positions
+        let sameColor = a.color == b.color
 
-        // They shouldn't be identical
-        XCTAssertFalse(samePositions && sameColor)
+        #expect(!(samePositions && sameColor))
     }
 }

@@ -2,218 +2,142 @@
 //  GameStatisticsTests.swift
 //  LeavesOfBlocksTests
 //
-//  Created by Claude on 11/27/25.
+//  Tests for GameSessionStatistics-derived metrics: averages, percentages,
+//  rates, performance grades, and time formatting.
 //
 
-import XCTest
+import Foundation
+import Testing
 @testable import LeavesOfBlocks
 
-// MARK: - Average Block Score Tests
+// MARK: - Helpers
 
-final class AverageBlockScoreTests: XCTestCase {
+private func statistics(
+    score: Int = 0,
+    blocksPlaced: Int = 0,
+    linesCleared: Int = 0,
+    gameTime: TimeInterval = 0,
+    longestCombo: Int = 0,
+    currentCombo: Int = 0,
+    difficulty: DifficultyMode = .easy
+) -> GameSessionStatistics {
+    GameSessionStatistics(
+        score: score,
+        blocksPlaced: blocksPlaced,
+        linesCleared: linesCleared,
+        gameTime: gameTime,
+        longestCombo: longestCombo,
+        currentCombo: currentCombo,
+        difficulty: difficulty
+    )
+}
 
-    func testAverageBlockScoreWithValidData() {
-        let stats = GameSessionStatistics(
-            score: 100,
-            blocksPlaced: 10,
-            linesCleared: 5,
-            gameTime: 60,
-            longestCombo: 2,
-            currentCombo: 0,
-            difficulty: .easy
-        )
+// MARK: - Average Block Score
 
-        XCTAssertEqual(stats.averageBlockScore, 10.0)
+@Suite("GameSessionStatistics.averageBlockScore")
+struct AverageBlockScoreTests {
+    @Test("Score divided by blocks placed")
+    func scoreDividedByBlocksPlaced() {
+        let stats = statistics(score: 100, blocksPlaced: 10)
+        #expect(stats.averageBlockScore == 10.0)
     }
 
-    func testAverageBlockScoreReturnsZeroWhenNoBlocksPlaced() {
-        let stats = GameSessionStatistics(
-            score: 0,
-            blocksPlaced: 0,
-            linesCleared: 0,
-            gameTime: 60,
-            longestCombo: 0,
-            currentCombo: 0,
-            difficulty: .easy
-        )
-
-        XCTAssertEqual(stats.averageBlockScore, 0.0)
+    @Test("Returns zero when no blocks placed (avoid divide-by-zero)")
+    func returnsZeroWhenNoBlocksPlaced() {
+        #expect(statistics().averageBlockScore == 0.0)
     }
 
-    func testAverageBlockScoreHandlesLargeScore() {
-        let stats = GameSessionStatistics(
-            score: 10000,
-            blocksPlaced: 50,
-            linesCleared: 20,
-            gameTime: 300,
-            longestCombo: 5,
-            currentCombo: 0,
-            difficulty: .hard
-        )
-
-        XCTAssertEqual(stats.averageBlockScore, 200.0)
+    @Test("Handles large scores")
+    func handlesLargeScores() {
+        let stats = statistics(score: 10_000, blocksPlaced: 50, difficulty: .hard)
+        #expect(stats.averageBlockScore == 200.0)
     }
 }
 
-// MARK: - Line Clear Percentage Tests
+// MARK: - Line Clear Percentage
 
-final class LineClearPercentageTests: XCTestCase {
-
-    func testLineClearPercentageWithValidData() {
-        let stats = GameSessionStatistics(
-            score: 100,
-            blocksPlaced: 10,
-            linesCleared: 5,
-            gameTime: 60,
-            longestCombo: 2,
-            currentCombo: 0,
-            difficulty: .easy
-        )
-
-        XCTAssertEqual(stats.lineClearPercentage, 50.0)
+@Suite("GameSessionStatistics.lineClearPercentage")
+struct LineClearPercentageTests {
+    @Test("Lines per block as a percentage")
+    func linesPerBlockAsAPercentage() {
+        let stats = statistics(score: 100, blocksPlaced: 10, linesCleared: 5)
+        #expect(stats.lineClearPercentage == 50.0)
     }
 
-    func testLineClearPercentageReturnsZeroWhenNoBlocksPlaced() {
-        let stats = GameSessionStatistics(
-            score: 0,
-            blocksPlaced: 0,
-            linesCleared: 0,
-            gameTime: 60,
-            longestCombo: 0,
-            currentCombo: 0,
-            difficulty: .easy
-        )
-
-        XCTAssertEqual(stats.lineClearPercentage, 0.0)
+    @Test("Returns zero when no blocks placed")
+    func returnsZeroWhenNoBlocksPlaced() {
+        #expect(statistics().lineClearPercentage == 0.0)
     }
 }
 
-// MARK: - Score Per Minute Tests
+// MARK: - Score Per Minute
 
-final class ScorePerMinuteTests: XCTestCase {
-
-    func testScorePerMinuteWithOneMinute() {
-        let stats = GameSessionStatistics(
-            score: 600,
-            blocksPlaced: 10,
-            linesCleared: 5,
-            gameTime: 60,
-            longestCombo: 2,
-            currentCombo: 0,
-            difficulty: .easy
-        )
-
-        XCTAssertEqual(stats.scorePerMinute, 600.0)
+@Suite("GameSessionStatistics.scorePerMinute")
+struct ScorePerMinuteTests {
+    @Test("Score equals SPM when exactly one minute elapsed")
+    func scoreEqualsSPMWhenExactlyOneMinuteElapsed() {
+        let stats = statistics(score: 600, gameTime: 60)
+        #expect(stats.scorePerMinute == 600.0)
     }
 
-    func testScorePerMinuteWithMultipleMinutes() {
-        let stats = GameSessionStatistics(
-            score: 1200,
-            blocksPlaced: 20,
-            linesCleared: 10,
-            gameTime: 120,
-            longestCombo: 3,
-            currentCombo: 0,
-            difficulty: .moderate
-        )
-
-        XCTAssertEqual(stats.scorePerMinute, 600.0)
+    @Test("SPM scales correctly over multiple minutes")
+    func spmScalesCorrectlyOverMultipleMinutes() {
+        let stats = statistics(score: 1200, gameTime: 120, difficulty: .moderate)
+        #expect(stats.scorePerMinute == 600.0)
     }
 
-    func testScorePerMinuteReturnsZeroWhenNoTime() {
-        let stats = GameSessionStatistics(
-            score: 100,
-            blocksPlaced: 5,
-            linesCleared: 2,
-            gameTime: 0,
-            longestCombo: 1,
-            currentCombo: 0,
-            difficulty: .easy
-        )
-
-        XCTAssertEqual(stats.scorePerMinute, 0.0)
+    @Test("Returns zero when no time elapsed (avoid divide-by-zero)")
+    func returnsZeroWhenNoTimeElapsed() {
+        let stats = statistics(score: 100, gameTime: 0)
+        #expect(stats.scorePerMinute == 0.0)
     }
 }
 
-// MARK: - Performance Grade Tests
+// MARK: - Performance Grade
 
-final class PerformanceGradeTests: XCTestCase {
-
-    func testPerformanceGradeS() {
-        // Create stats that yield 90%+ efficiency
-        let stats = GameSessionStatistics(
-            score: 60000,
-            blocksPlaced: 100,
-            linesCleared: 600,
-            gameTime: 60,
-            longestCombo: 10,
-            currentCombo: 0,
-            difficulty: .hard
+@Suite("GameSessionStatistics.performanceGrade")
+struct PerformanceGradeTests {
+    @Test("Top-tier efficiency yields S")
+    func topTierEfficiencyYieldsS() {
+        let stats = statistics(
+            score: 60_000, blocksPlaced: 100, linesCleared: 600,
+            gameTime: 60, longestCombo: 10, difficulty: .hard
         )
-
-        XCTAssertEqual(stats.performanceGrade, "S")
+        #expect(stats.performanceGrade == "S")
     }
 
-    func testPerformanceGradeF() {
-        // Create stats that yield low efficiency
-        let stats = GameSessionStatistics(
-            score: 10,
-            blocksPlaced: 1,
-            linesCleared: 0,
-            gameTime: 600,
-            longestCombo: 0,
-            currentCombo: 0,
-            difficulty: .easy
+    @Test("Bottom-tier efficiency yields F")
+    func bottomTierEfficiencyYieldsF() {
+        let stats = statistics(
+            score: 10, blocksPlaced: 1, linesCleared: 0,
+            gameTime: 600
         )
-
-        XCTAssertEqual(stats.performanceGrade, "F")
+        #expect(stats.performanceGrade == "F")
     }
 }
 
-// MARK: - Formatted Game Time Tests
+// MARK: - Formatted Game Time
 
-final class FormattedGameTimeTests: XCTestCase {
-
-    func testFormattedGameTimeUnderOneMinute() {
-        let stats = GameSessionStatistics(
-            score: 100,
-            blocksPlaced: 5,
-            linesCleared: 2,
-            gameTime: 45,
-            longestCombo: 1,
-            currentCombo: 0,
-            difficulty: .easy
-        )
-
-        XCTAssertEqual(stats.formattedGameTime, "0:45")
+@Suite("GameSessionStatistics.formattedGameTime")
+struct FormattedGameTimeTests {
+    @Test("Under one minute renders as 0:SS")
+    func underOneMinuteRendersAs0SS() {
+        let stats = statistics(score: 100, blocksPlaced: 5, gameTime: 45)
+        #expect(stats.formattedGameTime == "0:45")
     }
 
-    func testFormattedGameTimeExactMinute() {
-        let stats = GameSessionStatistics(
-            score: 100,
-            blocksPlaced: 5,
-            linesCleared: 2,
-            gameTime: 60,
-            longestCombo: 1,
-            currentCombo: 0,
-            difficulty: .easy
-        )
-
-        XCTAssertEqual(stats.formattedGameTime, "1:00")
+    @Test("Exactly one minute renders as 1:00")
+    func exactlyOneMinuteRendersAs100() {
+        let stats = statistics(score: 100, blocksPlaced: 5, gameTime: 60)
+        #expect(stats.formattedGameTime == "1:00")
     }
 
-    func testFormattedGameTimeMultipleMinutes() {
-        let stats = GameSessionStatistics(
-            score: 500,
-            blocksPlaced: 25,
-            linesCleared: 10,
-            gameTime: 185,
-            longestCombo: 3,
-            currentCombo: 0,
-            difficulty: .moderate
+    @Test("Multiple minutes render as M:SS")
+    func multipleMinutesRenderAsMSS() {
+        let stats = statistics(
+            score: 500, blocksPlaced: 25, linesCleared: 10,
+            gameTime: 185, longestCombo: 3, difficulty: .moderate
         )
-
-        XCTAssertEqual(stats.formattedGameTime, "3:05")
+        #expect(stats.formattedGameTime == "3:05")
     }
 }
-
