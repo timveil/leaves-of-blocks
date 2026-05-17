@@ -21,7 +21,6 @@ struct GameSession: Equatable {
     let fallbackActivations: Int?
     let efficiencyGrade: String?
     let strategicGrade: String?
-    let tierUsageDistribution: String?
 
     /// Game time as a `m:ss` clock string.
     var formattedGameTime: String {

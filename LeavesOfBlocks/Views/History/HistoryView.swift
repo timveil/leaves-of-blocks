@@ -99,7 +99,6 @@ struct HistoryView: View {
                         averageGridEfficiency: Double.random(in: 0.4...0.9),
                         averageFragmentation: Double.random(in: 0.2...0.6),
                         strategicPlayRating: Double.random(in: 0.3...0.8),
-                        tierUsageDistribution: ["diverse": 10, "constrained": 15, "minimal": 5],
                         fallbackActivations: Int.random(in: 0...3),
                         challengeMaintained: Double.random(in: 0.3...0.8)
                     )

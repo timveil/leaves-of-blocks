@@ -31,8 +31,7 @@ private func makeRecord(
     strategicPlayRating: Double = 0,
     challengeMaintained: Double = 0,
     efficiencyGrade: String? = nil,
-    strategicGrade: String? = nil,
-    tierUsageDistribution: String? = nil
+    strategicGrade: String? = nil
 ) -> GameRecord {
     let record = GameRecord(context: manager.viewContext)
     record.id = UUID()
@@ -49,7 +48,6 @@ private func makeRecord(
     record.challengeMaintained = challengeMaintained
     record.efficiencyGrade = efficiencyGrade
     record.strategicGrade = strategicGrade
-    record.tierUsageDistribution = tierUsageDistribution
     return record
 }
 
@@ -92,8 +90,7 @@ struct GameSessionFromRecordHappyPathTests {
             strategicPlayRating: 0.6,
             challengeMaintained: 0.5,
             efficiencyGrade: "grade_a_plus",
-            strategicGrade: "grade_master",
-            tierUsageDistribution: "{\"diverse\":10}"
+            strategicGrade: "grade_master"
         )
 
         let session = GameSession(record: record)
@@ -104,7 +101,6 @@ struct GameSessionFromRecordHappyPathTests {
         #expect(session?.challengeMaintained == 0.5)
         #expect(session?.efficiencyGrade == "grade_a_plus")
         #expect(session?.strategicGrade == "grade_master")
-        #expect(session?.tierUsageDistribution == "{\"diverse\":10}")
     }
 }
 
@@ -136,16 +132,6 @@ struct GameSessionFromRecordOptionalCoercionTests {
 
         #expect(session?.efficiencyGrade == nil)
         #expect(session?.strategicGrade == nil)
-    }
-
-    @Test @MainActor
-    func emptyTierUsageBecomesNil() {
-        let manager = CoreDataManager.makeInMemoryForTests()
-        let record = makeRecord(in: manager, tierUsageDistribution: "")
-
-        let session = GameSession(record: record)
-
-        #expect(session?.tierUsageDistribution == nil)
     }
 }
 

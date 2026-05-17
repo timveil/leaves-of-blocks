@@ -32,8 +32,7 @@ extension GameSession {
             challengeMaintained: record.challengeMaintained > 0 ? record.challengeMaintained : nil,
             fallbackActivations: nil,
             efficiencyGrade: record.efficiencyGrade?.nilIfEmpty,
-            strategicGrade: record.strategicGrade?.nilIfEmpty,
-            tierUsageDistribution: record.tierUsageDistribution?.nilIfEmpty
+            strategicGrade: record.strategicGrade?.nilIfEmpty
         )
     }
 }

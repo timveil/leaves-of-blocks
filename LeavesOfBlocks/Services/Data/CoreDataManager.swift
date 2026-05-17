@@ -140,15 +140,9 @@ final class CoreDataManager {
                 gameRecord.fallbackActivations = Int32(metrics.fallbackActivations)
                 gameRecord.efficiencyGrade = metrics.efficiencyGrade
                 gameRecord.strategicGrade = metrics.strategicGrade
-
-                do {
-                    let tierData = try JSONSerialization.data(withJSONObject: metrics.tierUsageDistribution)
-                    if let tierString = String(data: tierData, encoding: .utf8) {
-                        gameRecord.tierUsageDistribution = tierString
-                    }
-                } catch {
-                    BuildConfiguration.log("Failed to serialize tier usage distribution: \(error.localizedDescription)", level: .warning)
-                }
+                // `tierUsageDistribution` column is preserved in the Core Data
+                // schema for backward read of older rows, but no longer
+                // populated for new rows — see A3 in the code review.
             }
 
             #if DEBUG

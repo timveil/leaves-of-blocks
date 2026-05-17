@@ -50,8 +50,7 @@ struct GameSessionRow: View {
                 challengeMaintained: nil,
                 fallbackActivations: nil,
                 efficiencyGrade: nil,
-                strategicGrade: nil,
-                tierUsageDistribution: nil
+                strategicGrade: nil
             ),
             isHighScore: true
         )
@@ -69,8 +68,7 @@ struct GameSessionRow: View {
                 challengeMaintained: nil,
                 fallbackActivations: nil,
                 efficiencyGrade: nil,
-                strategicGrade: nil,
-                tierUsageDistribution: nil
+                strategicGrade: nil
             ),
             isHighScore: false
         )

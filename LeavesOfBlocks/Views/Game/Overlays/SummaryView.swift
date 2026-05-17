@@ -159,8 +159,7 @@ private struct SummaryDifficultyTile: View {
             challengeMaintained: 0.58,
             fallbackActivations: 1,
             efficiencyGrade: "A-",
-            strategicGrade: "B+",
-            tierUsageDistribution: "diverse:14,constrained:18,minimal:6"
+            strategicGrade: "B+"
         )
     )
 }

@@ -28,7 +28,6 @@ final class PlayerBehaviorTracker {
         let averageGridEfficiency: Double          // Average grid efficiency throughout game
         let averageFragmentation: Double           // Average grid fragmentation
         let strategicPlayRating: Double            // How well player set up line clears
-        let tierUsageDistribution: [String: Int]   // How often each difficulty tier was used
         let fallbackActivations: Int               // Number of times fallback system activated
         let challengeMaintained: Double            // Percentage of game spent in higher tiers
         
@@ -77,7 +76,6 @@ final class PlayerBehaviorTracker {
     @ObservationIgnored private var gridEfficiencyHistory: [Double] = []
     @ObservationIgnored private var fragmentationHistory: [Double] = []
     @ObservationIgnored private var strategicOpportunities: [Double] = []
-    @ObservationIgnored private var tierUsageCount: [String: Int] = [:]
     @ObservationIgnored private var fallbackCount: Int = 0
     @ObservationIgnored private var totalMeasurements: Int = 0
     @ObservationIgnored private var highTierMeasurements: Int = 0
@@ -109,7 +107,6 @@ final class PlayerBehaviorTracker {
             averageGridEfficiency: averages.efficiency,
             averageFragmentation: averages.fragmentation,
             strategicPlayRating: averages.strategic,
-            tierUsageDistribution: tierUsageCount,
             fallbackActivations: fallbackCount,
             challengeMaintained: averages.challengeMaintained
         )
@@ -147,36 +144,31 @@ final class PlayerBehaviorTracker {
         gridEfficiencyHistory.removeAll()
         fragmentationHistory.removeAll()
         strategicOpportunities.removeAll()
-        tierUsageCount.removeAll()
         fallbackCount = 0
         totalMeasurements = 0
         highTierMeasurements = 0
         currentSessionMetrics = nil
-        
+
         BuildConfiguration.log("Player behavior tracking session started", level: .debug)
     }
-    
+
     /// Records grid state metrics during gameplay
     func recordGridState(_ grid: [[GridCell]]) {
         let metrics = GridAnalysis.analyzeGrid(grid)
         let tier = GridAnalysis.determineDifficultyTier(for: grid)
-        
+
         // Record efficiency metrics, dropping the oldest entries past the cap.
         appendBounded(&gridEfficiencyHistory, metrics.efficiency)
         appendBounded(&fragmentationHistory, metrics.fragmentation)
         appendBounded(&strategicOpportunities, metrics.strategicPotential)
-        
-        // Track tier usage
-        let tierName = tier.description
-        tierUsageCount[tierName, default: 0] += 1
-        
+
         // Track challenge level
         totalMeasurements += 1
         if tier == .diverse || tier == .constrained {
             highTierMeasurements += 1
         }
-        
-        BuildConfiguration.log("Recorded grid state - Efficiency: \(String(format: "%.3f", metrics.efficiency)), Tier: \(tierName)", level: .verbose)
+
+        BuildConfiguration.log("Recorded grid state - Efficiency: \(String(format: "%.3f", metrics.efficiency)), Tier: \(tier.description)", level: .verbose)
     }
     
     /// Appends `value` to `history`, dropping the oldest entry once the cap is exceeded.
@@ -214,7 +206,6 @@ final class PlayerBehaviorTracker {
             averageGridEfficiency: averages.efficiency,
             averageFragmentation: averages.fragmentation,
             strategicPlayRating: averages.strategic,
-            tierUsageDistribution: tierUsageCount,
             fallbackActivations: fallbackCount,
             challengeMaintained: averages.challengeMaintained
         )

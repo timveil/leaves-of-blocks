@@ -32,7 +32,6 @@ private func metrics(
         averageGridEfficiency: averageGridEfficiency,
         averageFragmentation: 0,
         strategicPlayRating: strategicPlayRating,
-        tierUsageDistribution: [:],
         fallbackActivations: 0,
         challengeMaintained: 0
     )
