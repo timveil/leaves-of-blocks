@@ -42,15 +42,38 @@ else
     GREEN='' YELLOW='' CYAN='' RED='' NC=''
 fi
 
+# Simulator discovery uses `xcrun simctl list -j devices` (JSON) so this script
+# isn't tied to the human-readable output format, which has changed across
+# Xcode versions. Parsing in python3 (ships with macOS — no extra dep).
+
 # Get first available iPhone simulator name
 get_simulator_name() {
-    xcrun simctl list devices available | grep "iPhone" | head -1 | sed 's/^[[:space:]]*//' | sed 's/ (.*//'
+    xcrun simctl list -j devices | python3 -c '
+import json, sys
+data = json.load(sys.stdin)
+for _, devices in data.get("devices", {}).items():
+    for device in devices:
+        if device.get("isAvailable") and device.get("name", "").startswith("iPhone"):
+            print(device["name"])
+            sys.exit(0)
+sys.exit(1)
+'
 }
 
 # Get simulator UDID by name
 get_simulator_udid() {
     local sim_name="$1"
-    xcrun simctl list devices available | grep "$sim_name" | head -1 | sed -E 's/.*\(([A-F0-9-]+)\).*/\1/'
+    xcrun simctl list -j devices | python3 -c '
+import json, sys
+target = sys.argv[1]
+data = json.load(sys.stdin)
+for _, devices in data.get("devices", {}).items():
+    for device in devices:
+        if device.get("isAvailable") and device.get("name") == target:
+            print(device["udid"])
+            sys.exit(0)
+sys.exit(1)
+' "$sim_name"
 }
 
 # Get test destination - adapts strategy based on environment

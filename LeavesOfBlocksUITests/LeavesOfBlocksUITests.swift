@@ -65,8 +65,17 @@ final class LeavesOfBlocksUITests: XCTestCase {
     private func openMenu() {
         let menuButton = app.buttons["menu_button"]
         XCTAssertTrue(menuButton.waitForExistence(timeout: 2), "Menu button should exist")
-        // SwiftUI toolbar `Menu` returns an invalid AX hit point on iOS 26,
-        // so tap the element's center coordinate rather than via .tap().
+        // Workaround: SwiftUI toolbar `Menu` (the `Menu { ... } label: { ... }`
+        // form) returns an invalid accessibility hit point on iOS 26.0–26.x,
+        // so XCUIElement.tap() lands outside the element and the menu never
+        // opens. Tapping the element's center coordinate sidesteps the
+        // bad hit point.
+        //
+        // **To remove this workaround:** When the iOS deployment target
+        // moves past whatever release ships Apple's fix (no FB has been
+        // filed yet — worth filing if this lingers), try swapping back to
+        // `menuButton.tap()` and confirm the menu opens locally. If it
+        // does, drop the coordinate dance and this comment.
         menuButton.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
     }
 
