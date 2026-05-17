@@ -314,59 +314,17 @@ struct BoardView: View {
     }
     
     private func findOptimalPlacement(for block: BlockShape, nearPoint: CGPoint) -> GridPosition? {
-        let maxDistance = DragConfiguration.maxSnapDistance
-        var bestPosition: GridPosition?
-        var bestDistance = CGFloat.greatestFiniteMagnitude
-
-        let bounds = block.getBounds()
-        let cellWithSpacing = GridConstants.cellWithSpacing(cellSize: cellSize)
-
-        // Optimize search area - only check positions near the drag location.
-        // The drag can produce a grid-local `nearPoint` deep outside the grid
-        // (see BoardLayout.placementSearchRanges doc + the production crash
-        // it traces back to); the helper returns nil in that case.
-        let centerRow = Int(nearPoint.y / cellWithSpacing)
-        let centerCol = Int(nearPoint.x / cellWithSpacing)
-        let searchRadius = max(bounds.width, bounds.height) + 2
-
-        guard let ranges = BoardLayout.placementSearchRanges(
-            centerRow: centerRow,
-            centerCol: centerCol,
-            searchRadius: searchRadius,
-            gridSize: AppConfiguration.GameRules.gridSize
-        ) else {
-            return nil
-        }
-
-        for row in ranges.rows {
-            for col in ranges.cols {
-                let position = GridPosition(row: row, col: col)
-
-                guard gameState.canPlaceBlock(block, at: position) else { continue }
-
-                let blockCenter = calculateBlockCenter(block: block, at: position)
-                let distance = hypot(blockCenter.x - nearPoint.x, blockCenter.y - nearPoint.y)
-
-                if distance < bestDistance && distance <= maxDistance {
-                    bestDistance = distance
-                    bestPosition = position
-                }
+        BoardLayout.findOptimalPlacement(
+            for: block,
+            nearPoint: nearPoint,
+            cellSize: cellSize,
+            cellSpacing: GridConstants.cellSpacing,
+            gridSize: AppConfiguration.GameRules.gridSize,
+            maxDistance: DragConfiguration.maxSnapDistance,
+            gridPadding: GridConstants.gridPadding,
+            canPlace: { block, position in
+                gameState.canPlaceBlock(block, at: position)
             }
-        }
-
-        return bestPosition
-    }
-    
-    private func calculateBlockCenter(block: BlockShape, at position: GridPosition) -> CGPoint {
-        let bounds = block.getBounds()
-        let cellWithSpacing = GridConstants.cellWithSpacing(cellSize: cellSize)
-        
-        let centerRow = CGFloat(position.row) + CGFloat(bounds.maxRow + bounds.minRow) / 2.0
-        let centerCol = CGFloat(position.col) + CGFloat(bounds.maxCol + bounds.minCol) / 2.0
-        
-        return CGPoint(
-            x: centerCol * cellWithSpacing + cellSize / 2.0 + GridConstants.gridPadding,
-            y: centerRow * cellWithSpacing + cellSize / 2.0 + GridConstants.gridPadding
         )
     }
     
