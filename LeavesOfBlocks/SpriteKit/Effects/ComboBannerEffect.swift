@@ -28,7 +28,7 @@ enum ComboBannerEffect {
     /// Plays the combo banner effect at the visual center of the grid.
     ///
     /// Posts a VoiceOver announcement unconditionally, then renders the visual
-    /// banner unless `prefersReducedMotion` is enabled.
+    /// banner unless `UIAccessibility.isReduceMotionEnabled` is set.
     ///
     /// - Parameters:
     ///   - comboCount: Total lines cleared simultaneously (must be `>= 2` to look right).
@@ -43,7 +43,7 @@ enum ComboBannerEffect {
             argument: "ax_combo_format".localized(with: title, comboCount, bonus)
         )
 
-        guard !UIAccessibility.prefersReducedMotion else { return }
+        guard !UIAccessibility.isReduceMotionEnabled else { return }
 
         for child in gridNode.children where child.name == containerName {
             child.removeFromParent()

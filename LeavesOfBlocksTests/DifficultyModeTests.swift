@@ -74,13 +74,3 @@ struct DifficultyModeTests {
     }
 }
 
-@Suite("UIAccessibility.prefersReducedMotion")
-struct UIAccessibilityPrefersReducedMotionTests {
-    @Test("Mirrors UIAccessibility.isReduceMotionEnabled at the time of read")
-    @MainActor
-    func mirrorsSystemSetting() {
-        // Can't toggle the iOS-level setting from a test, but we can verify
-        // the helper is a true alias (value parity at this instant).
-        #expect(UIAccessibility.prefersReducedMotion == UIAccessibility.isReduceMotionEnabled)
-    }
-}
