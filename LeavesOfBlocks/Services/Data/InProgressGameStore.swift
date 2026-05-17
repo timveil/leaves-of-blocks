@@ -20,13 +20,25 @@ struct InProgressGameSnapshot: Codable, Equatable {
     var savedAt: Date
 }
 
+/// Abstract surface for the active-game store, so consumers (chiefly
+/// `GameState`) can be tested against an in-memory fake instead of real
+/// disk I/O. The production `InProgressGameStore` conforms; the test
+/// target ships a `MockInProgressGameStore` that records call counts.
+@MainActor
+protocol InProgressGameStoring: AnyObject {
+    var hasSavedGame: Bool { get }
+    func load() -> InProgressGameSnapshot?
+    func save(_ snapshot: InProgressGameSnapshot)
+    func clear()
+}
+
 /// Single-slot, JSON-on-disk persistence for the active game.
 ///
 /// The store holds at most one snapshot. Writing a new snapshot replaces the
 /// previous one; `clear()` removes the file. The file URL is injectable so
 /// tests can use a temporary directory.
 @MainActor
-final class InProgressGameStore {
+final class InProgressGameStore: InProgressGameStoring {
 
     static let shared: InProgressGameStore = {
         let url = InProgressGameStore.defaultFileURL()

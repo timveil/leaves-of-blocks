@@ -44,7 +44,7 @@ final class GameState {
 
     private let gameService: GameService
     private let behaviorTracker: PlayerBehaviorTracker
-    private let inProgressStore: InProgressGameStore
+    private let inProgressStore: any InProgressGameStoring
 
     // MARK: - Computed Properties
 
@@ -83,10 +83,12 @@ final class GameState {
     ///   - gameService: Timing, persistence, and haptics. `nil` constructs a default `GameService`.
     ///   - behaviorTracker: Per-session efficiency/strategy tracker. `nil` constructs a default `PlayerBehaviorTracker`.
     ///   - inProgressStore: Single-slot store for the active run. `nil` uses the shared instance.
+    ///     The parameter is typed as `any InProgressGameStoring` so tests can
+    ///     inject an in-memory fake instead of hitting disk.
     init(
         gameService: GameService? = nil,
         behaviorTracker: PlayerBehaviorTracker? = nil,
-        inProgressStore: InProgressGameStore? = nil
+        inProgressStore: (any InProgressGameStoring)? = nil
     ) {
         self.gameService = gameService ?? GameService()
         self.behaviorTracker = behaviorTracker ?? PlayerBehaviorTracker()
