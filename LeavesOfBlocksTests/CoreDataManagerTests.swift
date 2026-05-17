@@ -29,8 +29,8 @@ private func saveSample(
     linesCleared: Int = 1,
     longestCombo: Int = 1,
     gameTime: TimeInterval = 60
-) {
-    manager.saveGameRecord(
+) throws {
+    try manager.saveGameRecord(
         score: score,
         difficulty: difficulty,
         blocksPlaced: blocksPlaced,
@@ -80,18 +80,18 @@ struct CoreDataManagerEmptyStoreTests {
 @Suite("CoreDataManager: save + fetch round-trip")
 struct CoreDataManagerSaveFetchTests {
     @Test @MainActor
-    func savedRecordAppearsInFetchHistory() {
+    func savedRecordAppearsInFetchHistory() throws {
         let m = makeManager()
-        saveSample(on: m, score: 100)
+        try saveSample(on: m, score: 100)
         let records = m.fetchGameHistory()
         #expect(records.count == 1)
         #expect(records.first?.score == 100)
     }
 
     @Test @MainActor
-    func savedRecordPreservesAllFields() {
+    func savedRecordPreservesAllFields() throws {
         let m = makeManager()
-        m.saveGameRecord(
+        try m.saveGameRecord(
             score: 250,
             difficulty: .hard,
             blocksPlaced: 42,
@@ -111,16 +111,16 @@ struct CoreDataManagerSaveFetchTests {
     }
 
     @Test @MainActor
-    func fetchHistoryReturnsNewestFirst() {
+    func fetchHistoryReturnsNewestFirst() throws {
         let m = makeManager()
-        saveSample(on: m, score: 100)
+        try saveSample(on: m, score: 100)
         // Force a new Date stamp by yielding briefly. saveGameRecord stamps
         // record.date = Date() — sequential calls in the same millisecond
         // would tie. A Thread.sleep is heavy-handed but cheap and reliable.
         Thread.sleep(forTimeInterval: 0.005)
-        saveSample(on: m, score: 200)
+        try saveSample(on: m, score: 200)
         Thread.sleep(forTimeInterval: 0.005)
-        saveSample(on: m, score: 50)
+        try saveSample(on: m, score: 50)
 
         let records = m.fetchGameHistory()
         #expect(records.count == 3)
@@ -129,10 +129,10 @@ struct CoreDataManagerSaveFetchTests {
     }
 
     @Test @MainActor
-    func fetchHistoryRespectsLimit() {
+    func fetchHistoryRespectsLimit() throws {
         let m = makeManager()
         for s in [10, 20, 30, 40, 50] {
-            saveSample(on: m, score: s)
+            try saveSample(on: m, score: s)
             Thread.sleep(forTimeInterval: 0.002)
         }
         #expect(m.fetchGameHistory(limit: 3).count == 3)
@@ -146,12 +146,12 @@ struct CoreDataManagerSaveFetchTests {
 @Suite("CoreDataManager: filtered queries")
 struct CoreDataManagerFilteredQueryTests {
     @Test @MainActor
-    func fetchHistoryForDifficultyOnlyReturnsThatDifficulty() {
+    func fetchHistoryForDifficultyOnlyReturnsThatDifficulty() throws {
         let m = makeManager()
-        saveSample(on: m, score: 10, difficulty: .easy)
-        saveSample(on: m, score: 20, difficulty: .moderate)
-        saveSample(on: m, score: 30, difficulty: .hard)
-        saveSample(on: m, score: 40, difficulty: .easy)
+        try saveSample(on: m, score: 10, difficulty: .easy)
+        try saveSample(on: m, score: 20, difficulty: .moderate)
+        try saveSample(on: m, score: 30, difficulty: .hard)
+        try saveSample(on: m, score: 40, difficulty: .easy)
 
         let easyOnly = m.fetchGameHistory(for: .easy)
         #expect(easyOnly.count == 2)
@@ -163,33 +163,76 @@ struct CoreDataManagerFilteredQueryTests {
     }
 
     @Test @MainActor
-    func fetchHistoryForDifficultySortsByScoreDescending() {
+    func fetchHistoryForDifficultySortsByScoreDescending() throws {
         let m = makeManager()
-        saveSample(on: m, score: 50, difficulty: .easy)
-        saveSample(on: m, score: 200, difficulty: .easy)
-        saveSample(on: m, score: 100, difficulty: .easy)
+        try saveSample(on: m, score: 50, difficulty: .easy)
+        try saveSample(on: m, score: 200, difficulty: .easy)
+        try saveSample(on: m, score: 100, difficulty: .easy)
 
         let records = m.fetchGameHistory(for: .easy)
         #expect(records.map { Int($0.score) } == [200, 100, 50])
     }
 
     @Test @MainActor
-    func fetchHighScoresReturnsTopByScoreDesc() {
+    func fetchHighScoresReturnsTopByScoreDesc() throws {
         let m = makeManager()
         for s in [50, 200, 100, 300, 75] {
-            saveSample(on: m, score: s)
+            try saveSample(on: m, score: s)
         }
         let top3 = m.fetchHighScores(limit: 3)
         #expect(top3.map { Int($0.score) } == [300, 200, 100])
     }
 
     @Test @MainActor
-    func fetchHighScoresWithLimitLargerThanRowsReturnsAll() {
+    func fetchHighScoresWithLimitLargerThanRowsReturnsAll() throws {
         let m = makeManager()
-        saveSample(on: m, score: 10)
-        saveSample(on: m, score: 20)
+        try saveSample(on: m, score: 10)
+        try saveSample(on: m, score: 20)
         let result = m.fetchHighScores(limit: 100)
         #expect(result.count == 2)
+    }
+}
+
+// MARK: - Throwing Contract (H1)
+
+@Suite("CoreDataManager: throwing contract")
+struct CoreDataManagerThrowingContractTests {
+    // Locks in the H1 fix: persistence methods are `throws` so callers can
+    // observe and react to Core Data failures instead of having them
+    // silently swallowed and posted to a notification with no subscribers.
+    //
+    // Inducing an actual save failure requires mocking NSManagedObjectContext
+    // (the current schema has no constraints to violate); these tests are
+    // therefore happy-path contract checks. The compile-time `try` requirement
+    // documents the API shape — removing `throws` upstream would surface as
+    // unused-`try` warnings across the test suite.
+
+    @Test @MainActor
+    func saveGameRecordIsThrowing() throws {
+        let m = CoreDataManager.makeInMemoryForTests()
+        try m.saveGameRecord(
+            score: 1, difficulty: .easy, blocksPlaced: 1,
+            linesCleared: 0, longestCombo: 0, gameTime: 1
+        )
+        #expect(m.fetchGameHistory().count == 1)
+    }
+
+    @Test @MainActor
+    func deleteAllGameRecordsIsThrowing() throws {
+        let m = CoreDataManager.makeInMemoryForTests()
+        try m.saveGameRecord(
+            score: 1, difficulty: .easy, blocksPlaced: 1,
+            linesCleared: 0, longestCombo: 0, gameTime: 1
+        )
+        try m.deleteAllGameRecords()
+        #expect(m.fetchGameHistory().isEmpty)
+    }
+
+    @Test @MainActor
+    func saveContextIsThrowing() throws {
+        // Direct exercise of saveContext: no pending changes is a happy no-op.
+        let m = CoreDataManager.makeInMemoryForTests()
+        try m.saveContext()
     }
 }
 
@@ -198,23 +241,23 @@ struct CoreDataManagerFilteredQueryTests {
 @Suite("CoreDataManager: deletion")
 struct CoreDataManagerDeletionTests {
     @Test @MainActor
-    func deleteAllRemovesEverything() {
+    func deleteAllRemovesEverything() throws {
         let m = makeManager()
         for s in [10, 20, 30] {
-            saveSample(on: m, score: s)
+            try saveSample(on: m, score: s)
         }
         #expect(m.fetchGameHistory().count == 3)
 
-        m.deleteAllGameRecords()
+        try m.deleteAllGameRecords()
 
         #expect(m.fetchGameHistory().isEmpty)
         #expect(m.calculateStatistics().totalGames == 0)
     }
 
     @Test @MainActor
-    func deleteAllOnEmptyStoreIsHarmless() {
+    func deleteAllOnEmptyStoreIsHarmless() throws {
         let m = makeManager()
-        m.deleteAllGameRecords()  // no throws expected
+        try m.deleteAllGameRecords()  // no throws expected
         #expect(m.fetchGameHistory().isEmpty)
     }
 }
@@ -224,14 +267,14 @@ struct CoreDataManagerDeletionTests {
 @Suite("CoreDataManager: calculateStatistics")
 struct CoreDataManagerStatisticsTests {
     @Test @MainActor
-    func aggregatesAcrossAllRecords() {
+    func aggregatesAcrossAllRecords() throws {
         let m = makeManager()
-        m.saveGameRecord(score: 100, difficulty: .easy, blocksPlaced: 20,
-                         linesCleared: 2, longestCombo: 1, gameTime: 60)
-        m.saveGameRecord(score: 200, difficulty: .moderate, blocksPlaced: 30,
-                         linesCleared: 4, longestCombo: 2, gameTime: 90)
-        m.saveGameRecord(score: 50, difficulty: .easy, blocksPlaced: 10,
-                         linesCleared: 1, longestCombo: 1, gameTime: 30)
+        try m.saveGameRecord(score: 100, difficulty: .easy, blocksPlaced: 20,
+                             linesCleared: 2, longestCombo: 1, gameTime: 60)
+        try m.saveGameRecord(score: 200, difficulty: .moderate, blocksPlaced: 30,
+                             linesCleared: 4, longestCombo: 2, gameTime: 90)
+        try m.saveGameRecord(score: 50, difficulty: .easy, blocksPlaced: 10,
+                             linesCleared: 1, longestCombo: 1, gameTime: 30)
 
         let stats = m.calculateStatistics()
         #expect(stats.totalGames == 3)
@@ -242,9 +285,9 @@ struct CoreDataManagerStatisticsTests {
     }
 
     @Test @MainActor
-    func singleRecordHighScoreEqualsThatRecord() {
+    func singleRecordHighScoreEqualsThatRecord() throws {
         let m = makeManager()
-        saveSample(on: m, score: 777)
+        try saveSample(on: m, score: 777)
         #expect(m.calculateStatistics().highScore == 777)
     }
 }
@@ -254,13 +297,13 @@ struct CoreDataManagerStatisticsTests {
 @Suite("CoreDataManager: calculateExtendedStatistics")
 struct CoreDataManagerExtendedStatisticsTests {
     @Test @MainActor
-    func capturesRecordsFromMultipleGames() {
+    func capturesRecordsFromMultipleGames() throws {
         let m = makeManager()
         // Two games on different days (day boundary tested separately).
-        m.saveGameRecord(score: 100, difficulty: .easy, blocksPlaced: 10,
-                         linesCleared: 5, longestCombo: 3, gameTime: 100)
-        m.saveGameRecord(score: 200, difficulty: .easy, blocksPlaced: 20,
-                         linesCleared: 10, longestCombo: 5, gameTime: 200)
+        try m.saveGameRecord(score: 100, difficulty: .easy, blocksPlaced: 10,
+                             linesCleared: 5, longestCombo: 3, gameTime: 100)
+        try m.saveGameRecord(score: 200, difficulty: .easy, blocksPlaced: 20,
+                             linesCleared: 10, longestCombo: 5, gameTime: 200)
 
         let stats = m.calculateExtendedStatistics()
         #expect(stats.totalGames == 2)
@@ -273,12 +316,12 @@ struct CoreDataManagerExtendedStatisticsTests {
     }
 
     @Test @MainActor
-    func favoriteDifficultyIsTheModalDifficulty() {
+    func favoriteDifficultyIsTheModalDifficulty() throws {
         let m = makeManager()
-        saveSample(on: m, difficulty: .easy)
-        saveSample(on: m, difficulty: .easy)
-        saveSample(on: m, difficulty: .moderate)
-        saveSample(on: m, difficulty: .hard)
+        try saveSample(on: m, difficulty: .easy)
+        try saveSample(on: m, difficulty: .easy)
+        try saveSample(on: m, difficulty: .moderate)
+        try saveSample(on: m, difficulty: .hard)
 
         #expect(m.calculateExtendedStatistics().favoriteDifficulty == .easy)
     }

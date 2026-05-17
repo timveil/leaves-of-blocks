@@ -100,37 +100,37 @@ struct GameServicePersistenceTests {
     }
 
     @Test @MainActor
-    func isNewHighScoreReturnsFalseWhenScoreIsBelowOrEqualToCurrent() {
+    func isNewHighScoreReturnsFalseWhenScoreIsBelowOrEqualToCurrent() throws {
         let store = CoreDataManager.makeInMemoryForTests()
         let service = GameService(coreDataManager: store)
-        service.saveGameRecord(score: 500, linesCleared: 5, blocksPlaced: 20,
-                               gameTime: 100, difficulty: .easy, longestCombo: 1)
+        try service.saveGameRecord(score: 500, linesCleared: 5, blocksPlaced: 20,
+                                   gameTime: 100, difficulty: .easy, longestCombo: 1)
         #expect(!service.isNewHighScore(500))
         #expect(!service.isNewHighScore(499))
         #expect(service.isNewHighScore(501))
     }
 
     @Test @MainActor
-    func getHighScoreReturnsPersistedHighScore() {
+    func getHighScoreReturnsPersistedHighScore() throws {
         let store = CoreDataManager.makeInMemoryForTests()
         let service = GameService(coreDataManager: store)
         #expect(service.getHighScore() == 0)
 
-        service.saveGameRecord(score: 100, linesCleared: 1, blocksPlaced: 5,
-                               gameTime: 30, difficulty: .easy, longestCombo: 1)
-        service.saveGameRecord(score: 350, linesCleared: 3, blocksPlaced: 12,
-                               gameTime: 60, difficulty: .moderate, longestCombo: 2)
+        try service.saveGameRecord(score: 100, linesCleared: 1, blocksPlaced: 5,
+                                   gameTime: 30, difficulty: .easy, longestCombo: 1)
+        try service.saveGameRecord(score: 350, linesCleared: 3, blocksPlaced: 12,
+                                   gameTime: 60, difficulty: .moderate, longestCombo: 2)
 
         #expect(service.getHighScore() == 350)
     }
 
     @Test @MainActor
-    func saveGameRecordPersistsToTheInjectedStore() {
+    func saveGameRecordPersistsToTheInjectedStore() throws {
         let store = CoreDataManager.makeInMemoryForTests()
         let service = GameService(coreDataManager: store)
 
-        service.saveGameRecord(score: 222, linesCleared: 2, blocksPlaced: 8,
-                               gameTime: 45, difficulty: .hard, longestCombo: 1)
+        try service.saveGameRecord(score: 222, linesCleared: 2, blocksPlaced: 8,
+                                   gameTime: 45, difficulty: .hard, longestCombo: 1)
 
         // Read directly from the same store to verify the write landed there.
         let records = store.fetchGameHistory()
@@ -140,31 +140,31 @@ struct GameServicePersistenceTests {
     }
 
     @Test @MainActor
-    func clearGameHistoryEmptiesTheStore() {
+    func clearGameHistoryEmptiesTheStore() throws {
         let store = CoreDataManager.makeInMemoryForTests()
         let service = GameService(coreDataManager: store)
-        service.saveGameRecord(score: 100, linesCleared: 1, blocksPlaced: 5,
-                               gameTime: 30, difficulty: .easy, longestCombo: 1)
-        service.saveGameRecord(score: 200, linesCleared: 2, blocksPlaced: 10,
-                               gameTime: 60, difficulty: .moderate, longestCombo: 1)
+        try service.saveGameRecord(score: 100, linesCleared: 1, blocksPlaced: 5,
+                                   gameTime: 30, difficulty: .easy, longestCombo: 1)
+        try service.saveGameRecord(score: 200, linesCleared: 2, blocksPlaced: 10,
+                                   gameTime: 60, difficulty: .moderate, longestCombo: 1)
         #expect(store.fetchGameHistory().count == 2)
 
-        service.clearGameHistory()
+        try service.clearGameHistory()
 
         #expect(store.fetchGameHistory().isEmpty)
         #expect(service.getHighScore() == 0)
     }
 
     @Test @MainActor
-    func resetAllDataClearsHistoryToo() {
+    func resetAllDataClearsHistoryToo() throws {
         // resetAllData currently delegates to clearGameHistory plus a future
         // hook for UserDefaults — verify the history side is cleared.
         let store = CoreDataManager.makeInMemoryForTests()
         let service = GameService(coreDataManager: store)
-        service.saveGameRecord(score: 50, linesCleared: 1, blocksPlaced: 5,
-                               gameTime: 30, difficulty: .easy, longestCombo: 1)
+        try service.saveGameRecord(score: 50, linesCleared: 1, blocksPlaced: 5,
+                                   gameTime: 30, difficulty: .easy, longestCombo: 1)
 
-        service.resetAllData()
+        try service.resetAllData()
 
         #expect(store.fetchGameHistory().isEmpty)
     }

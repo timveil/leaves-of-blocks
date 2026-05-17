@@ -331,16 +331,20 @@ final class GameState {
                 gameTime: currentGameTime,
                 difficulty: currentDifficulty
             )
-            
-            gameService.saveGameRecord(
-                score: score,
-                linesCleared: linesCleared,
-                blocksPlaced: blocksPlaced,
-                gameTime: currentGameTime,
-                difficulty: currentDifficulty,
-                longestCombo: longestCombo,
-                sessionMetrics: sessionMetrics
-            )
+
+            do {
+                try gameService.saveGameRecord(
+                    score: score,
+                    linesCleared: linesCleared,
+                    blocksPlaced: blocksPlaced,
+                    gameTime: currentGameTime,
+                    difficulty: currentDifficulty,
+                    longestCombo: longestCombo,
+                    sessionMetrics: sessionMetrics
+                )
+            } catch {
+                BuildConfiguration.log("Failed to save game record: \(error.localizedDescription)", level: .error)
+            }
 
             // The run is finalized — clear the in-progress slot so the next
             // launch starts fresh.
@@ -432,14 +436,16 @@ final class GameState {
     
     // MARK: - Data Management
 
-    /// Clears all persisted game history.
-    func clearGameHistory() {
-        gameService.clearGameHistory()
+    /// Clears all persisted game history. Throws if Core Data fails to delete.
+    func clearGameHistory() throws {
+        try gameService.clearGameHistory()
     }
 
-    /// Clears all persisted data and resets the active game.
-    func resetAllData() {
-        gameService.resetAllData()
-        resetGame()
+    /// Clears all persisted data and resets the active game. Throws if the
+    /// underlying Core Data deletion fails; the active in-memory run is reset
+    /// regardless so the UI doesn't show stale state.
+    func resetAllData() throws {
+        defer { resetGame() }
+        try gameService.resetAllData()
     }
 }

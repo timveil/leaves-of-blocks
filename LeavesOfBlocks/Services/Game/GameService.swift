@@ -105,7 +105,11 @@ final class GameService {
     
     // MARK: - Game Record Management
     
-    /// Saves a game record to persistent storage
+    /// Saves a game record to persistent storage.
+    ///
+    /// Throws if Core Data fails to persist the record. The Game Center
+    /// submission is intentionally still attempted only on a successful local
+    /// save — Game Center is the secondary store, not the source of truth.
     func saveGameRecord(
         score: Int,
         linesCleared: Int,
@@ -114,11 +118,8 @@ final class GameService {
         difficulty: DifficultyMode,
         longestCombo: Int,
         sessionMetrics: PlayerBehaviorTracker.SessionMetrics? = nil
-    ) {
-        // High score is automatically tracked in Core Data
-
-        // Save to Core Data
-        coreDataManager.saveGameRecord(
+    ) throws {
+        try coreDataManager.saveGameRecord(
             score: score,
             difficulty: difficulty,
             blocksPlaced: blocksPlaced,
@@ -191,15 +192,14 @@ final class GameService {
     // MARK: - Data Management
     
     /// Clears all game history from Core Data
-    func clearGameHistory() {
-        coreDataManager.deleteAllGameRecords()
+    func clearGameHistory() throws {
+        try coreDataManager.deleteAllGameRecords()
         BuildConfiguration.log("Game history cleared", level: .debug)
     }
 
     /// Resets all game data including history and preferences
-    func resetAllData() {
-        // Clear Core Data
-        clearGameHistory()
+    func resetAllData() throws {
+        try clearGameHistory()
 
         // Clear any UserDefaults if we add user preferences later
         // For now, high scores are stored in Core Data, so they're already cleared

@@ -1,10 +1,6 @@
 import Foundation
 import CoreData
 
-extension Notification.Name {
-    static let coreDataSaveFailure = Notification.Name("CoreDataSaveFailure")
-}
-
 @MainActor
 final class CoreDataManager {
     static let shared = CoreDataManager(inMemory: false)
@@ -62,25 +58,20 @@ final class CoreDataManager {
         persistentContainer.viewContext
     }
 
-    func saveContext() {
+    /// Persists pending changes on the view context. Rolls back on failure
+    /// so the in-memory context doesn't keep half-applied mutations.
+    func saveContext() throws {
         let context = persistentContainer.viewContext
 
-        context.performAndWait {
+        try context.performAndWait {
             guard context.hasChanges else { return }
 
             do {
                 try context.save()
             } catch {
-                let nsError = error as NSError
-                BuildConfiguration.log("Error saving context: \(nsError.localizedDescription)", level: .error)
-
+                BuildConfiguration.log("Error saving context: \((error as NSError).localizedDescription)", level: .error)
                 context.rollback()
-
-                NotificationCenter.default.post(
-                    name: .coreDataSaveFailure,
-                    object: nil,
-                    userInfo: ["error": nsError]
-                )
+                throw error
             }
         }
     }
@@ -127,7 +118,7 @@ final class CoreDataManager {
     ///     present, efficiency / strategic / fallback metrics are also persisted.
     func saveGameRecord(score: Int, difficulty: DifficultyMode, blocksPlaced: Int,
                        linesCleared: Int, longestCombo: Int, gameTime: TimeInterval,
-                       sessionMetrics: PlayerBehaviorTracker.SessionMetrics? = nil) {
+                       sessionMetrics: PlayerBehaviorTracker.SessionMetrics? = nil) throws {
         let context = viewContext
         context.performAndWait {
             let gameRecord = GameRecord(context: context)
@@ -166,7 +157,7 @@ final class CoreDataManager {
             #endif
         }
 
-        saveContext()
+        try saveContext()
     }
 
     /// Returns persisted game records, newest first.
@@ -241,9 +232,9 @@ final class CoreDataManager {
     /// them back into the context. Without this merge, any active fetched
     /// results / `@FetchRequest` continues to show stale rows until the screen
     /// is rebuilt.
-    func deleteAllGameRecords() {
+    func deleteAllGameRecords() throws {
         let context = viewContext
-        context.performAndWait {
+        try context.performAndWait {
             let request: NSFetchRequest<NSFetchRequestResult> = GameRecord.fetchRequest()
             let deleteRequest = NSBatchDeleteRequest(fetchRequest: request)
             deleteRequest.resultType = .resultTypeObjectIDs
@@ -259,6 +250,7 @@ final class CoreDataManager {
                 }
             } catch {
                 BuildConfiguration.log("Error deleting all game records: \(error.localizedDescription)", level: .error)
+                throw error
             }
         }
     }

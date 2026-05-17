@@ -132,15 +132,23 @@ struct SettingsView: View {
     // MARK: - Private Methods
     
     private func clearGameHistory() {
-        gameState.clearGameHistory()
-        resetCompletedMessage = "history_cleared_message".localized
-        showingResetCompleted = true
+        do {
+            try gameState.clearGameHistory()
+            resetCompletedMessage = "history_cleared_message".localized
+            showingResetCompleted = true
+        } catch {
+            BuildConfiguration.log("Clear game history failed: \(error.localizedDescription)", level: .error)
+        }
     }
 
     private func resetAllData() {
-        gameState.resetAllData()
-        resetCompletedMessage = "all_data_reset_message".localized
-        showingResetCompleted = true
+        do {
+            try gameState.resetAllData()
+            resetCompletedMessage = "all_data_reset_message".localized
+            showingResetCompleted = true
+        } catch {
+            BuildConfiguration.log("Reset all data failed: \(error.localizedDescription)", level: .error)
+        }
     }
 }
 
