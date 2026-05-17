@@ -36,9 +36,6 @@ final class GameSceneBridge {
     /// The grid position for the current preview (set by SwiftUI drag handlers).
     var previewPosition: GridPosition?
 
-    /// Snapshot of the last observed game-over state, used to dedupe re-registrations.
-    @ObservationIgnored private var lastObservedGameOver: Bool
-
     // MARK: - Initialization
 
     /// Creates a new bridge connecting the game state to a SpriteKit scene.
@@ -50,8 +47,6 @@ final class GameSceneBridge {
         self.gameState = gameState
         let sceneSize = GameScene.sceneSize(cellSize: cellSize)
         self.scene = GameScene(gameState: gameState, size: sceneSize, cellSize: cellSize)
-        self.lastObservedGameOver = gameState.isGameOver
-        observeGameOverState()
     }
 
     // MARK: - Preview Control
@@ -107,41 +102,5 @@ final class GameSceneBridge {
     /// Resumes the SpriteKit scene when the app returns to the foreground.
     func resumeFromBackground() {
         scene.resumeFromBackground()
-    }
-
-    // MARK: - Game-Over Observation
-
-    /// Observes `gameState.isGameOver` and triggers scene effects when it changes.
-    ///
-    /// `withObservationTracking` fires its `onChange` block exactly once per registration,
-    /// so we re-register inside the dispatched task to keep observing for further changes.
-    private func observeGameOverState() {
-        withObservationTracking { [weak self] in
-            _ = self?.gameState.isGameOver
-        } onChange: { [weak self] in
-            Task { @MainActor [weak self] in
-                guard let self else { return }
-                let isGameOver = self.gameState.isGameOver
-                if isGameOver != self.lastObservedGameOver {
-                    self.lastObservedGameOver = isGameOver
-                    self.handleGameOverChange(isGameOver: isGameOver)
-                }
-                self.observeGameOverState()
-            }
-        }
-    }
-
-    private func handleGameOverChange(isGameOver: Bool) {
-        if isGameOver {
-            scene.playGameOverEffect()
-            if gameState.isNewHighScore {
-                Task { @MainActor [weak self] in
-                    try? await Task.sleep(for: .seconds(0.5))
-                    self?.scene.playHighScoreCelebration()
-                }
-            }
-        } else {
-            scene.clearGameOverEffects()
-        }
     }
 }

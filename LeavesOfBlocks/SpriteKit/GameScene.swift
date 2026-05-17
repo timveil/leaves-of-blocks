@@ -47,6 +47,11 @@ class GameScene: SKScene {
     /// Previous grid state hash for change detection
     private var lastGridHash: Int = 0
 
+    /// Snapshot of the last observed game-over state. Used by the shared
+    /// observation loop to detect `isGameOver` transitions independently of
+    /// grid mutations.
+    private var lastObservedGameOver: Bool = false
+
     /// Ghost block node shown during drag (rendered in SpriteKit for visual consistency)
     private var ghostBlockNode: BlockNode?
 
@@ -82,6 +87,7 @@ class GameScene: SKScene {
         view.allowsTransparency = true
         setupGrid()
         observationActive = true
+        lastObservedGameOver = gameState?.isGameOver ?? false
         observeGameState()
         syncGridFromModel()
     }
@@ -102,23 +108,50 @@ class GameScene: SKScene {
         addChild(gridNode)
     }
 
-    /// Tracks `GameState.grid` mutations and flags the scene for re-render.
+    /// Tracks `GameState.grid` and `GameState.isGameOver` mutations.
     ///
-    /// `withObservationTracking` fires its `onChange` block exactly once per registration,
-    /// so we re-register inside the dispatched task to keep observing for further changes
-    /// until the scene is torn down (`observationActive == false`).
+    /// `withObservationTracking` fires its `onChange` block exactly once per
+    /// registration, so we re-register inside the dispatched task to keep
+    /// observing for further changes until the scene is torn down
+    /// (`observationActive == false`). A single combined loop replaces what
+    /// used to be a separate observation in `GameSceneBridge`.
     private func observeGameState() {
         guard observationActive, let gameState = gameState else { return }
 
         withObservationTracking { [weak self] in
             _ = self?.gameState?.grid
+            _ = self?.gameState?.isGameOver
             _ = gameState // capture to keep tracking valid even if `self` is briefly nil
         } onChange: { [weak self] in
             Task { @MainActor [weak self] in
                 guard let self else { return }
                 self.needsGridSync = true
+
+                let currentGameOver = self.gameState?.isGameOver ?? false
+                if currentGameOver != self.lastObservedGameOver {
+                    self.lastObservedGameOver = currentGameOver
+                    self.handleGameOverChange(isGameOver: currentGameOver)
+                }
+
                 self.observeGameState()
             }
+        }
+    }
+
+    /// Dispatches the appropriate scene effect when `isGameOver` transitions.
+    /// Pulled out of `GameSceneBridge` so the scene owns its own response to
+    /// state changes instead of being driven from the SwiftUI bridge.
+    private func handleGameOverChange(isGameOver: Bool) {
+        if isGameOver {
+            playGameOverEffect()
+            if gameState?.isNewHighScore == true {
+                Task { @MainActor [weak self] in
+                    try? await Task.sleep(for: .seconds(0.5))
+                    self?.playHighScoreCelebration()
+                }
+            }
+        } else {
+            clearGameOverEffects()
         }
     }
 
