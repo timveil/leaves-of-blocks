@@ -1,66 +1,48 @@
+import CoreData
 import SwiftUI
 
 struct HistoryView: View {
     var gameState: GameState
     let onSelectSession: (GameSession) -> Void
-    @Environment(\.coreDataManager) private var coreDataManager
-    @State private var gameHistory: [GameSession] = []
-    @State private var highScore: Int = 0
 
-    private func loadGameHistory() {
-        let records = coreDataManager.fetchGameHistory()
+    @FetchRequest(
+        entity: GameRecord.entity(),
+        sortDescriptors: [NSSortDescriptor(key: "date", ascending: false)]
+    )
+    private var records: FetchedResults<GameRecord>
 
-        var sessions: [GameSession] = []
+    private var sessions: [GameSession] {
+        records.compactMap(GameSession.init(record:))
+    }
 
-        for record in records {
-            if let date = record.date,
-               let difficultyString = record.difficulty,
-               let difficulty = DifficultyMode(rawValue: difficultyString) {
-                sessions.append(GameSession(
-                    date: date,
-                    score: Int(record.score),
-                    blocksPlaced: Int(record.blocksPlaced),
-                    linesCleared: Int(record.linesCleared),
-                    difficulty: difficulty,
-                    gameTime: record.gameTime,
-                    averageGridEfficiency: record.averageGridEfficiency > 0 ? record.averageGridEfficiency : nil,
-                    averageFragmentation: record.averageFragmentation > 0 ? record.averageFragmentation : nil,
-                    strategicPlayRating: record.strategicPlayRating > 0 ? record.strategicPlayRating : nil,
-                    challengeMaintained: record.challengeMaintained > 0 ? record.challengeMaintained : nil,
-                    fallbackActivations: nil,
-                    efficiencyGrade: record.efficiencyGrade?.isEmpty == false ? record.efficiencyGrade : nil,
-                    strategicGrade: record.strategicGrade?.isEmpty == false ? record.strategicGrade : nil,
-                    tierUsageDistribution: record.tierUsageDistribution?.isEmpty == false ? record.tierUsageDistribution : nil
-                ))
-            }
-        }
-
-        gameHistory = sessions.sorted { $0.date > $1.date }
-        highScore = coreDataManager.calculateStatistics().highScore
+    private var highScore: Int {
+        records.map { Int($0.score) }.max() ?? 0
     }
 
     var body: some View {
         BaseScreenView {
             ScrollView {
-                VStack(alignment: .leading, spacing: GameTheme.Layout.mediumPadding) {
+                LazyVStack(alignment: .leading, spacing: GameTheme.Layout.mediumPadding) {
                     StrokedTitle(text: "history_menu".localized)
                         .padding(.bottom, GameTheme.Layout.smallSpacing)
 
-                    if gameHistory.isEmpty {
+                    let sessions = self.sessions
+                    if sessions.isEmpty {
                         Text("no_games_yet".localized)
                             .font(GameTheme.Typography.body)
                             .foregroundColor(GameTheme.Colors.secondaryText)
                             .frame(maxWidth: .infinity)
                             .padding(.vertical, GameTheme.Layout.extraLargePadding)
                     } else {
-                        ForEach(gameHistory.indices, id: \.self) { index in
+                        let topScore = highScore
+                        ForEach(Array(sessions.enumerated()), id: \.offset) { index, session in
                             Button(action: {
                                 HapticFeedback.tap()
-                                onSelectSession(gameHistory[index])
+                                onSelectSession(session)
                             }) {
                                 GameSessionRow(
-                                    session: gameHistory[index],
-                                    isHighScore: gameHistory[index].score == highScore
+                                    session: session,
+                                    isHighScore: session.score == topScore
                                 )
                             }
                             .buttonStyle(.pressDarken)
@@ -74,12 +56,6 @@ struct HistoryView: View {
             }
             .scrollIndicators(.hidden)
             .scrollFadeMask()
-        }
-        .onAppear {
-            loadGameHistory()
-        }
-        .onReceive(NotificationCenter.default.publisher(for: .NSManagedObjectContextObjectsDidChange)) { _ in
-            loadGameHistory()
         }
     }
 }
@@ -98,6 +74,7 @@ struct HistoryView: View {
                 gameState: GameState(),
                 onSelectSession: { _ in }
             )
+            .environment(\.managedObjectContext, coreDataManager.viewContext)
             .environment(\.coreDataManager, coreDataManager)
             .onAppear {
                 guard !hasLoadedData else { return }

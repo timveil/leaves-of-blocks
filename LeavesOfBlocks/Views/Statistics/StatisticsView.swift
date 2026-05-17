@@ -3,11 +3,18 @@ import CoreData
 
 // MARK: - Statistics View
 
-/// Aggregate stats across every persisted `GameRecord`. Refreshes when the
-/// Core Data context changes (e.g. a new run finishes while this screen is open).
+/// Aggregate stats across every persisted `GameRecord`. Refreshes
+/// automatically via `@FetchRequest` when a new run finishes.
 struct StatisticsView: View {
-    @Environment(\.coreDataManager) private var coreDataManager
-    @State private var stats: ExtendedStatistics = .empty
+    @FetchRequest(
+        entity: GameRecord.entity(),
+        sortDescriptors: []
+    )
+    private var records: FetchedResults<GameRecord>
+
+    private var stats: ExtendedStatistics {
+        ExtendedStatistics.aggregate(records.map(GameRecordSnapshot.init(record:)))
+    }
 
     private let columns = [
         GridItem(.flexible(), spacing: GameTheme.Layout.mediumPadding),
@@ -39,12 +46,6 @@ struct StatisticsView: View {
             }
             .scrollIndicators(.hidden)
             .scrollFadeMask()
-        }
-        .onAppear {
-            loadStatistics()
-        }
-        .onReceive(NotificationCenter.default.publisher(for: .NSManagedObjectContextObjectsDidChange)) { _ in
-            loadStatistics()
         }
     }
 
@@ -101,9 +102,6 @@ struct StatisticsView: View {
         ]
     }
 
-    private func loadStatistics() {
-        stats = coreDataManager.calculateExtendedStatistics()
-    }
 }
 
 // MARK: - Card Data Helper
@@ -115,5 +113,8 @@ private struct StatCardData: Identifiable {
 }
 
 #Preview {
-    StatisticsView()
+    let manager = CoreDataManager.makeInMemoryForTests()
+    return StatisticsView()
+        .environment(\.managedObjectContext, manager.viewContext)
+        .environment(\.coreDataManager, manager)
 }
