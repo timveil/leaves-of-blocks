@@ -497,6 +497,40 @@
         }
       }
     },
+    "ax_hint_available" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hint, one available"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pista, una disponible"
+          }
+        }
+      }
+    },
+    "ax_hint_used" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hint, already used"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pista, ya utilizada"
+          }
+        }
+      }
+    },
     "ax_row_clear_block" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -527,6 +561,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Puntuación %@, %@ líneas limpiadas"
+          }
+        }
+      }
+    },
+    "ax_undo_available" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Undo, one available"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deshacer, uno disponible"
+          }
+        }
+      }
+    },
+    "ax_undo_used" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Undo, already used"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deshacer, ya utilizado"
           }
         }
       }
@@ -1933,6 +2001,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Puntuación Máxima"
+          }
+        }
+      }
+    },
+    "hint" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hint"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pista"
           }
         }
       }
@@ -3480,6 +3565,23 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Combo de 2 Líneas (+50)"
+          }
+        }
+      }
+    },
+    "undo" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Undo"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deshacer"
           }
         }
       }

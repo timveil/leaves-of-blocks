@@ -223,8 +223,89 @@ enum GameLogic {
         return (rows, cols)
     }
 
+    // MARK: - Hint Logic
+
+    /// A suggested placement returned by `findHint`. Captures everything the
+    /// view layer needs to render the highlight without re-deriving footprints
+    /// for special blocks.
+    struct Hint: Equatable {
+        let blockIndex: Int
+        let block: BlockShape
+        let position: GridPosition
+        let willClearLines: Bool
+        /// The absolute grid cells the placement would affect — already
+        /// resolved through special-block footprints so the view layer can
+        /// pulse them directly.
+        let highlightedCells: [GridPosition]
+    }
+
+    /// Finds a hint placement for the player. Prefers placements that
+    /// immediately clear at least one line; otherwise returns the first valid
+    /// placement encountered in scan order. Returns `nil` when no block in
+    /// `blocks` can be placed anywhere on `grid`.
+    ///
+    /// Pure / side-effect-free. Worst-case cost is `O(|blocks| × gridSize²)`
+    /// validity probes; line-clearing simulation runs only on valid candidates
+    /// until the first clearing hit is found.
+    static func findHint(blocks: [BlockShape], grid: [[GridCell]]) -> Hint? {
+        let size = AppConfiguration.GameRules.gridSize
+        var firstValid: Hint?
+
+        for (index, block) in blocks.enumerated() {
+            for row in 0..<size {
+                for col in 0..<size {
+                    let position = GridPosition(row: row, col: col)
+                    guard canPlaceBlock(block, at: position, in: grid) else { continue }
+
+                    let preview = linesThatWouldClear(placing: block, at: position, in: grid)
+                    let willClear = !preview.rows.isEmpty || !preview.cols.isEmpty
+                    let hint = Hint(
+                        blockIndex: index,
+                        block: block,
+                        position: position,
+                        willClearLines: willClear,
+                        highlightedCells: highlightedCells(for: block, at: position)
+                    )
+                    if willClear { return hint }
+                    if firstValid == nil { firstValid = hint }
+                }
+            }
+        }
+        return firstValid
+    }
+
+    /// Resolves the absolute grid cells affected by placing `block` at
+    /// `position`, including the row / column / 3x3 footprint of special blocks.
+    /// Cells outside the grid are dropped so the caller can iterate the result
+    /// without a bounds check.
+    static func highlightedCells(for block: BlockShape, at position: GridPosition) -> [GridPosition] {
+        let size = AppConfiguration.GameRules.gridSize
+        switch block.type {
+        case .normal:
+            return block.positions.map {
+                GridPosition(row: position.row + $0.row, col: position.col + $0.col)
+            }
+        case .horizontalClear:
+            return (0..<size).map { GridPosition(row: position.row, col: $0) }
+        case .verticalClear:
+            return (0..<size).map { GridPosition(row: $0, col: position.col) }
+        case .areaClear:
+            var cells: [GridPosition] = []
+            for rowOffset in -1...1 {
+                for colOffset in -1...1 {
+                    let r = position.row + rowOffset
+                    let c = position.col + colOffset
+                    if r >= 0, r < size, c >= 0, c < size {
+                        cells.append(GridPosition(row: r, col: c))
+                    }
+                }
+            }
+            return cells
+        }
+    }
+
     // MARK: - Game Over Logic
-    
+
     /// Checks if any of the current blocks can be placed on the grid
     static func isGameOver(currentBlocks: [BlockShape], grid: [[GridCell]]) -> Bool {
         for block in currentBlocks {
