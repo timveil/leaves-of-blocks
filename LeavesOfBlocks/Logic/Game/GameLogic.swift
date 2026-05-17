@@ -481,10 +481,12 @@ enum GameLogic {
         // Sort blocks by constraint (largest first for better pruning)
         let sortedBlocks = blocks.sorted { $0.positions.count > $1.positions.count }
         
-        // Use optimized backtracking with depth limit
+        // Use optimized backtracking with depth limit; budget lives in
+        // AppConfiguration.Gameplay.placementBacktrackLimit so tuning doesn't
+        // require editing the algorithm.
         var callCount = 0
-        let maxCalls = 1000 // Prevent excessive computation
-        
+        let maxCalls = AppConfiguration.Gameplay.placementBacktrackLimit
+
         var mutableGrid = grid
         return canPlaceBlocksOptimized(sortedBlocks, startingAt: 0, grid: &mutableGrid, callCount: &callCount, maxCalls: maxCalls)
     }

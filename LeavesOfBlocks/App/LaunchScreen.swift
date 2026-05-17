@@ -27,7 +27,7 @@ struct LaunchScreen: View {
                 .scaleEffect(visible ? 1.0 : 0.6)
                 .opacity(visible ? 1.0 : 0.0)
                 .animation(
-                    reduceMotion ? nil : .spring(response: 0.6, dampingFraction: 0.7),
+                    reduceMotion ? nil : GameTheme.Animations.launchScreenEntrance,
                     value: visible
                 )
         }

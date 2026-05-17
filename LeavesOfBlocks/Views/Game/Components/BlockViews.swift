@@ -99,7 +99,10 @@ struct BlockView: View {
                 ZStack {
                     RoundedRectangle(cornerRadius: GameTheme.Layout.specialBlockCornerRadius)
                         .fill(block.color.color)
-                        .frame(width: cellSize - 2, height: cellSize - 2)
+                        .frame(
+                            width: cellSize - GameTheme.Layout.specialBlockInset,
+                            height: cellSize - GameTheme.Layout.specialBlockInset
+                        )
 
                     // Icon overlay
                     Image(systemName: block.type.systemIconName)

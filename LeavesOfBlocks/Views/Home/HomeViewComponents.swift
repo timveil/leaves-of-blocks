@@ -23,14 +23,14 @@ struct DifficultySelectionView: View {
     var body: some View {
         VStack(spacing: GameTheme.Layout.extraLargeSpacing) {
             // Acorn display
-            HStack(spacing: 8) {
+            HStack(spacing: GameTheme.Layout.mediumSpacing) {
                 ForEach(1...3, id: \.self) { index in
                     Image("AcornIcon")
                         .resizable()
                         .aspectRatio(contentMode: .fit)
-                        .frame(height: 60)
+                        .frame(height: GameTheme.Layout.acornIconHeight)
                         .opacity(index <= acornCount ? 1.0 : 0.2)
-                        .animation(.easeInOut(duration: 0.2), value: acornCount)
+                        .animation(GameTheme.Animations.difficultySelection, value: acornCount)
                 }
             }
 
@@ -38,11 +38,11 @@ struct DifficultySelectionView: View {
             Text(selectedDifficulty.displayName)
                 .font(GameTheme.Typography.headline)
                 .foregroundColor(GameTheme.Colors.primaryText)
-                .animation(.easeInOut(duration: 0.2), value: selectedDifficulty)
+                .animation(GameTheme.Animations.difficultySelection, value: selectedDifficulty)
 
             // Custom slider
             AcornSlider(value: $sliderValue)
-                .frame(height: 36)
+                .frame(height: GameTheme.Layout.sliderHeight)
                 .accessibilityElement()
                 .accessibilityLabel("ax_difficulty_slider".localized)
                 .accessibilityValue(selectedDifficulty.displayName)
@@ -87,40 +87,40 @@ private struct AcornSlider: View {
 
             ZStack(alignment: .leading) {
                 // Track
-                RoundedRectangle(cornerRadius: 4)
+                RoundedRectangle(cornerRadius: GameTheme.Layout.smallSpacing)
                     .fill(GameTheme.Colors.cardBackground)
-                    .frame(height: 8)
+                    .frame(height: GameTheme.Layout.sliderTrackHeight)
                     .overlay(
-                        RoundedRectangle(cornerRadius: 4)
-                            .stroke(Color.black, lineWidth: 2)
+                        RoundedRectangle(cornerRadius: GameTheme.Layout.smallSpacing)
+                            .stroke(GameTheme.Colors.outline, lineWidth: GameTheme.Layout.gridLineWidth)
                     )
 
                 // Filled portion
-                RoundedRectangle(cornerRadius: 4)
+                RoundedRectangle(cornerRadius: GameTheme.Layout.smallSpacing)
                     .fill(GameTheme.Colors.accent)
-                    .frame(width: thumbX + 18, height: 8)
+                    .frame(width: thumbX + GameTheme.Layout.sliderHeight / 2, height: GameTheme.Layout.sliderTrackHeight)
 
                 // Tick marks
                 HStack {
                     ForEach(0..<3) { i in
                         if i > 0 { Spacer() }
                         Circle()
-                            .fill(Color.black)
-                            .frame(width: 6, height: 6)
+                            .fill(GameTheme.Colors.outline)
+                            .frame(width: GameTheme.Layout.tightSpacing, height: GameTheme.Layout.tightSpacing)
                         if i < 2 { Spacer() }
                     }
                 }
-                .padding(.horizontal, 15)
+                .padding(.horizontal, GameTheme.Layout.sliderTickPadding)
 
                 // Thumb
                 Circle()
                     .fill(GameTheme.Colors.primaryBackground)
-                    .frame(width: 36, height: 36)
+                    .frame(width: GameTheme.Layout.sliderHeight, height: GameTheme.Layout.sliderHeight)
                     .overlay(
                         Circle()
-                            .stroke(Color.black, lineWidth: GameTheme.Layout.cardBorderWidth)
+                            .stroke(GameTheme.Colors.outline, lineWidth: GameTheme.Layout.cardBorderWidth)
                     )
-                    .offset(x: thumbX - 18)
+                    .offset(x: thumbX - GameTheme.Layout.sliderHeight / 2)
                     .gesture(
                         DragGesture(minimumDistance: 0)
                             .onChanged { drag in

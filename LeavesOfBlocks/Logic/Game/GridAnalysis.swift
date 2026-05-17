@@ -46,13 +46,19 @@ struct GridAnalysis {
             }
         }
         
-        /// Thresholds for tier classification based on quality score
+        /// Thresholds for tier classification based on quality score.
+        /// Boundaries live in `AppConfiguration.Gameplay` so balance tuning
+        /// doesn't require editing the analysis logic.
         static func fromQualityScore(_ score: Double) -> DifficultyTier {
             switch score {
-            case 0.7...1.0: return .diverse
-            case 0.4...0.7: return .constrained
-            case 0.15...0.4: return .minimal
-            default: return .emergency
+            case AppConfiguration.Gameplay.difficultyTierDiverseThreshold...1.0:
+                return .diverse
+            case AppConfiguration.Gameplay.difficultyTierConstrainedThreshold..<AppConfiguration.Gameplay.difficultyTierDiverseThreshold:
+                return .constrained
+            case AppConfiguration.Gameplay.difficultyTierMinimalThreshold..<AppConfiguration.Gameplay.difficultyTierConstrainedThreshold:
+                return .minimal
+            default:
+                return .emergency
             }
         }
     }

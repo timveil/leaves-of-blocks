@@ -52,7 +52,7 @@ struct GameTableRowView<Header: View>: View {
     @ViewBuilder let header: () -> Header
 
     var body: some View {
-        VStack(spacing: 6) {
+        VStack(spacing: GameTheme.Layout.tightSpacing) {
             header()
 
             Text(description)

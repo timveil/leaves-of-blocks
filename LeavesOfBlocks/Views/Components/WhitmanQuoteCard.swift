@@ -32,7 +32,7 @@ struct WhitmanQuoteCard: View {
             Image("WhitmanPortrait")
                 .resizable()
                 .aspectRatio(contentMode: .fit)
-                .frame(width: 88, height: 88)
+                .frame(width: GameTheme.Layout.whitmanPortraitSize, height: GameTheme.Layout.whitmanPortraitSize)
 
             HStack(alignment: .top, spacing: 0) {
                 RoundedRectangle(cornerRadius: 1.5)

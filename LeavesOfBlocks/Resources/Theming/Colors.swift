@@ -81,6 +81,12 @@ extension GameTheme {
         // Buttons
         static let buttonText = Color.white
 
+        // Folk-art outlines (hairline borders, slider strokes, divider lines)
+        /// Pure-black accent used for thin outline strokes (slider track and
+        /// thumb, tick marks). Distinct from `primaryText` so it can be
+        /// retuned without dragging body-text color with it.
+        static let outline = Color.black
+
         // Game Effect Colors
         static let lineCompletionPrimary = sun400
         static let lineCompletionSecondary = sun500
