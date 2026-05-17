@@ -473,7 +473,7 @@ extension BlockGenerator {
         }
 
         for _ in 0..<count {
-            if let selectedBlock = smallBlocks.randomElement(), !smallBlocks.isEmpty {
+            if let selectedBlock = smallBlocks.randomElement() {
                 let randomColor = BlockColor.allCases.randomElement() ?? .blue
                 challengeBlocks.append(BlockShape(positions: selectedBlock.positions, color: randomColor))
             } else {

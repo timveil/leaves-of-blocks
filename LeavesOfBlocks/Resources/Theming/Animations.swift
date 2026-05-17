@@ -17,5 +17,10 @@ extension GameTheme {
         /// suppressed entirely when Reduce Motion is on (handled at the call
         /// site so the constant stays declarative).
         static let launchScreenEntrance: Animation = .spring(response: 0.6, dampingFraction: 0.7)
+
+        /// Press-state brightness transition used by `PressDarkenButtonStyle`.
+        /// Short and ease-out so the darken applies snappily but releases
+        /// smoothly when the press ends.
+        static let buttonPress: Animation = .easeOut(duration: 0.08)
     }
 }

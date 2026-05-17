@@ -9,7 +9,7 @@ struct PressDarkenButtonStyle: ButtonStyle {
     func makeBody(configuration: Configuration) -> some View {
         configuration.label
             .brightness(configuration.isPressed ? -darkenAmount : 0)
-            .animation(.easeOut(duration: 0.08), value: configuration.isPressed)
+            .animation(GameTheme.Animations.buttonPress, value: configuration.isPressed)
     }
 }
 

@@ -63,7 +63,7 @@ struct ScoreDisplayView: View {
             .overlay(
                 Rectangle()
                     .frame(height: GameTheme.Layout.dividerHeight)
-                    .foregroundColor(.black),
+                    .foregroundColor(GameTheme.Colors.outline),
                 alignment: .bottom
             )
 
