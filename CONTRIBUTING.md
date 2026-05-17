@@ -67,26 +67,25 @@ team / bundle ID changes in your fork.
 
 ### Commit Message Format
 
-All commits must follow [Conventional Commits](https://www.conventionalcommits.org/). The format rules (regex, allowed types, max width) are defined in [`scripts/check-commit-subject.sh`](scripts/check-commit-subject.sh) and enforced by the local [`.githooks/commit-msg`](.githooks/commit-msg) hook (see [Enable the local commit-message hook](#enable-the-local-commit-message-hook)) plus the CI workflow on every PR. The format also drives changelog generation.
+All commits must follow [Conventional Commits](https://www.conventionalcommits.org/). The exact format — regex, scope syntax, max subject width — is defined in [`scripts/check-commit-subject.sh`](scripts/check-commit-subject.sh) (the single source of truth), enforced locally by [`.githooks/commit-msg`](.githooks/commit-msg) (see [Enable the local commit-message hook](#enable-the-local-commit-message-hook)) and by CI on every PR.
 
 ```
 <type>(<scope>): <description>
 ```
 
-- **type** is required and must be one of:
-  - `feat` — new feature *(→ Added in changelog)*
-  - `fix` — bug fix *(→ Fixed)*
-  - `docs` — documentation only
-  - `style` — formatting, whitespace, no code change
-  - `refactor` — code restructuring with no behavior change *(→ Changed)*
-  - `perf` — performance improvement *(→ Changed)*
-  - `test` — adding or updating tests
-  - `chore` — maintenance / housekeeping
-  - `revert` — reverting a previous commit *(→ Removed)*
-  - `build` — build system or external dependencies
-  - `ci` — CI configuration
-- **scope** is optional and goes in parentheses (e.g. `(grid)`, `(game-center)`).
-- **subject** is required, no trailing period, and the full subject line must be ≤ 72 characters.
+The type also drives changelog generation:
+
+- `feat` — new feature *(→ Added)*
+- `fix` — bug fix *(→ Fixed)*
+- `docs` — documentation only
+- `style` — formatting, whitespace, no code change
+- `refactor` — code restructuring with no behavior change *(→ Changed)*
+- `perf` — performance improvement *(→ Changed)*
+- `test` — adding or updating tests
+- `chore` — maintenance / housekeeping
+- `revert` — reverting a previous commit *(→ Removed)*
+- `build` — build system or external dependencies
+- `ci` — CI configuration
 
 Examples:
 

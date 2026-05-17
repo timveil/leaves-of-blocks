@@ -26,16 +26,13 @@ This applies to `Text`, `Button`, `navigationTitle`, accessibility labels, and p
 
 ## Commit Message Format (Strict)
 
-Every commit must follow Conventional Commits. The format rules (regex, allowed types, max width) live in [`scripts/check-commit-subject.sh`](scripts/check-commit-subject.sh) and are invoked from two places: locally by [`.githooks/commit-msg`](.githooks/commit-msg) and on every PR by [`.github/workflows/commit-lint.yml`](.github/workflows/commit-lint.yml). Malformed messages are rejected; the format also drives changelog generation.
+Every commit must follow Conventional Commits. The exact rules — regex, allowed types, max subject width — live in [`scripts/check-commit-subject.sh`](scripts/check-commit-subject.sh) (the single source of truth), enforced locally by [`.githooks/commit-msg`](.githooks/commit-msg) and on every PR by [`.github/workflows/commit-lint.yml`](.github/workflows/commit-lint.yml). The format also drives changelog generation; see [`CONTRIBUTING.md`](CONTRIBUTING.md#commit-message-format) for the type→changelog mapping.
+
+Shape:
 
 ```
 <type>(<scope>): <description>
 ```
-
-- **Allowed types:** `feat`, `fix`, `docs`, `style`, `refactor`, `perf`, `test`, `chore`, `revert`, `build`, `ci`.
-- **Scope** is optional, in parentheses, lowercase (e.g. `fix(grid):`, `feat(game-center):`).
-- **Subject** is required, no trailing period, ≤ 72 characters total.
-- **Never** bypass the hook with `--no-verify`. The CI check will reject the PR anyway.
 
 ```
 # Wrong
@@ -49,15 +46,13 @@ fix(grid): Resolve block placement bug
 feat(game-center): Submit final score on game over
 ```
 
-The `Co-Authored-By` trailer that Claude Code appends still belongs in the commit body, not the subject — it does not interfere with the format check.
+**Never** bypass the hook with `--no-verify` — the CI check will reject the PR anyway. The `Co-Authored-By` trailer that Claude Code appends belongs in the commit body, not the subject.
 
 The local hook runs only if you've pointed git at the checked-in hooks directory once per clone:
 
 ```bash
 git config core.hooksPath .githooks
 ```
-
-See [`CONTRIBUTING.md`](CONTRIBUTING.md#enable-the-local-commit-message-hook) for the contributor-facing version of this setup.
 
 ## Project Overview
 
