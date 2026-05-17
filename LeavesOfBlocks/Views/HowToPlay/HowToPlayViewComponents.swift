@@ -40,18 +40,20 @@ struct GameTableHeaderView: View {
     }
 }
 
-// MARK: - Scoring Table
+// MARK: - Shared Table Row
 
-struct ScoringTableRowView: View {
-    let points: String
+/// Generic row used by every How-To-Play table card: an icon-y top
+/// element provided by the caller, then a localized description below,
+/// wrapped in the shared white-background + top-divider envelope. The
+/// per-variant wrappers below (Scoring/Difficulty/Shapes) only carry
+/// their parameter shape; the layout itself lives here.
+struct GameTableRowView<Header: View>: View {
     let description: String
-    let color: Color
+    @ViewBuilder let header: () -> Header
 
     var body: some View {
         VStack(spacing: 6) {
-            Text(points)
-                .font(GameTheme.Typography.display)
-                .foregroundColor(color)
+            header()
 
             Text(description)
                 .font(GameTheme.Typography.body)
@@ -69,6 +71,22 @@ struct ScoringTableRowView: View {
                 .foregroundColor(GameTheme.Colors.gridBorder.opacity(0.2)),
             alignment: .top
         )
+    }
+}
+
+// MARK: - Scoring Table
+
+struct ScoringTableRowView: View {
+    let points: String
+    let description: String
+    let color: Color
+
+    var body: some View {
+        GameTableRowView(description: description) {
+            Text(points)
+                .font(GameTheme.Typography.display)
+                .foregroundColor(color)
+        }
     }
 }
 
@@ -79,25 +97,9 @@ struct DifficultyTableRowView: View {
     let description: String
 
     var body: some View {
-        VStack(spacing: 6) {
+        GameTableRowView(description: description) {
             AcornCountView(count: mode.acornCount)
-
-            Text(description)
-                .font(GameTheme.Typography.body)
-                .foregroundColor(GameTheme.Colors.secondaryText)
-                .multilineTextAlignment(.center)
-                .fixedSize(horizontal: false, vertical: true)
         }
-        .frame(maxWidth: .infinity)
-        .padding(.horizontal, GameTheme.Layout.largePadding)
-        .padding(.vertical, GameTheme.Layout.mediumPadding)
-        .background(Color.white)
-        .overlay(
-            Rectangle()
-                .frame(height: 1)
-                .foregroundColor(GameTheme.Colors.gridBorder.opacity(0.2)),
-            alignment: .top
-        )
     }
 }
 
@@ -108,26 +110,10 @@ struct ShapesTableRowView: View {
     let description: String
 
     var body: some View {
-        VStack(spacing: 6) {
+        GameTableRowView(description: description) {
             shapeType.visualRepresentation
                 .frame(height: 44)
-
-            Text(description)
-                .font(GameTheme.Typography.body)
-                .foregroundColor(GameTheme.Colors.secondaryText)
-                .multilineTextAlignment(.center)
-                .fixedSize(horizontal: false, vertical: true)
         }
-        .frame(maxWidth: .infinity)
-        .padding(.horizontal, GameTheme.Layout.largePadding)
-        .padding(.vertical, GameTheme.Layout.mediumPadding)
-        .background(Color.white)
-        .overlay(
-            Rectangle()
-                .frame(height: 1)
-                .foregroundColor(GameTheme.Colors.gridBorder.opacity(0.2)),
-            alignment: .top
-        )
     }
 }
 
