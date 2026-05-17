@@ -38,32 +38,35 @@ enum GameOverEffect {
         gridSize: Int
     ) {
         let desaturatedColor = SpriteKitColors.gameOverDesaturation.withAlphaComponent(0.7)
+        let rowWidth = CGFloat(gridSize) * cellSize + CGFloat(gridSize - 1) * spacing
 
+        // One overlay per row, not per cell. The previous implementation
+        // allocated gridSize × gridSize (= 64 on the default board) shape
+        // nodes every game-over; row strips preserve the top-to-bottom
+        // cascading fade with 8× fewer nodes.
         for row in 0..<gridSize {
             let delay = Double(row) * 0.06
 
-            for col in 0..<gridSize {
-                let overlay = SKShapeNode(
-                    rect: CGRect(x: 0, y: 0, width: cellSize, height: cellSize),
-                    cornerRadius: GameTheme.Layout.cellCornerRadius
-                )
-                overlay.fillColor = desaturatedColor
-                overlay.strokeColor = .clear
-                overlay.alpha = 0
-                overlay.position = SpriteKitEffects.cellPoint(
-                    row: row, col: col,
-                    cellSize: cellSize, spacing: spacing
-                )
-                overlay.zPosition = 15
-                overlay.name = GridNode.gameOverOverlayName
-                parent.addChild(overlay)
+            let overlay = SKShapeNode(
+                rect: CGRect(x: 0, y: 0, width: rowWidth, height: cellSize),
+                cornerRadius: GameTheme.Layout.cellCornerRadius
+            )
+            overlay.fillColor = desaturatedColor
+            overlay.strokeColor = .clear
+            overlay.alpha = 0
+            overlay.position = SpriteKitEffects.cellPoint(
+                row: row, col: 0,
+                cellSize: cellSize, spacing: spacing
+            )
+            overlay.zPosition = 15
+            overlay.name = GridNode.gameOverOverlayName
+            parent.addChild(overlay)
 
-                let fadeIn = SKAction.sequence([
-                    SKAction.wait(forDuration: delay),
-                    SKAction.fadeAlpha(to: 0.6, duration: 0.2)
-                ])
-                overlay.run(fadeIn)
-            }
+            let fadeIn = SKAction.sequence([
+                SKAction.wait(forDuration: delay),
+                SKAction.fadeAlpha(to: 0.6, duration: 0.2)
+            ])
+            overlay.run(fadeIn)
         }
     }
 
