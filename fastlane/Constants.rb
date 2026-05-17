@@ -23,11 +23,11 @@ DEVELOPER_PHONE = ENV["LOCAL_FASTLANE_DEVELOPER_PHONE"]
 DEVELOPER_EMAIL = ENV["LOCAL_FASTLANE_DEVELOPER_EMAIL"]
 
 # Build Configuration
-XCODE_VERSION = "26.4.1"
+XCODE_VERSION = "26.5"
 # Pin the iOS Simulator runtime version. fastlane's snapshot auto-detection
 # uses the runtime label ("iOS 26.4"), but xcodebuild's `-destination` needs
 # the installed point version ("26.4.1"). Update when the runtime changes.
-IOS_VERSION = "26.4.1"
+IOS_VERSION = "26.5"
 IOS_SIMULATOR = "iPhone 17 Pro"
 EXPORT_METHOD = "app-store"
 TEAM_ID = "85U9MWUBJL"
