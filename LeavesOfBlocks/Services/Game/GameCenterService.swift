@@ -32,6 +32,30 @@ enum GameCenterIDs {
     }
 }
 
+// MARK: - Game Center Servicing Protocol
+
+/// Abstract surface for the Game Center service so service-layer consumers
+/// (chiefly `GameService.saveGameRecord`) can be tested against a fake
+/// without a sandboxed Apple ID or a GameKit round-trip.
+///
+/// Views that observe the live auth state still type their property as the
+/// concrete `GameCenterService` — protocol existentials erase `@Observable`,
+/// so going through the protocol from a view would break the re-render
+/// loop. Service-to-service wiring uses the protocol; UI keeps the concrete.
+@MainActor
+protocol GameCenterServicing: AnyObject {
+    var isAuthenticated: Bool { get }
+    func authenticateIfEnabled(presenter: ((UIViewController) -> Void)?)
+    func userDisabledPreference()
+    func retryPendingSubmissions()
+    func submitFinalScore(
+        score: Int,
+        sessionMetrics: PlayerBehaviorTracker.SessionMetrics?,
+        longestCombo: Int
+    )
+    func presentDashboard(leaderboardID: String?, from presenter: UIViewController?)
+}
+
 // MARK: - Game Center Service
 
 /// Single entry point for Apple Game Center.
@@ -41,7 +65,7 @@ enum GameCenterIDs {
 /// to gate their calls. Authentication itself is also gated by the preference.
 @MainActor
 @Observable
-final class GameCenterService {
+final class GameCenterService: GameCenterServicing {
 
     static let shared = GameCenterService()
 

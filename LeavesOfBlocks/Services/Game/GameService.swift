@@ -16,21 +16,33 @@ final class GameService {
     @ObservationIgnored private var isTimerActive: Bool = false
 
     private let coreDataManager: CoreDataManager
+    private let gameCenterService: any GameCenterServicing
 
     // MARK: - Initialization
 
     /// Creates a `GameService`.
     ///
-    /// - Parameter coreDataManager: Storage backend for high scores and game
-    ///   history. Pass `nil` (the default) to use the production singleton;
-    ///   tests can pass `CoreDataManager.makeInMemoryForTests()` for isolation.
-    ///   The `nil` default + `?? .shared` resolution sidesteps a Swift 6
-    ///   warning: a default expression of `.shared` would be evaluated in a
-    ///   nonisolated caller context, but `.shared` is `@MainActor`-isolated.
-    ///   Resolving inside the init body inherits the class's `@MainActor`
-    ///   isolation and stays Swift 6-compliant.
-    init(coreDataManager: CoreDataManager? = nil) {
+    /// - Parameters:
+    ///   - coreDataManager: Storage backend for high scores and game history.
+    ///     Pass `nil` (the default) to use the production singleton; tests
+    ///     can pass `CoreDataManager.makeInMemoryForTests()` for isolation.
+    ///   - gameCenterService: Apple Game Center surface that
+    ///     `saveGameRecord` forwards completed runs to. Pass `nil` (default)
+    ///     to use `GameCenterService.shared`; tests can inject a
+    ///     `MockGameCenterService` to verify forwarding without a sandboxed
+    ///     Apple ID or a real GameKit round-trip.
+    ///
+    /// The `nil` defaults + `?? .shared` resolution sidesteps a Swift 6
+    /// warning: a default expression of `.shared` would be evaluated in a
+    /// nonisolated caller context, but `.shared` is `@MainActor`-isolated.
+    /// Resolving inside the init body inherits the class's `@MainActor`
+    /// isolation and stays Swift 6-compliant.
+    init(
+        coreDataManager: CoreDataManager? = nil,
+        gameCenterService: (any GameCenterServicing)? = nil
+    ) {
         self.coreDataManager = coreDataManager ?? .shared
+        self.gameCenterService = gameCenterService ?? GameCenterService.shared
     }
 
     deinit {
@@ -131,7 +143,7 @@ final class GameService {
 
         // Submit to Game Center if the user has opted in. The service is a
         // no-op when the preference is off or the player isn't authenticated.
-        GameCenterService.shared.submitFinalScore(
+        gameCenterService.submitFinalScore(
             score: score,
             sessionMetrics: sessionMetrics,
             longestCombo: longestCombo
