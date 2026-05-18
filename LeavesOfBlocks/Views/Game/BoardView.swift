@@ -11,8 +11,26 @@ struct BoardView: View {
     @State private var viewBounds: CGRect = .zero
     @Environment(\.scenePhase) private var scenePhase
 
-    /// Bridge for SpriteKit scene communication
-    @State private var sceneBridge: GameSceneBridge?
+    /// Bridge for SpriteKit scene communication.
+    ///
+    /// Created eagerly in `init` (rather than lazily in `onAppear`) so the
+    /// `SpriteKitGameView` is in the view tree on the very first body
+    /// evaluation. The lazy variant relied on `onAppear` → state mutation
+    /// → re-render to mount the scene, and on slow cold simulators (CI
+    /// macos-15-arm64 runners on iOS 26.5) that follow-up render never
+    /// landed inside the test's wait window — `testDifficultySelection`
+    /// failed in run 26006753276 because `spritekit_game_grid` never
+    /// appeared in 20s of polling.
+    @State private var sceneBridge: GameSceneBridge
+
+    init(gameState: GameState, onViewSummary: @escaping () -> Void, onNewGame: @escaping () -> Void) {
+        self.gameState = gameState
+        self.onViewSummary = onViewSummary
+        self.onNewGame = onNewGame
+        self._sceneBridge = State(
+            initialValue: GameSceneBridge(gameState: gameState, cellSize: GameTheme.Layout.cellSize)
+        )
+    }
     
     // MARK: - Configuration
     private struct DragConfiguration {
@@ -75,15 +93,13 @@ struct BoardView: View {
                     // Grid Row
                     HStack {
                         Spacer()
-                        if let bridge = sceneBridge {
-                            SpriteKitGameView(bridge: bridge)
-                                .frame(width: gameWidth, height: gameWidth)
-                                .onGeometryChange(for: CGRect.self) { proxy in
-                                    proxy.frame(in: .global)
-                                } action: { newValue in
-                                    gridFrame = newValue
-                                }
-                        }
+                        SpriteKitGameView(bridge: sceneBridge)
+                            .frame(width: gameWidth, height: gameWidth)
+                            .onGeometryChange(for: CGRect.self) { proxy in
+                                proxy.frame(in: .global)
+                            } action: { newValue in
+                                gridFrame = newValue
+                            }
                         Spacer()
                     }
                     
@@ -121,11 +137,6 @@ struct BoardView: View {
                 .zIndex(10) // Game elements above grass
                 .padding(.horizontal, GameTheme.Layout.largePadding)
                 .padding(.top, GameTheme.Layout.mediumPadding)
-                .onAppear {
-                    if sceneBridge == nil {
-                        sceneBridge = GameSceneBridge(gameState: gameState, cellSize: cellSize)
-                    }
-                }
             
                 gameOverOverlay
                 draggedBlockOverlay
@@ -142,13 +153,13 @@ struct BoardView: View {
             // overlay can stay rendered at zIndex 1000 on return, masking taps.
             if newPhase != .active {
                 dragState.reset()
-                sceneBridge?.clearPreview()
+                sceneBridge.clearPreview()
                 // Pause SpriteKit so the suspended app drops GPU/CPU state and
                 // is a less attractive jetsam target. Both reports we have were
                 // jetsam kills while suspended at ~70-90 MB resident.
-                sceneBridge?.suspendForBackground()
+                sceneBridge.suspendForBackground()
             } else {
-                sceneBridge?.resumeFromBackground()
+                sceneBridge.resumeFromBackground()
             }
         }
     }
@@ -207,13 +218,13 @@ struct BoardView: View {
         updateDragPreview(blockVisualCenter: blockVisualCenter)
 
         // Forward preview state to SpriteKit bridge
-        sceneBridge?.updatePreview(block: dragState.draggedBlock, position: dragState.previewPosition)
+        sceneBridge.updatePreview(block: dragState.draggedBlock, position: dragState.previewPosition)
     }
     
     private func handleDragEnd() {
         defer {
             dragState.reset()
-            sceneBridge?.clearPreview()
+            sceneBridge.clearPreview()
         }
 
         guard let block = dragState.draggedBlock else { return }
@@ -235,7 +246,7 @@ struct BoardView: View {
             gameState.placeBlock(block, at: position)
 
             // Trigger SpriteKit visual effects
-            sceneBridge?.triggerBlockPlacementEffect(block: block, at: position)
+            sceneBridge.triggerBlockPlacementEffect(block: block, at: position)
 
             // Detect lines cleared during this placement
             if gameState.linesCleared > linesBefore {
@@ -249,7 +260,7 @@ struct BoardView: View {
                 let gridSize = AppConfiguration.GameRules.gridSize
                 let confirmedRows = Set(rowCounts.filter { $0.value >= gridSize }.keys)
                 let confirmedCols = Set(colCounts.filter { $0.value >= gridSize }.keys)
-                sceneBridge?.triggerLineClearEffect(clearedRows: confirmedRows, clearedCols: confirmedCols)
+                sceneBridge.triggerLineClearEffect(clearedRows: confirmedRows, clearedCols: confirmedCols)
             }
         } else {
             gameState.blockReturnFeedback()
