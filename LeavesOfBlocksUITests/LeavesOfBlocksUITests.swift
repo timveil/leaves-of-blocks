@@ -15,14 +15,14 @@ final class LeavesOfBlocksUITests: XCTestCase {
     ///
     /// The suite previously sprinkled 2 / 3 / 5-second values across methods
     /// with no documented rationale; consolidating behind one constant kept
-    /// intent uniform. The initial 5-second value turned out too tight for
-    /// the first cold-simulator grid wait on CI's macos-15-arm64 runners —
-    /// `testDifficultySelection` failed at 5s in run 25997441219 while
-    /// later tests (warmed simulator) passed.
-    ///
-    /// 10 seconds covers the cold-start gap without slowing local feedback,
-    /// since `waitForExistence` only consumes the full window on failure.
-    private let defaultTimeout: TimeInterval = 10
+    /// intent uniform. 5s was too tight for the first cold-simulator grid
+    /// wait on CI's macos-15-arm64 runners (`testDifficultySelection` failed
+    /// in run 25997441219), so it was bumped to 10s. Then iOS 26.5 / macOS
+    /// 15.7.4 stretched the cold-sim first-launch + SpriteKit-scene-mount
+    /// path past 10s as well, failing the same test in run 26004869474 —
+    /// hence 20s. Later tests (warmed simulator) typically resolve waits in
+    /// 1–2s, so the extra headroom only costs time on actual failures.
+    private let defaultTimeout: TimeInterval = 20
 
     /// Check if running in CI environment
     private var isCI: Bool {
@@ -65,11 +65,12 @@ final class LeavesOfBlocksUITests: XCTestCase {
     // MARK: - Game Grid Helper
 
     @MainActor
-    private func waitForGameGrid(timeout: TimeInterval = 10) -> Bool {
-        let spriteKitGrid = app.otherElements["spritekit_game_grid"]
-        let swiftUIGrid = app.otherElements["game_grid"]
-        return spriteKitGrid.waitForExistence(timeout: timeout) ||
-               swiftUIGrid.waitForExistence(timeout: timeout)
+    private func waitForGameGrid(timeout: TimeInterval = 20) -> Bool {
+        // `game_grid` (the SwiftUI renderer) was removed in v2.0.1 (71a52fc);
+        // the SpriteKit scene is the only thing that mounts now. Keeping a
+        // fallback to a non-existent identifier just doubled the wait window
+        // on every grid failure.
+        return app.otherElements["spritekit_game_grid"].waitForExistence(timeout: timeout)
     }
 
     // MARK: - Menu Navigation Helpers
@@ -217,9 +218,7 @@ final class LeavesOfBlocksUITests: XCTestCase {
 
         XCTAssertTrue(waitForGameGrid(timeout: defaultTimeout))
 
-        let gridElement = app.otherElements["spritekit_game_grid"].exists
-            ? app.otherElements["spritekit_game_grid"]
-            : app.otherElements["game_grid"]
+        let gridElement = app.otherElements["spritekit_game_grid"]
 
         // The holding area mounts after the grid; wait for the container
         // before querying its descendants.
