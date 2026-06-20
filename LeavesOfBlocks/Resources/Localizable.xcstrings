@@ -248,13 +248,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "One-time helpers to get you out of a tight spot. Each can be used once per game:"
+            "value" : "Helpers for when you're in a tight spot. Undo and Hint can each be used once per game:"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Ayudas de un solo uso para salir de un apuro. Cada una se puede usar una vez por partida:"
+            "value" : "Ayudas para cuando estás en un apuro. Deshacer y Pista se pueden usar una vez por partida cada una:"
           }
         }
       }
