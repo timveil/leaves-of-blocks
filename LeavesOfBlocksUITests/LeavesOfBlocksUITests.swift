@@ -78,11 +78,14 @@ final class LeavesOfBlocksUITests: XCTestCase {
         let grid = app.otherElements["spritekit_game_grid"]
         let holdingArea = app.otherElements["block_container"]
         let deadline = Date(timeIntervalSinceNow: timeout)
-        repeat {
+        while true {
             if grid.exists || holdingArea.exists { return true }
-            _ = grid.waitForExistence(timeout: 0.5) // brief poll tick
-        } while Date() < deadline
-        return grid.exists || holdingArea.exists
+            let remaining = deadline.timeIntervalSinceNow
+            if remaining <= 0 { return false }
+            // Brief poll tick, clamped to the time left so we never overshoot
+            // the deadline; returns straight away if the grid shows during it.
+            if grid.waitForExistence(timeout: min(0.5, remaining)) { return true }
+        }
     }
 
     // MARK: - Menu Navigation Helpers
