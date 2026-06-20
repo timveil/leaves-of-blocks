@@ -263,8 +263,17 @@ cmd_run() {
         exit 1
     fi
 
-    # Boot simulator
+    # Shut down any already-booted simulators first, then boot only the target.
+    # `open -a Simulator` restores a window for every booted device, so without
+    # this a stray simulator left running (from Xcode, a prior run, or an
+    # interrupted parallel-test run) would pop open alongside ours — the "many
+    # simulators open" surprise. After this, exactly one device is running.
     echo ""
+    if xcrun simctl list devices booted 2>/dev/null | grep -q "(Booted)"; then
+        echo -e "${YELLOW}Shutting down other booted simulators...${NC}"
+        xcrun simctl shutdown all 2>/dev/null || true
+    fi
+
     echo -e "${YELLOW}Booting simulator...${NC}"
     xcrun simctl boot "$sim_udid" 2>/dev/null || true
     open -a Simulator
