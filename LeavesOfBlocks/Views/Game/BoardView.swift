@@ -270,9 +270,22 @@ struct BoardView: View {
     // MARK: - Helper Methods
     
     private func getDraggedBlockVisualCenter() -> CGPoint {
+        // The block is lifted above the finger so it isn't hidden under the
+        // fingertip. `dragOffset.height` carries the base (negative) lift; the
+        // applied lift tapers to zero near the grid's top edge so the targeting
+        // point never floats off the top of the board (issue #39). When the
+        // grid frame isn't measured yet, fall back to the full base lift.
+        let baseLift = -dragState.dragOffset.height
+        let lift: CGFloat
+        if gridFrame.height > 0 {
+            let fingerGridY = dragState.dragLocation.y - gridFrame.minY
+            lift = BoardLayout.adaptiveLiftOffset(fingerGridY: fingerGridY, baseOffset: baseLift)
+        } else {
+            lift = baseLift
+        }
         return CGPoint(
             x: dragState.dragLocation.x + dragState.dragOffset.width,
-            y: dragState.dragLocation.y + dragState.dragOffset.height
+            y: dragState.dragLocation.y - lift
         )
     }
     

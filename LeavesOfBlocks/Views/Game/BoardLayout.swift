@@ -34,6 +34,30 @@ enum BoardLayout {
         return (lowerRow...upperRow, lowerCol...upperCol)
     }
 
+    /// Returns the effective upward offset (in points) used to lift the dragged
+    /// block above the finger so it isn't hidden under the fingertip.
+    ///
+    /// The lift is the full `baseOffset` over most of the board but tapers
+    /// linearly to zero as the finger approaches the grid's top edge, so the
+    /// targeting point (`fingerGridY − offset`) never crosses above the grid.
+    /// A constant upward offset made the top rows hard to place: when a player
+    /// rests a finger on a top cell, a fixed lift pushes the snap target off
+    /// the board, so the preview floats above the grid and fights placement
+    /// (issue #39). Tapering keeps full visibility everywhere except the top
+    /// band, where the finger is already near the screen top and occludes
+    /// little of the remaining board.
+    ///
+    /// - Parameters:
+    ///   - fingerGridY: the finger's y position relative to the grid's top edge
+    ///     (i.e. `fingerGlobalY − gridFrame.minY`).
+    ///   - baseOffset: the full lift applied away from the top edge.
+    /// - Returns: a lift in `0...baseOffset`, guaranteeing `fingerGridY − lift`
+    ///   stays `>= 0` for any on-grid finger.
+    static func adaptiveLiftOffset(fingerGridY: CGFloat, baseOffset: CGFloat) -> CGFloat {
+        guard baseOffset > 0 else { return 0 }
+        return min(baseOffset, max(0, fingerGridY))
+    }
+
     /// Returns the cell-center coordinate (in grid-local space) for placing
     /// `block` at `position`. Used by `findOptimalPlacement` to score each
     /// candidate against the drag's `nearPoint`.

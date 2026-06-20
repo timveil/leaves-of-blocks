@@ -116,6 +116,59 @@ struct BoardLayoutSearchRangeTests {
     }
 }
 
+// MARK: - Adaptive lift offset (issue #39)
+
+@Suite("BoardLayout.adaptiveLiftOffset")
+struct BoardLayoutAdaptiveLiftOffsetTests {
+
+    // Matches the production base offset wired up in BoardView.
+    private static let base: CGFloat = 40
+
+    @Test("Finger well below the top edge gets the full base lift")
+    func fingerWellBelowTopGetsFullLift() {
+        #expect(BoardLayout.adaptiveLiftOffset(fingerGridY: 200, baseOffset: Self.base) == Self.base)
+    }
+
+    @Test("Finger exactly base-offset below the top still gets the full lift")
+    func fingerAtBaseDistanceGetsFullLift() {
+        #expect(BoardLayout.adaptiveLiftOffset(fingerGridY: Self.base, baseOffset: Self.base) == Self.base)
+    }
+
+    @Test("Within the top band the lift tapers to the finger's distance from the top")
+    func liftTapersInsideTopBand() {
+        // Finger 10pt below the grid top → lift is 10, so the targeting point
+        // lands exactly on the top edge (10 - 10 = 0) instead of 40pt above it.
+        #expect(BoardLayout.adaptiveLiftOffset(fingerGridY: 10, baseOffset: Self.base) == 10)
+    }
+
+    @Test("Finger at the grid's top edge gets no lift")
+    func fingerAtTopEdgeGetsNoLift() {
+        #expect(BoardLayout.adaptiveLiftOffset(fingerGridY: 0, baseOffset: Self.base) == 0)
+    }
+
+    @Test("Finger above the grid clamps the lift to zero")
+    func fingerAboveGridClampsToZero() {
+        #expect(BoardLayout.adaptiveLiftOffset(fingerGridY: -25, baseOffset: Self.base) == 0)
+    }
+
+    @Test("A zero base offset always yields zero lift")
+    func zeroBaseYieldsZero() {
+        #expect(BoardLayout.adaptiveLiftOffset(fingerGridY: 200, baseOffset: 0) == 0)
+    }
+
+    @Test("The targeting point never crosses above the grid top for any on-grid finger")
+    func targetingPointNeverGoesAboveTop() {
+        // For every finger position from the top edge downward, finger − lift
+        // must stay >= 0 — this is the whole point of the adaptive offset.
+        for y in stride(from: CGFloat(0), through: 400, by: 5) {
+            let lift = BoardLayout.adaptiveLiftOffset(fingerGridY: y, baseOffset: Self.base)
+            #expect(lift >= 0)
+            #expect(lift <= Self.base)
+            #expect(y - lift >= 0)
+        }
+    }
+}
+
 // MARK: - End-to-end findOptimalPlacement
 
 @Suite("BoardLayout.findOptimalPlacement")
