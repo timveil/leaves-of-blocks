@@ -1,9 +1,7 @@
-Version 2.0.5 is a behind-the-scenes polish update focused on making the game feel smoother and more reliable in all the small ways that matter.
+Version 2.0.6 brings a few friendly new ways to keep your run going when the board gets tricky.
 
-One change you may notice right away: your music will now keep playing while you enjoy Leaves of Blocks. The game no longer interrupts audio from other apps, so you can put on your favorite playlist or podcast and drop blocks to your heart's content without missing a beat.
+Changed your mind about a placement? You can now Undo your last block, once per game, to take it back and try a different spot. Feeling stuck? Tap Hint, also once per game, and we'll suggest a move to get you going again. And when a game finally comes to an end, you can now View Board to take one last look at your final grid and see how it all came together.
 
-If you use Game Center, things should feel noticeably more solid. Leaderboard scores and achievements now retry automatically if a submission doesn't go through the first time, so your progress is always recorded even if your connection has a hiccup. We also made several improvements under the hood to keep Game Center integration running smoothly and reliably.
-
-We squashed a handful of bugs as well. Dragging blocks near the edge of the board should now behave exactly as you would expect, and we fixed a subtle issue where removing a placed piece could affect the wrong block on the board. Game history stats will now calculate correctly in all sessions, and a rare edge case in puzzle generation has been resolved to ensure every puzzle always has a valid solution. We also improved how VoiceOver interacts with decorative elements, so the experience is cleaner for anyone who relies on accessibility features.
+We also smoothed out a few rough edges. Dropping blocks near the top of the board now feels exactly as you'd expect, and we fixed a first-launch hiccup where the grid didn't always appear right away.
 
 Thank you for playing Leaves of Blocks!
