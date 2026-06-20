@@ -532,7 +532,40 @@ final class GameState {
         currentDifficulty = difficulty
         resetGame()
     }
-    
+
+    /// Seeds an immediate game-over for UI testing: an almost-full board with
+    /// only isolated single-cell gaps (no region a block can fit) plus three
+    /// 3×3 blocks that cannot be placed. Driven by the `-force-game-over`
+    /// launch argument so a UI test can exercise the game-over overlay without
+    /// playing a full game. Only invoked under `isUITesting`.
+    private func seedGameOverForUITesting() {
+        let size = AppConfiguration.GameRules.gridSize
+        var seeded = GameLogic.createEmptyGrid()
+        for r in 0..<size {
+            for c in 0..<size {
+                seeded[r][c].isFilled = true
+                seeded[r][c].color = .blue
+            }
+        }
+        // Two offset diagonals of empty cells: every gap is orthogonally
+        // isolated, so no multi-cell block fits, but the board reads as nearly
+        // full. No row or column is complete, so nothing clears.
+        for r in 0..<size {
+            seeded[r][r].isFilled = false
+            seeded[r][(r + 4) % size].isFilled = false
+        }
+        grid = seeded
+
+        let square = (0..<3).flatMap { r in (0..<3).map { GridPosition(row: r, col: $0) } }
+        currentBlocks = [
+            BlockShape(positions: square, color: .green),
+            BlockShape(positions: square, color: .red),
+            BlockShape(positions: square, color: .yellow)
+        ]
+        score = 1234
+        checkGameOver()
+    }
+
     /// Resets the current game to its initial state.
     ///
     /// This method clears all game progress and reinitializes the game state for a fresh start.
@@ -584,9 +617,16 @@ final class GameState {
         behaviorTracker.recordGridState(grid, isInitialSeed: true)
         
         generateNewBlocks()
-        
+
         // Start game session with service
         gameService.startGameSession(difficulty: currentDifficulty)
+
+        // UI-test hook: override the fresh board into an immediate game-over so
+        // the game-over overlay can be exercised without playing a full game.
+        // Inert in shipped builds (end users can't pass launch arguments).
+        if AppConfiguration.Runtime.isUITesting && AppConfiguration.Runtime.forceGameOver {
+            seedGameOverForUITesting()
+        }
     }
     
     // MARK: - Haptic Feedback

@@ -79,5 +79,12 @@ enum AppConfiguration {
 
         /// `true` when the app should display screenshot-friendly fixture data.
         static let isScreenshotMode = ProcessInfo.processInfo.arguments.contains("-screenshot-mode")
+
+        /// `true` when a UI test wants the game to start already in a game-over
+        /// state (an unplaceable board) — used to exercise the game-over
+        /// overlay without playing a full game. Only honored under
+        /// `isUITesting`, and unreachable in shipped builds (end users can't
+        /// pass launch arguments to an installed app).
+        static let forceGameOver = ProcessInfo.processInfo.arguments.contains("-force-game-over")
     }
 }

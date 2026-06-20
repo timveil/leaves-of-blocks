@@ -295,7 +295,38 @@ final class LeavesOfBlocksUITests: XCTestCase {
 
         XCTAssertTrue(waitForGameGrid(timeout: defaultTimeout), "Game grid should appear after starting game")
     }
-    
+
+    @MainActor
+    func testViewBoardPeekAfterGameOver() throws {
+        // Relaunch straight into a forced game-over (an unplaceable board) so we
+        // can exercise the game-over overlay without playing a full game.
+        app.terminate()
+        app.launchArguments = ["-ui-testing", "-force-game-over"]
+        app.launch()
+
+        let startButton = app.buttons["start_game_button"]
+        XCTAssertTrue(startButton.waitForExistence(timeout: defaultTimeout), "Start game button should exist")
+        startButton.tap()
+
+        // The game-over overlay appears with the View Board affordance.
+        let viewBoard = app.buttons["game_over_view_board_button"]
+        XCTAssertTrue(viewBoard.waitForExistence(timeout: defaultTimeout), "View Board button should appear at game-over")
+        let newGame = app.buttons["game_over_new_game_button"]
+        XCTAssertTrue(newGame.exists, "Results overlay should be showing initially")
+
+        // Tap View Board → results overlay hides; board + Show Results appear.
+        viewBoard.tap()
+        let showResults = app.buttons["game_over_show_results_button"]
+        XCTAssertTrue(showResults.waitForExistence(timeout: defaultTimeout), "Show Results button should appear while peeking")
+        XCTAssertTrue(waitForGameGrid(timeout: defaultTimeout), "Final board grid should be visible while peeking")
+        XCTAssertFalse(newGame.exists, "Results overlay should be hidden while peeking the board")
+
+        // Tap Show Results → overlay returns; peek button goes away.
+        showResults.tap()
+        XCTAssertTrue(newGame.waitForExistence(timeout: defaultTimeout), "Results overlay should return")
+        XCTAssertFalse(showResults.exists, "Show Results button should be gone once results return")
+    }
+
     // MARK: - Helper Methods
     
     @MainActor
