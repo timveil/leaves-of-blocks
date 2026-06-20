@@ -7,6 +7,7 @@ struct GameOverOverlayView: View {
     let onViewSummary: () -> Void
     let onNewGame: () -> Void
     let onUndo: () -> Void
+    let onViewBoard: () -> Void
 
     var body: some View {
         GoldHeaderCard(title: "game_over".localized) {
@@ -52,6 +53,18 @@ struct GameOverOverlayView: View {
                         accessibilityId: "game_over_view_summary_button",
                         onTap: onViewSummary
                     )
+
+                    // Hides this overlay to reveal the final board (grid +
+                    // the unplaceable blocks) so the player can see how the
+                    // game ended (issue #36). A floating button restores it.
+                    FullWidthActionButton(
+                        title: "view_board".localized,
+                        icon: "square.grid.3x3",
+                        style: .secondary,
+                        accessibilityId: "game_over_view_board_button",
+                        onTap: onViewBoard
+                    )
+                    .accessibilityHint("view_board_hint".localized)
                 }
             }
         }
@@ -78,7 +91,8 @@ struct GameOverOverlayView: View {
             }(),
             onViewSummary: {},
             onNewGame: {},
-            onUndo: {}
+            onUndo: {},
+            onViewBoard: {}
         )
     }
 }
