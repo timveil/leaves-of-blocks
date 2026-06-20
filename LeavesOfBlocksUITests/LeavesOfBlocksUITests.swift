@@ -93,11 +93,32 @@ final class LeavesOfBlocksUITests: XCTestCase {
         menuButton.coordinate(withNormalizedOffset: CGVector(dx: 0.5, dy: 0.5)).tap()
     }
 
+    /// Opens the slide-down menu and returns once `element` is visible, retrying
+    /// the open up to `attempts` times. A single coordinate tap (see `openMenu`)
+    /// is occasionally swallowed on a cold simulator, leaving the menu closed so
+    /// the item never appears — the historical source of `testNavigationFlow`
+    /// flakiness. We only re-tap when the item is still absent (menu closed), so
+    /// a successful open is never toggled back shut. Returns `false` if the item
+    /// never appears across all attempts.
+    @MainActor
+    private func openMenu(untilVisible element: XCUIElement, attempts: Int = 3) -> Bool {
+        // Per-attempt wait is half the default: long enough for the menu to
+        // render once the tap lands, short enough that a swallowed tap retries
+        // promptly instead of burning the full timeout. Total worst case stays
+        // bounded at attempts × (defaultTimeout / 2).
+        for _ in 0..<attempts {
+            openMenu()
+            if element.waitForExistence(timeout: defaultTimeout / 2) {
+                return true
+            }
+        }
+        return false
+    }
+
     @MainActor
     private func navigateViaMenu(to accessibilityId: String) {
-        openMenu()
         let button = app.buttons[accessibilityId]
-        XCTAssertTrue(button.waitForExistence(timeout: defaultTimeout), "\(accessibilityId) should exist in menu")
+        XCTAssertTrue(openMenu(untilVisible: button), "\(accessibilityId) should exist in menu")
         button.tap()
         // Wait for the menu to dismiss before the next interaction.
         _ = button.waitForNonExistence(timeout: defaultTimeout)
