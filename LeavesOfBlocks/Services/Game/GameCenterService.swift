@@ -67,7 +67,7 @@ protocol GameCenterServicing: AnyObject {
 @Observable
 final class GameCenterService: GameCenterServicing {
 
-    static let shared = GameCenterService()
+    static let shared = GameCenterService(pendingStore: .shared)
 
     /// `true` once `GKLocalPlayer.local.isAuthenticated` becomes true.
     /// Driven by `authenticateIfEnabled()` and exposed for SwiftUI views.
@@ -77,7 +77,7 @@ final class GameCenterService: GameCenterServicing {
 
     @ObservationIgnored private let pendingStore: PendingGameCenterSubmissionStore
 
-    private init(pendingStore: PendingGameCenterSubmissionStore = .shared) {
+    private init(pendingStore: PendingGameCenterSubmissionStore) {
         self.pendingStore = pendingStore
     }
 

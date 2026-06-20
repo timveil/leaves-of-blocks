@@ -103,7 +103,7 @@ struct HistoryView: View {
                         challengeMaintained: Double.random(in: 0.3...0.8)
                     )
 
-                    try? coreDataManager.saveGameRecord(
+                    _ = try? coreDataManager.saveGameRecord(
                         score: session.score,
                         difficulty: session.difficulty,
                         blocksPlaced: session.blocks,
