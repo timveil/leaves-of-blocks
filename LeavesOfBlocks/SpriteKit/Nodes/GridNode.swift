@@ -54,6 +54,14 @@ class GridNode: SKNode {
     /// Holds line-clear preview overlay tiles during drag. Cleared on every grid sync.
     private let previewOverlayNode = SKNode()
 
+    /// Holds the pulsing hint overlay. Sibling of `previewOverlayNode`, sits
+    /// one level above so a hint always wins over a stray drag preview.
+    private let hintOverlayNode = SKNode()
+
+    /// Action key used to schedule the hint auto-clear. Stored so a manual
+    /// `clearHint()` can cancel the pending fade.
+    private static let hintAutoclearActionKey = "hintAutoclear"
+
     private let borderWidth = GameTheme.Layout.gridBorderWidth
 
     /// Content dimension (cells + internal spacing, no border)
@@ -101,6 +109,8 @@ class GridNode: SKNode {
         addChild(contentNode)
         previewOverlayNode.zPosition = 2
         contentNode.addChild(previewOverlayNode)
+        hintOverlayNode.zPosition = 3
+        contentNode.addChild(hintOverlayNode)
         buildGrid()
     }
 
@@ -271,5 +281,51 @@ class GridNode: SKNode {
         overlay.lineWidth = 4
         overlay.position = cellPosition(row: row, col: col)
         previewOverlayNode.addChild(overlay)
+    }
+
+    // MARK: - Hint Overlay
+
+    /// Pulses a soft tint on every supplied grid cell for ~2 seconds, then
+    /// fades out automatically. Cancellable via `clearHint()` (e.g., when the
+    /// player starts a drag during the hint window). Mirrors the
+    /// `previewOverlayNode` pattern — sibling node, `removeAllChildren` to
+    /// clear, `SKAction` to animate.
+    func showHintCells(_ cells: [GridPosition]) {
+        clearHint()
+        guard !cells.isEmpty else { return }
+
+        let fill = SpriteKitColors.lineCompletionPrimary.withAlphaComponent(0.45)
+        let stroke = SpriteKitColors.lineCompletionSecondary
+        for cell in cells where (0..<gridSize).contains(cell.row) && (0..<gridSize).contains(cell.col) {
+            let rect = CGRect(x: 0, y: 0, width: cellSize, height: cellSize)
+            let overlay = SKShapeNode(rect: rect, cornerRadius: GameTheme.Layout.cellCornerRadius)
+            overlay.fillColor = fill
+            overlay.strokeColor = stroke
+            overlay.lineWidth = 4
+            overlay.position = cellPosition(row: cell.row, col: cell.col)
+            hintOverlayNode.addChild(overlay)
+        }
+
+        let pulse = SKAction.repeatForever(SKAction.sequence([
+            SKAction.fadeAlpha(to: 0.55, duration: 0.4),
+            SKAction.fadeAlpha(to: 1.0, duration: 0.4)
+        ]))
+        hintOverlayNode.alpha = 1.0
+        hintOverlayNode.run(pulse)
+
+        let fadeOut = SKAction.sequence([
+            SKAction.wait(forDuration: 1.7),
+            SKAction.fadeAlpha(to: 0.0, duration: 0.3),
+            SKAction.run { [weak self] in self?.clearHint() }
+        ])
+        hintOverlayNode.run(fadeOut, withKey: GridNode.hintAutoclearActionKey)
+    }
+
+    /// Cancels any active hint pulse and removes the overlay cells.
+    func clearHint() {
+        hintOverlayNode.removeAction(forKey: GridNode.hintAutoclearActionKey)
+        hintOverlayNode.removeAllActions()
+        hintOverlayNode.alpha = 1.0
+        hintOverlayNode.removeAllChildren()
     }
 }

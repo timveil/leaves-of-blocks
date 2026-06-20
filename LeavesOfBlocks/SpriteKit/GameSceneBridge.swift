@@ -91,6 +91,20 @@ final class GameSceneBridge {
         scene.playLineClearEffect(clearedRows: rows, clearedCols: cols)
     }
 
+    // MARK: - Hint Overlay
+
+    /// Renders a pulsing hint overlay on the cells the supplied `Hint` would
+    /// affect, drawn by `GridNode.showHintCells(_:)`.
+    func showHint(_ hint: GameLogic.Hint) {
+        scene.showHint(hint)
+    }
+
+    /// Clears any active hint overlay. Called when the player starts a drag or
+    /// when undo is used (the hint may have referenced now-invalid state).
+    func clearHint() {
+        scene.clearHint()
+    }
+
     // MARK: - Background / Foreground
 
     /// Pauses the SpriteKit scene so the suspended app holds less GPU/CPU

@@ -214,6 +214,98 @@ struct SessionMetricsGradeTests {
     }
 }
 
+// MARK: - State Snapshot
+
+@Suite("PlayerBehaviorTracker state snapshot")
+struct PlayerBehaviorTrackerStateTests {
+    @Test @MainActor
+    func captureAndRestoreRoundTripsIdentically() {
+        let tracker = makeTracker()
+        tracker.recordGridState(emptyGrid(), isInitialSeed: true)
+        tracker.recordGridState(gridFilled(rows: 0..<2))
+        tracker.recordGridState(gridFilled(rows: 0..<4))
+        tracker.recordFallbackActivation(from: .diverse, to: .constrained)
+
+        let captured = tracker.captureState()
+
+        // Mutate further past the capture point.
+        tracker.recordGridState(gridFilled(rows: 0..<6))
+        tracker.recordFallbackActivation(from: .constrained, to: .minimal)
+
+        let drifted = tracker.captureState()
+        #expect(captured != drifted, "further recording must change the state")
+
+        tracker.restore(captured)
+        let rehydrated = tracker.captureState()
+        #expect(rehydrated == captured, "restored state must equal the captured value")
+    }
+
+    @Test @MainActor
+    func restoreRehydratesPublishedMetrics() {
+        let tracker = makeTracker()
+        tracker.recordGridState(emptyGrid())
+        tracker.recordGridState(emptyGrid())
+        tracker.recordGridState(emptyGrid())
+        tracker.recordFallbackActivation(from: .diverse, to: .constrained)
+
+        let metricsBefore = tracker.getCurrentMetrics(
+            score: 100, blocksPlaced: 3, linesCleared: 0,
+            longestCombo: 0, gameTime: 30, difficulty: .moderate
+        )
+
+        let captured = tracker.captureState()
+
+        // Diverge: change every external knob.
+        for _ in 0..<5 { tracker.recordGridState(gridFilled(rows: 0..<7)) }
+        tracker.recordFallbackActivation(from: .diverse, to: .emergency)
+
+        tracker.restore(captured)
+        let metricsAfter = tracker.getCurrentMetrics(
+            score: 100, blocksPlaced: 3, linesCleared: 0,
+            longestCombo: 0, gameTime: 30, difficulty: .moderate
+        )
+        #expect(metricsAfter.averageGridEfficiency == metricsBefore.averageGridEfficiency)
+        #expect(metricsAfter.averageFragmentation == metricsBefore.averageFragmentation)
+        #expect(metricsAfter.strategicPlayRating == metricsBefore.strategicPlayRating)
+        #expect(metricsAfter.fallbackActivations == metricsBefore.fallbackActivations)
+        #expect(metricsAfter.challengeMaintained == metricsBefore.challengeMaintained)
+    }
+
+    @Test @MainActor
+    func captureIncludesFinalizedSessionMetrics() {
+        let tracker = makeTracker()
+        tracker.recordGridState(emptyGrid())
+        _ = tracker.finalizeSession(
+            score: 500, blocksPlaced: 10, linesCleared: 4,
+            longestCombo: 3, gameTime: 90, difficulty: .hard
+        )
+
+        let captured = tracker.captureState()
+        #expect(captured.currentSessionMetrics?.score == 500)
+
+        // Start a fresh session to clobber currentSessionMetrics.
+        tracker.startSession()
+        #expect(tracker.captureState().currentSessionMetrics == nil)
+
+        tracker.restore(captured)
+        #expect(tracker.captureState().currentSessionMetrics?.score == 500)
+    }
+
+    @Test @MainActor
+    func captureRestoreSurvivesEmptyTracker() {
+        let trackerA = makeTracker()
+        let trackerB = makeTracker()
+        let emptyState = trackerA.captureState()
+
+        trackerB.recordGridState(emptyGrid())
+        trackerB.recordFallbackActivation(from: .diverse, to: .minimal)
+        trackerB.restore(emptyState)
+
+        let rehydrated = trackerB.captureState()
+        #expect(rehydrated == emptyState)
+    }
+}
+
 // MARK: - History Bounding
 
 @Suite("PlayerBehaviorTracker bounded history")

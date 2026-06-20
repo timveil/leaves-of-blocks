@@ -116,14 +116,16 @@ final class CoreDataManager {
     ///   - gameTime: Elapsed gameplay duration, in seconds.
     ///   - sessionMetrics: Optional analytics from `PlayerBehaviorTracker`. When
     ///     present, efficiency / strategic / fallback metrics are also persisted.
+    @discardableResult
     func saveGameRecord(score: Int, difficulty: DifficultyMode, blocksPlaced: Int,
                        linesCleared: Int, longestCombo: Int, gameTime: TimeInterval,
-                       sessionMetrics: PlayerBehaviorTracker.SessionMetrics? = nil) throws {
+                       sessionMetrics: PlayerBehaviorTracker.SessionMetrics? = nil) throws -> UUID {
         let context = viewContext
+        let recordID = UUID()
         context.performAndWait {
             let gameRecord = GameRecord(context: context)
 
-            gameRecord.id = UUID()
+            gameRecord.id = recordID
             gameRecord.score = Int32(score)
             gameRecord.difficulty = difficulty.rawValue
             gameRecord.blocksPlaced = Int32(blocksPlaced)
@@ -151,6 +153,24 @@ final class CoreDataManager {
             #endif
         }
 
+        try saveContext()
+        return recordID
+    }
+
+    /// Deletes the `GameRecord` whose stable `id` matches the supplied UUID, if
+    /// present. Used by `GameState.undoLastPlacement` to reverse the auto-save
+    /// that fires when a placement triggers game-over.
+    func deleteGameRecord(id: UUID) throws {
+        let context = viewContext
+        try context.performAndWait {
+            let request: NSFetchRequest<GameRecord> = GameRecord.fetchRequest()
+            request.predicate = NSPredicate(format: "id == %@", id as CVarArg)
+            request.fetchLimit = 1
+            let matches = try context.fetch(request)
+            for record in matches {
+                context.delete(record)
+            }
+        }
         try saveContext()
     }
 

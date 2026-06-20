@@ -223,8 +223,128 @@ enum GameLogic {
         return (rows, cols)
     }
 
+    // MARK: - Hint Logic
+
+    /// A suggested placement returned by `findHint`. Captures everything the
+    /// view layer needs to render the highlight without re-deriving footprints
+    /// for special blocks.
+    struct Hint: Equatable {
+        let blockIndex: Int
+        let block: BlockShape
+        let position: GridPosition
+        let willClearLines: Bool
+        /// The absolute grid cells the placement would affect — already
+        /// resolved through special-block footprints so the view layer can
+        /// pulse them directly.
+        let highlightedCells: [GridPosition]
+    }
+
+    /// Finds a hint placement for the player. Prefers placements that
+    /// immediately clear at least one line; otherwise returns the placement
+    /// that sits against the most existing blocks (consolidating the board
+    /// rather than stranding a piece alone in the top-left corner), breaking
+    /// ties by scan order. Returns `nil` when no block in `blocks` can be
+    /// placed anywhere on `grid`.
+    ///
+    /// Pure / side-effect-free. Worst-case cost is `O(|blocks| × gridSize²)`
+    /// validity probes; line-clearing simulation runs only on valid candidates
+    /// until the first clearing hit is found.
+    static func findHint(blocks: [BlockShape], grid: [[GridCell]]) -> Hint? {
+        let size = AppConfiguration.GameRules.gridSize
+        var bestFallback: Hint?
+        var bestAdjacency = -1
+
+        for (index, block) in blocks.enumerated() {
+            for row in 0..<size {
+                for col in 0..<size {
+                    let position = GridPosition(row: row, col: col)
+                    guard canPlaceBlock(block, at: position, in: grid) else { continue }
+
+                    let preview = linesThatWouldClear(placing: block, at: position, in: grid)
+                    let willClear = !preview.rows.isEmpty || !preview.cols.isEmpty
+                    let hint = Hint(
+                        blockIndex: index,
+                        block: block,
+                        position: position,
+                        willClearLines: willClear,
+                        highlightedCells: highlightedCells(for: block, at: position)
+                    )
+                    if willClear { return hint }
+
+                    // Fallback ranking: prefer the placement whose footprint
+                    // touches the most filled cells. On an empty board every
+                    // candidate scores 0, so the first (top-left) placement
+                    // wins — unchanged from the old behavior; mid-game this
+                    // points at a useful, board-consolidating move instead.
+                    let adjacency = filledNeighborCount(for: block, at: position, in: grid)
+                    if adjacency > bestAdjacency {
+                        bestAdjacency = adjacency
+                        bestFallback = hint
+                    }
+                }
+            }
+        }
+        return bestFallback
+    }
+
+    /// Counts how many of `block`'s occupied cells (placed at `position`) sit
+    /// orthogonally against a filled grid cell. Used to rank non-clearing hint
+    /// candidates toward consolidating placements. Edges don't count — only
+    /// existing blocks — so an empty grid scores every placement 0.
+    private static func filledNeighborCount(for block: BlockShape, at position: GridPosition, in grid: [[GridCell]]) -> Int {
+        let size = AppConfiguration.GameRules.gridSize
+        let occupied = Set(block.positions.map {
+            GridPosition(row: position.row + $0.row, col: position.col + $0.col)
+        })
+        var count = 0
+        for cell in occupied {
+            let neighbors = [
+                GridPosition(row: cell.row - 1, col: cell.col),
+                GridPosition(row: cell.row + 1, col: cell.col),
+                GridPosition(row: cell.row, col: cell.col - 1),
+                GridPosition(row: cell.row, col: cell.col + 1)
+            ]
+            for n in neighbors where n.row >= 0 && n.row < size && n.col >= 0 && n.col < size {
+                if !occupied.contains(n) && grid[n.row][n.col].isFilled {
+                    count += 1
+                }
+            }
+        }
+        return count
+    }
+
+    /// Resolves the absolute grid cells affected by placing `block` at
+    /// `position`, including the row / column / 3x3 footprint of special blocks.
+    /// Cells outside the grid are dropped so the caller can iterate the result
+    /// without a bounds check.
+    static func highlightedCells(for block: BlockShape, at position: GridPosition) -> [GridPosition] {
+        let size = AppConfiguration.GameRules.gridSize
+        switch block.type {
+        case .normal:
+            return block.positions.map {
+                GridPosition(row: position.row + $0.row, col: position.col + $0.col)
+            }
+        case .horizontalClear:
+            return (0..<size).map { GridPosition(row: position.row, col: $0) }
+        case .verticalClear:
+            return (0..<size).map { GridPosition(row: $0, col: position.col) }
+        case .areaClear:
+            var cells: [GridPosition] = []
+            for rowOffset in -1...1 {
+                for colOffset in -1...1 {
+                    let r = position.row + rowOffset
+                    let c = position.col + colOffset
+                    if r >= 0, r < size, c >= 0, c < size {
+                        cells.append(GridPosition(row: r, col: c))
+                    }
+                }
+            }
+            return cells
+        }
+    }
+
     // MARK: - Game Over Logic
-    
+
     /// Checks if any of the current blocks can be placed on the grid
     static func isGameOver(currentBlocks: [BlockShape], grid: [[GridCell]]) -> Bool {
         for block in currentBlocks {

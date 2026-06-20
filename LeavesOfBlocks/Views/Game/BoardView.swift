@@ -90,6 +90,14 @@ struct BoardView: View {
                         Spacer()
                     }
 
+                    // Assist Bar Row (Undo + Hint)
+                    HStack {
+                        Spacer()
+                        assistBar
+                            .frame(width: gameWidth)
+                        Spacer()
+                    }
+
                     // Grid Row
                     HStack {
                         Spacer()
@@ -164,6 +172,50 @@ struct BoardView: View {
         }
     }
 
+    // MARK: - Assist Bar
+
+    @ViewBuilder
+    private var assistBar: some View {
+        HStack(spacing: GameTheme.Layout.largePadding) {
+            Spacer()
+            CircularIconButton(
+                icon: "arrow.uturn.backward",
+                accessibilityLabel: gameState.canUndo
+                    ? "ax_undo_available".localized
+                    : "ax_undo_used".localized,
+                color: gameState.canUndo
+                    ? GameTheme.Colors.primaryAccent
+                    : GameTheme.Colors.tertiaryText,
+                size: 48,
+                iconSize: 22,
+                action: {
+                    gameState.undoLastPlacement()
+                    sceneBridge.clearHint()
+                }
+            )
+            .disabled(!gameState.canUndo)
+
+            CircularIconButton(
+                icon: "lightbulb.fill",
+                accessibilityLabel: gameState.canHint
+                    ? "ax_hint_available".localized
+                    : "ax_hint_used".localized,
+                color: gameState.canHint
+                    ? GameTheme.Colors.accent
+                    : GameTheme.Colors.tertiaryText,
+                size: 48,
+                iconSize: 22,
+                action: {
+                    if let hint = gameState.requestHint() {
+                        sceneBridge.showHint(hint)
+                    }
+                }
+            )
+            .disabled(!gameState.canHint)
+            Spacer()
+        }
+    }
+
     // MARK: - Overlays
 
     @ViewBuilder
@@ -177,7 +229,11 @@ struct BoardView: View {
                     GameOverOverlayView(
                         gameState: gameState,
                         onViewSummary: onViewSummary,
-                        onNewGame: onNewGame
+                        onNewGame: onNewGame,
+                        onUndo: {
+                            gameState.undoLastPlacement()
+                            sceneBridge.clearHint()
+                        }
                     )
                     .padding(.top, 100) // Position closer to top
 
@@ -207,6 +263,8 @@ struct BoardView: View {
         dragState.isDragging = true
         dragState.dragLocation = fingerLocation
         dragState.dragOffset = CGSize(width: 0, height: -DragConfiguration.offsetAboveFinger)
+        // Any pulsing hint overlay would visually fight the drag preview.
+        sceneBridge.clearHint()
     }
     
     private func handleDragMove(fingerLocation: CGPoint) {

@@ -15,7 +15,7 @@ final class PlayerBehaviorTracker {
     // MARK: - Session Metrics
     
     /// Comprehensive session statistics including efficiency metrics
-    struct SessionMetrics {
+    struct SessionMetrics: Equatable {
         // Existing metrics
         let score: Int
         let blocksPlaced: Int
@@ -231,7 +231,48 @@ final class PlayerBehaviorTracker {
 
         return sessionMetrics
     }
-    
+
+    // MARK: - State Snapshot
+
+    /// Value-type snapshot of every accumulating tracker field. Captured before
+    /// each placement so undo can rewind the tracker to a prior point without
+    /// replaying recordings.
+    struct State: Equatable {
+        let gridEfficiencyHistory: [Double]
+        let fragmentationHistory: [Double]
+        let strategicOpportunities: [Double]
+        let fallbackCount: Int
+        let totalMeasurements: Int
+        let highTierMeasurements: Int
+        let currentSessionMetrics: SessionMetrics?
+    }
+
+    /// Snapshots the tracker's accumulated state. Pure read — does not mutate.
+    func captureState() -> State {
+        State(
+            gridEfficiencyHistory: gridEfficiencyHistory,
+            fragmentationHistory: fragmentationHistory,
+            strategicOpportunities: strategicOpportunities,
+            fallbackCount: fallbackCount,
+            totalMeasurements: totalMeasurements,
+            highTierMeasurements: highTierMeasurements,
+            currentSessionMetrics: currentSessionMetrics
+        )
+    }
+
+    /// Restores tracker state from a prior `captureState()`. Replaces every
+    /// accumulating field; does not emit observation notifications for the
+    /// `@ObservationIgnored` arrays (callers — typically `GameState.restore` —
+    /// re-render via other observed properties).
+    func restore(_ state: State) {
+        gridEfficiencyHistory = state.gridEfficiencyHistory
+        fragmentationHistory = state.fragmentationHistory
+        strategicOpportunities = state.strategicOpportunities
+        fallbackCount = state.fallbackCount
+        totalMeasurements = state.totalMeasurements
+        highTierMeasurements = state.highTierMeasurements
+        currentSessionMetrics = state.currentSessionMetrics
+    }
 }
 
 // MARK: - Extended GameSessionStatistics

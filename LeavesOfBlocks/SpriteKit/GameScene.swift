@@ -58,6 +58,12 @@ class GameScene: SKScene {
     /// Tracks the last ghost block identity to avoid recreating on every drag move
     private var lastGhostBlockId: String?
 
+    /// Pending high-score celebration dispatched after the game-over overlay
+    /// settles. Held so an undo flipping `isGameOver` back to false (within
+    /// the 0.5s pre-celebration window) can cancel it before the burst fires
+    /// on an already-cleared overlay.
+    private var highScoreCelebrationTask: Task<Void, Never>?
+
     // MARK: - Initialization
 
     /// Creates a new game scene bound to the given game state.
@@ -145,8 +151,10 @@ class GameScene: SKScene {
         if isGameOver {
             playGameOverEffect()
             if gameState?.isNewHighScore == true {
-                Task { @MainActor [weak self] in
+                highScoreCelebrationTask?.cancel()
+                highScoreCelebrationTask = Task { @MainActor [weak self] in
                     try? await Task.sleep(for: .seconds(0.5))
+                    guard !Task.isCancelled else { return }
                     self?.playHighScoreCelebration()
                 }
             }
@@ -330,6 +338,20 @@ class GameScene: SKScene {
         needsGridSync = true
     }
 
+    // MARK: - Hint Overlay
+
+    /// Renders a pulsing hint overlay on the cells affected by the supplied
+    /// `Hint`. Auto-fades after ~2 seconds; the rendering lives in
+    /// `GridNode.showHintCells(_:)`.
+    func showHint(_ hint: GameLogic.Hint) {
+        gridNode.showHintCells(hint.highlightedCells)
+    }
+
+    /// Clears any active hint overlay immediately.
+    func clearHint() {
+        gridNode.clearHint()
+    }
+
     // MARK: - Game Over Effects
 
     /// Plays the game-over grid sweep effect.
@@ -356,6 +378,8 @@ class GameScene: SKScene {
 
     /// Clears game-over overlays (e.g., on new game).
     func clearGameOverEffects() {
+        highScoreCelebrationTask?.cancel()
+        highScoreCelebrationTask = nil
         GameOverEffect.clearGameOver(in: gridNode.contentNode)
     }
 

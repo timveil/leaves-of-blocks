@@ -122,6 +122,7 @@ final class GameService {
     /// Throws if Core Data fails to persist the record. The Game Center
     /// submission is intentionally still attempted only on a successful local
     /// save — Game Center is the secondary store, not the source of truth.
+    @discardableResult
     func saveGameRecord(
         score: Int,
         linesCleared: Int,
@@ -130,8 +131,8 @@ final class GameService {
         difficulty: DifficultyMode,
         longestCombo: Int,
         sessionMetrics: PlayerBehaviorTracker.SessionMetrics? = nil
-    ) throws {
-        try coreDataManager.saveGameRecord(
+    ) throws -> UUID {
+        let savedID = try coreDataManager.saveGameRecord(
             score: score,
             difficulty: difficulty,
             blocksPlaced: blocksPlaced,
@@ -148,6 +149,18 @@ final class GameService {
             sessionMetrics: sessionMetrics,
             longestCombo: longestCombo
         )
+        return savedID
+    }
+
+    /// Deletes the `GameRecord` row matching `id`. Used to reverse the auto-save
+    /// performed by `saveGameRecord` when a player undoes a game-over.
+    ///
+    /// Note the intentional asymmetry: undo deletes the local record but does
+    /// not retract the Game Center submission from `saveGameRecord` — GKLeaderboard
+    /// keeps a player's best score and can't be lowered, and pulling achievements
+    /// back would be hostile UX. The next real game-over re-submits.
+    func deleteGameRecord(id: UUID) throws {
+        try coreDataManager.deleteGameRecord(id: id)
     }
     
     // MARK: - Haptic Feedback

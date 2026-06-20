@@ -31,7 +31,6 @@ final class GameState {
 
     // Game Statistics
     private(set) var blocksPlaced: Int = 0
-    private(set) var gameStartTime: Date = Date()
     private(set) var longestCombo: Int = 0
     private(set) var currentCombo: Int = 0
     private(set) var isNewHighScore: Bool = false
@@ -39,6 +38,35 @@ final class GameState {
 
     // Difficulty mode
     private(set) var currentDifficulty: DifficultyMode = .easy
+
+    // MARK: - Undo State
+
+    /// Whether the once-per-game undo has been consumed. Observed so the UI
+    /// can grey out the undo button after a successful `undoLastPlacement()`.
+    private(set) var undoUsed: Bool = false
+
+    /// The pre-placement snapshot captured most recently inside `placeBlock`,
+    /// or `nil` when no placement has been made (or the slot has already been
+    /// consumed). Not observed — `canUndo` exposes the relevant binary signal
+    /// to the UI; the snapshot payload itself shouldn't trigger view rerenders.
+    @ObservationIgnored private var lastUndoSnapshot: UndoSnapshot?
+
+    /// Whether the player can undo right now. The undo button binds to this.
+    var canUndo: Bool {
+        !undoUsed && lastUndoSnapshot != nil
+    }
+
+    // MARK: - Hint State
+
+    /// Whether the once-per-game hint has been consumed.
+    private(set) var hintUsed: Bool = false
+
+    /// Whether the player can request a hint right now. Disabled at game-over
+    /// (no useful placement to suggest) or after the hint has already been
+    /// used for this run.
+    var canHint: Bool {
+        !hintUsed && !isGameOver
+    }
 
     // MARK: - Services
 
@@ -122,7 +150,6 @@ final class GameState {
         isGameOver = false
         lastClearedCells = []
         isNewHighScore = false
-        gameStartTime = snapshot.savedAt.addingTimeInterval(-snapshot.elapsedGameTime)
 
         // Behavior tracker starts fresh on resume; analytics reflect post-resume play only.
         // `isInitialSeed: true` populates the rolling averages without counting
@@ -134,6 +161,120 @@ final class GameState {
             difficulty: snapshot.difficulty,
             resumingFromElapsed: snapshot.elapsedGameTime
         )
+    }
+
+    // MARK: - Undo Snapshot
+
+    /// Captures the entire mutable game state for use as an undo target.
+    ///
+    /// Unlike `snapshot() -> InProgressGameSnapshot` (which is lossy — it omits
+    /// behavior-tracker analytics and the game-over flag because resume starts
+    /// the tracker fresh), this snapshot is the exact pre-placement state and
+    /// is held in memory only.
+    func captureSnapshot() -> UndoSnapshot {
+        UndoSnapshot(
+            grid: grid,
+            currentBlocks: currentBlocks,
+            score: score,
+            isGameOver: isGameOver,
+            linesCleared: linesCleared,
+            lastClearedCells: lastClearedCells,
+            blocksPlaced: blocksPlaced,
+            longestCombo: longestCombo,
+            currentCombo: currentCombo,
+            isNewHighScore: isNewHighScore,
+            specialShapesUsed: specialShapesUsed,
+            currentDifficulty: currentDifficulty,
+            elapsedGameTime: gameService.currentGameTime,
+            trackerState: behaviorTracker.captureState(),
+            savedRecordID: nil
+        )
+    }
+
+    /// Returns a suggested placement for one of the held blocks, or `nil` if
+    /// no placement is available (which only happens when the game is
+    /// effectively over). Consumes the once-per-game hint slot only when a
+    /// hint is actually returned — a nil result leaves the slot intact.
+    func requestHint() -> GameLogic.Hint? {
+        guard canHint else { return nil }
+        guard let hint = GameLogic.findHint(blocks: currentBlocks, grid: grid) else { return nil }
+        hintUsed = true
+        return hint
+    }
+
+    /// Reverses the most recent placement, including any line clears, special
+    /// block effects, or game-over save it triggered. Consumes the once-per-game
+    /// undo slot — subsequent placements cannot be undone until `resetGame()`
+    /// runs.
+    func undoLastPlacement() {
+        guard !undoUsed, let snapshot = lastUndoSnapshot else { return }
+
+        // Delete the just-saved GameRecord if the placement caused game-over.
+        // Best-effort: log and continue if the deletion fails (the user still
+        // gets the state revert, which is the user-visible outcome).
+        if let recordID = snapshot.savedRecordID {
+            do {
+                try gameService.deleteGameRecord(id: recordID)
+            } catch {
+                BuildConfiguration.log("Undo: failed to delete saved GameRecord \(recordID): \(error.localizedDescription)", level: .error)
+            }
+        }
+
+        restore(from: snapshot)
+        undoUsed = true
+        lastUndoSnapshot = nil
+
+        // Re-sync the in-progress store with the restored state so a background
+        // / launch resume sees the pre-placement run, not the post-placement one.
+        if hasActiveRun {
+            inProgressStore.save(self.snapshot())
+        } else {
+            inProgressStore.clear()
+        }
+    }
+
+    /// Used internally by `checkGameOver` to attach the just-saved GameRecord id
+    /// to the pending undo snapshot. The snapshot's fields are `let`, so we
+    /// rebuild it with the additional id.
+    private func attachSavedRecordIDToUndoSnapshot(_ id: UUID) {
+        guard let existing = lastUndoSnapshot else { return }
+        lastUndoSnapshot = UndoSnapshot(
+            grid: existing.grid,
+            currentBlocks: existing.currentBlocks,
+            score: existing.score,
+            isGameOver: existing.isGameOver,
+            linesCleared: existing.linesCleared,
+            lastClearedCells: existing.lastClearedCells,
+            blocksPlaced: existing.blocksPlaced,
+            longestCombo: existing.longestCombo,
+            currentCombo: existing.currentCombo,
+            isNewHighScore: existing.isNewHighScore,
+            specialShapesUsed: existing.specialShapesUsed,
+            currentDifficulty: existing.currentDifficulty,
+            elapsedGameTime: existing.elapsedGameTime,
+            trackerState: existing.trackerState,
+            savedRecordID: id
+        )
+    }
+
+    /// Replays a snapshot back into the game state, including tracker history
+    /// and elapsed game time. Does not consume the undo slot — `undoLastPlacement()`
+    /// owns the slot-consumption side effect.
+    func restore(from snapshot: UndoSnapshot) {
+        grid = snapshot.grid
+        currentBlocks = snapshot.currentBlocks
+        score = snapshot.score
+        isGameOver = snapshot.isGameOver
+        linesCleared = snapshot.linesCleared
+        lastClearedCells = snapshot.lastClearedCells
+        blocksPlaced = snapshot.blocksPlaced
+        longestCombo = snapshot.longestCombo
+        currentCombo = snapshot.currentCombo
+        isNewHighScore = snapshot.isNewHighScore
+        specialShapesUsed = snapshot.specialShapesUsed
+        currentDifficulty = snapshot.currentDifficulty
+        behaviorTracker.restore(snapshot.trackerState)
+        gameService.resetGameTimer(resumingFromElapsed: snapshot.elapsedGameTime)
     }
 
     /// Captures the current in-flight game state for persistence.
@@ -224,6 +365,13 @@ final class GameState {
     ///   The method automatically provides haptic feedback and updates all relevant statistics.
     func placeBlock(_ block: BlockShape, at gridPosition: GridPosition) {
         guard canPlaceBlock(block, at: gridPosition) else { return }
+
+        // Capture the pre-placement state for undo. Stashed only when the
+        // once-per-game slot hasn't been consumed yet — if it has, every
+        // subsequent placement is final and snapshot capture is skipped.
+        if !undoUsed {
+            lastUndoSnapshot = captureSnapshot()
+        }
 
         BuildConfiguration.log("Placing block with \(block.positions.count) cells at (\(gridPosition.row), \(gridPosition.col))", level: .debug)
         
@@ -343,7 +491,7 @@ final class GameState {
             )
 
             do {
-                try gameService.saveGameRecord(
+                let savedID = try gameService.saveGameRecord(
                     score: score,
                     linesCleared: linesCleared,
                     blocksPlaced: blocksPlaced,
@@ -352,6 +500,10 @@ final class GameState {
                     longestCombo: longestCombo,
                     sessionMetrics: sessionMetrics
                 )
+                // Attach the saved record id to the pending undo snapshot so
+                // `undoLastPlacement()` can delete the exact row (no "most recent"
+                // race with any future save).
+                attachSavedRecordIDToUndoSnapshot(savedID)
             } catch {
                 BuildConfiguration.log("Failed to save game record: \(error.localizedDescription)", level: .error)
             }
@@ -399,6 +551,11 @@ final class GameState {
         // Discard any persisted in-progress game; the new run starts from scratch.
         inProgressStore.clear()
 
+        // Reset assist features: a fresh run gets a fresh undo + hint budget.
+        undoUsed = false
+        hintUsed = false
+        lastUndoSnapshot = nil
+
         // Reset grid using GameLogic
         grid = GameLogic.createEmptyGrid()
 
@@ -410,7 +567,6 @@ final class GameState {
         
         // Reset statistics
         blocksPlaced = 0
-        gameStartTime = Date()
         longestCombo = 0
         currentCombo = 0
         isNewHighScore = false
@@ -497,6 +653,14 @@ final class GameState {
         if let currentBlocks { self.currentBlocks = currentBlocks }
         if let grid { self.grid = grid }
         if let lastClearedCells { self.lastClearedCells = lastClearedCells }
+    }
+
+    /// Attaches a `savedRecordID` to the pending undo snapshot. Mirrors the
+    /// production path inside `checkGameOver` without requiring a test to
+    /// actually trigger a natural game-over.
+    func _setTestUndoSavedRecordID(_ id: UUID?) {
+        guard let id, lastUndoSnapshot != nil else { return }
+        attachSavedRecordIDToUndoSnapshot(id)
     }
 #endif
 }
