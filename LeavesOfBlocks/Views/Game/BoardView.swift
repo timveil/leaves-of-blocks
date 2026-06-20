@@ -229,7 +229,11 @@ struct BoardView: View {
                     GameOverOverlayView(
                         gameState: gameState,
                         onViewSummary: onViewSummary,
-                        onNewGame: onNewGame
+                        onNewGame: onNewGame,
+                        onUndo: {
+                            gameState.undoLastPlacement()
+                            sceneBridge.clearHint()
+                        }
                     )
                     .padding(.top, 100) // Position closer to top
 

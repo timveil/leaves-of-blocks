@@ -6,6 +6,7 @@ struct GameOverOverlayView: View {
     var gameState: GameState
     let onViewSummary: () -> Void
     let onNewGame: () -> Void
+    let onUndo: () -> Void
 
     var body: some View {
         GoldHeaderCard(title: "game_over".localized) {
@@ -22,6 +23,20 @@ struct GameOverOverlayView: View {
                     .minimumScaleFactor(0.7)
 
                 VStack(spacing: GameTheme.Layout.mediumPadding) {
+                    // Offered only when the once-per-game undo is still available
+                    // (it survives game-over so the player can take the fatal
+                    // move back). Undoing flips `isGameOver` false, which
+                    // dismisses this overlay.
+                    if gameState.canUndo {
+                        FullWidthActionButton(
+                            title: "undo".localized,
+                            icon: "arrow.uturn.backward",
+                            style: .secondary,
+                            accessibilityId: "game_over_undo_button",
+                            onTap: onUndo
+                        )
+                    }
+
                     FullWidthActionButton(
                         title: "new_game".localized,
                         icon: "play.fill",
@@ -62,7 +77,8 @@ struct GameOverOverlayView: View {
                 return state
             }(),
             onViewSummary: {},
-            onNewGame: {}
+            onNewGame: {},
+            onUndo: {}
         )
     }
 }

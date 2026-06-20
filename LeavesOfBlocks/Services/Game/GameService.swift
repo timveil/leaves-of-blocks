@@ -154,6 +154,11 @@ final class GameService {
 
     /// Deletes the `GameRecord` row matching `id`. Used to reverse the auto-save
     /// performed by `saveGameRecord` when a player undoes a game-over.
+    ///
+    /// Note the intentional asymmetry: undo deletes the local record but does
+    /// not retract the Game Center submission from `saveGameRecord` — GKLeaderboard
+    /// keeps a player's best score and can't be lowered, and pulling achievements
+    /// back would be hostile UX. The next real game-over re-submits.
     func deleteGameRecord(id: UUID) throws {
         try coreDataManager.deleteGameRecord(id: id)
     }

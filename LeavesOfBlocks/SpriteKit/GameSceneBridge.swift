@@ -94,8 +94,7 @@ final class GameSceneBridge {
     // MARK: - Hint Overlay
 
     /// Renders a pulsing hint overlay on the cells the supplied `Hint` would
-    /// affect. Implementation lands in `GridNode.showHintCells(_:)` (Step 7);
-    /// for Step 6 this is a stub that just logs.
+    /// affect, drawn by `GridNode.showHintCells(_:)`.
     func showHint(_ hint: GameLogic.Hint) {
         scene.showHint(hint)
     }

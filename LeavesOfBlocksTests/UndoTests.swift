@@ -529,4 +529,59 @@ struct UndoAfterGameOverTests {
         let postDeleteCount = coreData.fetchGameHistory().count
         #expect(postDeleteCount == 0, "undo must delete the saved GameRecord by id")
     }
+
+    /// Builds a grid that is full except for isolated single cells on two
+    /// offset diagonals. No row or column is complete (so a placement clears
+    /// nothing), every empty cell is orthogonally isolated (so no multi-cell
+    /// block fits anywhere), but a 1x1 block still fits in any gap.
+    private func gridForcingGameOverAfterSingleCell() -> [[GridCell]] {
+        var grid = GameLogic.createEmptyGrid()
+        for r in 0..<8 { for c in 0..<8 { grid[r][c].isFilled = true } }
+        for r in 0..<8 {
+            grid[r][r].isFilled = false
+            grid[r][(r + 4) % 8].isFilled = false
+        }
+        return grid
+    }
+
+    /// Drives a *real* game-over through `placeBlock` (not the `_setTestState`
+    /// shortcut the other tests use) so the production save → attach-record-id
+    /// → undo-deletes-record wiring is exercised end to end. This is the path
+    /// the game-over overlay's undo button depends on.
+    @Test @MainActor
+    func realGameOverThenUndoDeletesRecordAndRestores() {
+        let (state, coreData, _) = makeStateWithInMemoryStore()
+
+        let oneByOne = BlockShape(positions: [GridPosition(row: 0, col: 0)], color: .blue)
+        let threeByThree = BlockShape(
+            positions: (0..<3).flatMap { r in (0..<3).map { c in GridPosition(row: r, col: c) } },
+            color: .green
+        )
+        state._setTestState(
+            score: 500,
+            currentBlocks: [oneByOne, threeByThree],
+            grid: gridForcingGameOverAfterSingleCell()
+        )
+
+        // Not game over yet — the 1x1 still fits in a diagonal gap.
+        #expect(state.isGameOver == false)
+
+        // Placing the 1x1 at (0,0) completes no line; the remaining 3x3 then
+        // can't fit anywhere → real game-over via the production path.
+        state.placeBlock(oneByOne, at: GridPosition(row: 0, col: 0))
+
+        #expect(state.isGameOver == true)
+        #expect(state.canUndo == true, "undo must be offered at a real game-over")
+        #expect(coreData.fetchGameHistory().count == 1, "game-over persists exactly one record")
+
+        let scoreAtGameOver = state.score
+
+        state.undoLastPlacement()
+
+        #expect(state.isGameOver == false, "undo must flip game-over back")
+        #expect(coreData.fetchGameHistory().isEmpty, "undo must delete the real saved record")
+        #expect(state.score < scoreAtGameOver, "score must rewind to pre-placement")
+        #expect(state.grid[0][0].isFilled == false, "the placed cell must be empty again")
+        #expect(state.canUndo == false, "undo is once-per-game")
+    }
 }
