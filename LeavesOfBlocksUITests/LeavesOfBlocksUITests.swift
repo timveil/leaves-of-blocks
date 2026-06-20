@@ -66,11 +66,23 @@ final class LeavesOfBlocksUITests: XCTestCase {
 
     @MainActor
     private func waitForGameGrid(timeout: TimeInterval = 20) -> Bool {
-        // `game_grid` (the SwiftUI renderer) was removed in v2.0.1 (71a52fc);
-        // the SpriteKit scene is the only thing that mounts now. Keeping a
-        // fallback to a non-existent identifier just doubled the wait window
-        // on every grid failure.
-        return app.otherElements["spritekit_game_grid"].waitForExistence(timeout: timeout)
+        // The `spritekit_game_grid` element is a `SpriteView`, whose
+        // accessibility element can lag behind the actual board on cold CI
+        // simulators even after the game has started — the long-standing source
+        // of `testDifficultySelection` / start-game flakiness (timeout bumped
+        // 5 → 10 → 20 and it still flaked). The SwiftUI holding-area container
+        // (`block_container`) appears as soon as the game starts and is a far
+        // more reliable signal, so accept whichever shows first. Poll both
+        // within one bounded window rather than waiting the full timeout on the
+        // grid and only then checking the fallback.
+        let grid = app.otherElements["spritekit_game_grid"]
+        let holdingArea = app.otherElements["block_container"]
+        let deadline = Date(timeIntervalSinceNow: timeout)
+        repeat {
+            if grid.exists || holdingArea.exists { return true }
+            _ = grid.waitForExistence(timeout: 0.5) // brief poll tick
+        } while Date() < deadline
+        return grid.exists || holdingArea.exists
     }
 
     // MARK: - Menu Navigation Helpers
