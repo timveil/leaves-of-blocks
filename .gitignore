@@ -116,6 +116,12 @@ Thumbs.db
 !.vscode/settings.json
 .idea/
 
+# sourcekit-lsp build server config (generated per-machine by xcode-build-server;
+# contains absolute DerivedData paths, so it must not be committed). Generate
+# locally with: xcode-build-server config -project LeavesOfBlocks.xcodeproj -scheme LeavesOfBlocks
+buildServer.json
+.compile
+
 # Temporary files
 *.tmp
 *.temp
