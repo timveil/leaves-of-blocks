@@ -52,8 +52,12 @@ fi
 # simulator found".)
 
 # Emits "<name>\t<udid>" for every available iPhone simulator, in listing order.
+# stderr is intentionally NOT suppressed: a healthy `simctl list` writes nothing
+# to it, but when `xcrun` fails (Xcode not selected, command-line-tools only)
+# the real error must surface — otherwise callers swallow it and report the
+# misleading "No iPhone simulator found".
 list_iphone_simulators() {
-    xcrun simctl list devices available 2>/dev/null \
+    xcrun simctl list devices available \
         | sed -nE 's/^[[:space:]]+(iPhone.*) \(([0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12})\).*/\1\t\2/p'
 }
 
@@ -263,8 +267,17 @@ cmd_run() {
         exit 1
     fi
 
-    # Boot simulator
+    # Shut down any already-booted simulators first, then boot only the target.
+    # `open -a Simulator` restores a window for every booted device, so without
+    # this a stray simulator left running (from Xcode, a prior run, or an
+    # interrupted parallel-test run) would pop open alongside ours — the "many
+    # simulators open" surprise. After this, exactly one device is running.
     echo ""
+    if xcrun simctl list devices booted 2>/dev/null | grep -q "(Booted)"; then
+        echo -e "${YELLOW}Shutting down other booted simulators...${NC}"
+        xcrun simctl shutdown all 2>/dev/null || true
+    fi
+
     echo -e "${YELLOW}Booting simulator...${NC}"
     xcrun simctl boot "$sim_udid" 2>/dev/null || true
     open -a Simulator
