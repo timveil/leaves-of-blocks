@@ -109,15 +109,15 @@ platform :ios do
     )
   end
 
-  desc "Upload metadata and screenshots only (no binary)"
+  desc "Upload metadata only (no binary, no screenshots)"
   lane :metadata_only do
     # Configure App Store Connect API key for App Store
     api_key = app_store_api_key
-    
+
     deliver(
       api_key: api_key,
       skip_binary_upload: true,
-      skip_screenshots: false,
+      skip_screenshots: true,  # screenshots are owned by the screenshots_only lane
       skip_metadata: false,
       force: true
     )
