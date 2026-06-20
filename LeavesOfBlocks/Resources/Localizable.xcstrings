@@ -2974,6 +2974,23 @@
         }
       }
     },
+    "show_results" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Show Results"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ver Resultados"
+          }
+        }
+      }
+    },
     "statistics" : {
       "extractionState" : "manual",
       "localizations" : {
@@ -3633,6 +3650,40 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ver Tabla de Clasificación"
+          }
+        }
+      }
+    },
+    "view_board" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "View Board"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ver Tablero"
+          }
+        }
+      }
+    },
+    "view_board_hint" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reveal the final board to see how the game ended"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Muestra el tablero final para ver cómo terminó la partida"
           }
         }
       }

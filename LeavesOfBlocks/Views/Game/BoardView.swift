@@ -9,6 +9,9 @@ struct BoardView: View {
     @State private var gridFrame: CGRect = .zero
     @State private var blockSlotsFrame: CGRect = .zero
     @State private var viewBounds: CGRect = .zero
+    /// When true at game-over, the results overlay is hidden so the player can
+    /// inspect the final board (grid + unplaceable blocks). See issue #36.
+    @State private var isPeekingBoard: Bool = false
     @Environment(\.scenePhase) private var scenePhase
 
     /// Bridge for SpriteKit scene communication.
@@ -147,6 +150,7 @@ struct BoardView: View {
                 .padding(.top, GameTheme.Layout.mediumPadding)
             
                 gameOverOverlay
+                peekBoardOverlay
                 draggedBlockOverlay
             }
         }
@@ -154,6 +158,11 @@ struct BoardView: View {
             proxy.frame(in: .global)
         } action: { newValue in
             viewBounds = newValue
+        }
+        .onChange(of: gameState.isGameOver) { _, isOver in
+            // Leaving game-over (new game, or undo of the fatal move) ends any
+            // board peek so the next game-over shows its results overlay.
+            if !isOver { isPeekingBoard = false }
         }
         .onChange(of: scenePhase) { _, newPhase in
             // SwiftUI doesn't reliably deliver DragGesture.onEnded when the app
@@ -220,7 +229,10 @@ struct BoardView: View {
 
     @ViewBuilder
     private var gameOverOverlay: some View {
-        if gameState.isGameOver {
+        // Hidden while peeking the board so the player can inspect the final
+        // grid; the floating "Show Results" button (peekBoardOverlay) brings
+        // it back. See issue #36.
+        if gameState.isGameOver && !isPeekingBoard {
             ZStack {
                 Color.black
                     .ignoresSafeArea()
@@ -233,7 +245,8 @@ struct BoardView: View {
                         onUndo: {
                             gameState.undoLastPlacement()
                             sceneBridge.clearHint()
-                        }
+                        },
+                        onViewBoard: { isPeekingBoard = true }
                     )
                     .padding(.top, 100) // Position closer to top
 
@@ -241,6 +254,36 @@ struct BoardView: View {
                 }
             }
             .zIndex(2000) // Higher than dragged blocks
+        }
+    }
+
+    /// While peeking the final board after game-over, a floating button to
+    /// restore the results overlay. The board itself (grid + the unplaceable
+    /// blocks) is the already-rendered `BoardView` showing through. See #36.
+    @ViewBuilder
+    private var peekBoardOverlay: some View {
+        if gameState.isGameOver && isPeekingBoard {
+            VStack {
+                Spacer()
+                Button {
+                    isPeekingBoard = false
+                } label: {
+                    Label("show_results".localized, systemImage: "chevron.up")
+                        .font(GameTheme.Typography.headline)
+                        .foregroundColor(GameTheme.Colors.primaryText)
+                        .padding(.vertical, GameTheme.Layout.mediumPadding)
+                        .padding(.horizontal, GameTheme.Layout.largePadding)
+                        .background(
+                            Capsule().fill(GameTheme.Colors.cardBackground)
+                        )
+                        .overlay(
+                            Capsule().stroke(GameTheme.Colors.primaryAccent, lineWidth: 2)
+                        )
+                }
+                .accessibilityIdentifier("game_over_show_results_button")
+                .padding(.bottom, GameTheme.Layout.largePadding)
+            }
+            .zIndex(2000)
         }
     }
 
