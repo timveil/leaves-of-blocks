@@ -52,8 +52,12 @@ fi
 # simulator found".)
 
 # Emits "<name>\t<udid>" for every available iPhone simulator, in listing order.
+# stderr is intentionally NOT suppressed: a healthy `simctl list` writes nothing
+# to it, but when `xcrun` fails (Xcode not selected, command-line-tools only)
+# the real error must surface — otherwise callers swallow it and report the
+# misleading "No iPhone simulator found".
 list_iphone_simulators() {
-    xcrun simctl list devices available 2>/dev/null \
+    xcrun simctl list devices available \
         | sed -nE 's/^[[:space:]]+(iPhone.*) \(([0-9A-Fa-f]{8}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{4}-[0-9A-Fa-f]{12})\).*/\1\t\2/p'
 }
 
