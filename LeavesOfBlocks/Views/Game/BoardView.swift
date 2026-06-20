@@ -190,7 +190,7 @@ struct BoardView: View {
                 iconSize: 22,
                 action: {
                     gameState.undoLastPlacement()
-                    sceneBridge?.clearHint()
+                    sceneBridge.clearHint()
                 }
             )
             .disabled(!gameState.canUndo)
@@ -207,7 +207,7 @@ struct BoardView: View {
                 iconSize: 22,
                 action: {
                     if let hint = gameState.requestHint() {
-                        sceneBridge?.showHint(hint)
+                        sceneBridge.showHint(hint)
                     }
                 }
             )
@@ -260,7 +260,7 @@ struct BoardView: View {
         dragState.dragLocation = fingerLocation
         dragState.dragOffset = CGSize(width: 0, height: -DragConfiguration.offsetAboveFinger)
         // Any pulsing hint overlay would visually fight the drag preview.
-        sceneBridge?.clearHint()
+        sceneBridge.clearHint()
     }
     
     private func handleDragMove(fingerLocation: CGPoint) {
