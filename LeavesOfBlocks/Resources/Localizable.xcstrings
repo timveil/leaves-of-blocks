@@ -225,6 +225,91 @@
         }
       }
     },
+    "assists" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Assists"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayudas"
+          }
+        }
+      }
+    },
+    "assists_description" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Helpers for when you're in a tight spot. Undo and Hint can each be used once per game:"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ayudas para cuando estás en un apuro. Deshacer y Pista se pueden usar una vez por partida cada una:"
+          }
+        }
+      }
+    },
+    "assist_undo" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Undo: take back your last block placement."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deshacer: recupera tu última colocación de bloque."
+          }
+        }
+      }
+    },
+    "assist_hint" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hint: highlight a suggested move on the board."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pista: resalta una jugada sugerida en el tablero."
+          }
+        }
+      }
+    },
+    "assist_view_board" : {
+      "extractionState" : "manual",
+      "localizations" : {
+        "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "View Board: when the game ends, reveal the final board to see how it finished."
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ver tablero: cuando termina la partida, muestra el tablero final para ver cómo terminó."
+          }
+        }
+      }
+    },
     "average_score" : {
       "extractionState" : "manual",
       "localizations" : {

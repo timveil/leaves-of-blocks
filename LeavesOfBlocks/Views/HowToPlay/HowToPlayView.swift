@@ -22,6 +22,23 @@ struct HowToPlayView: View {
                         sectionBlock("drag_drop", "drag_drop_description")
                         sectionBlock("clear_lines", "clear_lines_description")
                         sectionBlock("game_over_rules", "game_over_description")
+
+                        // Assists (undo / hint / view board)
+                        VStack(alignment: .leading, spacing: GameTheme.Layout.mediumSpacing) {
+                            Text("assists".localized)
+                                .sectionHeaderStyle()
+
+                            Text("assists_description".localized)
+                                .sectionTextStyle(color: GameTheme.Colors.secondaryText)
+                                .lineSpacing(6)
+
+                            VStack(alignment: .leading, spacing: GameTheme.Layout.smallSpacing) {
+                                TipRow(text: "assist_undo".localized)
+                                TipRow(text: "assist_hint".localized)
+                                TipRow(text: "assist_view_board".localized)
+                            }
+                        }
+
                         sectionBlock("advanced_features", "advanced_features_description")
                         sectionBlock("efficiency_system", "efficiency_system_description")
                         sectionBlock("strategic_grading", "strategic_grading_description")
