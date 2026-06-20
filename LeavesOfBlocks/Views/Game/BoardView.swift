@@ -84,7 +84,11 @@ struct BoardView: View {
     var body: some View {
         BaseScreenView(showsStatusBar: false) {
             ZStack {
-                VStack(spacing: 44) {
+                // Score, assist bar, and grid sit ~20pt apart so the thin
+                // assist bar reads as part of one compact top cluster instead
+                // of floating with the full 44pt section gaps. The 44pt gap is
+                // restored above the holding area below (see its `.padding`).
+                VStack(spacing: 20) {
                     // Score Row
                     HStack {
                         Spacer()
@@ -142,7 +146,10 @@ struct BoardView: View {
                         }
                         Spacer()
                     }
-                    
+                    // Restore the full gap (20 stack spacing + 24) between the
+                    // grid cluster above and the holding area.
+                    .padding(.top, GameTheme.Layout.largePadding)
+
                     Spacer(minLength: 20) // Leave space for grass
                 }
                 .zIndex(10) // Game elements above grass
