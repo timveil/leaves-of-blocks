@@ -85,6 +85,26 @@ struct HintDiscoveryTests {
     }
 
     @Test
+    func fallbackPrefersPlacementAdjacentToFilledCellsOverCorner() {
+        // Grid empty except a lone filled cell at (4,4). No placement clears a
+        // line, so findHint falls back. A 1x1 block should be suggested next to
+        // the existing block (consolidating) rather than alone in the corner.
+        var grid = GameLogic.createEmptyGrid()
+        grid[4][4].isFilled = true
+        let block = BlockShape(positions: [GridPosition(row: 0, col: 0)], color: .blue)
+
+        let hint = GameLogic.findHint(blocks: [block], grid: grid)
+        #expect(hint != nil)
+        let neighbors: Set<GridPosition> = [
+            GridPosition(row: 3, col: 4), GridPosition(row: 5, col: 4),
+            GridPosition(row: 4, col: 3), GridPosition(row: 4, col: 5)
+        ]
+        #expect(hint.map { neighbors.contains($0.position) } == true,
+                "hint should sit next to the existing block, not the top-left corner")
+        #expect(hint?.position != GridPosition(row: 0, col: 0))
+    }
+
+    @Test
     func highlightedCellsForNormalBlockTranslatePositions() {
         let grid = GameLogic.createEmptyGrid()
         // 1x2 horizontal block.

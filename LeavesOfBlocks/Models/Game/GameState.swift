@@ -31,7 +31,6 @@ final class GameState {
 
     // Game Statistics
     private(set) var blocksPlaced: Int = 0
-    private(set) var gameStartTime: Date = Date()
     private(set) var longestCombo: Int = 0
     private(set) var currentCombo: Int = 0
     private(set) var isNewHighScore: Bool = false
@@ -151,7 +150,6 @@ final class GameState {
         isGameOver = false
         lastClearedCells = []
         isNewHighScore = false
-        gameStartTime = snapshot.savedAt.addingTimeInterval(-snapshot.elapsedGameTime)
 
         // Behavior tracker starts fresh on resume; analytics reflect post-resume play only.
         // `isInitialSeed: true` populates the rolling averages without counting
@@ -569,7 +567,6 @@ final class GameState {
         
         // Reset statistics
         blocksPlaced = 0
-        gameStartTime = Date()
         longestCombo = 0
         currentCombo = 0
         isNewHighScore = false

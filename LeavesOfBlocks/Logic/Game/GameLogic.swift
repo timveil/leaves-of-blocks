@@ -240,16 +240,19 @@ enum GameLogic {
     }
 
     /// Finds a hint placement for the player. Prefers placements that
-    /// immediately clear at least one line; otherwise returns the first valid
-    /// placement encountered in scan order. Returns `nil` when no block in
-    /// `blocks` can be placed anywhere on `grid`.
+    /// immediately clear at least one line; otherwise returns the placement
+    /// that sits against the most existing blocks (consolidating the board
+    /// rather than stranding a piece alone in the top-left corner), breaking
+    /// ties by scan order. Returns `nil` when no block in `blocks` can be
+    /// placed anywhere on `grid`.
     ///
     /// Pure / side-effect-free. Worst-case cost is `O(|blocks| × gridSize²)`
     /// validity probes; line-clearing simulation runs only on valid candidates
     /// until the first clearing hit is found.
     static func findHint(blocks: [BlockShape], grid: [[GridCell]]) -> Hint? {
         let size = AppConfiguration.GameRules.gridSize
-        var firstValid: Hint?
+        var bestFallback: Hint?
+        var bestAdjacency = -1
 
         for (index, block) in blocks.enumerated() {
             for row in 0..<size {
@@ -267,11 +270,47 @@ enum GameLogic {
                         highlightedCells: highlightedCells(for: block, at: position)
                     )
                     if willClear { return hint }
-                    if firstValid == nil { firstValid = hint }
+
+                    // Fallback ranking: prefer the placement whose footprint
+                    // touches the most filled cells. On an empty board every
+                    // candidate scores 0, so the first (top-left) placement
+                    // wins — unchanged from the old behavior; mid-game this
+                    // points at a useful, board-consolidating move instead.
+                    let adjacency = filledNeighborCount(for: block, at: position, in: grid)
+                    if adjacency > bestAdjacency {
+                        bestAdjacency = adjacency
+                        bestFallback = hint
+                    }
                 }
             }
         }
-        return firstValid
+        return bestFallback
+    }
+
+    /// Counts how many of `block`'s occupied cells (placed at `position`) sit
+    /// orthogonally against a filled grid cell. Used to rank non-clearing hint
+    /// candidates toward consolidating placements. Edges don't count — only
+    /// existing blocks — so an empty grid scores every placement 0.
+    private static func filledNeighborCount(for block: BlockShape, at position: GridPosition, in grid: [[GridCell]]) -> Int {
+        let size = AppConfiguration.GameRules.gridSize
+        let occupied = Set(block.positions.map {
+            GridPosition(row: position.row + $0.row, col: position.col + $0.col)
+        })
+        var count = 0
+        for cell in occupied {
+            let neighbors = [
+                GridPosition(row: cell.row - 1, col: cell.col),
+                GridPosition(row: cell.row + 1, col: cell.col),
+                GridPosition(row: cell.row, col: cell.col - 1),
+                GridPosition(row: cell.row, col: cell.col + 1)
+            ]
+            for n in neighbors where n.row >= 0 && n.row < size && n.col >= 0 && n.col < size {
+                if !occupied.contains(n) && grid[n.row][n.col].isFilled {
+                    count += 1
+                }
+            }
+        }
+        return count
     }
 
     /// Resolves the absolute grid cells affected by placing `block` at

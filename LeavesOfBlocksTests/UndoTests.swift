@@ -233,7 +233,7 @@ struct UndoSnapshotPlumbingTests {
         state.startGame(difficulty: .easy)
         let captured = state.captureSnapshot()
 
-        // Drift the timer by reseting to a different elapsed.
+        // Drift the timer by resetting to a different elapsed.
         state.restore(from: captured)
         // Immediately after restore, currentGameTime should match the captured elapsed.
         let tolerance: TimeInterval = 0.25

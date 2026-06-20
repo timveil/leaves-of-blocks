@@ -341,8 +341,8 @@ class GameScene: SKScene {
     // MARK: - Hint Overlay
 
     /// Renders a pulsing hint overlay on the cells affected by the supplied
-    /// `Hint`. Auto-fades after ~2 seconds. Full implementation lives in
-    /// `GridNode.showHintCells(_:pulseColor:)` (Step 7).
+    /// `Hint`. Auto-fades after ~2 seconds; the rendering lives in
+    /// `GridNode.showHintCells(_:)`.
     func showHint(_ hint: GameLogic.Hint) {
         gridNode.showHintCells(hint.highlightedCells)
     }
