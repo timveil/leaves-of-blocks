@@ -300,8 +300,9 @@ final class LeavesOfBlocksUITests: XCTestCase {
     func testViewBoardPeekAfterGameOver() throws {
         // Relaunch straight into a forced game-over (an unplaceable board) so we
         // can exercise the game-over overlay without playing a full game.
+        // Append rather than replace so the flags from setUp are preserved.
         app.terminate()
-        app.launchArguments = ["-ui-testing", "-force-game-over"]
+        app.launchArguments.append("-force-game-over")
         app.launch()
 
         let startButton = app.buttons["start_game_button"]
@@ -319,12 +320,13 @@ final class LeavesOfBlocksUITests: XCTestCase {
         let showResults = app.buttons["game_over_show_results_button"]
         XCTAssertTrue(showResults.waitForExistence(timeout: defaultTimeout), "Show Results button should appear while peeking")
         XCTAssertTrue(waitForGameGrid(timeout: defaultTimeout), "Final board grid should be visible while peeking")
-        XCTAssertFalse(newGame.exists, "Results overlay should be hidden while peeking the board")
+        // Overlay removal is animated, so wait for it rather than asserting now.
+        XCTAssertTrue(newGame.waitForNonExistence(timeout: defaultTimeout), "Results overlay should be hidden while peeking the board")
 
         // Tap Show Results → overlay returns; peek button goes away.
         showResults.tap()
         XCTAssertTrue(newGame.waitForExistence(timeout: defaultTimeout), "Results overlay should return")
-        XCTAssertFalse(showResults.exists, "Show Results button should be gone once results return")
+        XCTAssertTrue(showResults.waitForNonExistence(timeout: defaultTimeout), "Show Results button should be gone once results return")
     }
 
     // MARK: - Helper Methods

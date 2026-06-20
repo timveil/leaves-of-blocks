@@ -533,11 +533,14 @@ final class GameState {
         resetGame()
     }
 
-    /// Seeds an immediate game-over for UI testing: an almost-full board with
-    /// only isolated single-cell gaps (no region a block can fit) plus three
-    /// 3×3 blocks that cannot be placed. Driven by the `-force-game-over`
-    /// launch argument so a UI test can exercise the game-over overlay without
-    /// playing a full game. Only invoked under `isUITesting`.
+    /// Seeds an immediate game-over for UI testing: an almost-full board whose
+    /// only empty cells are isolated single-cell gaps, plus three 3×3 blocks.
+    /// The gaps mean no *multi-cell* shape fits anywhere, and since every
+    /// offered block is a 3×3 square, none can be placed → game over. (A 1×1
+    /// block would fit a gap, but none are offered.) Driven by the
+    /// `-force-game-over` launch argument so a UI test can exercise the
+    /// game-over overlay without playing a full game. Only invoked under
+    /// `isUITesting`.
     private func seedGameOverForUITesting() {
         let size = AppConfiguration.GameRules.gridSize
         var seeded = GameLogic.createEmptyGrid()
