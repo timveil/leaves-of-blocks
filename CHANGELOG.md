@@ -13,6 +13,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 
+## [2.0.6] - 2026-06-20
+
+### Added
+- Per-game Undo and Hint assists, reachable mid-game and from the game-over overlay
+- View Board peek on the game-over overlay to review your final grid
+
+### Changed
+- Stop the `metadata_only` lane from re-uploading screenshots (prevents duplicate App Store screenshots)
+- Drop the python3 dependency from `build.sh` simulator discovery
+
+### Fixed
+- Taper drag lift near the top of the board so top-row cells are placeable
+- Eagerly initialize the SpriteKit scene bridge so the grid mounts on first render
+- Tighten assist-bar spacing in the board's top cluster
+- Resolve Swift 6 actor-isolation and unused-`try?` build warnings
+
 ## [2.0.5] - 2026-05-17
 
 ### Added
@@ -245,7 +261,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - COPPA compliant with no data collection
 - iPhone-optimized experience with portrait orientation
 
-[Unreleased]: https://github.com/timveil/leaves-of-blocks/compare/v2.0.5...HEAD
+[Unreleased]: https://github.com/timveil/leaves-of-blocks/compare/v2.0.6...HEAD
+[2.0.6]: https://github.com/timveil/leaves-of-blocks/compare/v2.0.5...v2.0.6
 [2.0.5]: https://github.com/timveil/leaves-of-blocks/compare/v2.0.3...v2.0.5
 [2.0.3]: https://github.com/timveil/leaves-of-blocks/compare/v2.0.2...v2.0.3
 [2.0.2]: https://github.com/timveil/leaves-of-blocks/compare/v2.0.1...v2.0.2
