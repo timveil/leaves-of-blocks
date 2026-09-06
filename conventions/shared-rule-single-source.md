@@ -56,6 +56,41 @@ grep -qE '^(feat|fix|docs|chore)(\(.+\))?: .+' "$1"   # already drifted
 ./scripts/check-commit-subject.sh "$subject"
 ```
 
+## The same applies to code
+
+A rule is the clearest case, but the principle is the same for logic. The
+release tooling had three identical `build_app` invocations across `build`,
+`beta` and `_release_core`; they became `app_store_build_app`. Three copies of
+"find the repo root from `Dir.pwd`" became `project_root(marker)` — and the
+third copy had already been written wrong, resolving to a path outside the
+repository.
+
+That is the tell worth watching for: **the second copy is a warning, the third
+is a bug that has already happened.** By the time something is written three
+times, one of them is subtly different and nobody knows which.
+
+## When duplication is right
+
+Deduplication is not free, and applied blindly it does more damage than the
+repetition it removes. Two pieces of code that *look* alike but **change for
+different reasons** must stay apart. Merging them creates a function with a
+flag, then two flags, then a function nobody can modify safely because its
+callers want opposite things.
+
+Ask what happens next time each copy changes:
+
+- **Same reason, always** — deduplicate. The commit format is one rule; a change
+  to it must reach the hook and CI together, and the whole point is that it
+  cannot reach only one.
+- **Different reasons, or independently** — leave them. Similar-looking test
+  fixtures, two validation rules that happen to share a regex today, a
+  screenshot device list that resembles a test device list. Their similarity is
+  a coincidence of the present.
+
+Three similar lines are cheaper than the wrong abstraction. The wrong
+abstraction is paid for by everyone who touches it afterwards, and it is much
+harder to reverse than the duplication would have been.
+
 ## When a value must appear twice
 
 Sometimes duplication is forced — two systems that cannot import from each
