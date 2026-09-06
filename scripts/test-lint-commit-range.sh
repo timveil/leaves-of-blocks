@@ -18,6 +18,9 @@ LINT="$SCRIPT_DIR/lint-commit-range.sh"
 pass=0
 fail=0
 
+# Fixed-string searches use `grep -qF` throughout: these needles carry regex
+# metacharacters (the "." in "No non-merge commits to lint.") that would
+# otherwise match text the assertion did not intend to accept.
 ok()   { pass=$((pass + 1)); printf '  ok    %s\n' "$1"; }
 bad()  { fail=$((fail + 1)); printf '  FAIL  %s\n        %s\n' "$1" "$2"; }
 
@@ -63,7 +66,7 @@ echo "empty range"
 
 out=$(printf '' | "$LINT" --stdin 2>&1); code=$?
 if [ "$code" -eq 0 ]; then ok "empty input exits 0"; else bad "empty input exits 0" "got $code"; fi
-if grep -q "No non-merge commits to lint." <<<"$out"; then
+if grep -qF "No non-merge commits to lint." <<<"$out"; then
   ok "empty input explains itself"
 else
   bad "empty input explains itself" "missing the explanatory line"
@@ -87,8 +90,8 @@ for needle in "git rebase -i" "force-with-lease" "core.hooksPath"; do
 done
 
 out=$(printf '%s\n' "feat: Fine" "Not fine" | "$LINT" --stdin 2>&1)
-if grep -q "✓ ok" <<<"$out"; then ok "passing subjects are marked"; else bad "passing subjects are marked" "no ✓ marker"; fi
-if grep -q "→ Not fine" <<<"$out"; then ok "each subject is echoed"; else bad "each subject is echoed" "subject not echoed"; fi
+if grep -qF "✓ ok" <<<"$out"; then ok "passing subjects are marked"; else bad "passing subjects are marked" "no ✓ marker"; fi
+if grep -qF "→ Not fine" <<<"$out"; then ok "each subject is echoed"; else bad "each subject is echoed" "subject not echoed"; fi
 
 echo
 echo "argument handling"

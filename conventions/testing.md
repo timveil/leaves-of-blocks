@@ -3,9 +3,9 @@
 **New unit tests use the [Swift Testing](https://developer.apple.com/documentation/testing)
 framework**, with descriptive `@Test` names and a Given-When-Then body.
 
-`LeavesOfBlocksTests/` has fully converted — all 26 test files import `Testing`,
-none import `XCTest`. `LeavesOfBlocksUITests/` remains XCTest, because UI
-automation still requires `XCUIApplication`.
+`LeavesOfBlocksTests/` has fully converted: every unit test file imports
+`Testing`, and none import `XCTest`. `LeavesOfBlocksUITests/` remains XCTest,
+because UI automation still requires `XCUIApplication`.
 
 ## Shape
 
