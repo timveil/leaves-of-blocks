@@ -86,13 +86,22 @@ get_size() {
             du -sk "$path" 2>/dev/null | awk '{print $1}' | grep -o '^[0-9]*' | awk '{print $1 * 1024}' || echo 0
         fi
     else
-        # For files, use stat
-        if stat -f%z "$path" 2>/dev/null; then
-            # BSD stat (macOS)
-            stat -f%z "$path" | grep -o '^[0-9]*' || echo 0
+        # For files and symlinks. The size is captured rather than tested by
+        # running stat bare in the `if`: doing that printed the value once from
+        # the condition and again from the body, so every caller saw two lines,
+        # failed its `^[0-9]+$` check and silently substituted 0. Every file
+        # size and every total this script has ever reported was 0B.
+        #
+        # Neither stat follows symlinks without -L, which is what we want: for
+        # a link, the bytes reclaimed are the link's own, and a broken one is
+        # measured without touching its missing target.
+        local size
+        if size=$(stat -f%z "$path" 2>/dev/null); then      # BSD stat (macOS)
+            printf '%s\n' "$size"
+        elif size=$(stat -c%s "$path" 2>/dev/null); then    # GNU stat
+            printf '%s\n' "$size"
         else
-            # GNU stat
-            stat -c%s "$path" | grep -o '^[0-9]*' || echo 0
+            echo 0
         fi
     fi
 }
@@ -236,7 +245,11 @@ echo -e "${BLUE}Found ignored items:${NC}"
 echo ""
 
 while IFS= read -r item; do
-    if [ -e "$item" ]; then
+    # -e follows symlinks, so it is false for a broken one -- and git happily
+    # lists broken symlinks as ignored files. Without the -L test they were
+    # reported by git, skipped here, and left behind by a script whose entire
+    # job is removing exactly that kind of leftover.
+    if [ -e "$item" ] || [ -L "$item" ]; then
         size=$(get_size "$item")
         # Ensure size is a valid number
         if ! [[ "$size" =~ ^[0-9]+$ ]]; then
@@ -245,7 +258,20 @@ while IFS= read -r item; do
         total_size=$((total_size + size))
         formatted_size=$(format_size $size)
         
-        if [ -d "$item" ]; then
+        # -L is tested first on purpose: -d follows the link, so a symlink to
+        # a directory would otherwise be announced as a directory in the
+        # confirmation prompt. `rm -rf` removes the link and not the directory
+        # behind it, and the prompt should say which of those is about to
+        # happen.
+        if [ -L "$item" ]; then
+            file_count=$((file_count + 1))
+            target=$(readlink "$item" 2>/dev/null || echo "?")
+            if [ -e "$item" ]; then
+                echo -e "${YELLOW}🔗 Symlink:${NC} $item -> $target ${BLUE}($formatted_size, link only)${NC}"
+            else
+                echo -e "${YELLOW}🔗 Symlink:${NC} $item -> $target ${BLUE}(broken)${NC}"
+            fi
+        elif [ -d "$item" ]; then
             dir_count=$((dir_count + 1))
             echo -e "${YELLOW}📁 Directory:${NC} $item ${BLUE}($formatted_size)${NC}"
             if [ "$VERBOSE" = true ]; then
@@ -318,7 +344,10 @@ if [ "$DRY_RUN" = false ]; then
     failed_count=0
     
     for item in "${files_to_delete[@]}"; do
-        if [ -e "$item" ]; then
+        # -L again: the collection loop above admits broken symlinks, and this
+        # guard would otherwise drop them right back out, listing an item for
+        # deletion and then quietly declining to delete it.
+        if [ -e "$item" ] || [ -L "$item" ]; then
             if rm -rf "$item" 2>/dev/null; then
                 deleted_count=$((deleted_count + 1))
                 [ "$VERBOSE" = true ] && echo -e "${GREEN}✓${NC} Deleted: $item"

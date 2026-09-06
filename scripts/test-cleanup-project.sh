@@ -51,10 +51,13 @@ run_dry() {
 
 echo "nothing to clean"
 
-# A broken symlink is the case that used to abort the script: git lists it as
-# an ignored untracked path, but `[ -e ]` follows the link and finds nothing,
-# so the delete list ended up empty while $all_ignored was not -- and expanding
-# that empty array under bash 3.2 with `set -u` is a hard error.
+# The bash 3.2 crash from #78 was reached by a broken symlink: git listed it,
+# `[ -e ]` denied it, and the delete list ended up empty while $all_ignored was
+# not. That path no longer produces an empty list -- broken symlinks are now
+# collected -- so this asserts the crash stays gone rather than re-testing the
+# route to it. The empty-list guard remains as defence against a path that
+# disappears between git listing it and the loop reading it, which cannot be
+# staged deterministically.
 REPO="$(make_repo broken-symlink)"
 printf 'broken-link\n' > "$REPO/.gitignore"
 ln -s /nonexistent/target "$REPO/broken-link"
@@ -62,14 +65,9 @@ git -C "$REPO" add .gitignore && git -C "$REPO" commit -q -m "chore: Ignore"
 
 run_dry "$REPO"; out="$RUN_OUT"
 if [ "$RUN_CODE" -eq 0 ]; then
-  ok "a listed-but-absent path exits 0"
+  ok "a repo whose only ignored item is a broken symlink exits 0"
 else
-  bad "listed-but-absent path exits 0" "got $RUN_CODE"
-fi
-if grep -qF "Nothing to clean" <<<"$out"; then
-  ok "and says so"
-else
-  bad "and says so" "message missing"
+  bad "broken-symlink repo exits 0" "got $RUN_CODE"
 fi
 if grep -qF "unbound variable" <<<"$out"; then
   bad "no bash error leaks to the user" "unbound variable in output"
@@ -111,6 +109,81 @@ else
   bad "dry run did not delete the file" "junk.log is gone — dry run deleted something"
 fi
 if [ -f "$REPO/README.md" ]; then ok "tracked files untouched"; else bad "tracked files untouched" "README.md gone"; fi
+
+echo
+echo "symlinks"
+
+REPO="$(make_repo symlinks)"
+printf 'broken-link\ngood-link\ndir-link\n' > "$REPO/.gitignore"
+printf 'precious\n' > "$REPO/target.txt"
+mkdir -p "$REPO/target-dir" && printf 'precious\n' > "$REPO/target-dir/inside.txt"
+git -C "$REPO" add .gitignore target.txt target-dir/inside.txt
+git -C "$REPO" commit -q -m "chore: Add targets"
+ln -s /nonexistent/target "$REPO/broken-link"
+ln -s target.txt "$REPO/good-link"
+ln -s target-dir "$REPO/dir-link"
+
+run_dry "$REPO"; out="$RUN_OUT"
+if grep -qF "broken-link" <<<"$out"; then
+  ok "a broken symlink is listed rather than skipped"
+else
+  bad "broken symlink is listed" "not in output"
+fi
+if grep -qF "🔗 Symlink" <<<"$out"; then ok "symlinks are labelled as symlinks"; else bad "symlinks labelled" "no marker"; fi
+if grep -qF "(broken)" <<<"$out"; then ok "a broken one says so"; else bad "broken one says so" "not marked"; fi
+# -d follows the link, so dir-link would read as a directory without the -L test.
+if grep -qE "📁 Directory:.*dir-link" <<<"$out"; then
+  bad "a symlink to a directory is not called a directory" "labelled Directory"
+else
+  ok "a symlink to a directory is not called a directory"
+fi
+
+# get_size returned its value twice, so every size failed the caller's numeric
+# check and became 0. The total was always 0B.
+if grep -qE "Total size: [1-9]" <<<"$out"; then
+  ok "sizes are reported rather than always zero"
+else
+  bad "sizes are reported" "total still reads zero: $(grep 'Total size' <<<"$out")"
+fi
+
+echo
+echo "actual deletion"
+
+# SAFETY: this is the only place the script runs for real. Un-isolated it would
+# wipe ~/Library/Developer/Xcode/DerivedData, clear CoreSimulator logs and run
+# `xcrun simctl delete unavailable` against the developer's machine. HOME is
+# redirected to a throwaway directory and a no-op xcrun is put on PATH, so
+# every one of those lands in $TMP or does nothing. The prompt is answered on
+# stdin because a real run asks for confirmation.
+STUB="$TMP/bin"
+mkdir -p "$STUB" "$TMP/home"
+printf '#!/bin/bash\nexit 0\n' > "$STUB/xcrun"
+chmod +x "$STUB/xcrun"
+
+REPO="$(make_repo deletion)"
+printf 'junk.log\nbroken-link\ndir-link\n' > "$REPO/.gitignore"
+mkdir -p "$REPO/target-dir" && printf 'precious\n' > "$REPO/target-dir/inside.txt"
+git -C "$REPO" add .gitignore target-dir/inside.txt
+git -C "$REPO" commit -q -m "chore: Add target"
+printf 'output\n' > "$REPO/junk.log"
+ln -s /nonexistent/target "$REPO/broken-link"
+ln -s target-dir "$REPO/dir-link"
+
+( cd "$REPO" && printf 'y\n' | env HOME="$TMP/home" PATH="$STUB:$PATH" "$CLEANUP" ) > "$TMP/live.txt" 2>&1
+live_code=$?
+
+if [ "$live_code" -eq 0 ]; then ok "a real run exits 0"; else bad "real run exits 0" "got $live_code: $(tail -2 "$TMP/live.txt")"; fi
+if [ ! -e "$REPO/junk.log" ]; then ok "the ignored file is deleted"; else bad "ignored file deleted" "junk.log survived"; fi
+if [ ! -L "$REPO/broken-link" ]; then ok "the broken symlink is deleted"; else bad "broken symlink deleted" "it survived — the whole point of this change"; fi
+if [ ! -L "$REPO/dir-link" ]; then ok "the symlink to a directory is deleted"; else bad "dir symlink deleted" "it survived"; fi
+
+# The safety property: removing a link must not reach through it.
+if [ -d "$REPO/target-dir" ]; then ok "the directory behind the link survives"; else bad "directory behind link survives" "target-dir was destroyed"; fi
+if [ -f "$REPO/target-dir/inside.txt" ]; then ok "its contents survive"; else bad "contents survive" "inside.txt was destroyed"; fi
+if [ -f "$REPO/README.md" ]; then ok "tracked files survive a real run"; else bad "tracked files survive" "README.md was destroyed"; fi
+
+# And the isolation held.
+if [ -d "$TMP/home" ]; then ok "the fake HOME absorbed the system-wide cleanup"; else bad "fake HOME intact" "it was removed"; fi
 
 echo
 echo "arguments"
