@@ -264,6 +264,21 @@ while IFS= read -r item; do
     fi
 done <<< "$all_ignored"
 
+# Git can list an ignored path that `[ -e ]` then rejects, so the list can come
+# back empty even though $all_ignored was not. A broken symlink is the ordinary
+# case: git reports it, but `-e` follows the link and finds nothing there.
+#
+# Returning here is both the honest report and the crash fix. macOS ships bash
+# 3.2, where expanding an empty array as "${files_to_delete[@]}" under `set -u`
+# is an "unbound variable" error -- so without this the script aborted on its
+# own diagnostics instead of saying there was nothing to do. Past this point the
+# array is guaranteed non-empty. See conventions/testing.md.
+if [ "${#files_to_delete[@]}" -eq 0 ]; then
+    echo ""
+    echo -e "${GREEN}Nothing to clean: no ignored items are present on disk.${NC}"
+    exit 0
+fi
+
 # Summary
 echo ""
 echo -e "${BLUE}Summary:${NC}"
