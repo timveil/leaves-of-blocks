@@ -61,7 +61,7 @@ git config core.hooksPath .githooks
 A SwiftUI + SpriteKit iOS puzzle game ("Leaves of Blocks") in the Block Blast genre. Players drag block shapes onto an 8×8 grid to clear lines. The game includes weighted block generation that adapts to player skill, particle effects via SpriteKit, and Core Data-backed game history.
 
 - Bundle ID: `timothy.veil.LeavesOfBlocks`
-- Deployment target: iOS 18.5+
+- Deployment target: iOS 18.0+
 - iPhone-only (`TARGETED_DEVICE_FAMILY = 1`)
 - Xcode 26+; Swift 5
 - Zero third-party runtime dependencies (system frameworks only: SwiftUI, SpriteKit, GameKit, Core Data)
@@ -114,6 +114,7 @@ GitHub Actions in `.github/workflows/ios.yml`:
 - 3-job graph: `build` → (`unit-tests`, `ui-tests`) running in parallel
 - Builds use `actions/cache@v4` keyed on `project.pbxproj`
 - Test artifacts uploaded via `actions/upload-artifact@v4`
+- `dependabot-auto-merge.yml` enables auto-merge for minor and patch dependency updates
 - Triggers on push to `main` and on PRs touching Swift / project / scripts
 - Every job that runs `xcodebuild` selects its toolchain with `./scripts/xcode-version.sh --select`, which picks the newest installed Xcode meeting the floor in `.xcode-version` and exports `DEVELOPER_DIR`. Without it, jobs inherit whatever Xcode the runner image happens to default to, and that can change under you.
 
@@ -127,7 +128,7 @@ CodeQL runs separately in `.github/workflows/codeql.yml` (Swift on macOS, Ruby a
 
 ### Build Troubleshooting
 
-- iPhone 16 and earlier only have iOS 18.5 runtimes; not compatible with iOS 26.x builds. Use the iPhone 17 family on iOS 26+.
+- Simulator choice is constrained by which runtimes are installed, not by the deployment target. Older iPhone models are typically paired with older runtimes; use the iPhone 17 family on an iOS 26 runtime for builds and screenshots. `./scripts/simulator-runtime.sh --list` shows what is available.
 - The **simulator runtime** for screenshots is derived, not pinned: [`scripts/simulator-runtime.sh`](scripts/simulator-runtime.sh) picks the newest installed runtime at or above the app's `IPHONEOS_DEPLOYMENT_TARGET`, read from the project file. If it fails, install a runtime via Xcode → Settings → Components. Note `simctl` reports two versions per runtime — the label (`iOS 26.4`) and the point version (`26.4.1`) — and xcodebuild's `-destination` matches the point version; `FastlaneCoreDevicePointVersionFix` in `Constants.rb` makes fastlane's device list agree. Device *names* (`IOS_SIMULATOR`, `SCREENSHOT_DEVICES`) stay pinned on purpose, since App Store screenshots are submitted at chosen display sizes.
 - The Xcode requirement is a **minimum**, declared once in `.xcode-version` and enforced by [`scripts/xcode-version.sh`](scripts/xcode-version.sh). `bundle exec fastlane` runs `--check` in `before_all`; if it fails, either install a newer Xcode or point at one you have with `sudo xcode-select -s /Applications/Xcode.app`. Raise the floor only when the project genuinely needs a newer toolchain — it was previously an exact pin, and every Xcode auto-update broke every lane until someone edited the constant.
 - Quickly isolate compile failures: `xcodebuild ... 2>&1 | grep -B 2 -A 5 "error:"`
@@ -182,6 +183,21 @@ LeavesOfBlocks/
 │   ├── Localizable.xcstrings     # String Catalog
 │   └── PrivacyInfo.xcprivacy
 └── Documentation/CodingStandards.md
+
+conventions/                      # Project-wide rules, one file per rule
+scripts/                          # Build, CI and release logic, each with a test-*.sh
+├── build.sh                      # Build/test entry point
+├── check-commit-subject.sh       # Commit format — source of truth
+├── check-pr-title.sh             # The subject a squash merge will produce
+├── check-docs-versions.sh        # Docs vs. IPHONEOS_DEPLOYMENT_TARGET
+├── codeql-languages.sh           # Path -> CodeQL language mapping
+├── lint-commit-range.sh          # Commit-range iteration for CI
+├── simulator-runtime.sh          # Newest installed runtime >= deployment target
+├── xcode-version.sh              # Xcode floor from .xcode-version
+└── run-script-tests.sh           # Runs every test-*.sh; what CI calls
+fastlane/
+├── Fastfile, Constants.rb, release_helpers.rb, GameCenterConfig.rb
+└── test/release_helpers_test.rb  # Ruby suite, run via scripts/test-release-helpers.sh
 ```
 
 Tests live outside the app target:

@@ -15,6 +15,13 @@ on:
       - '.githooks/**'
       - '.xcode-version'
       - '.github/workflows/tooling.yml'
+      # check-docs-versions.sh compares the docs against the project's
+      # deployment target, so both sides of that comparison must trigger it.
+      # #89 changed the project and left five documents contradicting it;
+      # without these paths the guard would not have run on either commit.
+      - '*.md'
+      - 'conventions/**'
+      - 'LeavesOfBlocks.xcodeproj/**'
 
 permissions:
   contents: read
