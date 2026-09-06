@@ -279,6 +279,23 @@ bundle exec fastlane ios screenshots_only           # update screenshots only
 
 `deploy` and `deploy_and_submit` require a `version:` arg (`patch` / `minor` / `major` / explicit `1.2.3`). They commit the changelog + project bump and tag `vX.Y.Z` automatically.
 
+### Phased release
+
+`fastlane/Deliverfile` sets `phased_release(true)` and `automatic_release(false)`, so an approved version ships behind two gates:
+
+1. The build sits approved in App Store Connect until you release it by hand.
+2. Once released, Apple rolls it out to auto-updating users over 7 days — roughly 1% / 2% / 5% / 10% / 20% / 50% / 100%. Users who manually check for updates get it immediately regardless.
+
+This is the only production rollout safety net: the app ships no third-party SDKs, so crash data comes solely from Xcode Organizer, which lags by hours.
+
+**If a regression shows up mid-rollout**, in App Store Connect → the version → *Phased Release for Automatic Updates*:
+
+- **Pause** — halts the rollout at its current percentage. Use this first; it is instant and reversible, and buys time to confirm whether Organizer's crash spike is real.
+- **Resume** — continues from where it paused.
+- **Release to All Users** — skips the remaining phases and goes to 100%. Only for a rollout you're confident in.
+
+Pausing does **not** remove the update from users who already have it. To actually stop the bleeding you still need to ship a fixed build (`deploy version:patch`) and, if the regression is severe, request an expedited review.
+
 ### Game Center capability
 
 The entitlement (`com.apple.developer.game-center`) is committed at `LeavesOfBlocks/LeavesOfBlocks.entitlements` and wired into both Debug and Release build configs. Automatic code signing typically auto-enables the capability on the App ID at first device build; if it doesn't, run `bundle exec fastlane produce --enable_services game_center` once.

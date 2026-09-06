@@ -21,7 +21,9 @@ screenshots_path(SCREENSHOTS_PATH)
 
 # App Store release options
 submit_for_review(false)  # Set to true to automatically submit for review
-automatic_release(false)  # Set to true to automatically release after approval
+automatic_release(false)  # Release manually after approval; the phased
+                          # rollout below starts at that moment, so this
+                          # is a second, independent gate on the release.
 force(true)              # Skip HTML preview and upload directly
 
 # Submission information (can be overridden in Fastfile)
@@ -33,8 +35,13 @@ submission_information(SUBMISSION_INFO)
 # Reject if binary already exists
 reject_if_possible(true)
 
-# Phased release
-phased_release(false)
+# Phased release. Apple rolls an approved update out to auto-updating users
+# over 7 days (1/2/5/10/20/50/100%) instead of all at once; users who seek the
+# update manually still get it immediately. This is the project's only rollout
+# safety net — there is no crash reporting beyond Xcode Organizer (by design:
+# no third-party SDKs) — so a regression can be caught and the rollout paused
+# from App Store Connect before it reaches the whole installed base.
+phased_release(true)
 
 # Reset ratings when new version is released
 reset_ratings(false)
