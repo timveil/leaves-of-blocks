@@ -260,9 +260,18 @@ def _parse_unreleased_subsections(changelog_content)
   body = match[1]
   sections = {}
 
-  # Each subsection is "### Header\n" followed by zero or more bullet lines,
+  # Each subsection is "### Header" followed by zero or more bullet lines,
   # ending at the next "### " or end-of-block.
-  body.scan(/### (\w+)\s*\n(.*?)(?=\n### |\z)/m) do |header, items_block|
+  #
+  # Anchored to line starts, and the header match stops at its own newline. An
+  # earlier version used `### (\w+)\s*\n` with a `(?=\n### )` terminator: the
+  # `\s*` swallowed the blank line after an EMPTY subsection, leaving the body
+  # starting at the following "### " with no newline in front of it for the
+  # lookahead to find. The next section's items were then attributed to the
+  # empty one, and that section disappeared -- so a template [Unreleased] block
+  # with an empty "### Added" above a populated "### Changed" reported the
+  # changed items as added.
+  body.scan(/^### (\w+)[^\n]*\n(.*?)(?=^### |\z)/m) do |header, items_block|
     bullets = items_block.scan(/^- (.+)$/).flatten.map(&:strip).reject(&:empty?)
     sections[header] = bullets unless bullets.empty?
   end

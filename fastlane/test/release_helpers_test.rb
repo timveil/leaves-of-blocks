@@ -142,6 +142,59 @@ assert_raises("a non-semver string is rejected")    { _resolve_bump(current: '2.
 assert_raises("an empty bump type is rejected")     { _resolve_bump(current: '2.0.6', bump_type: '') }
 
 puts
+puts "_parse_unreleased_subsections"
+
+# The template [Unreleased] block ships empty subsections, so this shape is the
+# normal one rather than an edge case.
+with_empty = <<~MD
+  ## [Unreleased]
+
+  ### Added
+
+  ### Changed
+  - A changed thing
+
+  ### Fixed
+  - A fixed thing
+
+  ## [1.0] - 2020-01-01
+
+  ### Added
+  - Old thing
+MD
+
+parsed = _parse_unreleased_subsections(with_empty)
+assert_equal(['Changed', 'Fixed'], parsed.keys.sort, "empty subsections are omitted, not populated")
+assert_equal(['A changed thing'], parsed['Changed'], "items stay under their own heading")
+assert_equal(['A fixed thing'], parsed['Fixed'], "the last subsection is parsed")
+assert_equal(false, parsed.key?('Added'), "an empty subsection does not absorb the next one")
+
+populated = <<~MD
+  ## [Unreleased]
+
+  ### Added
+  - An added thing
+
+  ### Changed
+  - A changed thing
+
+  ## [1.0] - 2020-01-01
+MD
+assert_equal(['Added', 'Changed'], _parse_unreleased_subsections(populated).keys.sort, "fully populated sections parse")
+
+# Non-standard headings are preserved -- that is what stops a hand-written
+# "Security" section from being dropped at release time.
+custom = "## [Unreleased]\n\n### Security\n- Patched a thing\n\n## [1.0] - 2020-01-01\n"
+assert_equal(['Patched a thing'], _parse_unreleased_subsections(custom)['Security'], "custom headings survive")
+
+assert_equal({}, _parse_unreleased_subsections("# Changelog\n\n## [1.0] - 2020-01-01\n"), "no [Unreleased] yields nothing")
+assert_equal({}, _parse_unreleased_subsections("## [Unreleased]\n\n### Added\n\n### Fixed\n\n## [1.0] - 2020-01-01\n"), "an entirely empty block yields nothing")
+
+# The block must not run past its own section into the released history.
+bleed = "## [Unreleased]\n\n### Added\n- Pending\n\n## [1.0] - 2020-01-01\n\n### Added\n- Shipped\n"
+assert_equal(['Pending'], _parse_unreleased_subsections(bleed)['Added'], "parsing stops at the next version heading")
+
+puts
 puts "executable_in_path?"
 
 require 'tmpdir'
