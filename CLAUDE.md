@@ -331,10 +331,12 @@ Publishing the GitHub Release soft-fails: it runs after `deliver` has succeeded 
 
 ### Phased release
 
-`fastlane/Deliverfile` sets `phased_release(true)` and `automatic_release(false)`, so an approved version ships behind two gates:
+`fastlane/Deliverfile` sets `phased_release(true)` and `automatic_release(true)`, so an approved version releases itself and then rolls out gradually:
 
-1. The build sits approved in App Store Connect until you release it by hand.
-2. Once released, Apple rolls it out to auto-updating users over 7 days — roughly 1% / 2% / 5% / 10% / 20% / 50% / 100%. Users who manually check for updates get it immediately regardless.
+1. On approval the version goes live without waiting for a manual push.
+2. Apple rolls it out to auto-updating users over 7 days — roughly 1% / 2% / 5% / 10% / 20% / 50% / 100%. Users who manually check for updates get it immediately regardless.
+
+The safety net is the rollout, not a human remembering to press a button: the update reaches ~1% on day one, and pausing is available throughout.
 
 This is the only production rollout safety net: the app ships no third-party SDKs, so crash data comes solely from Xcode Organizer, which lags by hours.
 
@@ -345,6 +347,14 @@ This is the only production rollout safety net: the app ships no third-party SDK
 - **Release to All Users** — skips the remaining phases and goes to 100%. Only for a rollout you're confident in.
 
 Pausing does **not** remove the update from users who already have it. To actually stop the bleeding you still need to ship a fixed build (`deploy`) and, if the regression is severe, request an expedited review.
+
+### Submitting
+
+`submit` sends the version App Store Connect is holding, not the one in the project file — after a release the project has already moved on, so those differ. It resolves the pending version from App Store Connect, waits for a build of that version to finish processing, and attaches it, which is what previously required choosing a build from a dropdown.
+
+Age rating answers live in [`fastlane/metadata/app_rating_config.json`](fastlane/metadata/app_rating_config.json) and are applied by `deliver` through `app_rating_config_path`. That includes the social-media questions App Store Connect added for September 2026 (`socialMedia`, `socialMediaAgeRestricted`, `messagingAndChat`, `userGeneratedContent`). Keeping them in the repository means a submission cannot go out with stale answers, and a change to them is reviewable. **They are declarations to Apple about the app's behavior — change them deliberately, not to make a check pass.**
+
+`preflight` covers both: that the config exists and answers the social-media questions, and which version and build are ready to submit.
 
 ### Game Center capability
 

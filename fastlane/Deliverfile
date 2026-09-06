@@ -21,9 +21,11 @@ screenshots_path(SCREENSHOTS_PATH)
 
 # App Store release options
 submit_for_review(false)  # Set to true to automatically submit for review
-automatic_release(false)  # Release manually after approval; the phased
-                          # rollout below starts at that moment, so this
-                          # is a second, independent gate on the release.
+# Release on approval rather than waiting for a manual push. The phased
+# rollout below then begins immediately, spreading the update over 7 days with
+# the pause control still available -- so the safety net is the rollout itself
+# rather than a human remembering to press a button.
+automatic_release(true)
 force(true)              # Skip HTML preview and upload directly
 
 # Submission information (can be overridden in Fastfile)
@@ -45,6 +47,12 @@ phased_release(true)
 
 # Reset ratings when new version is released
 reset_ratings(false)
+
+# Age rating answers, including the social-media questions App Store Connect
+# added for September 2026. Keeping them here rather than only in the web UI
+# means a submission cannot go out with stale answers, and a change to them
+# shows up in review like any other.
+app_rating_config_path("./fastlane/metadata/app_rating_config.json")
 
 # App review information
 app_review_information(app_review_info)

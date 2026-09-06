@@ -844,6 +844,64 @@ rescue StandardError => e
   FastlaneCore::UI.important("Could not verify screenshot counts (#{e.message}); check the listing by hand.")
 end
 
+# The version App Store Connect is holding for submission.
+#
+# Deliberately not read from the project file. After a release the project has
+# already moved to the next development version (#95), so on the day 2.0.7 is
+# awaiting review the project says 2.0.8 -- and submitting against that finds
+# no build at all. App Store Connect is the only thing that knows which version
+# is actually pending.
+def version_awaiting_submission
+  app = Spaceship::ConnectAPI::App.find(APP_IDENTIFIER)
+  edit = app.get_edit_app_store_version
+  edit&.version_string
+rescue StandardError => e
+  FastlaneCore::UI.important("Could not read the pending version from App Store Connect: #{e.message}")
+  nil
+end
+
+# Build number of the most recent processed build for a marketing version.
+#
+# Submitting requires a build attached to the version, and App Store Connect
+# will not attach one that is still processing -- which is why submitting by
+# hand meant picking from a dropdown. A binary spends minutes in processing
+# after upload, so this waits rather than assuming.
+#
+# Returns nil rather than raising when nothing becomes available; the caller
+# decides whether that is fatal.
+def latest_processed_build_number(version:, timeout: 1800, poll: 30)
+  deadline = Time.now + timeout
+  reported_waiting = false
+
+  loop do
+    app = Spaceship::ConnectAPI::App.find(APP_IDENTIFIER)
+    builds = Spaceship::ConnectAPI::Build.all(
+      app_id: app.id,
+      version: version,
+      processing_states: Spaceship::ConnectAPI::Build::ProcessingState::VALID,
+      sort: "-uploadedDate",
+      limit: 1
+    )
+
+    build = builds.first
+    return build.version if build
+
+    if Time.now >= deadline
+      FastlaneCore::UI.important("No processed build for #{version} after #{timeout}s.")
+      return nil
+    end
+
+    unless reported_waiting
+      FastlaneCore::UI.message("Waiting for a build of #{version} to finish processing...")
+      reported_waiting = true
+    end
+    sleep(poll)
+  end
+rescue StandardError => e
+  FastlaneCore::UI.important("Could not determine a processed build for #{version}: #{e.message}")
+  nil
+end
+
 # Publish a GitHub Release for a tag that has already been pushed.
 #
 # Named for exactly what shipped: the tag is v<version>, the notes are that
@@ -1023,6 +1081,30 @@ def run_release_preflight(api_key:, bump_type:)
   rescue StandardError
     raise "#{read_marketing_version(xcodeproj: XCODE_PROJECT, target_name: MAIN_SCHEME)} is already released; " \
           "beta will be refused until the project moves to the next version"
+  end
+
+  # Submission-path rows. #98: submitting by hand surfaced three things the
+  # pipeline never touched, so deploy_and_submit would have failed or produced
+  # a bad submission with nothing to warn first.
+  _preflight(rows, 'Age rating config') do
+    root = project_root(File.join('fastlane', 'metadata', 'app_rating_config.json'))
+    raise 'fastlane/metadata/app_rating_config.json is missing' unless root
+
+    require 'json'
+    config = JSON.parse(File.read(File.join(root, 'fastlane', 'metadata', 'app_rating_config.json')))
+    required = %w[socialMedia socialMediaAgeRestricted messagingAndChat userGeneratedContent]
+    missing = required.reject { |k| config.key?(k) }
+    raise "missing answers: #{missing.join(', ')}" unless missing.empty?
+
+    "#{config.keys.count} answers, social-media questions included"
+  end
+
+  _preflight(rows, 'Pending submission', severity: :warn) do
+    pending = version_awaiting_submission
+    next nil unless pending
+
+    build = latest_processed_build_number(version: pending, timeout: 0)
+    build ? "#{pending} (#{build}) ready to submit" : "#{pending} has no processed build yet"
   end
 
   _preflight(rows, 'CHANGELOG section') do
