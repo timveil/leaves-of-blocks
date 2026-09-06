@@ -73,7 +73,7 @@ Upload screenshots only
 
 Dry-run every read-only check the release path depends on
 
-Options: version:patch|minor|major or version:1.2.3 (default patch) to preview a target version
+Options: version:minor|major|1.2.3 to preview a train change; omit to preview shipping the current version
 
 ### ios deploy
 
@@ -83,7 +83,7 @@ Options: version:patch|minor|major or version:1.2.3 (default patch) to preview a
 
 Complete App Store deployment with metadata and binary
 
-Options: version:patch|minor|major or version:1.0.5 to set specific version
+Options: version:minor|major|1.2.3 to change train; omit to ship the version the project already states
 
 ### ios submit
 
@@ -101,7 +101,7 @@ Submit for App Store review (use after deploy)
 
 Full deployment pipeline: build, upload, and submit for review
 
-Options: version:patch|minor|major or version:1.0.5 to set specific version
+Options: version:minor|major|1.2.3 to change train; omit to ship the version the project already states
 
 ### ios screenshots
 
