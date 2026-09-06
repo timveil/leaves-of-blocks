@@ -5,7 +5,7 @@
   
   [![iOS Build and Test](https://github.com/timveil/leaves-of-blocks/actions/workflows/ios.yml/badge.svg)](https://github.com/timveil/leaves-of-blocks/actions/workflows/ios.yml)
   [![Swift 5](https://img.shields.io/badge/Swift-5.0-F05138?logo=swift&logoColor=white)](https://swift.org)
-  [![Platform](https://img.shields.io/badge/platform-iOS%2018.5%2B-007AFF?logo=apple)](https://developer.apple.com/ios/)
+  [![Platform](https://img.shields.io/badge/platform-iOS%2018.0%2B-007AFF?logo=apple)](https://developer.apple.com/ios/)
   [![License: MIT](https://img.shields.io/github/license/timveil/leaves-of-blocks)](LICENSE)
   [![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-FE5196?logo=conventionalcommits&logoColor=white)](https://www.conventionalcommits.org)
   [![No Ads](https://img.shields.io/badge/ads-none-success)](#privacy-by-default)
@@ -84,7 +84,7 @@ For the full side-by-side (and a less serious version of the comparison), see [l
 
 ### Requirements
 - Xcode 26+
-- iOS 18.5+
+- iOS 18.0+
 - macOS with Xcode command line tools
 
 ### Build & Run
@@ -224,6 +224,7 @@ bundle exec fastlane ios setup_game_center          # register Game Center leade
 #### Per-release deployment
 
 ```bash
+bundle exec fastlane ios preflight                         # read-only: can a release run right now?
 bundle exec fastlane ios beta                              # TestFlight upload
 bundle exec fastlane ios deploy version:patch              # App Store binary + metadata (also: minor, major, or 1.2.3)
 bundle exec fastlane ios deploy_and_submit version:patch   # deploy and submit for review in one shot
@@ -240,6 +241,7 @@ See [CLAUDE.md](./CLAUDE.md) for full lane internals and deployment procedures.
 
 - **[Public website](https://www.leavesofblocks.com/)**: Marketing site, in-browser demo, and FAQ
 - **[CONTRIBUTING.md](./CONTRIBUTING.md)**: How to set up the project, run tests, and submit changes
+- **[conventions/](./conventions/)**: Project-wide rules — workflow scripting, commit messages, localization, dependencies, testing, review comments
 - **[CHANGELOG.md](./CHANGELOG.md)**: Release notes and version history
 - **[Coding Standards](./LeavesOfBlocks/Documentation/CodingStandards.md)**: Swift style guide and conventions
 - **[SECURITY.md](./SECURITY.md)**: How to report security issues

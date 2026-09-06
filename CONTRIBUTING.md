@@ -6,7 +6,7 @@ Thank you for your interest in contributing! This document explains how to get t
 
 ### Prerequisites
 - macOS with Xcode 26 or later
-- iOS 18.5+ Simulator (an iPhone 17 family simulator is recommended)
+- iOS 18.0+ Simulator (an iPhone 17 family simulator is recommended)
 - Ruby (managed by `.ruby-version`) and Bundler — only needed for Fastlane workflows
 - Optional: `bundle install` if you plan to run Fastlane lanes
 
@@ -60,6 +60,15 @@ Project-wide conventions live in [`conventions/`](conventions/) — one file per
 - **Documentation**: Public APIs should carry DocC comments (`///`) including `- Parameter`, `- Returns`, and `- Throws` clauses where applicable.
 
 ## Submitting Changes
+
+### What CI will check
+
+Beyond the build and tests, three gates apply to pull requests. They are listed here because meeting one unprepared looks like an unexplained failure:
+
+- **Commit subjects** — every non-merge commit must follow the format below.
+- **The pull request title** — a squash merge uses the PR *title* as the commit subject on `main`, so it is held to the same format. `scripts/check-pr-title.sh` validates the exact subject the merge will produce, including the ` (#N)` GitHub appends. Renaming the PR re-runs the check.
+- **Script suites** *(only when the relevant paths change)* — if you touch `scripts/`, `fastlane/`, the docs or the xcodeproj, `.github/workflows/tooling.yml` runs `./scripts/run-script-tests.sh` and verifies the fastlane configuration loads. Run that script locally first; it is the same one CI calls.
+
 
 1. **Fork and branch.** Create a topic branch off `main` named after the change (e.g. `feature/streak-bonus`, `fix/drag-throttle`).
 2. **Keep changes focused.** A pull request should do one thing. Split refactors out from feature work where possible.
