@@ -887,7 +887,11 @@ def latest_processed_build_number(version:, timeout: 1800, poll: 30)
     return build.version if build
 
     if Time.now >= deadline
-      FastlaneCore::UI.important("No processed build for #{version} after #{timeout}s.")
+      # Silent when timeout is 0. preflight uses that for a non-blocking peek,
+      # and "no processed build after 0s" is the normal answer there -- logging
+      # it would put a warning line through the middle of the preflight table
+      # for a row that is already reporting the same thing.
+      FastlaneCore::UI.important("No processed build for #{version} after #{timeout}s.") if timeout.positive?
       return nil
     end
 

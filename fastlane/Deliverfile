@@ -52,7 +52,13 @@ reset_ratings(false)
 # added for September 2026. Keeping them here rather than only in the web UI
 # means a submission cannot go out with stale answers, and a change to them
 # shows up in review like any other.
-app_rating_config_path("./fastlane/metadata/app_rating_config.json")
+# Built from the resolved fastlane dir, not a repo-root-relative literal.
+# deliver expands the path against Dir.pwd, which is the repo root or fastlane/
+# depending on invocation -- "./fastlane/metadata/..." becomes
+# "fastlane/fastlane/metadata/..." from inside fastlane/ and the file is not
+# found. Fourth bug of this shape in this repository; the resolution above
+# exists precisely to avoid it.
+app_rating_config_path(File.join(fastlane_dir, "metadata", "app_rating_config.json"))
 
 # App review information
 app_review_information(app_review_info)
