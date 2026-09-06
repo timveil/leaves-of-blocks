@@ -309,14 +309,17 @@ bundle exec fastlane ios setup_game_center          # one-time: register Game Ce
 ```bash
 bundle exec fastlane ios preflight                  # read-only: can a release run right now?
 bundle exec fastlane ios beta                       # bump build, archive, upload to TestFlight
-bundle exec fastlane ios deploy version:patch       # bump version+build, regenerate changelog/release notes, upload binary + metadata
-bundle exec fastlane ios deploy_and_submit version:patch  # deploy + automatically submit for review
+bundle exec fastlane ios deploy                     # ship the version the project states; changelog, binary + metadata
+bundle exec fastlane ios deploy_and_submit          # deploy + automatically submit for review
+bundle exec fastlane ios deploy version:minor       # change train first, then ship
 bundle exec fastlane ios submit                     # submit a previously uploaded build for review
 bundle exec fastlane ios metadata_only              # update App Store listing (no binary)
 bundle exec fastlane ios screenshots_only           # update screenshots only
 ```
 
-`deploy` and `deploy_and_submit` require a `version:` arg (`patch` / `minor` / `major` / explicit `1.2.3`). They commit the changelog + project bump, tag `vX.Y.Z`, and attempt a GitHub Release from that version's CHANGELOG section.
+`MARKETING_VERSION` states **the version under development**, so `deploy` ships what the project already says and `version:` is only needed to change train (`minor`, `major`, or an explicit `1.2.3`). Each lane commits the changelog, tags `vX.Y.Z`, attempts a GitHub Release from that version's CHANGELOG section, and then — after the tag — moves the project to the next patch and pushes `chore: Begin development on vX.Y.Z+1`.
+
+That trailing bump is not cosmetic. App Store Connect refuses further builds under an approved version, so a project left on the just-shipped number makes `beta` unusable from approval until the next release. Moving on immediately means TestFlight builds go out as the next version, which is also what the next `deploy` will ship.
 
 **Check before releasing.** `preflight` runs every read-only check the release path depends on — Xcode floor, clean tree, branch, simulator runtime, App Store Connect auth and next build number, target version, tag and version availability, CHANGELOG section, TestFlight notes, and `gh` — and reports them as a table. It writes nothing, anywhere.
 
@@ -341,7 +344,7 @@ This is the only production rollout safety net: the app ships no third-party SDK
 - **Resume** — continues from where it paused.
 - **Release to All Users** — skips the remaining phases and goes to 100%. Only for a rollout you're confident in.
 
-Pausing does **not** remove the update from users who already have it. To actually stop the bleeding you still need to ship a fixed build (`deploy version:patch`) and, if the regression is severe, request an expedited review.
+Pausing does **not** remove the update from users who already have it. To actually stop the bleeding you still need to ship a fixed build (`deploy`) and, if the regression is severe, request an expedited review.
 
 ### Game Center capability
 

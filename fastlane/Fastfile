@@ -113,16 +113,16 @@ platform :ios do
   end
 
   desc "Dry-run every read-only check the release path depends on"
-  desc "Options: version:patch|minor|major or version:1.2.3 (default patch) to preview a target version"
+  desc "Options: version:minor|major|1.2.3 to preview a train change; omit to preview shipping the current version"
   lane :preflight do |options|
     run_release_preflight(
       api_key: app_store_api_key,
-      bump_type: options[:version] || 'patch'
+      bump_type: options[:version]
     )
   end
 
   desc "Complete App Store deployment with metadata and binary"
-  desc "Options: version:patch|minor|major or version:1.0.5 to set specific version"
+  desc "Options: version:minor|major|1.2.3 to change train; omit to ship the version the project already states"
   lane :deploy do |options|
     _release_core(api_key: app_store_api_key, options: options, submit: false)
   end
@@ -146,7 +146,7 @@ platform :ios do
   end
 
   desc "Full deployment pipeline: build, upload, and submit for review"
-  desc "Options: version:patch|minor|major or version:1.0.5 to set specific version"
+  desc "Options: version:minor|major|1.2.3 to change train; omit to ship the version the project already states"
   lane :deploy_and_submit do |options|
     _release_core(api_key: app_store_api_key, options: options, submit: true)
   end

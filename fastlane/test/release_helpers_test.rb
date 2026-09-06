@@ -281,6 +281,25 @@ Dir.mktmpdir do |dir|
 end
 
 puts
+puts "_resolve_target_version"
+
+# MARKETING_VERSION states the version under development, so with no bump a
+# release ships exactly what the project already says. Bumping at release time
+# was what left the project on the just-shipped version and made beta unusable
+# until the next deploy (#95).
+assert_equal('2.0.7', _resolve_target_version(current: '2.0.7', bump_type: nil), "no bump ships the current version")
+assert_equal('2.0.7', _resolve_target_version(current: '2.0.7', bump_type: ''), "an empty bump ships the current version")
+assert_equal('2.0.7', _resolve_target_version(current: '2.0.7', bump_type: '   '), "a whitespace bump ships the current version")
+
+assert_equal('2.1.0', _resolve_target_version(current: '2.0.7', bump_type: 'minor'), "minor changes train")
+assert_equal('3.0.0', _resolve_target_version(current: '2.0.7', bump_type: 'major'), "major changes train")
+assert_equal('2.0.8', _resolve_target_version(current: '2.0.7', bump_type: 'patch'), "patch still works if asked for")
+assert_equal('4.5.6', _resolve_target_version(current: '2.0.7', bump_type: '4.5.6'), "an explicit version is honored")
+
+# A typo must not silently ship something unintended.
+assert_raises("an unknown bump type is still rejected") { _resolve_target_version(current: '2.0.7', bump_type: 'pathc') }
+
+puts
 puts "_preflight row classification"
 
 rows = []

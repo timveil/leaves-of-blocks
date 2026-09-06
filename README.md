@@ -226,14 +226,15 @@ bundle exec fastlane ios setup_game_center          # register Game Center leade
 ```bash
 bundle exec fastlane ios preflight                         # read-only: can a release run right now?
 bundle exec fastlane ios beta                              # TestFlight upload
-bundle exec fastlane ios deploy version:patch              # App Store binary + metadata (also: minor, major, or 1.2.3)
-bundle exec fastlane ios deploy_and_submit version:patch   # deploy and submit for review in one shot
+bundle exec fastlane ios deploy                            # ship the version the project states
+bundle exec fastlane ios deploy_and_submit                 # deploy and submit for review in one shot
+bundle exec fastlane ios deploy version:minor              # change train first, then ship
 bundle exec fastlane ios submit                            # submit a previously-uploaded build for review
 bundle exec fastlane ios metadata_only                     # listing changes only (no binary)
 bundle exec fastlane ios screenshots_only                  # screenshots only
 ```
 
-`deploy` and `deploy_and_submit` regenerate the changelog from your commits, bump the marketing version, commit those changes, upload, then tag `vX.Y.Z` and attempt a matching GitHub Release (best-effort — if `gh` is unavailable it logs the command to run by hand rather than failing a shipped release). The build number comes from App Store Connect at archive time rather than the project file, so one version string identifies the App Store submission, the tag and the release. For the daily TestFlight loop, `beta` is enough.
+`deploy` and `deploy_and_submit` regenerate the changelog from your commits, ship the version the project already states, upload, then tag `vX.Y.Z`, attempt a matching GitHub Release, and move the project on to the next patch for development (best-effort — if `gh` is unavailable it logs the command to run by hand rather than failing a shipped release). The build number comes from App Store Connect at archive time rather than the project file, so one version string identifies the App Store submission, the tag and the release. For the daily TestFlight loop, `beta` is enough.
 
 See [CLAUDE.md](./CLAUDE.md) for full lane internals and deployment procedures.
 

@@ -60,6 +60,20 @@
 # went unnoticed across multiple releases).
 SEMVER_REGEX = /\A\d+\.\d+\.\d+\z/.freeze
 
+# Which version a release should ship.
+#
+# MARKETING_VERSION states the version under development, so with no bump_type
+# a release ships exactly that. A bump_type is how you change train -- minor,
+# major, or an explicit number -- and is applied to the current value.
+#
+# Pure so the rule can be tested without a project file; _release_core supplies
+# the current version by reading one.
+def _resolve_target_version(current:, bump_type:)
+  return current if bump_type.nil? || bump_type.to_s.strip.empty?
+
+  _resolve_bump(current: current, bump_type: bump_type)
+end
+
 def _resolve_bump(current:, bump_type:)
   parts = current.split('.').map(&:to_i)
   parts << 0 while parts.length < 3
@@ -628,6 +642,10 @@ def commit_release_local(version:)
   # Bail out if there's nothing staged. Without this guard `git commit` would
   # exit non-zero, but `sh` would still raise — and the caller might mistake a
   # "nothing to commit" run for a partial success and run finalize_release.
+  #
+  # Note the project file is legitimately unchanged when a release ships the
+  # version the project already states; the CHANGELOG and release notes are
+  # what make this non-empty in that case.
   staged = sh("git diff --cached --name-only", log: false).strip
   if staged.empty?
     FastlaneCore::UI.user_error!(
@@ -909,12 +927,14 @@ def run_release_preflight(api_key:, bump_type:)
     "reachable, next build #{latest}"
   end
 
+  # Mirrors _release_core: with no bump_type a release ships the version the
+  # project already states. Previewing a patch bump instead would show a target
+  # the deploy would not actually use.
   target_version = nil
   _preflight(rows, 'Target version') do
-    target_version = calculate_new_version(
-      xcodeproj: XCODE_PROJECT, target_name: MAIN_SCHEME, bump_type: bump_type
-    )
-    "#{read_marketing_version(xcodeproj: XCODE_PROJECT, target_name: MAIN_SCHEME)} -> #{target_version}"
+    current = read_marketing_version(xcodeproj: XCODE_PROJECT, target_name: MAIN_SCHEME)
+    target_version = _resolve_target_version(current: current, bump_type: bump_type)
+    target_version == current ? "#{current} (as the project states)" : "#{current} -> #{target_version}"
   end
 
   _preflight(rows, 'Tag available') do
@@ -927,6 +947,21 @@ def run_release_preflight(api_key:, bump_type:)
     raise 'target version unresolved' unless target_version
     ensure_version_available_on_app_store!(version: target_version)
     "#{target_version} not yet used"
+  end
+
+  # The row whose absence let #95 through. The checks above validate the version
+  # a future `deploy` would ship; a `beta` uploads under the version the project
+  # states right now, and App Store Connect refuses builds under an approved
+  # one. Passing preflight and then failing an upload it could have predicted is
+  # worse than no preflight, because the green result is what convinced you to
+  # run it.
+  _preflight(rows, 'TestFlight accepts current version') do
+    current = read_marketing_version(xcodeproj: XCODE_PROJECT, target_name: MAIN_SCHEME)
+    ensure_version_available_on_app_store!(version: current)
+    "#{current} can still take builds"
+  rescue StandardError
+    raise "#{read_marketing_version(xcodeproj: XCODE_PROJECT, target_name: MAIN_SCHEME)} is already released; " \
+          "beta will be refused until the project moves to the next version"
   end
 
   _preflight(rows, 'CHANGELOG section') do
@@ -973,6 +1008,43 @@ def run_release_preflight(api_key:, bump_type:)
   rows
 end
 
+# Move the project onto the next development version after a release.
+#
+# Runs AFTER the tag is pushed, deliberately. The tag must point at a commit
+# where MARKETING_VERSION states the version that shipped -- that is the
+# traceability #63 established, and bumping before tagging would break it.
+#
+# Why bump at all: App Store Connect refuses further builds under an approved
+# version. Left at the just-shipped number, the project makes `beta` unusable
+# from approval until the next release. Moving to the next patch immediately
+# means TestFlight builds during development go out as X.Y.Z+1 (n), which is
+# also what the next `deploy` will ship.
+#
+# Soft-fails. The release is already public by this point; a push failure here
+# is a chore to finish by hand, not a reason to report the release as failed.
+def begin_next_development_version(shipped_version:)
+  next_version = _resolve_bump(current: shipped_version, bump_type: 'patch')
+
+  bump_marketing_version(
+    xcodeproj: XCODE_PROJECT,
+    target_name: MAIN_SCHEME,
+    version: next_version
+  )
+
+  sh("git add ../LeavesOfBlocks.xcodeproj/project.pbxproj")
+  sh("git commit -m 'chore: Begin development on v#{next_version}'")
+  sh("git push origin main")
+
+  FastlaneCore::UI.success("Project moved to v#{next_version} for development")
+  next_version
+rescue StandardError => e
+  FastlaneCore::UI.important("Could not move the project to the next version: #{e.message}")
+  FastlaneCore::UI.important("The release itself is unaffected. Finish by hand, or `beta` will be")
+  FastlaneCore::UI.important("refused until it is done:")
+  FastlaneCore::UI.important("  set MARKETING_VERSION to the next patch, commit, push")
+  nil
+end
+
 # Canonical release flow shared by `deploy` and `deploy_and_submit`. The
 # only behavioral difference between those two lanes is the value of
 # `submit:` passed through to `deliver`.
@@ -986,19 +1058,22 @@ end
 #     instead of an orphan tag pushed to origin.
 #   - Tag + push to origin happen ONLY after deliver returns success.
 def _release_core(api_key:, options:, submit:)
-  unless options[:version]
-    lane_name = submit ? 'deploy_and_submit' : 'deploy'
-    FastlaneCore::UI.user_error!("Version bump required. Use: fastlane #{lane_name} version:patch|minor|major")
-  end
-
   FastlaneCore::UI.message("▸ Pre-flight: git status + branch")
   ensure_git_status_clean
   ensure_git_branch(branch: 'main')
 
+  # MARKETING_VERSION states the version under development, so a release ships
+  # what the project already says. `version:` is only needed to change train --
+  # minor, major, or an explicit number -- and is applied before shipping.
+  #
+  # It used to be required and always bumped at release time, which left the
+  # project sitting at the just-shipped version between releases. App Store
+  # Connect refuses further builds under an approved version, so `beta` was
+  # unusable from the moment a release was approved until the next deploy --
+  # exactly when a TestFlight build is most wanted. See #95.
   FastlaneCore::UI.message("▸ Resolving target version")
-  new_version = calculate_new_version(
-    xcodeproj: XCODE_PROJECT,
-    target_name: MAIN_SCHEME,
+  new_version = _resolve_target_version(
+    current: read_marketing_version(xcodeproj: XCODE_PROJECT, target_name: MAIN_SCHEME),
     bump_type: options[:version]
   )
   FastlaneCore::UI.message("Target version: #{new_version}")
@@ -1026,7 +1101,7 @@ def _release_core(api_key:, options:, submit:)
   # the GitHub Release all carry it. Passing it explicitly (rather than
   # re-deriving it from the bump type here) removes the second, independent
   # computation that could disagree with the first.
-  FastlaneCore::UI.message("▸ Bumping marketing version")
+  FastlaneCore::UI.message("▸ Setting marketing version")
   bump_marketing_version(
     xcodeproj: XCODE_PROJECT,
     target_name: MAIN_SCHEME,
@@ -1067,11 +1142,16 @@ def _release_core(api_key:, options:, submit:)
   FastlaneCore::UI.message("▸ Finalizing release (tag + push + GitHub Release)")
   finalize_release(version: new_version, build_number: build_number)
 
+  # After the tag, never before: see begin_next_development_version.
+  FastlaneCore::UI.message("▸ Opening the next development version")
+  next_version = begin_next_development_version(shipped_version: new_version)
+
   # Lane-level summary. Emoji used as semantic icons here, not decoration:
   # 📱 binary state, 🏷️ git tag state, ⏳ what to wait for next.
   FastlaneCore::UI.success(submit ? "🎉 Release deployed and submitted for review" : "Release deployed")
   FastlaneCore::UI.message("📱 Binary, metadata, and screenshots uploaded")
   FastlaneCore::UI.message("🏷️  Git tag v#{new_version} pushed to origin, GitHub Release published")
+  FastlaneCore::UI.message("🔜 Project now on v#{next_version} for development") if next_version
   FastlaneCore::UI.message(submit ? "⏳ Apple will review within 24-48 hours" : "⏳ Check App Store Connect for build processing")
 
   new_version
