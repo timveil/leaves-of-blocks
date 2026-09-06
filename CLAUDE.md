@@ -114,6 +114,12 @@ GitHub Actions in `.github/workflows/ios.yml`:
 - Test artifacts uploaded via `actions/upload-artifact@v4`
 - Triggers on push to `main` and on PRs touching Swift / project / scripts
 
+CodeQL runs separately in `.github/workflows/codeql.yml` (Swift on macOS, Ruby and Actions on Ubuntu, plus a weekly cron):
+
+- A `changes` job runs [`scripts/codeql-languages.sh`](scripts/codeql-languages.sh) over the PR diff and emits a matrix containing **only** the affected languages, so a fastlane-only change no longer pays for a full Swift `xcodebuild` (~20 min on macOS). Scheduled runs pass `--all` and analyze everything.
+- That script is the single source of truth for the path→language mapping. When adding a file type, update it and run [`scripts/test-codeql-languages.sh`](scripts/test-codeql-languages.sh).
+- Watch out for extensionless Ruby: `Fastfile`, `Deliverfile`, `Snapfile`, and `Appfile` match no `*.rb` glob and must be listed explicitly.
+
 ### Build Troubleshooting
 
 - iPhone 16 and earlier only have iOS 18.5 runtimes; not compatible with iOS 26.x builds. Use the iPhone 17 family on iOS 26+.

@@ -6,6 +6,11 @@ on:
   # duplicative — paying ~13 min of macOS Swift trace overhead twice for the
   # same diff. The weekly cron keeps drift coverage if a query suite update
   # surfaces new findings against unchanged code.
+  #
+  # paths-ignore decides only whether this workflow STARTS. Which languages
+  # actually get analyzed is decided per-run by the `changes` job below —
+  # without that, one changed Ruby file starts the workflow and the whole
+  # matrix runs, including a full xcodebuild for Swift on a diff with no Swift.
   pull_request:
     branches: [ "main" ]
     paths-ignore:
@@ -17,8 +22,56 @@ on:
     - cron: '21 6 * * 1'
 
 jobs:
+  changes:
+    name: Detect affected languages
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    outputs:
+      matrix: ${{ steps.detect.outputs.matrix }}
+      any: ${{ steps.detect.outputs.any }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          # Full history so the base commit is present for the diff below.
+          fetch-depth: 0
+
+      # On a pull_request event the checked-out ref is refs/pull/N/merge — the
+      # head branch already merged into the current base tip. Diffing that
+      # against base.sha therefore yields exactly the PR's own changes.
+      #
+      # Scheduled runs analyze everything: that run exists to catch drift
+      # against unchanged code when a query suite updates, so narrowing it by
+      # diff would defeat its purpose.
+      - name: Detect affected languages
+        id: detect
+        run: |
+          set -euo pipefail
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            git diff --name-only "${{ github.event.pull_request.base.sha }}" HEAD \
+              | ./scripts/codeql-languages.sh >> "$GITHUB_OUTPUT"
+          else
+            ./scripts/codeql-languages.sh --all >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Report selection
+        run: |
+          set -euo pipefail
+          {
+            echo "### CodeQL language selection"
+            echo
+            echo "| Language | Analyzed |"
+            echo "| --- | --- |"
+            echo "| swift | ${{ steps.detect.outputs.swift }} |"
+            echo "| ruby | ${{ steps.detect.outputs.ruby }} |"
+            echo "| actions | ${{ steps.detect.outputs.actions }} |"
+          } >> "$GITHUB_STEP_SUMMARY"
+
   analyze:
     name: Analyze (${{ matrix.language }})
+    needs: changes
+    if: needs.changes.outputs.any == 'true'
     runs-on: ${{ matrix.runner }}
     permissions:
       security-events: write
@@ -28,17 +81,7 @@ jobs:
 
     strategy:
       fail-fast: false
-      matrix:
-        include:
-          - language: swift
-            runner: macos-latest
-            build-mode: manual
-          - language: ruby
-            runner: ubuntu-latest
-            build-mode: none
-          - language: actions
-            runner: ubuntu-latest
-            build-mode: none
+      matrix: ${{ fromJSON(needs.changes.outputs.matrix) }}
 
     steps:
       - name: Checkout
