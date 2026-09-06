@@ -28,6 +28,10 @@ module FastlaneCore
   end
 end
 
+require 'tmpdir'
+require 'fileutils'
+require 'open3'
+
 require_relative '../release_helpers'
 
 $pass = 0
@@ -234,10 +238,50 @@ assert_equal(exact, truncate_testflight_notes(exact), "text exactly at the limit
 assert_equal(true, truncate_testflight_notes('x' * 20, limit: 5).length <= 5, "a limit shorter than the marker still fits")
 
 puts
-puts "executable_in_path?"
+puts "commit_subjects_since_last_tag"
 
-require 'tmpdir'
-require 'fileutils'
+# Exercised against real repositories: this is where the range is built, and
+# the previous version substituted a sentinel revision for the no-tag case.
+Dir.mktmpdir do |dir|
+  run = lambda do |*args|
+    _out, _err, status = Open3.capture3('git', '-C', dir, *args)
+    raise "git #{args.join(' ')} failed" unless status.success?
+  end
+
+  run.call('init', '-q', '.')
+  run.call('config', 'user.email', 'test@example.com')
+  run.call('config', 'user.name', 'Test')
+  run.call('commit', '-q', '--allow-empty', '-m', 'feat: Before the tag')
+
+  Dir.chdir(dir) do
+    assert_equal(['feat: Before the tag'], commit_subjects_since_last_tag,
+                 "with no tags, every commit is returned")
+  end
+
+  run.call('tag', 'v1.0.0')
+  run.call('commit', '-q', '--allow-empty', '-m', 'fix: After the tag')
+  run.call('commit', '-q', '--allow-empty', '-m', 'chore: Also after')
+
+  Dir.chdir(dir) do
+    subjects = commit_subjects_since_last_tag
+    assert_equal(['fix: After the tag', 'chore: Also after'].sort, subjects.sort,
+                 "with a tag, only commits after it are returned")
+    assert_equal(false, subjects.include?('feat: Before the tag'),
+                 "the tagged commit itself is excluded")
+    assert_equal("• After the tag", format_commit_notes(subjects),
+                 "the range feeds through to tester-facing notes")
+  end
+end
+
+# Outside a repository entirely, git fails and the helper stays quiet.
+Dir.mktmpdir do |dir|
+  Dir.chdir(dir) do
+    assert_equal([], commit_subjects_since_last_tag, "outside a git repository, no subjects and no raise")
+  end
+end
+
+puts
+puts "executable_in_path?"
 
 Dir.mktmpdir do |dir|
   original_path = ENV['PATH']

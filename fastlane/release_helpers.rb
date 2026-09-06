@@ -665,9 +665,14 @@ TESTFLIGHT_NOTES_LIMIT = 4000
 TESTER_RELEVANT_TYPES = %w[feat fix perf refactor style revert].freeze
 
 # Run a git command without a shell, returning empty on failure.
+#
+# stderr is captured and discarded rather than inherited. `git describe` on a
+# repository with no tags writes "fatal: No names found, cannot describe
+# anything" -- accurate, benign, and alarming to read in the middle of a
+# release log for a case this code handles deliberately.
 def _git_output(*args)
   require 'open3'
-  out, status = Open3.capture2('git', *args)
+  out, _err, status = Open3.capture3('git', *args)
   status.success? ? out : ''
 rescue StandardError
   ''
@@ -731,9 +736,7 @@ def testflight_notes(override: nil)
     return truncate_testflight_notes(from_changelog) if from_changelog
   end
 
-  subjects = _git_output('log', "#{_last_tag}..HEAD", '--no-merges', '--format=%s')
-             .split("\n").map(&:strip).reject(&:empty?)
-  from_commits = format_commit_notes(subjects)
+  from_commits = format_commit_notes(commit_subjects_since_last_tag)
   return truncate_testflight_notes(from_commits) if from_commits
 
   FastlaneCore::UI.important("No [Unreleased] entries or tester-relevant commits — uploading without notes.")
@@ -743,13 +746,23 @@ rescue StandardError => e
   nil
 end
 
-# Most recent tag, or the empty-tree hash so `<ref>..HEAD` still works on a
-# repository that has never been tagged.
-def _last_tag
+# Subjects of non-merge commits since the most recent tag, or every commit when
+# the repository has no tags yet.
+#
+# The no-tag case omits the range rather than substituting a sentinel revision.
+# An earlier version passed the empty-tree hash so that "#{ref}..HEAD" always
+# had a left side; git happens to tolerate a tree there and returns the full
+# history, but that is incidental rather than documented -- `A..B` means
+# `B ^A`, and A is meant to be a commit. It also disagreed with
+# update_changelog_from_commits, which drops the range in the same situation.
+# Two functions reading the same history should not differ on how they ask.
+def commit_subjects_since_last_tag
   tag = _git_output('describe', '--tags', '--abbrev=0').strip
-  return tag unless tag.empty?
 
-  _git_output('hash-object', '-t', 'tree', '/dev/null').strip
+  args = ['log', '--no-merges', '--format=%s']
+  args.insert(1, "#{tag}..HEAD") unless tag.empty?
+
+  _git_output(*args).split("\n").map(&:strip).reject(&:empty?)
 end
 
 # Publish a GitHub Release for a tag that has already been pushed.
