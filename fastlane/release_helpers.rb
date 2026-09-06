@@ -81,6 +81,65 @@ def _resolve_bump(current:, bump_type:)
   end
 end
 
+# Resolve the next build number from App Store Connect.
+#
+# App Store Connect is the only authority on which build numbers are already
+# taken. The checked-in CURRENT_PROJECT_VERSION drifts out of step with it the
+# moment a build is uploaded from another machine, a failed release run is
+# undone with `git reset --hard`, or a bump lands on a branch that never
+# merges. When it drifts low, the upload is rejected for a duplicate build
+# number -- after the archive has already been built, which is the most
+# expensive place in the pipeline to fail.
+#
+# Returns an Integer. Deliberately does NOT write to project.pbxproj: the value
+# is handed to xcodebuild at archive time by app_store_build_app below, so the
+# lanes leave a clean working tree and CURRENT_PROJECT_VERSION in the repo is
+# no longer meaningful. ASC alone decides.
+def next_build_number(api_key:)
+  latest = latest_testflight_build_number(
+    api_key: api_key,
+    app_identifier: APP_IDENTIFIER,
+    # Without this, the action hard-errors when the app has no builds at all
+    # rather than falling back -- which would make a first upload impossible.
+    initial_build_number: 0
+  ).to_s.strip
+
+  # This project uses a monotonically increasing integer scheme. A dotted or
+  # otherwise non-integer value would be silently mangled by to_i ("1.2" -> 1),
+  # producing a number that is very likely already taken.
+  unless latest.match?(/\A\d+\z/)
+    FastlaneCore::UI.user_error!(
+      "App Store Connect returned a non-integer build number (#{latest.inspect}). " \
+      "This project uses a monotonically increasing integer scheme -- investigate " \
+      "before uploading."
+    )
+  end
+
+  next_number = latest.to_i + 1
+  FastlaneCore::UI.message("Build number: #{latest} on App Store Connect -> #{next_number}")
+  next_number
+end
+
+# Archive for App Store distribution with the build number resolved from App
+# Store Connect. Shared by every lane that produces an uploadable binary
+# (`build`, `beta`, and `_release_core`), which previously repeated this call
+# verbatim three times.
+#
+# The build number is passed as an xcodebuild setting override rather than
+# written to disk. GENERATE_INFOPLIST_FILE is YES for this target, so
+# CFBundleVersion in the archive is generated from CURRENT_PROJECT_VERSION --
+# overriding it on the command line reaches the built product without touching
+# the project file.
+def app_store_build_app(api_key:)
+  build_app(
+    project: XCODE_PROJECT,
+    scheme: MAIN_SCHEME,
+    export_method: EXPORT_METHOD,
+    xcargs: "CURRENT_PROJECT_VERSION=#{next_build_number(api_key: api_key)}",
+    export_options: app_store_signing_options(api_key: api_key)
+  )
+end
+
 # Bump MARKETING_VERSION directly via the xcodeproj gem.
 # Works around `increment_version_number` failing under
 # GENERATE_INFOPLIST_FILE=YES (it tries to update an Info.plist that doesn't
@@ -590,13 +649,12 @@ def _release_core(api_key:, options:, submit:)
   FastlaneCore::UI.message("▸ Updating changelog from commits")
   changelog_updated = update_changelog_from_commits(new_version: new_version)
 
-  FastlaneCore::UI.message("▸ Bumping marketing version + build number")
+  FastlaneCore::UI.message("▸ Bumping marketing version")
   bump_marketing_version(
     xcodeproj: XCODE_PROJECT,
     target_name: MAIN_SCHEME,
     bump_type: options[:version]
   )
-  increment_build_number(xcodeproj: XCODE_PROJECT)
 
   if changelog_updated
     FastlaneCore::UI.message("▸ Generating release notes")
@@ -608,13 +666,12 @@ def _release_core(api_key:, options:, submit:)
   FastlaneCore::UI.message("▸ Creating local release commit")
   commit_release_local(version: new_version)
 
+  # Build number is resolved from App Store Connect here, not from the project
+  # file -- so the release commit above carries only the marketing version and
+  # changelog, and a re-run after a failed archive picks the next free number
+  # rather than reusing one.
   FastlaneCore::UI.message("▸ Archiving")
-  build_app(
-    project: XCODE_PROJECT,
-    scheme: MAIN_SCHEME,
-    export_method: EXPORT_METHOD,
-    export_options: app_store_signing_options(api_key: api_key)
-  )
+  app_store_build_app(api_key: api_key)
 
   FastlaneCore::UI.message("▸ Uploading to App Store Connect")
   deliver(

@@ -57,13 +57,7 @@ platform :ios do
   desc "Create a new build for App Store"
   lane :build do
     api_key = app_store_api_key
-    increment_build_number(xcodeproj: XCODE_PROJECT)
-    build_app(
-      project: XCODE_PROJECT,
-      scheme: MAIN_SCHEME,
-      export_method: EXPORT_METHOD,
-      export_options: app_store_signing_options(api_key: api_key)
-    )
+    app_store_build_app(api_key: api_key)
   end
 
   desc "Upload to TestFlight"
@@ -71,19 +65,15 @@ platform :ios do
     # Configure App Store Connect API key for TestFlight
     api_key = app_store_api_key
 
-    # TestFlight only requires a unique build number. The marketing version
-    # is owned by the `deploy` lane (and CHANGELOG/git tag flow) — we don't
-    # touch it here. An older `bump_marketing_version("2.0.0")` call in this
-    # lane was hard-overwriting MARKETING_VERSION to 2.0.0 on every beta
-    # upload, which App Store Connect rejected once 2.0.x had advanced past
-    # 2.0.0 (CFBundleShortVersionString must be > last approved version).
-    increment_build_number(xcodeproj: XCODE_PROJECT)
-    build_app(
-      project: XCODE_PROJECT,
-      scheme: MAIN_SCHEME,
-      export_method: EXPORT_METHOD,
-      export_options: app_store_signing_options(api_key: api_key)
-    )
+    # TestFlight only requires a unique build number, resolved from App Store
+    # Connect by next_build_number rather than from the checked-in value. The
+    # marketing version is owned by the `deploy` lane (and CHANGELOG/git tag
+    # flow) — we don't touch it here. An older `bump_marketing_version("2.0.0")`
+    # call in this lane was hard-overwriting MARKETING_VERSION to 2.0.0 on
+    # every beta upload, which App Store Connect rejected once 2.0.x had
+    # advanced past 2.0.0 (CFBundleShortVersionString must be > last approved
+    # version).
+    app_store_build_app(api_key: api_key)
     upload_to_testflight(
       api_key: api_key,
       skip_waiting_for_build_processing: true

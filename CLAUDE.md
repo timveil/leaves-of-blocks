@@ -130,7 +130,14 @@ CodeQL runs separately in `.github/workflows/codeql.yml` (Swift on macOS, Ruby a
 
 ### Version Management
 
-The project uses Xcode's built-in **Manage Version and Build Number** (enabled by default during distribution). Build numbers auto-increment in the uploaded archive on App Store upload; source files are not modified. `Bundle+Extensions.swift` reads version info via `Bundle.main` for the About screen and logging.
+Two numbers, two different owners:
+
+- **`MARKETING_VERSION`** (`CFBundleShortVersionString`) is owned by the repo. `deploy` / `deploy_and_submit` bump it via `bump_marketing_version` (`fastlane/release_helpers.rb`) from the `version:` argument, write it across every build configuration of the `LeavesOfBlocks` target, and commit `project.pbxproj` as `chore: Release vX.Y.Z`.
+- **`CURRENT_PROJECT_VERSION`** (`CFBundleVersion`) is owned by App Store Connect. `next_build_number` asks ASC for the most recent upload and returns that plus one; `app_store_build_app` hands it to xcodebuild as a setting override at archive time. It is **never** written to `project.pbxproj` — the value checked in there is stale by design and is not the build number any uploaded binary carries.
+
+That split is deliberate. It means `beta` leaves a clean working tree (no bump to commit or reset before the next `deploy` passes its `ensure_git_status_clean` pre-flight), and a build number can never collide with one App Store Connect already has — regardless of what is in the repo, which machine archives, or whether a previous release run was undone.
+
+`Bundle+Extensions.swift` reads both via `Bundle.main` for the About screen and logging. In a local Debug build the build number is whatever `project.pbxproj` still says; only archives carry the resolved value.
 
 ## Project Structure
 
