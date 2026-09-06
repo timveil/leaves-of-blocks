@@ -209,13 +209,35 @@ struct HintOrchestrationTests {
     @Test @MainActor
     func nilHintDoesNotConsumeFlag() {
         let (state, _) = makeHintState()
-        // Fill grid so no block fits.
+        // Fill the grid so no ORDINARY block fits.
         var grid = GameLogic.createEmptyGrid()
         for r in 0..<8 { for c in 0..<8 { grid[r][c].isFilled = true } }
-        state._setTestState(grid: grid)
+
+        // Pin the block set. GameState generates its blocks randomly on init,
+        // and a special block is placeable on a full grid by design — so
+        // inheriting whatever generation produced made this assertion a coin
+        // flip that happened to land the other way in CI.
+        state._setTestState(currentBlocks: Array(BlockShape.allShapes.prefix(3)), grid: grid)
+
         let result = state.requestHint()
         #expect(result == nil)
         #expect(state.hintUsed == false)
+    }
+
+    @Test @MainActor
+    func specialBlockStillOffersHintOnFullGrid() {
+        let (state, _) = makeHintState()
+        var grid = GameLogic.createEmptyGrid()
+        for r in 0..<8 { for c in 0..<8 { grid[r][c].isFilled = true } }
+
+        // The other half of the same behavior, and the reason the test above
+        // needed pinning: a line-clear block is valid regardless of the grid.
+        state._setTestState(currentBlocks: [BlockShape.horizontalClearShape], grid: grid)
+
+        let result = state.requestHint()
+        #expect(result != nil, "a line-clear block is placeable on a full grid")
+        #expect(result?.block.type == .horizontalClear)
+        #expect(state.hintUsed == true, "a hint that was returned must consume the flag")
     }
 
     @Test @MainActor
