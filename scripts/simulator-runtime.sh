@@ -61,7 +61,19 @@ version_ge() {
 # "<point version><TAB><label version>" for each installed iOS runtime.
 # `available` drops runtimes that are present but unusable.
 list_runtimes() {
-  xcrun simctl list runtimes available \
+  local output
+
+  # Normalized to the documented exit 2 rather than passing xcrun's own code
+  # through. xcrun's stderr is deliberately left visible -- when Xcode is not
+  # selected, or only the Command Line Tools are, its message is the useful
+  # one and swallowing it would leave only a number.
+  if ! output="$(xcrun simctl list runtimes available)"; then
+    echo "simulator-runtime.sh: could not list simulator runtimes; see the xcrun error above." >&2
+    echo "A full Xcode must be selected -- check with: xcode-select -p" >&2
+    exit 2
+  fi
+
+  printf '%s\n' "$output" \
     | sed -nE 's/^iOS ([0-9][0-9.]*) \(([0-9][0-9.]*) - [^)]*\).*/\2\t\1/p'
 }
 
@@ -110,8 +122,23 @@ for arg in "$@"; do
 done
 
 case "$mode" in
-  min)     minimum ;;
-  list)    list_runtimes ;;
-  from)    select_from "$(minimum)" "$want_label" ;;
-  version) list_runtimes | select_from "$(minimum)" "$want_label" ;;
+  min)
+    minimum
+    ;;
+  list)
+    list_runtimes
+    ;;
+  from)
+    select_from "$(minimum)" "$want_label"
+    ;;
+  version)
+    # Collected before piping, not `list_runtimes | select_from`. Each stage of
+    # a pipeline runs in its own subshell, so list_runtimes' `exit 2` would end
+    # only that stage; select_from would then read empty input and report "no
+    # runtime qualifies" with exit 1 -- the wrong code, and a second misleading
+    # message stacked under the real one. As an assignment the failure
+    # propagates, and `set -e` ends the script with 2 as documented.
+    runtimes="$(list_runtimes)"
+    printf '%s\n' "$runtimes" | select_from "$(minimum)" "$want_label"
+    ;;
 esac

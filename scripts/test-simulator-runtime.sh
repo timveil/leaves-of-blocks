@@ -128,6 +128,43 @@ if [ "$code" -eq 2 ]; then ok "an unparseable project file is a setup error"; el
 if [ "$code" -eq 2 ]; then ok "an unknown flag is a usage error"; else bad "unknown flag exits 2" "got $code"; fi
 
 echo
+echo "xcrun failures"
+
+# When Xcode is not selected, or only the Command Line Tools are, xcrun fails.
+# That is a setup error (exit 2), not "no runtime qualifies" (exit 1) -- and
+# the two need different responses from whoever reads the log.
+STUB="$TMP/stub"
+mkdir -p "$STUB"
+printf '#!/bin/bash\necho "xcrun: error: unable to find utility" >&2\nexit 72\n' > "$STUB/xcrun"
+chmod +x "$STUB/xcrun"
+
+unset SIMULATOR_RUNTIME_PBXPROJ
+
+PATH="$STUB:$PATH" "$SR" >/dev/null 2>&1; code=$?
+if [ "$code" -eq 2 ]; then ok "a failing xcrun exits 2, not 1"; else bad "failing xcrun exits 2" "got $code"; fi
+
+PATH="$STUB:$PATH" "$SR" --list >/dev/null 2>&1; code=$?
+if [ "$code" -eq 2 ]; then ok "--list reports the same setup error"; else bad "--list exits 2" "got $code"; fi
+
+err=$(PATH="$STUB:$PATH" "$SR" 2>&1 >/dev/null)
+if grep -qF "xcode-select -p" <<<"$err"; then
+  ok "the message says how to check the toolchain"
+else
+  bad "message names xcode-select" "got: $err"
+fi
+if grep -qF "unable to find utility" <<<"$err"; then
+  ok "xcrun's own error is preserved, not swallowed"
+else
+  bad "xcrun error preserved" "the underlying cause was hidden"
+fi
+# A pipeline would have let the second stage report an unrelated failure too.
+if grep -qF "no installed iOS runtime" <<<"$err"; then
+  bad "no misleading second error" "the 'no runtime' message also fired"
+else
+  ok "no misleading second error is stacked under it"
+fi
+
+echo
 echo "against the real machine"
 
 unset SIMULATOR_RUNTIME_PBXPROJ
