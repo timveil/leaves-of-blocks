@@ -47,6 +47,8 @@ Create a new build for App Store
 
 Upload to TestFlight
 
+Options: notes:"..." to override the What to Test text
+
 ### ios metadata_only
 
 ```sh
@@ -62,6 +64,16 @@ Upload metadata only (no binary, no screenshots)
 ```
 
 Upload screenshots only
+
+### ios preflight
+
+```sh
+[bundle exec] fastlane ios preflight
+```
+
+Dry-run every read-only check the release path depends on
+
+Options: version:patch|minor|major or version:1.2.3 (default patch) to preview a target version
 
 ### ios deploy
 

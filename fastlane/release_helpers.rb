@@ -840,6 +840,139 @@ def finalize_release(version:, build_number: nil)
   publish_github_release(version: version, build_number: build_number)
 end
 
+# ─────────────────────────────────────────────────────────────────────────────
+# Release preflight
+#
+# Every read-only check the release path depends on, run together and reported
+# as one table. Nothing here writes to the repository, the project file, or App
+# Store Connect.
+#
+# It exists because the release pipeline changed substantially without ever
+# running: build numbers from App Store Connect, the Xcode floor, phased
+# rollout, the GitHub Release step, TestFlight notes and the derived simulator
+# runtime all had their first live exercise scheduled for a real release. This
+# moves the discoverable half of that somewhere failure is free.
+#
+# What it deliberately cannot cover: signing, archiving, upload, submission,
+# phased rollout, and the gh call itself. Those still first run for real. Run
+# `beta` before `deploy` so signing and the archive are exercised against
+# TestFlight rather than the App Store.
+# ─────────────────────────────────────────────────────────────────────────────
+
+# One row of the report. A failing check is recorded rather than raised, so a
+# single problem does not hide the others -- learning that three things are
+# wrong beats fixing them one run at a time.
+def _preflight(rows, name, severity: :fail)
+  value = yield
+  if value.nil? || (value.respond_to?(:empty?) && value.empty?)
+    rows << [name, severity, 'not available']
+  else
+    rows << [name, :ok, value.to_s]
+  end
+rescue StandardError => e
+  rows << [name, severity, e.message.to_s.lines.first.to_s.strip]
+end
+
+def run_release_preflight(api_key:, bump_type:)
+  rows = []
+
+  _preflight(rows, 'Xcode meets minimum') do
+    require 'shellwords'
+    ensure_minimum_xcode_version!
+
+    # Resolved the same way ensure_minimum_xcode_version! does. A hardcoded
+    # "../scripts" points outside the repository when fastlane runs from the
+    # root, which would fail this row while Xcode was perfectly fine -- a
+    # preflight that invents failures is worse than one that does not exist.
+    root = project_root(File.join('scripts', 'xcode-version.sh'))
+    raise 'could not locate scripts/xcode-version.sh' unless root
+
+    script = File.join(root, 'scripts', 'xcode-version.sh')
+    "#{`#{script.shellescape} --min`.strip} or newer"
+  end
+
+  _preflight(rows, 'Working tree clean') do
+    _git_output('status', '--porcelain').strip.empty? ? 'clean' : (raise 'uncommitted changes present')
+  end
+
+  _preflight(rows, 'On main') do
+    branch = _git_output('rev-parse', '--abbrev-ref', 'HEAD').strip
+    branch == 'main' ? branch : (raise "on '#{branch}', release requires main")
+  end
+
+  _preflight(rows, 'Simulator runtime') do
+    simulator_runtime_version
+  end
+
+  _preflight(rows, 'App Store Connect auth') do
+    latest = next_build_number(api_key: api_key)
+    "reachable, next build #{latest}"
+  end
+
+  target_version = nil
+  _preflight(rows, 'Target version') do
+    target_version = calculate_new_version(
+      xcodeproj: XCODE_PROJECT, target_name: MAIN_SCHEME, bump_type: bump_type
+    )
+    "#{read_marketing_version(xcodeproj: XCODE_PROJECT, target_name: MAIN_SCHEME)} -> #{target_version}"
+  end
+
+  _preflight(rows, 'Tag available') do
+    raise 'target version unresolved' unless target_version
+    ensure_tag_available!(version: target_version)
+    "v#{target_version} is free"
+  end
+
+  _preflight(rows, 'Version free on ASC') do
+    raise 'target version unresolved' unless target_version
+    ensure_version_available_on_app_store!(version: target_version)
+    "#{target_version} not yet used"
+  end
+
+  _preflight(rows, 'CHANGELOG section') do
+    raise 'target version unresolved' unless target_version
+    path = File.join(Dir.pwd, '..', 'CHANGELOG.md')
+    section = File.exist?(path) ? extract_changelog_section(File.read(path), 'Unreleased') : nil
+    section ? "#{section.lines.count} line(s) under [Unreleased]" : (raise '[Unreleased] is empty; the release would have no notes')
+  end
+
+  _preflight(rows, 'TestFlight notes') do
+    notes = testflight_notes
+    notes ? "#{notes.length} chars" : nil
+  end
+
+  # gh only warns: publish_github_release soft-fails by design, so its absence
+  # must not read as a blocked release.
+  _preflight(rows, 'gh for GitHub Release', severity: :warn) do
+    executable_in_path?('gh') ? 'present' : nil
+  end
+
+  width = rows.map { |r| r[0].length }.max
+  FastlaneCore::UI.message('')
+  rows.each do |name, status, detail|
+    icon = { ok: '✓', warn: '!', fail: '✗' }[status]
+    line = format("  %s  %-#{width}s  %s", icon, name, detail)
+    case status
+    when :ok   then FastlaneCore::UI.success(line)
+    when :warn then FastlaneCore::UI.important(line)
+    else            FastlaneCore::UI.error(line)
+    end
+  end
+  FastlaneCore::UI.message('')
+
+  failures = rows.count { |r| r[1] == :fail }
+  warnings = rows.count { |r| r[1] == :warn }
+
+  if failures.positive?
+    FastlaneCore::UI.user_error!("Preflight failed: #{failures} check(s) would block a release.")
+  end
+
+  FastlaneCore::UI.success("Preflight passed#{warnings.positive? ? " with #{warnings} warning(s)" : ''}.")
+  FastlaneCore::UI.important('Not covered: signing, archive, upload, submission, phased rollout.')
+  FastlaneCore::UI.important('Run `beta` before `deploy` to exercise those against TestFlight first.')
+  rows
+end
+
 # Canonical release flow shared by `deploy` and `deploy_and_submit`. The
 # only behavioral difference between those two lanes is the value of
 # `submit:` passed through to `deliver`.

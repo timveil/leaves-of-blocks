@@ -281,6 +281,51 @@ Dir.mktmpdir do |dir|
 end
 
 puts
+puts "_preflight row classification"
+
+rows = []
+_preflight(rows, 'good') { 'a value' }
+assert_equal([['good', :ok, 'a value']], rows, "a value is recorded as ok")
+
+rows = []
+_preflight(rows, 'boom') { raise 'something broke' }
+assert_equal(:fail, rows[0][1], "a raise is recorded as a failure")
+assert_equal('something broke', rows[0][2], "the message is kept")
+
+# A check that raises must not abort the run: three problems should be
+# reported together, not discovered one release attempt at a time.
+rows = []
+_preflight(rows, 'one') { raise 'first' }
+_preflight(rows, 'two') { raise 'second' }
+_preflight(rows, 'three') { 'fine' }
+assert_equal(3, rows.length, "a failing check does not stop later ones")
+assert_equal([:fail, :fail, :ok], rows.map { |r| r[1] }, "each is classified independently")
+
+# Only the first line of a multi-line error, so one failure cannot flood the table.
+rows = []
+_preflight(rows, 'multi') { raise "headline\nstack frame\nmore detail" }
+assert_equal('headline', rows[0][2], "only the first line of an error is shown")
+
+rows = []
+_preflight(rows, 'nothing') { nil }
+assert_equal(:fail, rows[0][1], "nil is a failure by default")
+assert_equal('not available', rows[0][2], "and says so")
+
+rows = []
+_preflight(rows, 'empty') { '' }
+assert_equal(:fail, rows[0][1], "an empty string is a failure, not a pass")
+
+# gh is optional because publish_github_release soft-fails; its absence must
+# warn rather than read as a blocked release.
+rows = []
+_preflight(rows, 'optional', severity: :warn) { nil }
+assert_equal(:warn, rows[0][1], "a missing optional check warns instead of failing")
+
+rows = []
+_preflight(rows, 'optional', severity: :warn) { raise 'gone' }
+assert_equal(:warn, rows[0][1], "an optional check that raises also only warns")
+
+puts
 puts "executable_in_path?"
 
 Dir.mktmpdir do |dir|

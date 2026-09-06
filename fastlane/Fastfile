@@ -112,6 +112,15 @@ platform :ios do
     )
   end
 
+  desc "Dry-run every read-only check the release path depends on"
+  desc "Options: version:patch|minor|major or version:1.2.3 (default patch) to preview a target version"
+  lane :preflight do |options|
+    run_release_preflight(
+      api_key: app_store_api_key,
+      bump_type: options[:version] || 'patch'
+    )
+  end
+
   desc "Complete App Store deployment with metadata and binary"
   desc "Options: version:patch|minor|major or version:1.0.5 to set specific version"
   lane :deploy do |options|
