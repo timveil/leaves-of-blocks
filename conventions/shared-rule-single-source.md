@@ -30,8 +30,10 @@ touching.
 
 The same shape applies elsewhere:
 
-- `fastlane/Constants.rb` holds `XCODE_VERSION`, read by every lane, rather than
-  a version string per lane.
+- `.xcode-version` holds the minimum Xcode version, read by
+  `scripts/xcode-version.sh` — which fastlane's `before_all` and every CI job
+  that runs `xcodebuild` both call — rather than a constant in `Constants.rb`
+  and a second copy in each workflow.
 - `scripts/codeql-languages.sh` holds the path→language mapping, called by the
   workflow rather than duplicated across matrix entries.
 

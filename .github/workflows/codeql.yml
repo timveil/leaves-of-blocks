@@ -98,6 +98,14 @@ jobs:
       # weight — without ARCHS=arm64, xcodebuild compiles every Swift file twice
       # (once per arch), roughly doubling CodeQL's build time. COMPILER_INDEX_
       # STORE_ENABLE=NO skips the indexer; CodeQL doesn't use those artifacts.
+      - name: Select Xcode
+        if: matrix.language == 'swift'
+        run: |
+          set -euo pipefail
+          DEVELOPER_DIR="$(./scripts/xcode-version.sh --select)"
+          echo "DEVELOPER_DIR=$DEVELOPER_DIR" >> "$GITHUB_ENV"
+          "$DEVELOPER_DIR/usr/bin/xcodebuild" -version
+
       - name: Build Swift
         if: matrix.language == 'swift'
         run: |

@@ -23,7 +23,40 @@ DEVELOPER_PHONE = ENV["LOCAL_FASTLANE_DEVELOPER_PHONE"]
 DEVELOPER_EMAIL = ENV["LOCAL_FASTLANE_DEVELOPER_EMAIL"]
 
 # Build Configuration
-XCODE_VERSION = "26.5"
+#
+# The Xcode requirement is a MINIMUM, declared once in .xcode-version at the
+# repository root and enforced by scripts/xcode-version.sh -- which the CI
+# workflows read too, so the number is never re-encoded (see
+# conventions/shared-rule-single-source.md).
+#
+# It used to be an exact pin here. That meant every Xcode auto-update broke
+# every lane at before_all until someone edited this file: moving to 26.6
+# against a hardcoded 26.5 took out `beta`, `deploy`, `screenshots` and
+# `test_api_auth` at once, with releases blocked until the constant changed.
+# A floor does not have that failure mode.
+def ensure_minimum_xcode_version!
+  require 'shellwords'
+
+  # fastlane may run with Dir.pwd at either the repo root or fastlane/,
+  # depending on how it was invoked; find the root by looking for the file.
+  root = ['..', '.'].map { |d| File.expand_path(d, Dir.pwd) }
+                    .find { |d| File.exist?(File.join(d, '.xcode-version')) }
+
+  unless root
+    FastlaneCore::UI.user_error!("Could not locate .xcode-version starting from #{Dir.pwd}")
+  end
+
+  script = File.join(root, 'scripts', 'xcode-version.sh')
+  output = `#{script.shellescape} --check 2>&1`
+
+  if $?.success?
+    FastlaneCore::UI.success(output.strip)
+  else
+    # The script explains what to do; pass its message through rather than
+    # replacing it with a vaguer one.
+    FastlaneCore::UI.user_error!(output.strip)
+  end
+end
 # Pin the iOS Simulator runtime version. fastlane's snapshot auto-detection
 # uses the runtime label ("iOS 26.4"), but xcodebuild's `-destination` needs
 # the installed point version ("26.4.1"). Update when the runtime changes.

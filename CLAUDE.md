@@ -115,6 +115,7 @@ GitHub Actions in `.github/workflows/ios.yml`:
 - Builds use `actions/cache@v4` keyed on `project.pbxproj`
 - Test artifacts uploaded via `actions/upload-artifact@v4`
 - Triggers on push to `main` and on PRs touching Swift / project / scripts
+- Every job that runs `xcodebuild` selects its toolchain with `./scripts/xcode-version.sh --select`, which picks the newest installed Xcode meeting the floor in `.xcode-version` and exports `DEVELOPER_DIR`. Without it, jobs inherit whatever Xcode the runner image happens to default to, and that can change under you.
 
 CodeQL runs separately in `.github/workflows/codeql.yml` (Swift on macOS, Ruby and Actions on Ubuntu, plus a weekly cron):
 
@@ -125,6 +126,7 @@ CodeQL runs separately in `.github/workflows/codeql.yml` (Swift on macOS, Ruby a
 ### Build Troubleshooting
 
 - iPhone 16 and earlier only have iOS 18.5 runtimes; not compatible with iOS 26.x builds. Use the iPhone 17 family on iOS 26+.
+- The Xcode requirement is a **minimum**, declared once in `.xcode-version` and enforced by [`scripts/xcode-version.sh`](scripts/xcode-version.sh). `bundle exec fastlane` runs `--check` in `before_all`; if it fails, either install a newer Xcode or point at one you have with `sudo xcode-select -s /Applications/Xcode.app`. Raise the floor only when the project genuinely needs a newer toolchain — it was previously an exact pin, and every Xcode auto-update broke every lane until someone edited the constant.
 - Quickly isolate compile failures: `xcodebuild ... 2>&1 | grep -B 2 -A 5 "error:"`
 - Successful builds end with `** BUILD SUCCEEDED **`.
 

@@ -31,7 +31,7 @@ default_platform(:ios)
 
 platform :ios do
   before_all do
-    ensure_xcode_version(version: XCODE_VERSION)
+    ensure_minimum_xcode_version!
   end
 
   desc "Run tests"
