@@ -1,61 +1,47 @@
-Please perform a comprehensive code review of the entire iOS Swift project with the following focus areas:
+Review the whole project, not a diff. For reviewing changes on a branch, use `/code-review-recent` instead — it covers the per-change rules and this command does not repeat them.
 
-**Project Architecture & Organization:**
-- Evaluate overall project structure and folder organization
-- Review architectural patterns (MVC, MVVM, etc.) for consistency throughout the project
-- Identify areas where architectural decisions conflict or could be unified
-- Assess separation of concerns across the entire codebase
-- Review dependency management and module boundaries
+## Read the rules first, do not recall them
 
-**Code Quality & Consistency:**
-- Identify duplicate code patterns across the entire project and suggest consolidation
-- Ensure consistent coding standards and naming conventions project-wide
-- Review adherence to Swift best practices and iOS development conventions
-- Identify inconsistent patterns and suggest standardization
-- Check for consistent error handling approaches throughout the project
+- [`conventions/README.md`](../../conventions/README.md) — index of all project rules
+- [`LeavesOfBlocks/Documentation/CodingStandards.md`](../../LeavesOfBlocks/Documentation/CodingStandards.md) — Swift formatting, naming, file organization, DocC
+- [`CLAUDE.md`](../../CLAUDE.md) — architecture and release flow
 
-**Technical Debt & Refactoring Opportunities:**
-- Identify legacy code that needs modernization (outdated iOS APIs, deprecated methods)
-- Find overly complex classes/methods that should be refactored
-- Suggest opportunities to reduce coupling between components
-- Identify code smells and anti-patterns throughout the codebase
-- Review for unused code, dead imports, and obsolete comments
+## What this project is
 
-**iOS-Specific Project Health:**
-- Verify proper use of iOS lifecycle methods and threading across all view controllers
-- Review auto layout implementation consistency and responsiveness
-- Check memory management patterns for retain cycles or leaks project-wide
-- Ensure consistent UI/UX patterns and reusable component usage
-- Review proper use of iOS frameworks and third-party dependencies
+SwiftUI + SpriteKit, `@Observable`, Core Data, opt-in GameKit. Swift 5 language mode — read `SWIFT_VERSION` rather than assuming. **No UIKit view controllers, no auto layout, no Combine, no networking.** Deployment target is read from `IPHONEOS_DEPLOYMENT_TARGET`; do not assume it.
 
-**Performance & Scalability:**
-- Identify performance bottlenecks across the entire application
-- Review database/networking patterns for efficiency
-- Check for expensive operations on the main thread
-- Assess app launch time and memory usage patterns
-- Identify areas that may not scale well with increased data or users
+## Whole-project questions worth asking
 
-**Security & Best Practices:**
-- Review data handling and storage practices project-wide
-- Check for hardcoded sensitive information
-- Verify proper API communication and authentication patterns
-- Review permissions and privacy compliance
+These are the ones a per-change review cannot see, which is the only reason this command exists separately.
 
-**Testing & Maintainability:**
-- Assess overall test coverage and identify critical gaps
-- Review testability of the codebase and suggest improvements
-- Identify areas lacking documentation or inline comments
-- Check for proper logging and debugging capabilities
+**Has the logic boundary eroded?** `GameLogic` should be static and stateless, `GameState` should own mutation, and the SpriteKit scene should never write back. Erosion happens one convenient exception at a time. Check whether rules have accumulated in view bodies, and whether `GameState` has grown logic that could be a pure function and therefore a test.
 
-**Build & Configuration:**
-- Ensure project compiles without errors or warnings
-- Review build configurations, schemes, and deployment settings
-- Check for proper version management and release processes
-- Verify Info.plist configurations and app metadata
+**Is anything unreachable or unused?** Dead shapes, unreferenced assets, `Localizable.xcstrings` keys with no call site, helpers left behind by a refactor. Unused localized keys are worth naming specifically — they are invisible and they cost translation effort.
 
-Provide a prioritized summary of findings with:
-1. Critical issues that must be addressed immediately
-2. Important improvements that should be planned for upcoming sprints
-3. Nice-to-have optimizations for future consideration
+**Is the concurrency model coherent, or a collection of local fixes?** Count the `nonisolated` sites and ask whether each is a design decision or a warning that got silenced. Most of the app is main-actor isolated; a scattering of exceptions with no stated reason is the shape of drift.
 
-Do not mark the review complete until all compilation errors are resolved and a clear action plan is provided.
+**Where is behavior untested that could be?** `GameLogic` is pure and therefore cheap to test — anything there without coverage is a gap with no excuse. Conversely, look for tests that cannot fail: fixtures never asserted, assertions vacuously true, suites whose output is discarded. See [`tdd.md`](../../conventions/tdd.md), which lists the ones this codebase has already produced.
+
+**Does the privacy posture still hold end to end?** No third-party runtime dependencies, no network path except opt-in GameKit, and `PrivacyInfo.xcprivacy` consistent with what the code actually does. This is a claim the project makes publicly, so it is worth verifying rather than assuming.
+
+**Is anything in the game loop doing work it should not?** Allocation, string interpolation for logging that release never emits, or repeated work per frame that could be hoisted. See the note in [`logging.md`](../../conventions/logging.md) about interpolation happening before the level guard.
+
+## What not to do
+
+**Do not fix compilation or run the test suite as part of the review.** CI does that on every pull request. Editing while reviewing muddies what was found and what was changed.
+
+Do not restate the conventions back as findings. "The project should localize strings" is not a finding; "`SettingsView.swift:42` has a hardcoded title" is.
+
+## Output
+
+Grouped by consequence:
+
+1. **Defects** — something is wrong now. File, line, what breaks.
+2. **Erosion** — a rule the project has written down is being followed less consistently than it was. Cite the convention and the examples.
+3. **Opportunities** — worth doing, nothing is broken. Say so plainly rather than inflating it.
+
+Be honest about coverage: say which areas you actually read and which you did not. A whole-project review that implies uniform depth it did not have is worse than one that admits its scope.
+
+## Relationship to `/code-review`
+
+Claude Code ships a built-in `/code-review` and `/security-review`. Those are better at general correctness and vulnerability sweeps. This command is for the project-specific question — whether the architecture and the written conventions still hold across the whole codebase.
