@@ -11,10 +11,11 @@ require File.join(fastlane_dir, 'Constants')
 # Devices for screenshot capture - use App Store Connect compatible devices
 devices(SCREENSHOT_DEVICES)
 
-# Pin iOS runtime version so xcodebuild's destination string matches the
-# installed simulator OS exactly (fastlane otherwise emits the runtime label,
-# e.g. "26.4", instead of the point version like "26.4.1").
-ios_version(IOS_VERSION)
+# Derived from the installed runtimes rather than pinned; see
+# simulator_runtime_version in Constants.rb. The point version is required here
+# because xcodebuild's destination matches against it, while fastlane otherwise
+# emits the runtime label ("26.4" rather than "26.4.1").
+ios_version(simulator_runtime_version)
 
 # Languages for localized screenshots
 languages(SCREENSHOT_LANGUAGES)

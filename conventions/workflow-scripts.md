@@ -71,6 +71,30 @@ fixed input:
 
 Both have a companion `test-*.sh` covering the cases that matter.
 
+## `set -e` will eat your error messages
+
+Under `set -euo pipefail`, a failing command inside a command substitution
+aborts the script *there* — before the code that was written to explain the
+failure ever runs:
+
+```bash
+# Wrong: a missing file exits 1 with no message, and the branch below is dead
+value="$(sed -n 's/.../p' "$file" | head -1)"
+[ -n "$value" ] || { echo "could not read $file" >&2; exit 2; }
+
+# Right
+value="$(sed -n 's/.../p' "$file" | head -1 || true)"
+```
+
+The same applies to a probe whose failure is a legitimate answer —
+`xcodebuild -version` when no Xcode is selected, `git describe` when there are
+no tags. Make it non-fatal and let the caller interpret the empty result.
+
+This has bitten twice: `xcode-version.sh` reported a bare exit code where no
+Xcode was selected, and `simulator-runtime.sh` did the same for a missing
+project file. Both times the unreachable branch was the one telling the user
+what to do.
+
 ## Enforcement
 
 Partly automated. [`.github/workflows/tooling.yml`](../.github/workflows/tooling.yml)
