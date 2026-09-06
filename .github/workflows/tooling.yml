@@ -51,3 +51,8 @@ jobs:
       # config file that no longer parses or loads.
       - name: Verify fastlane configuration loads
         run: bundle exec fastlane lanes
+
+      # `lanes` never loads the Deliverfile, so a bad path in it survives that
+      # check and only surfaces mid-deploy. This loads it.
+      - name: Verify Deliverfile paths resolve
+        run: ./scripts/check-deliverfile-paths.sh
