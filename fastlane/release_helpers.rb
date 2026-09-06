@@ -783,6 +783,67 @@ def commit_subjects_since_last_tag
   _git_output(*args).split("\n").map(&:strip).reject(&:empty?)
 end
 
+# Compare what App Store Connect ended up with against what was sent.
+#
+# fastlane 2.238.0 uploaded every screenshot twice (#97): App Store Connect
+# publishes a screenshot's checksum asynchronously after its state reaches
+# COMPLETE, fastlane read the nil checksum as "not uploaded" and sent them
+# again. Version 2.0.7 went to review showing 8 screenshots where there are 4,
+# and nothing in this pipeline noticed -- the upload reported success.
+#
+# Warns rather than raises. It runs after deliver, so the binary and metadata
+# are already up; a mismatch is something to go and fix in App Store Connect,
+# not a reason to report the release as failed.
+def verify_uploaded_screenshots
+  # Resolved through project_root, not Dir.pwd. fastlane runs with Dir.pwd at
+  # either the repo root or fastlane/, so a hardcoded relative glob finds
+  # nothing from the root -- and this method returns early on an empty result,
+  # so it would have reported nothing and looked like it had checked. A
+  # verifier that silently no-ops is worse than no verifier: the run stays
+  # green either way, and only one of those means the listing is correct.
+  root = project_root(File.join('fastlane', 'screenshots'))
+  unless root
+    FastlaneCore::UI.important("Could not locate fastlane/screenshots; skipping screenshot verification.")
+    return
+  end
+
+  local_by_locale = Hash.new(0)
+  Dir.glob(File.join(root, 'fastlane', 'screenshots', '*', '*.png')).each do |path|
+    next if path.include?('/framed/')
+    local_by_locale[File.basename(File.dirname(path))] += 1
+  end
+
+  if local_by_locale.empty?
+    FastlaneCore::UI.important("No local screenshots found; nothing to verify against.")
+    return
+  end
+
+  app = Spaceship::ConnectAPI::App.find(APP_IDENTIFIER)
+  version = app.get_edit_app_store_version
+  return unless version
+
+  mismatches = []
+  version.get_app_store_version_localizations.each do |loc|
+    remote = loc.get_app_screenshot_sets.sum { |set| (set.app_screenshots || []).count }
+    expected = local_by_locale[loc.locale]
+    next if expected.zero?
+
+    if remote == expected
+      FastlaneCore::UI.message("Screenshots for #{loc.locale}: #{remote}, as sent")
+    else
+      mismatches << "#{loc.locale}: App Store Connect has #{remote}, #{expected} were sent"
+    end
+  end
+
+  return if mismatches.empty?
+
+  FastlaneCore::UI.important("Screenshot count mismatch — check the listing before the version is reviewed:")
+  mismatches.each { |m| FastlaneCore::UI.important("  #{m}") }
+  FastlaneCore::UI.important("`fastlane ios screenshots_only` replaces the set.")
+rescue StandardError => e
+  FastlaneCore::UI.important("Could not verify screenshot counts (#{e.message}); check the listing by hand.")
+end
+
 # Publish a GitHub Release for a tag that has already been pushed.
 #
 # Named for exactly what shipped: the tag is v<version>, the notes are that
@@ -1137,6 +1198,9 @@ def _release_core(api_key:, options:, submit:)
     skip_screenshots: false
   )
   FastlaneCore::UI.success("Delivered to App Store Connect")
+
+  FastlaneCore::UI.message("▸ Verifying uploaded screenshots")
+  verify_uploaded_screenshots
 
   # Point of no return passed: tag + push to origin.
   FastlaneCore::UI.message("▸ Finalizing release (tag + push + GitHub Release)")
