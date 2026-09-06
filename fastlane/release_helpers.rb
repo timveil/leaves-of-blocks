@@ -795,12 +795,28 @@ end
 # are already up; a mismatch is something to go and fix in App Store Connect,
 # not a reason to report the release as failed.
 def verify_uploaded_screenshots
+  # Resolved through project_root, not Dir.pwd. fastlane runs with Dir.pwd at
+  # either the repo root or fastlane/, so a hardcoded relative glob finds
+  # nothing from the root -- and this method returns early on an empty result,
+  # so it would have reported nothing and looked like it had checked. A
+  # verifier that silently no-ops is worse than no verifier: the run stays
+  # green either way, and only one of those means the listing is correct.
+  root = project_root(File.join('fastlane', 'screenshots'))
+  unless root
+    FastlaneCore::UI.important("Could not locate fastlane/screenshots; skipping screenshot verification.")
+    return
+  end
+
   local_by_locale = Hash.new(0)
-  Dir.glob(File.join(Dir.pwd, 'screenshots', '*', '*.png')).each do |path|
+  Dir.glob(File.join(root, 'fastlane', 'screenshots', '*', '*.png')).each do |path|
     next if path.include?('/framed/')
     local_by_locale[File.basename(File.dirname(path))] += 1
   end
-  return if local_by_locale.empty?
+
+  if local_by_locale.empty?
+    FastlaneCore::UI.important("No local screenshots found; nothing to verify against.")
+    return
+  end
 
   app = Spaceship::ConnectAPI::App.find(APP_IDENTIFIER)
   version = app.get_edit_app_store_version
@@ -813,7 +829,7 @@ def verify_uploaded_screenshots
     next if expected.zero?
 
     if remote == expected
-      FastlaneCore::UI.success("Screenshots for #{loc.locale}: #{remote}, as sent")
+      FastlaneCore::UI.message("Screenshots for #{loc.locale}: #{remote}, as sent")
     else
       mismatches << "#{loc.locale}: App Store Connect has #{remote}, #{expected} were sent"
     end
