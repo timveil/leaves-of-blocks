@@ -11,6 +11,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Changed
 - Ship App Store updates as a 7-day phased rollout so a regression can be caught and paused before it reaches everyone
+- Require a minimum Xcode version rather than an exact pin, so a toolchain update no longer blocks every release lane
+- Extract inline GitHub Actions scripting into tested scripts, and add a `conventions/` folder recording project-wide rules
 
 ### Fixed
 
