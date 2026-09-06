@@ -289,6 +289,7 @@ bundle exec fastlane ios setup_game_center          # one-time: register Game Ce
 ### Per-release flows
 
 ```bash
+bundle exec fastlane ios preflight                  # read-only: can a release run right now?
 bundle exec fastlane ios beta                       # bump build, archive, upload to TestFlight
 bundle exec fastlane ios deploy version:patch       # bump version+build, regenerate changelog/release notes, upload binary + metadata
 bundle exec fastlane ios deploy_and_submit version:patch  # deploy + automatically submit for review
@@ -298,6 +299,10 @@ bundle exec fastlane ios screenshots_only           # update screenshots only
 ```
 
 `deploy` and `deploy_and_submit` require a `version:` arg (`patch` / `minor` / `major` / explicit `1.2.3`). They commit the changelog + project bump, tag `vX.Y.Z`, and attempt a GitHub Release from that version's CHANGELOG section.
+
+**Check before releasing.** `preflight` runs every read-only check the release path depends on — Xcode floor, clean tree, branch, simulator runtime, App Store Connect auth and next build number, target version, tag and version availability, CHANGELOG section, TestFlight notes, and `gh` — and reports them as a table. It writes nothing, anywhere.
+
+It cannot cover signing, archiving, upload, submission, phased rollout, or the `gh` call itself; those first execute during a real run. The sequence that de-risks a release is **`preflight` → `beta` → `deploy`**: `beta` exercises signing, the archive, the App Store Connect build number and the TestFlight notes without touching the App Store listing.
 
 **One version identifies the whole release.** The target version is resolved once at the start of `_release_core` and passed everywhere — `MARKETING_VERSION`, the App Store submission, the git tag, and the GitHub Release all carry the same string, and `bump_marketing_version` reads the project back to prove the write took before anything is archived. The build number is resolved once from App Store Connect and recorded in the release body, so `2.0.7 (28)` on the GitHub Release is the binary in App Store Connect.
 
