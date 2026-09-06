@@ -232,7 +232,7 @@ bundle exec fastlane ios metadata_only                     # listing changes onl
 bundle exec fastlane ios screenshots_only                  # screenshots only
 ```
 
-`deploy` and `deploy_and_submit` regenerate the changelog from your commits, bump the marketing version, increment the build number, commit those changes, and tag `vX.Y.Z` before uploading. For the daily TestFlight loop, `beta` is enough.
+`deploy` and `deploy_and_submit` regenerate the changelog from your commits, bump the marketing version, commit those changes, upload, then tag `vX.Y.Z` and publish a matching GitHub Release. The build number comes from App Store Connect at archive time rather than the project file, so one version string identifies the App Store submission, the tag and the release. For the daily TestFlight loop, `beta` is enough.
 
 See [CLAUDE.md](./CLAUDE.md) for full lane internals and deployment procedures.
 
