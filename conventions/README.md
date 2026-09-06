@@ -22,6 +22,7 @@ PR. Swift style is not here — that lives in
 | [Runtime dependencies](runtime-dependencies.md) | No third-party runtime dependencies. System frameworks only. |
 | [Testing](testing.md) | New unit tests use Swift Testing, in Given-When-Then shape. |
 | [Review comments](review-comments.md) | Every review comment is addressed and resolved before merge. |
+| [Invariants, not counts](invariants-not-counts.md) | Documentation states what is always true, not what was true when written. |
 
 ## Adding one
 
