@@ -9,7 +9,9 @@ permissions:
 
 # Format rules live in scripts/check-commit-subject.sh — both the local
 # .githooks/commit-msg hook and this Action invoke that single script, so the
-# regex / allowed types / width are defined exactly once.
+# regex / allowed types / width are defined exactly once. The iteration over a
+# commit range lives in scripts/lint-commit-range.sh; see
+# conventions/workflow-scripts.md for why neither is inline here.
 
 jobs:
   lint:
@@ -26,39 +28,4 @@ jobs:
         env:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
-        run: |
-          set -euo pipefail
-
-          mapfile -t SUBJECTS < <(git log --no-merges --format='%s' "$BASE_SHA..$HEAD_SHA")
-
-          if [ "${#SUBJECTS[@]}" -eq 0 ]; then
-            echo "No non-merge commits to lint."
-            exit 0
-          fi
-
-          fail=0
-          for subject in "${SUBJECTS[@]}"; do
-            echo "→ $subject"
-            if ./scripts/check-commit-subject.sh "$subject" 2>/tmp/err; then
-              echo "   ✓ ok"
-            else
-              fail=1
-              sed 's/^/   /' /tmp/err
-            fi
-          done
-
-          if [ "$fail" -ne 0 ]; then
-            cat <<'EOF'
-
-          ────────────────────────────────────────────────────────────────────
-          To fix: rebase and reword the offending commits, then force-push:
-            git rebase -i <base-sha>
-            # change `pick` → `reword`, save, edit subjects
-            git push --force-with-lease
-
-          Local enforcement is also wired up via .githooks/commit-msg — run
-          `git config core.hooksPath .githooks` once per clone to enable it.
-          ────────────────────────────────────────────────────────────────────
-          EOF
-            exit 1
-          fi
+        run: ./scripts/lint-commit-range.sh "$BASE_SHA" "$HEAD_SHA"

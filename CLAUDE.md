@@ -6,6 +6,8 @@ Guidance for Claude Code (claude.ai/code) when working in this repository.
 
 All code changes must follow `LeavesOfBlocks/Documentation/CodingStandards.md`. That document is the source of truth for Swift formatting, naming, file organization, DocC documentation, SwiftUI conventions, error handling, and testing standards.
 
+Rules that span languages and tooling — rather than Swift style — live in [`conventions/`](conventions/), one file per rule, indexed in [`conventions/README.md`](conventions/README.md). Read the relevant one before adding a workflow, a script, or a new enforcement mechanism. Of particular note: **no GitHub Actions workflow inlines complex scripting** ([`conventions/workflow-scripts.md`](conventions/workflow-scripts.md)) and **a rule enforced in two places is defined once** ([`conventions/shared-rule-single-source.md`](conventions/shared-rule-single-source.md)).
+
 ### Localization Rule (Strict)
 
 User-visible text must use the `.localized` lookup pattern from `String+Extensions.swift`, backed by `LeavesOfBlocks/Resources/Localizable.xcstrings`.

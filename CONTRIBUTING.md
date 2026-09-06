@@ -52,6 +52,8 @@ team / bundle ID changes in your fork.
 
 ## Development Conventions
 
+Project-wide conventions live in [`conventions/`](conventions/) — one file per rule, each naming what enforces it. Start with [`conventions/README.md`](conventions/README.md).
+
 - **Coding standards**: All code must follow [`LeavesOfBlocks/Documentation/CodingStandards.md`](LeavesOfBlocks/Documentation/CodingStandards.md). This covers Swift formatting, file organization, naming, DocC documentation, and SwiftUI conventions.
 - **Localization**: User-facing strings must use the localized lookup pattern (`"key".localized`) — never hardcode display text. See the standards document for the full rule.
 - **Testing**: New game logic should be covered by unit tests in `LeavesOfBlocksTests/`. New user-facing flows should have a corresponding UI test in `LeavesOfBlocksUITests/` where reasonable.
