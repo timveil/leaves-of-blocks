@@ -11,6 +11,10 @@ PR. Swift style is not here — that lives in
 
 | Convention | Rule |
 | --- | --- |
+| [Test first](tdd.md) | Write the failing test, watch it fail, then make it pass. |
+| [Game logic boundary](game-logic-boundary.md) | Rules live in `GameLogic` as pure functions; the scene never writes back. |
+| [Concurrency](concurrency.md) | Default to `@MainActor`; reach for `nonisolated` deliberately, and say why. |
+| [Logging](logging.md) | Log through `BuildConfiguration`, never `print`. |
 | [Workflow scripts](workflow-scripts.md) | A GitHub Actions `run:` step invokes a command; it does not implement logic. |
 | [One rule, one definition](shared-rule-single-source.md) | A rule enforced in two places is defined once and called twice. |
 | [Commit messages](commit-messages.md) | Conventional Commits, enforced locally and in CI. |

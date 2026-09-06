@@ -6,7 +6,9 @@ Guidance for Claude Code (claude.ai/code) when working in this repository.
 
 All code changes must follow `LeavesOfBlocks/Documentation/CodingStandards.md`. That document is the source of truth for Swift formatting, naming, file organization, DocC documentation, SwiftUI conventions, error handling, and testing standards.
 
-Rules that span languages and tooling — rather than Swift style — live in [`conventions/`](conventions/), one file per rule, indexed in [`conventions/README.md`](conventions/README.md). Read the relevant one before adding a workflow, a script, or a new enforcement mechanism. Of particular note: **no GitHub Actions workflow inlines complex scripting** ([`conventions/workflow-scripts.md`](conventions/workflow-scripts.md)), **a rule enforced in two places is defined once** ([`conventions/shared-rule-single-source.md`](conventions/shared-rule-single-source.md)), and **every review comment is addressed and resolved before a PR merges** ([`conventions/review-comments.md`](conventions/review-comments.md)).
+Project-wide rules live in [`conventions/`](conventions/), one file per rule, indexed in [`conventions/README.md`](conventions/README.md). They cover engineering practice and cross-cutting rules; Swift *formatting and style* remain in `CodingStandards.md`. Read the relevant one before adding a workflow, a script, a new enforcement mechanism, or game-rule logic.
+
+Of particular note: **write the failing test first** ([`tdd.md`](conventions/tdd.md)), **game rules live in `GameLogic` as pure functions and the SpriteKit scene never writes back** ([`game-logic-boundary.md`](conventions/game-logic-boundary.md)), **no GitHub Actions workflow inlines complex scripting** ([`workflow-scripts.md`](conventions/workflow-scripts.md)), **a rule enforced in two places is defined once** ([`shared-rule-single-source.md`](conventions/shared-rule-single-source.md)), and **every review comment is addressed and resolved before a PR merges** ([`review-comments.md`](conventions/review-comments.md)).
 
 ### Localization Rule (Strict)
 
