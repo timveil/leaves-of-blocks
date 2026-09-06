@@ -8,7 +8,7 @@ Review the whole project, not a diff. For reviewing changes on a branch, use `/c
 
 ## What this project is
 
-SwiftUI + SpriteKit, Swift 6, `@Observable`, Core Data, opt-in GameKit. **No UIKit view controllers, no auto layout, no Combine, no networking.** Deployment target is read from `IPHONEOS_DEPLOYMENT_TARGET`; do not assume it.
+SwiftUI + SpriteKit, `@Observable`, Core Data, opt-in GameKit. Swift 5 language mode — read `SWIFT_VERSION` rather than assuming. **No UIKit view controllers, no auto layout, no Combine, no networking.** Deployment target is read from `IPHONEOS_DEPLOYMENT_TARGET`; do not assume it.
 
 ## Whole-project questions worth asking
 
@@ -18,9 +18,9 @@ These are the ones a per-change review cannot see, which is the only reason this
 
 **Is anything unreachable or unused?** Dead shapes, unreferenced assets, `Localizable.xcstrings` keys with no call site, helpers left behind by a refactor. Unused localized keys are worth naming specifically — they are invisible and they cost translation effort.
 
-**Is the concurrency model coherent, or a collection of local fixes?** Count the `nonisolated` sites and ask whether each is a design decision or a warning that got silenced. The codebase has 13 files using `@MainActor`; a scattering of exceptions with no stated reason is the shape of drift.
+**Is the concurrency model coherent, or a collection of local fixes?** Count the `nonisolated` sites and ask whether each is a design decision or a warning that got silenced. Most of the app is main-actor isolated; a scattering of exceptions with no stated reason is the shape of drift.
 
-**Where is behavior untested that could be?** `GameLogic` is pure and therefore cheap to test — anything there without coverage is a gap with no excuse. Conversely, look for tests that cannot fail: fixtures never asserted, assertions vacuously true, suites whose output is discarded. See [`tdd.md`](../../conventions/tdd.md); this codebase has produced five of those.
+**Where is behavior untested that could be?** `GameLogic` is pure and therefore cheap to test — anything there without coverage is a gap with no excuse. Conversely, look for tests that cannot fail: fixtures never asserted, assertions vacuously true, suites whose output is discarded. See [`tdd.md`](../../conventions/tdd.md), which lists the ones this codebase has already produced.
 
 **Does the privacy posture still hold end to end?** No third-party runtime dependencies, no network path except opt-in GameKit, and `PrivacyInfo.xcprivacy` consistent with what the code actually does. This is a claim the project makes publicly, so it is worth verifying rather than assuming.
 

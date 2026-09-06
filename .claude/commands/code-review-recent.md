@@ -12,14 +12,14 @@ Anything below that repeats a convention is a summary for orientation. The conve
 
 ## What this project is
 
-SwiftUI + SpriteKit, Swift 6, `@Observable`, Core Data, opt-in GameKit. **No UIKit view controllers, no auto layout, no Combine, no networking.** If a review comment is about constraints, `viewDidLoad`, publishers or URL sessions, it is about a different app.
+SwiftUI + SpriteKit, `@Observable`, Core Data, opt-in GameKit. Swift 5 language mode — read `SWIFT_VERSION` rather than assuming. **No UIKit view controllers, no auto layout, no Combine, no networking.** If a review comment is about constraints, `viewDidLoad`, publishers or URL sessions, it is about a different app.
 
 ## The invariants worth checking on every change
 
 - **Rules stay out of views.** `GameLogic` is pure static functions; `GameState` owns mutation; the SpriteKit scene observes and never writes back. A rule that moved into a view body is the most damaging change this codebase can absorb, because it becomes untestable. See [`game-logic-boundary.md`](../../conventions/game-logic-boundary.md).
 - **Every user-visible string goes through `.localized`** — `Text`, `Button`, `navigationTitle`, accessibility labels, **and previews**. Previews are where this leaks. See [`localization.md`](../../conventions/localization.md).
 - **No third-party runtime dependencies.** A new package reference is a blocking comment, not a nit — it invalidates the privacy posture. See [`runtime-dependencies.md`](../../conventions/runtime-dependencies.md).
-- **`@MainActor` by default; `nonisolated` deliberately and with a stated reason.** Watch for `nonisolated` or an unstructured `Task` used to silence a Swift 6 isolation warning rather than to express a design. See [`concurrency.md`](../../conventions/concurrency.md).
+- **`@MainActor` by default; `nonisolated` deliberately and with a stated reason.** Watch for `nonisolated` or an unstructured `Task` used to silence an actor-isolation warning rather than to express a design. See [`concurrency.md`](../../conventions/concurrency.md).
 - **`BuildConfiguration.log`, never `print`** outside `#Preview`. See [`logging.md`](../../conventions/logging.md).
 - **Tests came first, and can actually fail.** New behavior without a test, or a test that would pass against broken code, is worth flagging. Watch specifically for assertions that cannot fail. See [`tdd.md`](../../conventions/tdd.md).
 
