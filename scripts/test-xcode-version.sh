@@ -104,6 +104,51 @@ code=$?
 if [ "$code" -eq 2 ]; then ok "unknown mode is a usage error"; else bad "unknown mode exits 2" "got $code"; fi
 
 echo
+echo "no usable xcodebuild"
+
+# Regression: selected_xcode_version must be non-fatal. With `set -euo
+# pipefail`, a failing xcodebuild inside --check's command substitution aborts
+# the script before it can report anything -- so the machine that most needs
+# the explanation (no Xcode selected) is the one that gets a bare exit code.
+STUB="$TMP/stub"
+mkdir -p "$STUB"
+
+floor 26.5
+
+printf '#!/bin/bash\nexit 1\n' > "$STUB/xcodebuild"
+chmod +x "$STUB/xcodebuild"
+out=$(PATH="$STUB:$PATH" "$XV" --check 2>&1); code=$?
+if [ "$code" -eq 2 ]; then
+  ok "failing xcodebuild exits 2, not a bare set -e abort"
+else
+  bad "failing xcodebuild exits 2" "got $code"
+fi
+if grep -qF "could not determine the selected Xcode version" <<<"$out"; then
+  ok "failing xcodebuild explains itself"
+else
+  bad "failing xcodebuild explains itself" "message missing; got: $out"
+fi
+
+# A stub that reports a version is still read correctly.
+printf '#!/bin/bash\necho "Xcode 26.7"\necho "Build version 17X1"\n' > "$STUB/xcodebuild"
+chmod +x "$STUB/xcodebuild"
+out=$(PATH="$STUB:$PATH" "$XV" --check 2>&1); code=$?
+if [ "$code" -eq 0 ] && grep -qF "Xcode 26.7 meets the minimum" <<<"$out"; then
+  ok "version is parsed from xcodebuild output"
+else
+  bad "version parsed from xcodebuild" "exit $code: $out"
+fi
+
+printf '#!/bin/bash\necho "Xcode 26.1"\n' > "$STUB/xcodebuild"
+chmod +x "$STUB/xcodebuild"
+PATH="$STUB:$PATH" "$XV" --check >/dev/null 2>&1; code=$?
+if [ "$code" -eq 1 ]; then
+  ok "a too-old selected Xcode exits 1"
+else
+  bad "too-old selected Xcode exits 1" "got $code"
+fi
+
+echo
 echo "against the real checked-in floor"
 
 unset XCODE_VERSION_FILE

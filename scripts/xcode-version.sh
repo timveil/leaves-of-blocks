@@ -50,8 +50,14 @@ version_ge() {
   [ "$(printf '%s\n%s\n' "$1" "$2" | sort -V | head -1)" = "$2" ]
 }
 
+# Deliberately non-fatal. When no Xcode is selected -- xcode-select pointing at
+# the Command Line Tools, or no Xcode installed at all -- xcodebuild exits
+# non-zero, and under `set -e` with pipefail that would abort the script from
+# inside the command substitution in --check, before it can say why. The caller
+# needs an empty string back so it can emit its own message and exit 2, which
+# is the whole reason this script exists.
 selected_xcode_version() {
-  xcodebuild -version 2>/dev/null | awk 'NR==1 { print $2 }'
+  xcodebuild -version 2>/dev/null | awk 'NR==1 { print $2 }' || true
 }
 
 # Emit "version<TAB>developer-dir" for every Xcode in /Applications. Reading
