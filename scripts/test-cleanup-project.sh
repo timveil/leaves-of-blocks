@@ -186,6 +186,63 @@ if [ -f "$REPO/README.md" ]; then ok "tracked files survive a real run"; else ba
 if [ -d "$TMP/home" ]; then ok "the fake HOME absorbed the system-wide cleanup"; else bad "fake HOME intact" "it was removed"; fi
 
 echo
+echo "option-like filenames"
+
+# git will list a file named "-rf" as happily as any other, and `rm -rf "-rf"`
+# parses it as flags: the file is not deleted and nothing says so. Everything
+# receiving a git-sourced path terminates its options.
+STUB2="$TMP/bin2"
+mkdir -p "$STUB2" "$TMP/home2"
+printf '#!/bin/bash\nexit 0\n' > "$STUB2/xcrun"
+chmod +x "$STUB2/xcrun"
+
+REPO="$(make_repo dashnames)"
+printf -- '-rf\n-link\n' > "$REPO/.gitignore"
+git -C "$REPO" add .gitignore && git -C "$REPO" commit -q -m "chore: Ignore"
+printf 'content\n' > "$REPO/-rf"
+ln -s /nonexistent "$REPO/-link"
+
+run_dry "$REPO"; out="$RUN_OUT"
+if grep -qF -- "-rf" <<<"$out"; then ok "an option-like filename is listed"; else bad "option-like filename listed" "absent"; fi
+if grep -qE "🔗 Symlink:.*-link -> /nonexistent" <<<"$out"; then
+  ok "readlink resolves an option-like symlink name"
+else
+  bad "readlink handles a leading dash" "target not shown: $(grep -F -- '-link' <<<"$out")"
+fi
+
+( cd "$REPO" && printf 'y\n' | env HOME="$TMP/home2" PATH="$STUB2:$PATH" "$CLEANUP" ) > "$TMP/live2.txt" 2>&1
+if [ ! -e "$REPO/-rf" ]; then
+  ok "a file named -rf is actually deleted"
+else
+  bad "file named -rf deleted" "it survived — rm parsed the name as flags"
+fi
+if [ ! -L "$REPO/-link" ]; then ok "a symlink named -link is deleted"; else bad "symlink named -link deleted" "it survived"; fi
+if [ -f "$REPO/README.md" ]; then ok "tracked files survive"; else bad "tracked files survive" "README.md destroyed"; fi
+
+echo
+echo "sizing a symlink to a directory"
+
+REPO="$(make_repo dirlink-size)"
+printf 'dlink\n' > "$REPO/.gitignore"
+mkdir -p "$REPO/heavy" && dd if=/dev/zero of="$REPO/heavy/blob" bs=1024 count=64 2>/dev/null
+git -C "$REPO" add .gitignore heavy/blob && git -C "$REPO" commit -q -m "chore: Add heavy dir"
+ln -s heavy "$REPO/dlink"
+
+run_dry "$REPO"; out="$RUN_OUT"
+# Three outcomes are distinguishable here, and only one is right:
+#   stat on the link  -> a small non-zero size (the target path's byte length)
+#   du on the link    -> 0B, because du does not follow the operand
+#   du through a link -> ~64KB, the target's real size
+# Asserting "not 64KB" would pass for the 0B case too, so the assertion has to
+# require a small NON-ZERO size to tell the -L and -d orderings apart.
+size_line=$(grep 'Total size' <<<"$out" | tr -d '\r')
+if grep -qE "Total size: [1-9][0-9]{0,2}B$" <<<"$size_line"; then
+  ok "the link itself is sized, not its target and not zero ($size_line)"
+else
+  bad "the link itself is sized" "expected a small non-zero size, got: $size_line"
+fi
+
+echo
 echo "arguments"
 
 REPO="$(make_repo args)"

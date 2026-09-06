@@ -76,33 +76,44 @@ format_size() {
 # Function to get file/directory size
 get_size() {
     local path=$1
-    if [ -d "$path" ]; then
+    # -L before -d, for the same reason the listing tests it first: -d follows
+    # the link, so a symlink to a directory would take the du branch and
+    # measure through the link. What `rm -rf` reclaims here is the link itself.
+    if [ -L "$path" ]; then
+        _stat_size "$path"
+    elif [ -d "$path" ]; then
         # For directories, use du
         if command -v gdu > /dev/null 2>&1; then
             # Use GNU du if available (macOS with coreutils)
-            gdu -sb "$path" 2>/dev/null | cut -f1 | grep -o '^[0-9]*' || echo 0
+            gdu -sb -- "$path" 2>/dev/null | cut -f1 | grep -o '^[0-9]*' || echo 0
         else
             # Fall back to BSD du - get first field and ensure it's numeric
-            du -sk "$path" 2>/dev/null | awk '{print $1}' | grep -o '^[0-9]*' | awk '{print $1 * 1024}' || echo 0
+            du -sk -- "$path" 2>/dev/null | awk '{print $1}' | grep -o '^[0-9]*' | awk '{print $1 * 1024}' || echo 0
         fi
     else
-        # For files and symlinks. The size is captured rather than tested by
-        # running stat bare in the `if`: doing that printed the value once from
-        # the condition and again from the body, so every caller saw two lines,
-        # failed its `^[0-9]+$` check and silently substituted 0. Every file
-        # size and every total this script has ever reported was 0B.
-        #
-        # Neither stat follows symlinks without -L, which is what we want: for
-        # a link, the bytes reclaimed are the link's own, and a broken one is
-        # measured without touching its missing target.
-        local size
-        if size=$(stat -f%z "$path" 2>/dev/null); then      # BSD stat (macOS)
-            printf '%s\n' "$size"
-        elif size=$(stat -c%s "$path" 2>/dev/null); then    # GNU stat
-            printf '%s\n' "$size"
-        else
-            echo 0
-        fi
+        _stat_size "$path"
+    fi
+}
+
+# Byte size of a single non-directory path.
+#
+# The size is captured rather than tested by running stat bare in the `if`:
+# doing that printed the value once from the condition and again from the body,
+# so every caller saw two lines, failed its `^[0-9]+$` check and silently
+# substituted 0. Every file size and every total this script has ever reported
+# was 0B.
+#
+# Neither stat follows symlinks without -L, which is what we want: for a link,
+# the bytes reclaimed are the link's own, and a broken one is measured without
+# touching its missing target.
+_stat_size() {
+    local path=$1 size
+    if size=$(stat -f%z -- "$path" 2>/dev/null); then      # BSD stat (macOS)
+        printf '%s\n' "$size"
+    elif size=$(stat -c%s -- "$path" 2>/dev/null); then    # GNU stat
+        printf '%s\n' "$size"
+    else
+        echo 0
     fi
 }
 
@@ -265,7 +276,7 @@ while IFS= read -r item; do
         # happen.
         if [ -L "$item" ]; then
             file_count=$((file_count + 1))
-            target=$(readlink "$item" 2>/dev/null || echo "?")
+            target=$(readlink -- "$item" 2>/dev/null || echo "?")
             if [ -e "$item" ]; then
                 echo -e "${YELLOW}🔗 Symlink:${NC} $item -> $target ${BLUE}($formatted_size, link only)${NC}"
             else
@@ -276,8 +287,8 @@ while IFS= read -r item; do
             echo -e "${YELLOW}📁 Directory:${NC} $item ${BLUE}($formatted_size)${NC}"
             if [ "$VERBOSE" = true ]; then
                 # Show directory contents
-                find "$item" -type f 2>/dev/null | head -10 | sed 's/^/    /'
-                file_count_in_dir=$(find "$item" -type f 2>/dev/null | wc -l | tr -d ' ')
+                find "./$item" -type f 2>/dev/null | head -10 | sed 's/^/    /'
+                file_count_in_dir=$(find "./$item" -type f 2>/dev/null | wc -l | tr -d ' ')
                 if [ "$file_count_in_dir" -gt 10 ]; then
                     echo "    ... and $((file_count_in_dir - 10)) more files"
                 fi
@@ -348,7 +359,7 @@ if [ "$DRY_RUN" = false ]; then
         # guard would otherwise drop them right back out, listing an item for
         # deletion and then quietly declining to delete it.
         if [ -e "$item" ] || [ -L "$item" ]; then
-            if rm -rf "$item" 2>/dev/null; then
+            if rm -rf -- "$item" 2>/dev/null; then
                 deleted_count=$((deleted_count + 1))
                 [ "$VERBOSE" = true ] && echo -e "${GREEN}✓${NC} Deleted: $item"
             else
