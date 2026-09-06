@@ -10,9 +10,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 ### Changed
-- Support iOS 18.0 and later, rather than requiring 18.5 — the app now installs on devices it always ran on
 
 ### Fixed
+
+## [2.0.7] - 2026-09-06
+
+### Changed
+- Support iOS 18.0 and later, rather than requiring 18.5 — the app now installs on devices it always ran on
+- Enable phased App Store rollout so updates reach players gradually for a smoother experience
+
+### Fixed
+- Fix compatibility so the game runs on iOS 18.0 and later, supporting more devices
 
 ## [2.0.6] - 2026-06-20
 
@@ -262,7 +270,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - COPPA compliant with no data collection
 - iPhone-optimized experience with portrait orientation
 
-[Unreleased]: https://github.com/timveil/leaves-of-blocks/compare/v2.0.6...HEAD
+[Unreleased]: https://github.com/timveil/leaves-of-blocks/compare/v2.0.7...HEAD
+[2.0.7]: https://github.com/timveil/leaves-of-blocks/compare/v2.0.6...v2.0.7
 [2.0.6]: https://github.com/timveil/leaves-of-blocks/compare/v2.0.5...v2.0.6
 [2.0.5]: https://github.com/timveil/leaves-of-blocks/compare/v2.0.3...v2.0.5
 [2.0.3]: https://github.com/timveil/leaves-of-blocks/compare/v2.0.2...v2.0.3

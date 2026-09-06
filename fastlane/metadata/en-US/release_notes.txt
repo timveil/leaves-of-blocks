@@ -1,7 +1,3 @@
-Version 2.0.6 brings a few friendly new ways to keep your run going when the board gets tricky.
-
-Changed your mind about a placement? You can now Undo your last block, once per game, to take it back and try a different spot. Feeling stuck? Tap Hint, also once per game, and we'll suggest a move to get you going again. And when a game finally comes to an end, you can now View Board to take one last look at your final grid and see how it all came together.
-
-We also smoothed out a few rough edges. Dropping blocks near the top of the board now feels exactly as you'd expect, and we fixed a first-launch hiccup where the grid didn't always appear right away.
+Good news if you've been waiting to try Leaves of Blocks — this update fixes a compatibility issue that was preventing the game from installing on iOS 18.0 through 18.4. The app has always run beautifully on those versions, and now it installs on them too. We've also enabled a gradual rollout process so future updates reach you smoothly and reliably.
 
 Thank you for playing Leaves of Blocks!
