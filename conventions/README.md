@@ -17,6 +17,7 @@ PR. Swift style is not here — that lives in
 | [Localization](localization.md) | User-visible text goes through `.localized`. Always. |
 | [Runtime dependencies](runtime-dependencies.md) | No third-party runtime dependencies. System frameworks only. |
 | [Testing](testing.md) | New unit tests use Swift Testing, in Given-When-Then shape. |
+| [Review comments](review-comments.md) | Every review comment is addressed and resolved before merge. |
 
 ## Adding one
 
