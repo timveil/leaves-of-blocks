@@ -1,0 +1,46 @@
+name: Tooling
+
+# The release pipeline and the CI logic itself had no test coverage: a Fastfile
+# or helper script that no longer loads would merge green and surface later,
+# mid-release. This job covers both, needs no App Store Connect credentials,
+# and runs in about a minute.
+on:
+  pull_request:
+    branches: [ "main" ]
+    paths:
+      - 'scripts/**'
+      - 'fastlane/**'
+      - 'Gemfile'
+      - 'Gemfile.lock'
+      - '.githooks/**'
+      - '.xcode-version'
+      - '.github/workflows/tooling.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  tooling:
+    name: Scripts and fastlane
+    # macOS because the script suites exercise real Xcode discovery
+    # (xcode-version.sh --check reads the installed xcodebuild).
+    runs-on: macos-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Run script test suites
+        run: ./scripts/run-script-tests.sh
+
+      - name: Set up Ruby
+        uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      # `lanes` loads the Fastfile, Appfile, Constants.rb and every require'd
+      # helper, then enumerates the lanes. It does not run before_all and needs
+      # no credentials -- but it does catch the failure this job exists for: a
+      # config file that no longer parses or loads.
+      - name: Verify fastlane configuration loads
+        run: bundle exec fastlane lanes

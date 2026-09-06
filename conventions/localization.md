@@ -48,4 +48,5 @@ added. Accessibility labels matter immediately regardless of locale count.
 ## Enforcement
 
 Review. There is no automated check — a grep for string literals inside `Text(`
-would be a reasonable addition to the job proposed in #60.
+would be a reasonable addition to
+[`.github/workflows/tooling.yml`](../.github/workflows/tooling.yml).

@@ -65,9 +65,18 @@ Scripts extracted from workflows get a companion `test-*.sh` — see
 [workflow scripts](workflow-scripts.md). These are plain bash: no framework,
 exit non-zero on failure, runnable directly.
 
-Worth knowing when you write one: it is easy to build a harness that reports
-success while silently discarding assertions. After adding tests, break the
-thing under test on purpose and confirm the tests actually go red.
+Run them all with [`scripts/run-script-tests.sh`](../scripts/run-script-tests.sh),
+which is what CI calls.
+
+Two things worth knowing when you write one:
+
+- **It is easy to build a harness that reports success while silently
+  discarding assertions.** After adding tests, break the thing under test on
+  purpose and confirm they actually go red.
+- **macOS ships bash 3.2**, and CI runs on macOS. Expanding an empty array as
+  `"${arr[@]}"` under `set -u` is an "unbound variable" error there, unlike in
+  bash 4+. Guard with `[ "${#arr[@]}" -gt 0 ]` before looping. This one bites
+  precisely on the success path, where the array of failures is empty.
 
 ## Running
 
