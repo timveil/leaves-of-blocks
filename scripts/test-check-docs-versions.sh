@@ -60,6 +60,38 @@ DOCS_CHECK_PBXPROJ="$TMP/pbxproj" "$CHECK" >/dev/null 2>&1; code=$?
 if [ "$code" -eq 0 ]; then ok "the floor is read from the project file"; else bad "floor read from project" "got $code"; fi
 
 echo
+echo "divergent build configurations"
+
+# Taking the first target and moving on would hide the exact failure that
+# started this: #87 found 18.5 in the project because a *test* target had been
+# set independently of the app. With no single floor there is nothing to check
+# the docs against, and saying so beats silently picking one.
+printf '\tIPHONEOS_DEPLOYMENT_TARGET = 18.0;\n\tIPHONEOS_DEPLOYMENT_TARGET = 18.5;\n' > "$TMP/split"
+DOCS_CHECK_PBXPROJ="$TMP/split" "$CHECK" >/dev/null 2>&1; code=$?
+if [ "$code" -eq 2 ]; then ok "disagreeing configurations are a setup error"; else bad "disagreeing configurations exit 2" "got $code"; fi
+
+err=$(DOCS_CHECK_PBXPROJ="$TMP/split" "$CHECK" 2>&1 >/dev/null)
+if grep -qF "18.0" <<<"$err" && grep -qF "18.5" <<<"$err"; then
+  ok "both conflicting values are shown"
+else
+  bad "both values shown" "got: $err"
+fi
+
+printf '\tIPHONEOS_DEPLOYMENT_TARGET = 18.0;\n\tIPHONEOS_DEPLOYMENT_TARGET = 18.0;\n' > "$TMP/same"
+DOCS_CHECK_PBXPROJ="$TMP/same" "$CHECK" >/dev/null 2>&1; code=$?
+if [ "$code" -eq 0 ]; then ok "repeated identical values are fine"; else bad "identical values accepted" "got $code"; fi
+
+echo
+echo "convention docs are in scope"
+
+# tooling.yml triggers on conventions/**, so the guard has to actually read
+# them -- running over a directory it ignores would be worse than not running.
+printf '# Test\n\nRequires iOS 12.9 or later.\n' > conventions/_tmp_probe.md
+"$CHECK" >/dev/null 2>&1; code=$?
+rm -f conventions/_tmp_probe.md
+if [ "$code" -eq 1 ]; then ok "a convention doc naming a wrong version is caught"; else bad "convention docs scanned" "want exit 1, got $code"; fi
+
+echo
 if [ "$fail" -eq 0 ]; then echo "All $pass checks passed."; exit 0; fi
 echo "$fail failed, $pass passed."
 exit 1

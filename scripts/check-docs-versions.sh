@@ -21,16 +21,40 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 PBXPROJ="${DOCS_CHECK_PBXPROJ:-$ROOT/LeavesOfBlocks.xcodeproj/project.pbxproj}"
+# Every prose document that could state a minimum. conventions/ is included
+# because tooling.yml triggers on it, and a guard that runs over a directory it
+# does not actually read is worse than one that never runs.
 DOCS=("README.md" "CLAUDE.md" "CONTRIBUTING.md")
+while IFS= read -r doc; do
+  DOCS+=("${doc#"$ROOT/"}")
+done < <(find "$ROOT/conventions" -name '*.md' 2>/dev/null | sort)
 
+# The project file carries IPHONEOS_DEPLOYMENT_TARGET once per build
+# configuration. Taking the first and moving on would hide the very failure
+# that produced this whole mess: #87 found 18.5 there because a *test* target
+# had been set independently of the app. If the configurations disagree there
+# is no single floor to check the docs against, and saying so beats silently
+# picking one.
 project_target() {
-  local value
-  value="$(sed -nE 's/^[[:space:]]*IPHONEOS_DEPLOYMENT_TARGET = ([0-9][0-9.]*);.*/\1/p' "$PBXPROJ" 2>/dev/null | head -1 || true)"
-  if [ -z "$value" ]; then
+  local values distinct
+  values="$(sed -nE 's/^[[:space:]]*IPHONEOS_DEPLOYMENT_TARGET = ([0-9][0-9.]*);.*/\1/p' "$PBXPROJ" 2>/dev/null || true)"
+
+  if [ -z "$values" ]; then
     echo "check-docs-versions.sh: could not read IPHONEOS_DEPLOYMENT_TARGET from $PBXPROJ" >&2
     exit 2
   fi
-  printf '%s\n' "$value"
+
+  distinct="$(printf '%s\n' "$values" | sort -u)"
+  if [ "$(printf '%s\n' "$distinct" | wc -l | tr -d ' ')" -ne 1 ]; then
+    {
+      echo "check-docs-versions.sh: build configurations disagree on the deployment target:"
+      printf '%s\n' "$distinct" | sed 's/^/  /'
+      echo "Set them all to the same value before checking the docs against it."
+    } >&2
+    exit 2
+  fi
+
+  printf '%s\n' "$distinct"
 }
 
 target="${2:-}"
