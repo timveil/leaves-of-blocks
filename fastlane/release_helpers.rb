@@ -877,8 +877,18 @@ def run_release_preflight(api_key:, bump_type:)
   rows = []
 
   _preflight(rows, 'Xcode meets minimum') do
+    require 'shellwords'
     ensure_minimum_xcode_version!
-    "#{`#{File.join(Dir.pwd, '..', 'scripts', 'xcode-version.sh')} --min`.strip} or newer"
+
+    # Resolved the same way ensure_minimum_xcode_version! does. A hardcoded
+    # "../scripts" points outside the repository when fastlane runs from the
+    # root, which would fail this row while Xcode was perfectly fine -- a
+    # preflight that invents failures is worse than one that does not exist.
+    root = project_root(File.join('scripts', 'xcode-version.sh'))
+    raise 'could not locate scripts/xcode-version.sh' unless root
+
+    script = File.join(root, 'scripts', 'xcode-version.sh')
+    "#{`#{script.shellescape} --min`.strip} or newer"
   end
 
   _preflight(rows, 'Working tree clean') do

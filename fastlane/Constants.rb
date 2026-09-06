@@ -34,13 +34,21 @@ DEVELOPER_EMAIL = ENV["LOCAL_FASTLANE_DEVELOPER_EMAIL"]
 # against a hardcoded 26.5 took out `beta`, `deploy`, `screenshots` and
 # `test_api_auth` at once, with releases blocked until the constant changed.
 # A floor does not have that failure mode.
+# Resolve the repository root by looking for a file known to live there.
+#
+# fastlane runs with Dir.pwd at either the repo root or fastlane/ depending on
+# how it was invoked, so no fixed relative path is safe. Every caller that
+# needs a repo-relative file goes through this rather than guessing -- guessing
+# is how a working check reports a false failure (conventions/shared-rule-single-source.md).
+def project_root(marker)
+  ['..', '.'].map { |d| File.expand_path(d, Dir.pwd) }
+             .find { |d| File.exist?(File.join(d, marker)) }
+end
+
 def ensure_minimum_xcode_version!
   require 'shellwords'
 
-  # fastlane may run with Dir.pwd at either the repo root or fastlane/,
-  # depending on how it was invoked; find the root by looking for the file.
-  root = ['..', '.'].map { |d| File.expand_path(d, Dir.pwd) }
-                    .find { |d| File.exist?(File.join(d, '.xcode-version')) }
+  root = project_root('.xcode-version')
 
   unless root
     FastlaneCore::UI.user_error!("Could not locate .xcode-version starting from #{Dir.pwd}")
@@ -83,8 +91,7 @@ IOS_SIMULATOR = "iPhone 17 Pro"
 # is loaded by the Deliverfile and Snapfile too, and a lane that never touches a
 # simulator should not fail because none is installed.
 def simulator_runtime_version
-  root = ['..', '.'].map { |d| File.expand_path(d, Dir.pwd) }
-                    .find { |d| File.exist?(File.join(d, 'scripts', 'simulator-runtime.sh')) }
+  root = project_root(File.join('scripts', 'simulator-runtime.sh'))
 
   unless root
     FastlaneCore::UI.user_error!("Could not locate scripts/simulator-runtime.sh from #{Dir.pwd}")

@@ -73,7 +73,7 @@ Upload screenshots only
 
 Dry-run every read-only check the release path depends on
 
-Options: version:patch|minor|major (default patch) to preview a target version
+Options: version:patch|minor|major or version:1.2.3 (default patch) to preview a target version
 
 ### ios deploy
 
