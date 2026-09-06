@@ -31,6 +31,7 @@ end
 require 'tmpdir'
 require 'fileutils'
 require 'open3'
+require 'json'
 
 require_relative '../release_helpers'
 
@@ -298,6 +299,33 @@ assert_equal('4.5.6', _resolve_target_version(current: '2.0.7', bump_type: '4.5.
 
 # A typo must not silently ship something unintended.
 assert_raises("an unknown bump type is still rejected") { _resolve_target_version(current: '2.0.7', bump_type: 'pathc') }
+
+puts
+puts "age rating config"
+
+# The answers Apple requires from September 2026. They live in the repository
+# so a submission cannot go out with stale ones, and so a change to them is
+# reviewable rather than a silent edit in the App Store Connect UI.
+rating_path = File.expand_path('../metadata/app_rating_config.json', __dir__)
+assert_equal(true, File.exist?(rating_path), "the age rating config is committed")
+
+rating = JSON.parse(File.read(rating_path)) rescue nil
+assert_equal(true, !rating.nil?, "it is valid JSON")
+
+if rating
+  %w[socialMedia socialMediaAgeRestricted messagingAndChat userGeneratedContent
+     unrestrictedWebAccess ageAssurance parentalControls].each do |key|
+    assert_equal(true, rating.key?(key), "answers the '#{key}' question")
+  end
+
+  # gamblingAndContests was split into gambling + contests; leaving it in makes
+  # deliver emit a deprecation on every upload.
+  assert_equal(false, rating.key?('gamblingAndContests'), "omits the deprecated gamblingAndContests")
+  assert_equal(true, rating.key?('gambling') && rating.key?('contests'), "uses the split keys instead")
+
+  # A null is not an answer, and Apple treats the section as incomplete.
+  assert_equal([], rating.select { |_, v| v.nil? }.keys, "contains no null answers")
+end
 
 puts
 puts "_preflight row classification"

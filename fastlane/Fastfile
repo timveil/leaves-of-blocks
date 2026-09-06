@@ -132,17 +132,29 @@ platform :ios do
     # Configure App Store Connect API key for App Store
     api_key = app_store_api_key
     
+    # App Store Connect will not attach a build that is still processing, which
+    # is why submitting by hand meant choosing one from a dropdown.
+    version = version_awaiting_submission
+    UI.user_error!("No version is awaiting submission in App Store Connect.") unless version
+
+    build_number = latest_processed_build_number(version: version)
+    UI.user_error!("No processed build available for #{version}; nothing to submit.") unless build_number
+
+    UI.message("Submitting #{version} (#{build_number})")
+
     deliver(
       api_key: api_key,
       submit_for_review: true,
-      automatic_release: false,
+      build_number: build_number,
+      # automatic_release is deliberately not passed: the Deliverfile owns it,
+      # and hardcoding false here silently overrode it.
       force: true,
       skip_binary_upload: true,
       skip_metadata: true,
       skip_screenshots: true
     )
-    
-    UI.success("📝 App submitted for App Store review!")
+
+    UI.success("📝 #{version} (#{build_number}) submitted for App Store review")
   end
 
   desc "Full deployment pipeline: build, upload, and submit for review"
