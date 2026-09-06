@@ -262,8 +262,8 @@ struct BlockShape: Codable, Equatable, Hashable, Identifiable {
     
     /// Collection of all standard block shapes available in the game.
     ///
-    /// This array contains 21 predefined shapes ranging from single blocks to complex
-    /// 9-cell arrangements. Shapes include straight lines, squares, L-shapes, T-shapes,
+    /// This array contains the predefined shapes, ranging from single blocks to
+    /// complex 9-cell arrangements. Shapes include straight lines, squares, L-shapes, T-shapes,
     /// and rectangles in various orientations.
     ///
     /// - Note: Used by `BlockGenerator` for weighted random selection based on difficulty.
