@@ -47,21 +47,13 @@ Create a new build for App Store
 
 Upload to TestFlight
 
-### ios release
-
-```sh
-[bundle exec] fastlane ios release
-```
-
-Upload to App Store
-
 ### ios metadata_only
 
 ```sh
 [bundle exec] fastlane ios metadata_only
 ```
 
-Upload metadata and screenshots only (no binary)
+Upload metadata only (no binary, no screenshots)
 
 ### ios screenshots_only
 
