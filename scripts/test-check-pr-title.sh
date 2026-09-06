@@ -45,7 +45,21 @@ suffix=" (#77)"
 fits=$(printf 'feat: %s' "$(printf 'x%.0s' $(seq 1 $((LIMIT - 6 - ${#suffix})) ))")
 over=$(printf 'feat: %s' "$(printf 'x%.0s' $(seq 1 $((LIMIT - 6 - ${#suffix} + 1)) ))")
 
-if [ "${#fits}$suffix" ]; then :; fi
+# The two cases below are only meaningful if the fixtures really do land on
+# the boundary. Assert that, so a change to LIMIT or to the arithmetic fails
+# here rather than leaving the assertions passing against the wrong lengths
+# while their descriptions claim otherwise.
+if [ $(( ${#fits} + ${#suffix} )) -eq "$LIMIT" ]; then
+  ok "fixture 'fits' lands exactly on the limit"
+else
+  bad "fixture 'fits' lands exactly on the limit" "got $(( ${#fits} + ${#suffix} )), want $LIMIT"
+fi
+if [ $(( ${#over} + ${#suffix} )) -eq $(( LIMIT + 1 )) ]; then
+  ok "fixture 'over' lands one past the limit"
+else
+  bad "fixture 'over' lands one past the limit" "got $(( ${#over} + ${#suffix} )), want $(( LIMIT + 1 ))"
+fi
+
 expect 0 "title that fits exactly with the suffix passes ($(( ${#fits} + ${#suffix} )) chars)" "$fits" 77
 expect 1 "title one char too long once suffixed fails ($(( ${#over} + ${#suffix} )) chars)"   "$over" 77
 
