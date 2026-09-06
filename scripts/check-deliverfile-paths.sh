@@ -61,5 +61,9 @@ exec bundle exec ruby -e '
     warn format("  %-24s %-16s %s", key, marker, resolved.sub(Dir.home, "~"))
   end
 
-  warn "Deliverfile loads; validated paths resolve"
+  # Deliberately not "all paths resolve": metadata_path and screenshots_path are
+  # listed above as deliver-relative and do NOT exist at the expanded path, by
+  # design. Claiming they resolved would be false, and a check that overstates
+  # what it verified is the kind that stops being believed.
+  warn "Deliverfile loaded; every option deliver validates against the filesystem was accepted"
 ' > /dev/null
