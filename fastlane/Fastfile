@@ -61,7 +61,8 @@ platform :ios do
   end
 
   desc "Upload to TestFlight"
-  lane :beta do
+  desc "Options: notes:\"...\" to override the What to Test text"
+  lane :beta do |options|
     # Configure App Store Connect API key for TestFlight
     api_key = app_store_api_key
 
@@ -76,6 +77,9 @@ platform :ios do
     app_store_build_app(api_key: api_key)
     upload_to_testflight(
       api_key: api_key,
+      # "What to Test", derived from [Unreleased] or recent commits. nil when
+      # there is nothing worth saying, which is the pre-existing behavior.
+      changelog: testflight_notes(override: options[:notes]),
       skip_waiting_for_build_processing: true
     )
   end

@@ -28,6 +28,10 @@ module FastlaneCore
   end
 end
 
+require 'tmpdir'
+require 'fileutils'
+require 'open3'
+
 require_relative '../release_helpers'
 
 $pass = 0
@@ -142,10 +146,142 @@ assert_raises("a non-semver string is rejected")    { _resolve_bump(current: '2.
 assert_raises("an empty bump type is rejected")     { _resolve_bump(current: '2.0.6', bump_type: '') }
 
 puts
-puts "executable_in_path?"
+puts "_parse_unreleased_subsections"
 
-require 'tmpdir'
-require 'fileutils'
+# The template [Unreleased] block ships empty subsections, so this shape is the
+# normal one rather than an edge case.
+with_empty = <<~MD
+  ## [Unreleased]
+
+  ### Added
+
+  ### Changed
+  - A changed thing
+
+  ### Fixed
+  - A fixed thing
+
+  ## [1.0] - 2020-01-01
+
+  ### Added
+  - Old thing
+MD
+
+parsed = _parse_unreleased_subsections(with_empty)
+assert_equal(['Changed', 'Fixed'], parsed.keys.sort, "empty subsections are omitted, not populated")
+assert_equal(['A changed thing'], parsed['Changed'], "items stay under their own heading")
+assert_equal(['A fixed thing'], parsed['Fixed'], "the last subsection is parsed")
+assert_equal(false, parsed.key?('Added'), "an empty subsection does not absorb the next one")
+
+populated = <<~MD
+  ## [Unreleased]
+
+  ### Added
+  - An added thing
+
+  ### Changed
+  - A changed thing
+
+  ## [1.0] - 2020-01-01
+MD
+assert_equal(['Added', 'Changed'], _parse_unreleased_subsections(populated).keys.sort, "fully populated sections parse")
+
+# Non-standard headings are preserved -- that is what stops a hand-written
+# "Security" section from being dropped at release time.
+custom = "## [Unreleased]\n\n### Security\n- Patched a thing\n\n## [1.0] - 2020-01-01\n"
+assert_equal(['Patched a thing'], _parse_unreleased_subsections(custom)['Security'], "custom headings survive")
+
+assert_equal({}, _parse_unreleased_subsections("# Changelog\n\n## [1.0] - 2020-01-01\n"), "no [Unreleased] yields nothing")
+assert_equal({}, _parse_unreleased_subsections("## [Unreleased]\n\n### Added\n\n### Fixed\n\n## [1.0] - 2020-01-01\n"), "an entirely empty block yields nothing")
+
+# The block must not run past its own section into the released history.
+bleed = "## [Unreleased]\n\n### Added\n- Pending\n\n## [1.0] - 2020-01-01\n\n### Added\n- Shipped\n"
+assert_equal(['Pending'], _parse_unreleased_subsections(bleed)['Added'], "parsing stops at the next version heading")
+
+puts
+puts "TestFlight notes"
+
+notes = format_testflight_notes({ 'Added' => ['One', 'Two'], 'Fixed' => ['Three'] })
+assert_equal("Added\n• One\n• Two\n\nFixed\n• Three", notes, "sections render as headed bullet lists")
+assert_equal(nil, format_testflight_notes({}), "no sections yields nil, not an empty string")
+assert_equal(nil, format_testflight_notes(nil), "nil sections yields nil")
+assert_equal(nil, format_testflight_notes({ 'Added' => [] }), "a section with no items yields nil")
+assert_equal("Fixed\n• Real", format_testflight_notes({ 'Added' => [], 'Fixed' => ['Real'] }), "empty sections are skipped, populated ones kept")
+
+commits = [
+  'feat(grid): Add a hint button (#12)',
+  'chore: Bump a dependency',
+  'fix: Stop the crash on rotate',
+  'ci(codeql): Speed up analysis',
+  'docs: Explain something'
+]
+assert_equal("• Add a hint button\n• Stop the crash on rotate", format_commit_notes(commits),
+             "only tester-relevant types survive, prefixes and PR numbers stripped")
+assert_equal(nil, format_commit_notes(['chore: Tooling', 'ci: More tooling']), "a tooling-only run yields nil")
+assert_equal(nil, format_commit_notes([]), "no commits yields nil")
+assert_equal(nil, format_commit_notes(nil), "nil commits yields nil")
+assert_equal("• Something", format_commit_notes(['feat!: Something']), "a breaking-change marker is handled")
+assert_equal("• Keep (#12) inside", format_commit_notes(['fix: Keep (#12) inside']), "only a trailing PR number is stripped")
+assert_equal(nil, format_commit_notes(['Not conventional at all']), "an unparseable subject is skipped")
+
+short = "Added\n• A thing"
+assert_equal(short, truncate_testflight_notes(short), "text under the limit is untouched")
+assert_equal(nil, truncate_testflight_notes(nil), "nil passes through")
+
+long = 'x' * (TESTFLIGHT_NOTES_LIMIT + 500)
+truncated = truncate_testflight_notes(long)
+assert_equal(true, truncated.length <= TESTFLIGHT_NOTES_LIMIT, "output never exceeds the limit")
+assert_equal(true, truncated.end_with?('(truncated)'), "truncation is announced")
+
+exact = 'x' * TESTFLIGHT_NOTES_LIMIT
+assert_equal(exact, truncate_testflight_notes(exact), "text exactly at the limit is untouched")
+assert_equal(true, truncate_testflight_notes('x' * 20, limit: 5).length <= 5, "a limit shorter than the marker still fits")
+
+puts
+puts "commit_subjects_since_last_tag"
+
+# Exercised against real repositories: this is where the range is built, and
+# the previous version substituted a sentinel revision for the no-tag case.
+Dir.mktmpdir do |dir|
+  run = lambda do |*args|
+    _out, _err, status = Open3.capture3('git', '-C', dir, *args)
+    raise "git #{args.join(' ')} failed" unless status.success?
+  end
+
+  run.call('init', '-q', '.')
+  run.call('config', 'user.email', 'test@example.com')
+  run.call('config', 'user.name', 'Test')
+  run.call('commit', '-q', '--allow-empty', '-m', 'feat: Before the tag')
+
+  Dir.chdir(dir) do
+    assert_equal(['feat: Before the tag'], commit_subjects_since_last_tag,
+                 "with no tags, every commit is returned")
+  end
+
+  run.call('tag', 'v1.0.0')
+  run.call('commit', '-q', '--allow-empty', '-m', 'fix: After the tag')
+  run.call('commit', '-q', '--allow-empty', '-m', 'chore: Also after')
+
+  Dir.chdir(dir) do
+    subjects = commit_subjects_since_last_tag
+    assert_equal(['fix: After the tag', 'chore: Also after'].sort, subjects.sort,
+                 "with a tag, only commits after it are returned")
+    assert_equal(false, subjects.include?('feat: Before the tag'),
+                 "the tagged commit itself is excluded")
+    assert_equal("• After the tag", format_commit_notes(subjects),
+                 "the range feeds through to tester-facing notes")
+  end
+end
+
+# Outside a repository entirely, git fails and the helper stays quiet.
+Dir.mktmpdir do |dir|
+  Dir.chdir(dir) do
+    assert_equal([], commit_subjects_since_last_tag, "outside a git repository, no subjects and no raise")
+  end
+end
+
+puts
+puts "executable_in_path?"
 
 Dir.mktmpdir do |dir|
   original_path = ENV['PATH']

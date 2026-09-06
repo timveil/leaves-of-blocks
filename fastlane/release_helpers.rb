@@ -260,9 +260,18 @@ def _parse_unreleased_subsections(changelog_content)
   body = match[1]
   sections = {}
 
-  # Each subsection is "### Header\n" followed by zero or more bullet lines,
+  # Each subsection is "### Header" followed by zero or more bullet lines,
   # ending at the next "### " or end-of-block.
-  body.scan(/### (\w+)\s*\n(.*?)(?=\n### |\z)/m) do |header, items_block|
+  #
+  # Anchored to line starts, and the header match stops at its own newline. An
+  # earlier version used `### (\w+)\s*\n` with a `(?=\n### )` terminator: the
+  # `\s*` swallowed the blank line after an EMPTY subsection, leaving the body
+  # starting at the following "### " with no newline in front of it for the
+  # lookahead to find. The next section's items were then attributed to the
+  # empty one, and that section disappeared -- so a template [Unreleased] block
+  # with an empty "### Added" above a populated "### Changed" reported the
+  # changed items as added.
+  body.scan(/^### (\w+)[^\n]*\n(.*?)(?=^### |\z)/m) do |header, items_block|
     bullets = items_block.scan(/^- (.+)$/).flatten.map(&:strip).reject(&:empty?)
     sections[header] = bullets unless bullets.empty?
   end
@@ -644,6 +653,116 @@ def executable_in_path?(name)
     candidate = File.join(dir, name)
     File.file?(candidate) && File.executable?(candidate)
   end
+end
+
+# TestFlight's "What to Test" field. Apple caps it; truncate rather than let
+# an upload be rejected for a field testers only skim.
+TESTFLIGHT_NOTES_LIMIT = 4000
+
+# Commit types worth showing a tester. A beta full of "chore: bump dependency"
+# tells them nothing about what to exercise, and burying two real fixes among
+# ten tooling commits is worse than showing neither.
+TESTER_RELEVANT_TYPES = %w[feat fix perf refactor style revert].freeze
+
+# Run a git command without a shell, returning empty on failure.
+#
+# stderr is captured and discarded rather than inherited. `git describe` on a
+# repository with no tags writes "fatal: No names found, cannot describe
+# anything" -- accurate, benign, and alarming to read in the middle of a
+# release log for a case this code handles deliberately.
+def _git_output(*args)
+  require 'open3'
+  out, _err, status = Open3.capture3('git', *args)
+  status.success? ? out : ''
+rescue StandardError
+  ''
+end
+
+# Format a { heading => [items] } hash as plain text for TestFlight.
+def format_testflight_notes(sections)
+  return nil if sections.nil? || sections.empty?
+
+  body = sections.map do |heading, items|
+    next nil if items.nil? || items.empty?
+    ([heading] + items.map { |item| "• #{item}" }).join("\n")
+  end.compact
+
+  body.empty? ? nil : body.join("\n\n")
+end
+
+# Format commit subjects as plain text, keeping only what a tester can act on.
+# Conventional prefixes and the trailing PR number are stripped: "feat(grid):
+# Add a hint button (#12)" reads as "Add a hint button".
+def format_commit_notes(subjects)
+  items = (subjects || []).map do |subject|
+    match = subject.to_s.strip.match(/\A(\w+)(?:\([^)]*\))?!?:\s*(.+)\z/)
+    next nil unless match && TESTER_RELEVANT_TYPES.include?(match[1].downcase)
+
+    text = match[2].sub(/\s*\(#\d+\)\z/, '').strip
+    text.empty? ? nil : "• #{text}"
+  end.compact
+
+  items.empty? ? nil : items.join("\n")
+end
+
+# Trim to TestFlight's limit, marking that something was cut so a tester does
+# not read a sentence that stops mid-word and assume that is all there was.
+def truncate_testflight_notes(text, limit: TESTFLIGHT_NOTES_LIMIT)
+  return text if text.nil? || text.length <= limit
+
+  marker = "\n\n… (truncated)"
+  return text[0, limit] if limit <= marker.length
+
+  text[0, limit - marker.length].rstrip + marker
+end
+
+# Build the "What to Test" text for a TestFlight upload.
+#
+# In order of preference: an explicit `notes:` lane argument, the CHANGELOG's
+# [Unreleased] section, then tester-relevant commits since the last tag. The
+# CHANGELOG comes first because it is written for humans and the release flow
+# already depends on it being current; commits are the fallback that is always
+# available.
+#
+# Never raises. Notes are a nicety and the upload is not: returning nil leaves
+# the build without them, exactly as before this existed.
+def testflight_notes(override: nil)
+  candidate = override.to_s.strip
+  return truncate_testflight_notes(candidate) unless candidate.empty?
+
+  changelog_path = File.join(Dir.pwd, '..', 'CHANGELOG.md')
+  if File.exist?(changelog_path)
+    from_changelog = format_testflight_notes(_parse_unreleased_subsections(File.read(changelog_path)))
+    return truncate_testflight_notes(from_changelog) if from_changelog
+  end
+
+  from_commits = format_commit_notes(commit_subjects_since_last_tag)
+  return truncate_testflight_notes(from_commits) if from_commits
+
+  FastlaneCore::UI.important("No [Unreleased] entries or tester-relevant commits — uploading without notes.")
+  nil
+rescue StandardError => e
+  FastlaneCore::UI.important("Could not build TestFlight notes (#{e.message}); uploading without them.")
+  nil
+end
+
+# Subjects of non-merge commits since the most recent tag, or every commit when
+# the repository has no tags yet.
+#
+# The no-tag case omits the range rather than substituting a sentinel revision.
+# An earlier version passed the empty-tree hash so that "#{ref}..HEAD" always
+# had a left side; git happens to tolerate a tree there and returns the full
+# history, but that is incidental rather than documented -- `A..B` means
+# `B ^A`, and A is meant to be a commit. It also disagreed with
+# update_changelog_from_commits, which drops the range in the same situation.
+# Two functions reading the same history should not differ on how they ask.
+def commit_subjects_since_last_tag
+  tag = _git_output('describe', '--tags', '--abbrev=0').strip
+
+  args = ['log', '--no-merges', '--format=%s']
+  args.insert(1, "#{tag}..HEAD") unless tag.empty?
+
+  _git_output(*args).split("\n").map(&:strip).reject(&:empty?)
 end
 
 # Publish a GitHub Release for a tag that has already been pushed.
