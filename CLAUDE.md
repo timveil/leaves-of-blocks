@@ -296,7 +296,11 @@ bundle exec fastlane ios metadata_only              # update App Store listing (
 bundle exec fastlane ios screenshots_only           # update screenshots only
 ```
 
-`deploy` and `deploy_and_submit` require a `version:` arg (`patch` / `minor` / `major` / explicit `1.2.3`). They commit the changelog + project bump and tag `vX.Y.Z` automatically.
+`deploy` and `deploy_and_submit` require a `version:` arg (`patch` / `minor` / `major` / explicit `1.2.3`). They commit the changelog + project bump, tag `vX.Y.Z`, and attempt a GitHub Release from that version's CHANGELOG section.
+
+**One version identifies the whole release.** The target version is resolved once at the start of `_release_core` and passed everywhere — `MARKETING_VERSION`, the App Store submission, the git tag, and the GitHub Release all carry the same string, and `bump_marketing_version` reads the project back to prove the write took before anything is archived. The build number is resolved once from App Store Connect and recorded in the release body, so `2.0.7 (28)` on the GitHub Release is the binary in App Store Connect.
+
+Publishing the GitHub Release soft-fails: it runs after `deliver` has succeeded and the tag is already public, so a missing `gh` or an API error logs a warning with a one-line manual fix rather than failing a lane whose binary has already shipped.
 
 ### Phased release
 

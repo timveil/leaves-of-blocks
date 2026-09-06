@@ -130,12 +130,14 @@ end
 # CFBundleVersion in the archive is generated from CURRENT_PROJECT_VERSION --
 # overriding it on the command line reaches the built product without touching
 # the project file.
-def app_store_build_app(api_key:)
+def app_store_build_app(api_key:, build_number: nil)
+  build_number ||= next_build_number(api_key: api_key)
+
   build_app(
     project: XCODE_PROJECT,
     scheme: MAIN_SCHEME,
     export_method: EXPORT_METHOD,
-    xcargs: "CURRENT_PROJECT_VERSION=#{next_build_number(api_key: api_key)}",
+    xcargs: "CURRENT_PROJECT_VERSION=#{build_number}",
     export_options: app_store_signing_options(api_key: api_key)
   )
 end
@@ -145,7 +147,22 @@ end
 # GENERATE_INFOPLIST_FILE=YES (it tries to update an Info.plist that doesn't
 # exist as a file, aborts before persisting the project setting, and
 # silently leaves the old version on the build).
-def bump_marketing_version(xcodeproj:, target_name:, bump_type:)
+# Locate a target's Release build configuration, failing with a readable
+# message rather than a NoMethodError several lines later.
+def release_build_configuration(target)
+  config = target.build_configurations.find { |c| c.name == 'Release' }
+  unless config
+    available = target.build_configurations.map(&:name).join(', ')
+    FastlaneCore::UI.user_error!(
+      "Target '#{target.name}' has no 'Release' build configuration " \
+      "(found: #{available.empty? ? 'none' : available}). The release flow reads " \
+      "MARKETING_VERSION from Release and cannot continue without it."
+    )
+  end
+  config
+end
+
+def bump_marketing_version(xcodeproj:, target_name:, version:)
   require 'xcodeproj'
 
   # Fastlane runs from fastlane/, so go up one level to reach the project.
@@ -155,19 +172,42 @@ def bump_marketing_version(xcodeproj:, target_name:, bump_type:)
   target = project.targets.find { |t| t.name == target_name }
   FastlaneCore::UI.user_error!("Target '#{target_name}' not found") unless target
 
-  release_config = target.build_configurations.find { |c| c.name == 'Release' }
-  current_version = release_config.build_settings['MARKETING_VERSION'] || '1.0.0'
+  current_version = release_build_configuration(target).build_settings['MARKETING_VERSION'] || '1.0.0'
 
   FastlaneCore::UI.message("Current version: #{current_version}")
-  new_version = _resolve_bump(current: current_version, bump_type: bump_type)
 
   target.build_configurations.each do |config|
-    config.build_settings['MARKETING_VERSION'] = new_version
+    config.build_settings['MARKETING_VERSION'] = version
   end
   project.save
 
-  FastlaneCore::UI.message("Version bumped: #{current_version} → #{new_version}")
-  new_version
+  # Read the version back from a freshly opened project rather than trusting
+  # the in-memory object. Everything downstream -- the archive, the App Store
+  # submission, the git tag and the GitHub Release -- is named for `version`,
+  # so a silent write failure here would ship a binary whose
+  # CFBundleShortVersionString disagrees with its own tag.
+  written = read_marketing_version(xcodeproj: xcodeproj, target_name: target_name)
+  unless written == version
+    FastlaneCore::UI.user_error!(
+      "Version bump did not take: expected MARKETING_VERSION #{version}, " \
+      "project now reports #{written.inspect}. Refusing to continue -- the tag " \
+      "and the binary would not match."
+    )
+  end
+
+  FastlaneCore::UI.message("Version bumped: #{current_version} → #{version}")
+  version
+end
+
+# Read MARKETING_VERSION from the target's Release configuration.
+def read_marketing_version(xcodeproj:, target_name:)
+  require 'xcodeproj'
+
+  project = Xcodeproj::Project.open(File.join(Dir.pwd, '..', xcodeproj))
+  target = project.targets.find { |t| t.name == target_name }
+  FastlaneCore::UI.user_error!("Target '#{target_name}' not found") unless target
+
+  release_build_configuration(target).build_settings['MARKETING_VERSION']
 end
 
 # Calculate the new MARKETING_VERSION without applying it. Used pre-flight
@@ -181,8 +221,7 @@ def calculate_new_version(xcodeproj:, target_name:, bump_type:)
   target = project.targets.find { |t| t.name == target_name }
   FastlaneCore::UI.user_error!("Target '#{target_name}' not found") unless target
 
-  release_config = target.build_configurations.find { |c| c.name == 'Release' }
-  current_version = release_config.build_settings['MARKETING_VERSION'] || '1.0.0'
+  current_version = release_build_configuration(target).build_settings['MARKETING_VERSION'] || '1.0.0'
 
   _resolve_bump(current: current_version, bump_type: bump_type)
 end
@@ -231,6 +270,24 @@ def _parse_unreleased_subsections(changelog_content)
   sections
 end
 
+# Extract the body of one version's CHANGELOG section.
+#
+# A section runs from its "## [x.y.z]" heading to whichever comes first: the
+# next "## [" heading, the "[Unreleased]:" link footer, or end of file. The
+# footer matters -- without it the final section in the file swallows the whole
+# link block, which then shows up verbatim in release notes.
+#
+# Returns the trimmed body, or nil when the section is absent or empty. Shared
+# by generate_release_notes and publish_github_release so there is one
+# definition of what a section is (conventions/shared-rule-single-source.md).
+def extract_changelog_section(content, version)
+  pattern = /## \[#{Regexp.escape(version)}\].*?\n(.*?)(?=\n## \[|\n\[Unreleased\]:|\z)/m
+  match = content.match(pattern)
+  return nil if match.nil? || match[1].strip.empty?
+
+  match[1].strip
+end
+
 # Generate App Store release notes from CHANGELOG.md, preferring AI prose
 # when ANTHROPIC_API_KEY is configured and falling back to a template.
 def generate_release_notes(version:)
@@ -245,18 +302,13 @@ def generate_release_notes(version:)
   content = File.read(changelog_path)
 
   # Try to find the section for this version, or fall back to [Unreleased].
-  version_pattern = /## \[#{Regexp.escape(version)}\].*?\n(.*?)(?=\n## \[|\n\[Unreleased\]:|\z)/m
-  unreleased_pattern = /## \[Unreleased\].*?\n(.*?)(?=\n## \[|\z)/m
+  section_content = extract_changelog_section(content, version)
+  section_content ||= extract_changelog_section(content, 'Unreleased')
 
-  section = content.match(version_pattern)
-  section = content.match(unreleased_pattern) if section.nil? || section[1].strip.empty?
-
-  if section.nil? || section[1].strip.empty?
+  if section_content.nil?
     FastlaneCore::UI.important("No changelog entries found for version #{version}")
     return nil
   end
-
-  section_content = section[1]
 
   # === AI PROSE GENERATION ATTEMPT ===
   prose = nil
@@ -580,10 +632,74 @@ def commit_release_local(version:)
   FastlaneCore::UI.success("Created local release commit for v#{version} (not yet pushed)")
 end
 
+# Is an executable of this name on PATH?
+#
+# A Ruby scan rather than `system("command -v ...")`: the gh invocation below
+# deliberately avoids a shell, and this check should not quietly reintroduce
+# one for the sake of a builtin.
+def executable_in_path?(name)
+  ENV.fetch('PATH', '').split(File::PATH_SEPARATOR).any? do |dir|
+    next false if dir.empty?
+
+    candidate = File.join(dir, name)
+    File.file?(candidate) && File.executable?(candidate)
+  end
+end
+
+# Publish a GitHub Release for a tag that has already been pushed.
+#
+# Named for exactly what shipped: the tag is v<version>, the notes are that
+# version's CHANGELOG section, and the build number that went to App Store
+# Connect is recorded in the body. One version string identifies the App Store
+# submission, the git tag and the GitHub Release.
+#
+# Soft-fails by design. This runs after deliver has succeeded and the tag is
+# already public, so the release is done whatever happens here. A missing `gh`
+# or a transient API error should leave a warning and a one-line manual fix,
+# not fail a lane whose binary is already on App Store Connect.
+def publish_github_release(version:, build_number: nil)
+  tag = "v#{version}"
+
+  unless executable_in_path?('gh')
+    FastlaneCore::UI.important("gh not found — skipping GitHub Release for #{tag}.")
+    FastlaneCore::UI.important("Create it later with: gh release create #{tag} --title #{tag} --notes-file <file>")
+    return false
+  end
+
+  changelog_path = File.join(Dir.pwd, '..', 'CHANGELOG.md')
+  notes = File.exist?(changelog_path) ? extract_changelog_section(File.read(changelog_path), version) : nil
+
+  if notes.nil?
+    FastlaneCore::UI.important("No CHANGELOG section for #{version} — skipping GitHub Release.")
+    return false
+  end
+
+  notes += "\n\nApp Store build: #{version} (#{build_number})" if build_number
+
+  require 'tempfile'
+  file = Tempfile.new(['release-notes', '.md'])
+  begin
+    file.write(notes)
+    file.close
+
+    # Array form: no shell, so nothing in the notes path or tag is interpreted.
+    if system('gh', 'release', 'create', tag, '--title', tag, '--notes-file', file.path)
+      FastlaneCore::UI.success("Published GitHub Release #{tag}")
+      true
+    else
+      FastlaneCore::UI.important("Could not publish GitHub Release #{tag} — the release itself is unaffected.")
+      FastlaneCore::UI.important("Retry with: gh release create #{tag} --title #{tag} --notes-file <file>")
+      false
+    end
+  ensure
+    file.unlink
+  end
+end
+
 # Tag the commit at HEAD and push commit + tag to origin/main. Run ONLY after
 # the binary upload (deliver) has succeeded — otherwise a failed upload
 # strands a public tag pointing at a release that never shipped.
-def finalize_release(version:)
+def finalize_release(version:, build_number: nil)
   # Defensive: tag must attach to the release commit we just made.
   head_subject = sh("git log -1 --pretty=%s", log: false).strip
   expected = "chore: Release v#{version}"
@@ -599,6 +715,10 @@ def finalize_release(version:)
   sh("git push origin v#{version}")
 
   FastlaneCore::UI.success("Tagged and pushed v#{version}")
+
+  # After the tag exists on origin, so `gh release create` attaches to it
+  # rather than creating one. Soft-fails; see publish_github_release.
+  publish_github_release(version: version, build_number: build_number)
 end
 
 # Canonical release flow shared by `deploy` and `deploy_and_submit`. The
@@ -649,11 +769,16 @@ def _release_core(api_key:, options:, submit:)
   FastlaneCore::UI.message("▸ Updating changelog from commits")
   changelog_updated = update_changelog_from_commits(new_version: new_version)
 
+  # new_version, resolved once above, is the single identity for this release:
+  # the project's MARKETING_VERSION, the App Store submission, the git tag and
+  # the GitHub Release all carry it. Passing it explicitly (rather than
+  # re-deriving it from the bump type here) removes the second, independent
+  # computation that could disagree with the first.
   FastlaneCore::UI.message("▸ Bumping marketing version")
   bump_marketing_version(
     xcodeproj: XCODE_PROJECT,
     target_name: MAIN_SCHEME,
-    bump_type: options[:version]
+    version: new_version
   )
 
   if changelog_updated
@@ -669,9 +794,11 @@ def _release_core(api_key:, options:, submit:)
   # Build number is resolved from App Store Connect here, not from the project
   # file -- so the release commit above carries only the marketing version and
   # changelog, and a re-run after a failed archive picks the next free number
-  # rather than reusing one.
+  # rather than reusing one. Resolved once and reused, so the number recorded
+  # in the GitHub Release is the number that was actually built.
   FastlaneCore::UI.message("▸ Archiving")
-  app_store_build_app(api_key: api_key)
+  build_number = next_build_number(api_key: api_key)
+  app_store_build_app(api_key: api_key, build_number: build_number)
 
   FastlaneCore::UI.message("▸ Uploading to App Store Connect")
   deliver(
@@ -685,14 +812,14 @@ def _release_core(api_key:, options:, submit:)
   FastlaneCore::UI.success("Delivered to App Store Connect")
 
   # Point of no return passed: tag + push to origin.
-  FastlaneCore::UI.message("▸ Finalizing release (tag + push)")
-  finalize_release(version: new_version)
+  FastlaneCore::UI.message("▸ Finalizing release (tag + push + GitHub Release)")
+  finalize_release(version: new_version, build_number: build_number)
 
   # Lane-level summary. Emoji used as semantic icons here, not decoration:
   # 📱 binary state, 🏷️ git tag state, ⏳ what to wait for next.
   FastlaneCore::UI.success(submit ? "🎉 Release deployed and submitted for review" : "Release deployed")
   FastlaneCore::UI.message("📱 Binary, metadata, and screenshots uploaded")
-  FastlaneCore::UI.message("🏷️  Git tag v#{new_version} pushed to origin")
+  FastlaneCore::UI.message("🏷️  Git tag v#{new_version} pushed to origin, GitHub Release published")
   FastlaneCore::UI.message(submit ? "⏳ Apple will review within 24-48 hours" : "⏳ Check App Store Connect for build processing")
 
   new_version
