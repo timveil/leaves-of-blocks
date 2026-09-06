@@ -57,11 +57,50 @@ def ensure_minimum_xcode_version!
     FastlaneCore::UI.user_error!(output.strip)
   end
 end
-# Pin the iOS Simulator runtime version. fastlane's snapshot auto-detection
-# uses the runtime label ("iOS 26.4"), but xcodebuild's `-destination` needs
-# the installed point version ("26.4.1"). Update when the runtime changes.
-IOS_VERSION = "26.5"
+# Device names stay pinned deliberately.
+#
+# SCREENSHOT_DEVICES is a product decision, not an incidental one: App Store
+# screenshots are submitted at specific display sizes, so the device is chosen
+# rather than discovered. IOS_SIMULATOR is closer to incidental -- it only
+# names a destination for the `test` and `build_for_testing` lanes -- but
+# scripts/build.sh already does discovery for the everyday path, and having
+# fastlane silently pick a different device than the one a failure was reported
+# on is worse than being told the pinned one is missing.
 IOS_SIMULATOR = "iPhone 17 Pro"
+
+# The simulator runtime is derived, not pinned. It used to be a constant here
+# whose comment read "Update when the runtime changes" -- a maintenance task
+# whose only reminder was a release failing partway through, since screenshots
+# run inside `deploy`.
+#
+# scripts/simulator-runtime.sh picks the newest installed runtime at or above
+# the app's IPHONEOS_DEPLOYMENT_TARGET, read from the project so the floor has
+# no second copy. It returns the POINT version ("26.4.1"), which is what
+# xcodebuild's -destination matches against; see the DeviceManager patch at the
+# bottom of this file for why the label form ("26.4") is not interchangeable.
+#
+# A method rather than a constant so only screenshot runs pay for it: this file
+# is loaded by the Deliverfile and Snapfile too, and a lane that never touches a
+# simulator should not fail because none is installed.
+def simulator_runtime_version
+  root = ['..', '.'].map { |d| File.expand_path(d, Dir.pwd) }
+                    .find { |d| File.exist?(File.join(d, 'scripts', 'simulator-runtime.sh')) }
+
+  unless root
+    FastlaneCore::UI.user_error!("Could not locate scripts/simulator-runtime.sh from #{Dir.pwd}")
+  end
+
+  require 'shellwords'
+  script = File.join(root, 'scripts', 'simulator-runtime.sh')
+  output = `#{script.shellescape} 2>&1`.strip
+
+  # The script explains what to install and how; pass its message through
+  # rather than replacing it with a vaguer one.
+  FastlaneCore::UI.user_error!(output) unless $?.success? && !output.empty?
+
+  FastlaneCore::UI.message("Simulator runtime: #{output}")
+  output
+end
 EXPORT_METHOD = "app-store"
 TEAM_ID = "85U9MWUBJL"
 
@@ -196,6 +235,13 @@ rescue StandardError
   nil
 end
 
+# Still required alongside simulator_runtime_version, and the two solve halves
+# of the same mismatch: that method supplies the POINT version to snapshot,
+# while this patch makes DeviceManager report point versions for the devices
+# snapshot matches it against. Fix only one and nothing matches -- supply a
+# point version to a DeviceManager reporting labels, or a label to xcodebuild,
+# and the destination resolves to no simulator.
+#
 # fastlane's DeviceManager parses the `-- iOS 26.4 --` section header from
 # `xcrun simctl list devices` text output and uses that label as the device's
 # os_version. When the runtime's installed point version differs (e.g. the
