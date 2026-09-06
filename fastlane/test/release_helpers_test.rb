@@ -142,6 +142,46 @@ assert_raises("a non-semver string is rejected")    { _resolve_bump(current: '2.
 assert_raises("an empty bump type is rejected")     { _resolve_bump(current: '2.0.6', bump_type: '') }
 
 puts
+puts "executable_in_path?"
+
+require 'tmpdir'
+require 'fileutils'
+
+Dir.mktmpdir do |dir|
+  original_path = ENV['PATH']
+  begin
+    tool = File.join(dir, 'faketool')
+    File.write(tool, "#!/bin/sh\nexit 0\n")
+
+    ENV['PATH'] = dir
+    File.chmod(0o644, tool)
+    assert_equal(false, executable_in_path?('faketool'), "a non-executable file is not found")
+
+    File.chmod(0o755, tool)
+    assert_equal(true, executable_in_path?('faketool'), "an executable on PATH is found")
+    assert_equal(false, executable_in_path?('nope'), "an absent name is not found")
+
+    # A directory sharing the name must not count as the executable.
+    subdir = File.join(dir, 'adir')
+    FileUtils.mkdir_p(subdir)
+    assert_equal(false, executable_in_path?('adir'), "a directory is not mistaken for an executable")
+
+    # Empty PATH entries mean "current directory" to some tools; skip them
+    # rather than resolving relative to wherever the lane happens to run.
+    ENV['PATH'] = "::#{dir}"
+    assert_equal(true, executable_in_path?('faketool'), "empty PATH entries are skipped")
+
+    ENV['PATH'] = ''
+    assert_equal(false, executable_in_path?('faketool'), "an empty PATH finds nothing")
+  ensure
+    ENV['PATH'] = original_path
+  end
+end
+
+# The real thing, as a sanity check that the scan agrees with reality.
+assert_equal(true, executable_in_path?('ruby'), "ruby is found on the real PATH")
+
+puts
 if $fail.zero?
   puts "All #{$pass} checks passed."
   exit 0

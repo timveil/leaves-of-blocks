@@ -147,6 +147,21 @@ end
 # GENERATE_INFOPLIST_FILE=YES (it tries to update an Info.plist that doesn't
 # exist as a file, aborts before persisting the project setting, and
 # silently leaves the old version on the build).
+# Locate a target's Release build configuration, failing with a readable
+# message rather than a NoMethodError several lines later.
+def release_build_configuration(target)
+  config = target.build_configurations.find { |c| c.name == 'Release' }
+  unless config
+    available = target.build_configurations.map(&:name).join(', ')
+    FastlaneCore::UI.user_error!(
+      "Target '#{target.name}' has no 'Release' build configuration " \
+      "(found: #{available.empty? ? 'none' : available}). The release flow reads " \
+      "MARKETING_VERSION from Release and cannot continue without it."
+    )
+  end
+  config
+end
+
 def bump_marketing_version(xcodeproj:, target_name:, version:)
   require 'xcodeproj'
 
@@ -157,8 +172,7 @@ def bump_marketing_version(xcodeproj:, target_name:, version:)
   target = project.targets.find { |t| t.name == target_name }
   FastlaneCore::UI.user_error!("Target '#{target_name}' not found") unless target
 
-  release_config = target.build_configurations.find { |c| c.name == 'Release' }
-  current_version = release_config.build_settings['MARKETING_VERSION'] || '1.0.0'
+  current_version = release_build_configuration(target).build_settings['MARKETING_VERSION'] || '1.0.0'
 
   FastlaneCore::UI.message("Current version: #{current_version}")
 
@@ -193,8 +207,7 @@ def read_marketing_version(xcodeproj:, target_name:)
   target = project.targets.find { |t| t.name == target_name }
   FastlaneCore::UI.user_error!("Target '#{target_name}' not found") unless target
 
-  target.build_configurations.find { |c| c.name == 'Release' }
-        .build_settings['MARKETING_VERSION']
+  release_build_configuration(target).build_settings['MARKETING_VERSION']
 end
 
 # Calculate the new MARKETING_VERSION without applying it. Used pre-flight
@@ -208,8 +221,7 @@ def calculate_new_version(xcodeproj:, target_name:, bump_type:)
   target = project.targets.find { |t| t.name == target_name }
   FastlaneCore::UI.user_error!("Target '#{target_name}' not found") unless target
 
-  release_config = target.build_configurations.find { |c| c.name == 'Release' }
-  current_version = release_config.build_settings['MARKETING_VERSION'] || '1.0.0'
+  current_version = release_build_configuration(target).build_settings['MARKETING_VERSION'] || '1.0.0'
 
   _resolve_bump(current: current_version, bump_type: bump_type)
 end
@@ -620,6 +632,20 @@ def commit_release_local(version:)
   FastlaneCore::UI.success("Created local release commit for v#{version} (not yet pushed)")
 end
 
+# Is an executable of this name on PATH?
+#
+# A Ruby scan rather than `system("command -v ...")`: the gh invocation below
+# deliberately avoids a shell, and this check should not quietly reintroduce
+# one for the sake of a builtin.
+def executable_in_path?(name)
+  ENV.fetch('PATH', '').split(File::PATH_SEPARATOR).any? do |dir|
+    next false if dir.empty?
+
+    candidate = File.join(dir, name)
+    File.file?(candidate) && File.executable?(candidate)
+  end
+end
+
 # Publish a GitHub Release for a tag that has already been pushed.
 #
 # Named for exactly what shipped: the tag is v<version>, the notes are that
@@ -634,7 +660,7 @@ end
 def publish_github_release(version:, build_number: nil)
   tag = "v#{version}"
 
-  unless system('command -v gh > /dev/null 2>&1')
+  unless executable_in_path?('gh')
     FastlaneCore::UI.important("gh not found — skipping GitHub Release for #{tag}.")
     FastlaneCore::UI.important("Create it later with: gh release create #{tag} --title #{tag} --notes-file <file>")
     return false
