@@ -195,6 +195,45 @@ bleed = "## [Unreleased]\n\n### Added\n- Pending\n\n## [1.0] - 2020-01-01\n\n###
 assert_equal(['Pending'], _parse_unreleased_subsections(bleed)['Added'], "parsing stops at the next version heading")
 
 puts
+puts "TestFlight notes"
+
+notes = format_testflight_notes({ 'Added' => ['One', 'Two'], 'Fixed' => ['Three'] })
+assert_equal("Added\n• One\n• Two\n\nFixed\n• Three", notes, "sections render as headed bullet lists")
+assert_equal(nil, format_testflight_notes({}), "no sections yields nil, not an empty string")
+assert_equal(nil, format_testflight_notes(nil), "nil sections yields nil")
+assert_equal(nil, format_testflight_notes({ 'Added' => [] }), "a section with no items yields nil")
+assert_equal("Fixed\n• Real", format_testflight_notes({ 'Added' => [], 'Fixed' => ['Real'] }), "empty sections are skipped, populated ones kept")
+
+commits = [
+  'feat(grid): Add a hint button (#12)',
+  'chore: Bump a dependency',
+  'fix: Stop the crash on rotate',
+  'ci(codeql): Speed up analysis',
+  'docs: Explain something'
+]
+assert_equal("• Add a hint button\n• Stop the crash on rotate", format_commit_notes(commits),
+             "only tester-relevant types survive, prefixes and PR numbers stripped")
+assert_equal(nil, format_commit_notes(['chore: Tooling', 'ci: More tooling']), "a tooling-only run yields nil")
+assert_equal(nil, format_commit_notes([]), "no commits yields nil")
+assert_equal(nil, format_commit_notes(nil), "nil commits yields nil")
+assert_equal("• Something", format_commit_notes(['feat!: Something']), "a breaking-change marker is handled")
+assert_equal("• Keep (#12) inside", format_commit_notes(['fix: Keep (#12) inside']), "only a trailing PR number is stripped")
+assert_equal(nil, format_commit_notes(['Not conventional at all']), "an unparseable subject is skipped")
+
+short = "Added\n• A thing"
+assert_equal(short, truncate_testflight_notes(short), "text under the limit is untouched")
+assert_equal(nil, truncate_testflight_notes(nil), "nil passes through")
+
+long = 'x' * (TESTFLIGHT_NOTES_LIMIT + 500)
+truncated = truncate_testflight_notes(long)
+assert_equal(true, truncated.length <= TESTFLIGHT_NOTES_LIMIT, "output never exceeds the limit")
+assert_equal(true, truncated.end_with?('(truncated)'), "truncation is announced")
+
+exact = 'x' * TESTFLIGHT_NOTES_LIMIT
+assert_equal(exact, truncate_testflight_notes(exact), "text exactly at the limit is untouched")
+assert_equal(true, truncate_testflight_notes('x' * 20, limit: 5).length <= 5, "a limit shorter than the marker still fits")
+
+puts
 puts "executable_in_path?"
 
 require 'tmpdir'

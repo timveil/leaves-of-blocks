@@ -655,6 +655,103 @@ def executable_in_path?(name)
   end
 end
 
+# TestFlight's "What to Test" field. Apple caps it; truncate rather than let
+# an upload be rejected for a field testers only skim.
+TESTFLIGHT_NOTES_LIMIT = 4000
+
+# Commit types worth showing a tester. A beta full of "chore: bump dependency"
+# tells them nothing about what to exercise, and burying two real fixes among
+# ten tooling commits is worse than showing neither.
+TESTER_RELEVANT_TYPES = %w[feat fix perf refactor style revert].freeze
+
+# Run a git command without a shell, returning empty on failure.
+def _git_output(*args)
+  require 'open3'
+  out, status = Open3.capture2('git', *args)
+  status.success? ? out : ''
+rescue StandardError
+  ''
+end
+
+# Format a { heading => [items] } hash as plain text for TestFlight.
+def format_testflight_notes(sections)
+  return nil if sections.nil? || sections.empty?
+
+  body = sections.map do |heading, items|
+    next nil if items.nil? || items.empty?
+    ([heading] + items.map { |item| "• #{item}" }).join("\n")
+  end.compact
+
+  body.empty? ? nil : body.join("\n\n")
+end
+
+# Format commit subjects as plain text, keeping only what a tester can act on.
+# Conventional prefixes and the trailing PR number are stripped: "feat(grid):
+# Add a hint button (#12)" reads as "Add a hint button".
+def format_commit_notes(subjects)
+  items = (subjects || []).map do |subject|
+    match = subject.to_s.strip.match(/\A(\w+)(?:\([^)]*\))?!?:\s*(.+)\z/)
+    next nil unless match && TESTER_RELEVANT_TYPES.include?(match[1].downcase)
+
+    text = match[2].sub(/\s*\(#\d+\)\z/, '').strip
+    text.empty? ? nil : "• #{text}"
+  end.compact
+
+  items.empty? ? nil : items.join("\n")
+end
+
+# Trim to TestFlight's limit, marking that something was cut so a tester does
+# not read a sentence that stops mid-word and assume that is all there was.
+def truncate_testflight_notes(text, limit: TESTFLIGHT_NOTES_LIMIT)
+  return text if text.nil? || text.length <= limit
+
+  marker = "\n\n… (truncated)"
+  return text[0, limit] if limit <= marker.length
+
+  text[0, limit - marker.length].rstrip + marker
+end
+
+# Build the "What to Test" text for a TestFlight upload.
+#
+# In order of preference: an explicit `notes:` lane argument, the CHANGELOG's
+# [Unreleased] section, then tester-relevant commits since the last tag. The
+# CHANGELOG comes first because it is written for humans and the release flow
+# already depends on it being current; commits are the fallback that is always
+# available.
+#
+# Never raises. Notes are a nicety and the upload is not: returning nil leaves
+# the build without them, exactly as before this existed.
+def testflight_notes(override: nil)
+  candidate = override.to_s.strip
+  return truncate_testflight_notes(candidate) unless candidate.empty?
+
+  changelog_path = File.join(Dir.pwd, '..', 'CHANGELOG.md')
+  if File.exist?(changelog_path)
+    from_changelog = format_testflight_notes(_parse_unreleased_subsections(File.read(changelog_path)))
+    return truncate_testflight_notes(from_changelog) if from_changelog
+  end
+
+  subjects = _git_output('log', "#{_last_tag}..HEAD", '--no-merges', '--format=%s')
+             .split("\n").map(&:strip).reject(&:empty?)
+  from_commits = format_commit_notes(subjects)
+  return truncate_testflight_notes(from_commits) if from_commits
+
+  FastlaneCore::UI.important("No [Unreleased] entries or tester-relevant commits — uploading without notes.")
+  nil
+rescue StandardError => e
+  FastlaneCore::UI.important("Could not build TestFlight notes (#{e.message}); uploading without them.")
+  nil
+end
+
+# Most recent tag, or the empty-tree hash so `<ref>..HEAD` still works on a
+# repository that has never been tagged.
+def _last_tag
+  tag = _git_output('describe', '--tags', '--abbrev=0').strip
+  return tag unless tag.empty?
+
+  _git_output('hash-object', '-t', 'tree', '/dev/null').strip
+end
+
 # Publish a GitHub Release for a tag that has already been pushed.
 #
 # Named for exactly what shipped: the tag is v<version>, the notes are that
