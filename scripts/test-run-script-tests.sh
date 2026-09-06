@@ -19,6 +19,10 @@ trap 'rm -rf "$TMP"' EXIT
 
 pass=0
 fail=0
+# Always capture the exit status into a variable before testing it. Using `$?`
+# directly in `if [ $? -eq N ]` makes it unrecoverable in the else branch --
+# there `$?` is the status of `[` itself, so a failure message reports 1 no
+# matter what the command actually returned.
 ok()  { pass=$((pass + 1)); printf '  ok    %s\n' "$1"; }
 bad() { fail=$((fail + 1)); printf '  FAIL  %s\n        %s\n' "$1" "$2"; }
 
@@ -72,11 +76,11 @@ D="$TMP/not-exec"; mkdir -p "$D"
 printf '#!/bin/bash\nexit 0\n' > "$D/test-gamma.sh"   # deliberately not chmod +x
 expect "$D" 1 "a non-executable suite is a failure"
 
-"$RUNNER" --dir >/dev/null 2>&1
-if [ $? -eq 2 ]; then ok "--dir without a value is a usage error"; else bad "--dir without value exits 2" "got $?"; fi
+"$RUNNER" --dir >/dev/null 2>&1; code=$?
+if [ "$code" -eq 2 ]; then ok "--dir without a value is a usage error"; else bad "--dir without value exits 2" "want exit 2, got $code"; fi
 
-"$RUNNER" --nonsense >/dev/null 2>&1
-if [ $? -eq 2 ]; then ok "an unknown flag is a usage error"; else bad "unknown flag exits 2" "got $?"; fi
+"$RUNNER" --nonsense >/dev/null 2>&1; code=$?
+if [ "$code" -eq 2 ]; then ok "an unknown flag is a usage error"; else bad "unknown flag exits 2" "want exit 2, got $code"; fi
 
 echo
 if [ "$fail" -eq 0 ]; then echo "All $pass checks passed."; exit 0; fi

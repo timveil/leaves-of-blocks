@@ -77,6 +77,11 @@ Two things worth knowing when you write one:
   `"${arr[@]}"` under `set -u` is an "unbound variable" error there, unlike in
   bash 4+. Guard with `[ "${#arr[@]}" -gt 0 ]` before looping. This one bites
   precisely on the success path, where the array of failures is empty.
+- **Capture `$?` into a variable before testing it.** In
+  `if [ $? -eq N ]; then ... else echo "got $?"; fi`, the `$?` in the else
+  branch is the status of `[` itself — so the failure message reports `1`
+  whatever the command actually returned, and sends you chasing the wrong
+  number.
 
 ## Running
 
