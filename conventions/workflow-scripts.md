@@ -73,8 +73,13 @@ Both have a companion `test-*.sh` covering the cases that matter.
 
 ## Enforcement
 
-Review, for now. Nothing fails a PR that inlines a loop — worth wiring a check
-into the job proposed in #60.
+Partly automated. [`.github/workflows/tooling.yml`](../.github/workflows/tooling.yml)
+runs every `scripts/test-*.sh` and verifies the fastlane configuration loads, so
+an extracted script that breaks fails a PR.
+
+What is still review-only is the extraction itself: nothing fails a PR that
+inlines a loop instead of extracting it. A linter over `run:` step bodies would
+close that, and the audit query in the section below is the shape it would take.
 
 Current state, audited at the time of writing: every `run:` step in the
 repository is at most ten lines with at most one conditional. The two in

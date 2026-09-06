@@ -117,6 +117,8 @@ GitHub Actions in `.github/workflows/ios.yml`:
 - Triggers on push to `main` and on PRs touching Swift / project / scripts
 - Every job that runs `xcodebuild` selects its toolchain with `./scripts/xcode-version.sh --select`, which picks the newest installed Xcode meeting the floor in `.xcode-version` and exports `DEVELOPER_DIR`. Without it, jobs inherit whatever Xcode the runner image happens to default to, and that can change under you.
 
+`.github/workflows/tooling.yml` covers the pipeline that builds the app rather than the app itself — the shell scripts and the fastlane configuration, neither of which had any coverage before. It runs [`scripts/run-script-tests.sh`](scripts/run-script-tests.sh) (every `scripts/test-*.sh`) and `bundle exec fastlane lanes`, needs no App Store Connect credentials, and finishes in about a minute. `fastlane lanes` is the cheap load check: it parses the Fastfile, Appfile and every required helper without running `before_all`.
+
 CodeQL runs separately in `.github/workflows/codeql.yml` (Swift on macOS, Ruby and Actions on Ubuntu, plus a weekly cron):
 
 - A `changes` job runs [`scripts/codeql-languages.sh`](scripts/codeql-languages.sh) over the PR diff and emits a matrix containing **only** the affected languages, so a fastlane-only change no longer pays for a full Swift `xcodebuild` (~20 min on macOS). Scheduled runs pass `--all` and analyze everything.
