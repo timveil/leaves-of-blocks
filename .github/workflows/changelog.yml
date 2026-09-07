@@ -1,0 +1,48 @@
+name: Changelog
+
+# A pull request that changes something a player can observe says so in
+# CHANGELOG.md, on the pull request that knows why it mattered
+# (conventions/changelog.md).
+#
+# Leaving it to the release run does not work. update_changelog_from_commits
+# reads commit subjects -- written for developers, about the code -- and renders
+# them into the App Store release notes for seven locales inside the same
+# `deploy` that commits them, so the first time anyone sees the sentence a
+# player will read, it has already shipped. Six feat(i18n) pull requests added
+# six languages between v2.0.7 and 2.1.0 and none of them said so.
+on:
+  pull_request:
+    branches: [ "main" ]
+    # `labeled` and `unlabeled` matter: adding "no-changelog" has to be able to
+    # turn a failing run green without an unrelated push to re-trigger it.
+    types: [opened, synchronize, reopened, labeled, unlabeled]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  changelog:
+    name: Require an entry for player-visible changes
+    runs-on: ubuntu-latest
+    # The escape hatch. Dispatching on a label to decide whether to call a
+    # script is glue, not logic (conventions/workflow-scripts.md).
+    if: ${{ !contains(github.event.pull_request.labels.*.name, 'no-changelog') }}
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          # Full history so the base commit is present for the diff below.
+          fetch-depth: 0
+
+      # Diffing base..head rather than the merge ref: this asks what the pull
+      # request itself changed, not what the merge would contain.
+      - name: Require a changelog entry
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: git diff --name-only "$BASE_SHA" "$HEAD_SHA" | ./scripts/check-changelog.sh

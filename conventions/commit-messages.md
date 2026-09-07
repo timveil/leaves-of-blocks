@@ -40,10 +40,13 @@ The type is not decoration. `update_changelog_from_commits` in
 | `revert` | Removed |
 | everything else | not included |
 
-So `chore`, `ci`, `docs`, `build` and `test` produce no changelog entry. That is
-usually right — but when such a change *is* worth telling users about, add the
-line to `[Unreleased]` in `CHANGELOG.md` by hand. The generator preserves manual
-entries and folds them into the release.
+So `chore`, `ci`, `docs`, `build` and `test` produce no changelog entry.
+
+That mapping is a backstop, not the plan. A pull request that changes something
+a player can observe writes its own line under `[Unreleased]` — see
+[Changelog](changelog.md) — and when it does, nothing is derived from commit
+subjects at all. This table describes what happens for the release nobody
+authored.
 
 ## The PR title is a commit subject too
 
