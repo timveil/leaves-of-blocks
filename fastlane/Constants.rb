@@ -150,7 +150,8 @@ SCREENSHOT_LANGUAGES = [
   "en-US",
   "es-MX",
   "fr-FR",
-  "ja"
+  "ja",
+  "nl-NL"
 ]
 
 # Fastlane Paths

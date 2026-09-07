@@ -53,6 +53,12 @@
             "state" : "translated",
             "value" : "情報"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Info"
+          }
         }
       }
     },
@@ -87,6 +93,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "このゲームについて"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Over het spel"
           }
         }
       }
@@ -123,6 +135,12 @@
             "state" : "translated",
             "value" : "スマートなブロック生成"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Slimme blokkeuze"
+          }
         }
       }
     },
@@ -157,6 +175,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "盤面を分析して、手ごたえを保ちながら詰みを防ぐようにブロックを調整します。苦しい場面では、置きやすい形が自動的に増えます。"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Het spel bekijkt je speelveld en past de blokken aan die je krijgt: uitdagend, maar nooit uitzichtloos. Wordt het krap, dan komen er vanzelf handiger vormen."
           }
         }
       }
@@ -193,6 +217,12 @@
             "state" : "translated",
             "value" : "高度な機能"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geavanceerde functies"
+          }
         }
       }
     },
@@ -227,6 +257,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Leaves of Blocks には、プレイスタイルに合わせて上達を後押しする仕組みが備わっています。"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leaves of Blocks heeft systemen aan boord die zich aanpassen aan hoe jij speelt en je helpen beter te worden."
           }
         }
       }
@@ -263,6 +299,12 @@
             "state" : "translated",
             "value" : "すべてのゲームデータをリセットしました。"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle spelgegevens zijn gewist."
+          }
         }
       }
     },
@@ -294,6 +336,12 @@
           }
         },
         "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Answer."
+          }
+        },
+        "nl" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Answer."
@@ -333,6 +381,12 @@
             "state" : "translated",
             "value" : "アシスト"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hulpmiddelen"
+          }
         }
       }
     },
@@ -367,6 +421,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "苦しいときのための機能です。取り消しとヒントは1ゲームにつき1回ずつ使えます:"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Voor als het krap wordt. Ongedaan maken en Hint kun je elk één keer per spel gebruiken:"
           }
         }
       }
@@ -403,6 +463,12 @@
             "state" : "translated",
             "value" : "取り消し: 直前に置いたブロックを戻します。"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ongedaan maken: neemt je laatst geplaatste blok terug."
+          }
         }
       }
     },
@@ -437,6 +503,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ヒント: 盤面におすすめの一手を表示します。"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hint: laat een mogelijke zet op het speelveld zien."
           }
         }
       }
@@ -473,6 +545,12 @@
             "state" : "translated",
             "value" : "盤面を見る: ゲーム終了後に、最後の盤面を表示します。"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Speelveld bekijken: toont na afloop het speelveld zoals het eindigde."
+          }
         }
       }
     },
@@ -507,6 +585,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "平均スコア"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gemiddelde score"
           }
         }
       }
@@ -543,6 +627,12 @@
             "state" : "translated",
             "value" : "エリア消去のパワーアップ"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vlak wissen-bonus"
+          }
         }
       }
     },
@@ -577,6 +667,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ブロック%d個"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%d blokken beschikbaar"
           }
         }
       }
@@ -613,6 +709,12 @@
             "state" : "translated",
             "value" : "%dマスの%@ブロック"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%2$@ blok van %1$d vakjes"
+          }
         }
       }
     },
@@ -647,6 +749,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "青"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "blauw"
           }
         }
       }
@@ -683,6 +791,12 @@
             "state" : "translated",
             "value" : "緑"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "groen"
+          }
         }
       }
     },
@@ -717,6 +831,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "オレンジ"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "oranje"
           }
         }
       }
@@ -753,6 +873,12 @@
             "state" : "translated",
             "value" : "ピンク"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "roze"
+          }
         }
       }
     },
@@ -787,6 +913,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "紫"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "paars"
           }
         }
       }
@@ -823,6 +955,12 @@
             "state" : "translated",
             "value" : "赤"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "rood"
+          }
         }
       }
     },
@@ -857,6 +995,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "黄"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "geel"
           }
         }
       }
@@ -893,6 +1037,12 @@
             "state" : "translated",
             "value" : "列消去のパワーアップ"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kolom wissen-bonus"
+          }
         }
       }
     },
@@ -927,6 +1077,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@、%d列消去、ボーナス%dポイント"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@, %d rijen gewist, %d bonuspunten"
           }
         }
       }
@@ -963,6 +1119,12 @@
             "state" : "translated",
             "value" : "上下にスワイプすると難易度を変更できます"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Veeg omhoog of omlaag om de moeilijkheid te wijzigen"
+          }
         }
       }
     },
@@ -997,6 +1159,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "難易度"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Moeilijkheid"
           }
         }
       }
@@ -1033,6 +1201,12 @@
             "state" : "translated",
             "value" : "盤面、8×8"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Speelveld, 8 bij 8"
+          }
         }
       }
     },
@@ -1067,6 +1241,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ヒント、残り1回"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hint, één beschikbaar"
           }
         }
       }
@@ -1103,6 +1283,12 @@
             "state" : "translated",
             "value" : "ヒント、使用済み"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hint, al gebruikt"
+          }
         }
       }
     },
@@ -1137,6 +1323,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "行消去のパワーアップ"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rij wissen-bonus"
           }
         }
       }
@@ -1173,6 +1365,12 @@
             "state" : "translated",
             "value" : "スコア%@、%@行消去"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Score %@, %@ rijen gewist"
+          }
         }
       }
     },
@@ -1207,6 +1405,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "取り消し、残り1回"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ongedaan maken, één beschikbaar"
           }
         }
       }
@@ -1243,6 +1447,12 @@
             "state" : "translated",
             "value" : "取り消し、使用済み"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ongedaan maken, al gebruikt"
+          }
         }
       }
     },
@@ -1277,6 +1487,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "自己ベスト"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beste ooit"
           }
         }
       }
@@ -1313,6 +1529,12 @@
             "state" : "translated",
             "value" : "最高スコア"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beste score"
+          }
         }
       }
     },
@@ -1347,6 +1569,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "配置ブロック"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geplaatste blokken"
           }
         }
       }
@@ -1383,6 +1611,12 @@
             "state" : "translated",
             "value" : "キャンセル"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Annuleer"
+          }
         }
       }
     },
@@ -1417,6 +1651,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ゲームを再開"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spel hervatten"
           }
         }
       }
@@ -1453,6 +1693,12 @@
             "state" : "translated",
             "value" : "スコア: %lld"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Score: %lld"
+          }
         }
       }
     },
@@ -1487,6 +1733,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "破棄"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verwerpen"
           }
         }
       }
@@ -1523,6 +1775,12 @@
             "state" : "translated",
             "value" : "プレイ中のゲームは破棄され、元に戻せません。"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Je huidige spel wordt verworpen en kan niet worden hersteld."
+          }
         }
       }
     },
@@ -1557,6 +1815,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "新しいゲームを始めますか？"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nieuw spel beginnen?"
           }
         }
       }
@@ -1593,6 +1857,12 @@
             "state" : "translated",
             "value" : "ゲーム履歴"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geschiedenis"
+          }
         }
       }
     },
@@ -1627,6 +1897,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "プレイ"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spelen"
           }
         }
       }
@@ -1663,6 +1939,12 @@
             "state" : "translated",
             "value" : "まだ記録がありません。1ゲーム終えるとここに表示されます。"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nog geen spellen: speel er een uit en hij verschijnt hier."
+          }
         }
       }
     },
@@ -1697,6 +1979,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "統計"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Statistieken"
           }
         }
       }
@@ -1733,6 +2021,12 @@
             "state" : "translated",
             "value" : "ゲームを再開"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spel hervatten"
+          }
         }
       }
     },
@@ -1767,6 +2061,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "高"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hoog"
           }
         }
       }
@@ -1803,6 +2103,12 @@
             "state" : "translated",
             "value" : "低"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Laag"
+          }
         }
       }
     },
@@ -1837,6 +2143,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "中"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gemiddeld"
           }
         }
       }
@@ -1873,6 +2185,12 @@
             "state" : "translated",
             "value" : "履歴をすべて削除"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Volledige geschiedenis wissen"
+          }
         }
       }
     },
@@ -1907,6 +2225,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "履歴を削除"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geschiedenis wissen"
           }
         }
       }
@@ -1943,6 +2267,12 @@
             "state" : "translated",
             "value" : "保存されたゲームと統計がすべて完全に削除されます。この操作は取り消せません。"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hiermee worden al je opgeslagen spellen en statistieken definitief verwijderd. Dit kan niet ongedaan worden gemaakt."
+          }
         }
       }
     },
@@ -1977,6 +2307,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ラインを消す"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rijen wissen"
           }
         }
       }
@@ -2013,6 +2349,12 @@
             "state" : "translated",
             "value" : "横の行または縦の列をすべて埋めると、そのラインが消えてスコアになります。複数のラインを同時に消すとボーナス点が入り、同時に消すほどコンボボーナスが大きくなります。"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zodra je een rij of kolom helemaal vult, verdwijnt die en levert hij punten op. Wis er meerdere tegelijk voor bonuspunten: hoe meer tegelijk, hoe groter de combobonus."
+          }
         }
       }
     },
@@ -2047,6 +2389,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "コンボ"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "COMBO"
           }
         }
       }
@@ -2083,6 +2431,12 @@
             "state" : "translated",
             "value" : "コンボ！"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "COMBO!"
+          }
         }
       }
     },
@@ -2114,6 +2468,12 @@
           }
         },
         "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "leavesofblocks.com"
+          }
+        },
+        "nl" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "leavesofblocks.com"
@@ -2153,6 +2513,12 @@
             "state" : "translated",
             "value" : "開発者"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Maker"
+          }
         }
       }
     },
@@ -2188,6 +2554,12 @@
             "state" : "translated",
             "value" : "。ゲームは怒りではなく安らぎを与えるものだと考える、ソフトウェアエンジニアであり父親です。"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ", software-engineer en vader, die vindt dat een spel rust moet geven in plaats van ergernis."
+          }
         }
       }
     },
@@ -2219,6 +2591,12 @@
           }
         },
         "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tim Veil"
+          }
+        },
+        "nl" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tim Veil"
@@ -2258,6 +2636,12 @@
             "state" : "translated",
             "value" : "献辞"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Opdracht"
+          }
         }
       }
     },
@@ -2292,6 +2676,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "エマ、アニー、グレースへ。このゲームが、大小さまざまな人生の苦労からのひとときの気晴らしになりますように。"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Voor Emma, Annie en Grace. Moge dit spel even afleiding bieden van de grote en kleine beslommeringen van het leven."
           }
         }
       }
@@ -2328,6 +2718,12 @@
             "state" : "translated",
             "value" : "開発: "
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ontwikkeld door "
+          }
         }
       }
     },
@@ -2362,6 +2758,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "難易度"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Moeilijkheid"
           }
         }
       }
@@ -2398,6 +2800,12 @@
             "state" : "translated",
             "value" : "大胆"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gedurfd"
+          }
         }
       }
     },
@@ -2432,6 +2840,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "やさしいは初めての方に最適です。小さくて置きやすいブロックが多く出ます"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zacht is ideaal om te beginnen: meer kleine blokken die makkelijk te plaatsen zijn"
           }
         }
       }
@@ -2468,6 +2882,12 @@
             "state" : "translated",
             "value" : "やさしい"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zacht"
+          }
         }
       }
     },
@@ -2502,6 +2922,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ワイルドは経験者向けです。大きく複雑なブロックが増え、戦略的な判断が求められます"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wild is voor ervaren spelers: reken op meer grote, ingewikkelde blokken die om strategie vragen"
           }
         }
       }
@@ -2538,6 +2964,12 @@
             "state" : "translated",
             "value" : "難易度"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Moeilijkheid"
+          }
         }
       }
     },
@@ -2572,6 +3004,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "大胆は小さなブロックと大きなブロックがほどよく混ざった、バランスの取れた難易度です"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gedurfd biedt een evenwichtige uitdaging met een goede mix van kleine en grote blokken"
           }
         }
       }
@@ -2608,6 +3046,12 @@
             "state" : "translated",
             "value" : "ワイルド"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wild"
+          }
         }
       }
     },
@@ -2642,6 +3086,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "遊び方"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zo speel je"
           }
         }
       }
@@ -2678,6 +3128,12 @@
             "state" : "translated",
             "value" : "画面下部に最大3つのブロックが表示されます。すべて収まる場所にドラッグして配置してください。ブロックは既存のマスと重ねたり、盤面の外にはみ出したりできません。3つすべてを使うと、自動的に新しい3つが配られます。"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Onder in beeld zie je maximaal 3 blokvormen. Sleep er een naar het speelveld, op een plek waar hij helemaal past. Blokken mogen niet over elkaar heen liggen of buiten de rand vallen. Heb je alle 3 geplaatst, dan krijg je automatisch 3 nieuwe."
+          }
         }
       }
     },
@@ -2712,6 +3168,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "効率"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Efficiëntie"
           }
         }
       }
@@ -2748,6 +3210,12 @@
             "state" : "translated",
             "value" : "パフォーマンス記録"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Prestatiemeting"
+          }
         }
       }
     },
@@ -2782,6 +3250,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "盤面のスペースをどれだけ効率よく使えているかを記録し、A+ から D までの評価を付けます。盤面を整理して無駄を減らすほど、効率は高くなります。"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Het spel houdt bij hoe efficiënt je de ruimte op het speelveld gebruikt en geeft een cijfer van A+ tot D. Hoe overzichtelijker je speelveld en hoe minder ruimte je verspilt, hoe hoger het cijfer."
           }
         }
       }
@@ -2818,6 +3292,12 @@
             "state" : "translated",
             "value" : "最終スコア"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eindscore"
+          }
         }
       }
     },
@@ -2852,6 +3332,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Game Center を有効にする"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Game Center inschakelen"
           }
         }
       }
@@ -2888,6 +3374,12 @@
             "state" : "translated",
             "value" : "オンにすると、最終スコアと獲得した実績が Apple の Game Center に送信されます。初期設定はオフで、オンにするまでデータはこの端末に留まります。広告なし、第三者による追跡なし、データの販売なし。"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Als dit aanstaat, worden je eindscore en behaalde prestaties naar Game Center van Apple gestuurd. Staat standaard uit: je gegevens blijven op dit apparaat totdat je ermee instemt. Geen advertenties, geen tracking door derden, geen verkoop van gegevens."
+          }
         }
       }
     },
@@ -2922,6 +3414,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ゲーム終了"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spel voorbij"
           }
         }
       }
@@ -2958,6 +3456,12 @@
             "state" : "translated",
             "value" : "手持ちの3つのブロックがどこにも置けなくなるとゲーム終了です。盤面の状況に応じて配られるブロックの種類が調整されるので、そう簡単には終わりません。"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Het spel eindigt als geen van je 3 blokken nog ergens past. Geen zorgen: het spel stemt de soort blokken af op je speelveld om dat uit te stellen."
+          }
         }
       }
     },
@@ -2992,6 +3496,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "力強きゲームは終わり、あなたはひとつのブロックも捧げられなかった。"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dat het machtige spel geëindigd is, en Jij geen blok kon bijdragen."
           }
         }
       }
@@ -3028,6 +3538,12 @@
             "state" : "translated",
             "value" : "ゲーム終了"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einde spel"
+          }
         }
       }
     },
@@ -3063,6 +3579,12 @@
             "state" : "translated",
             "value" : "プレイ回数"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gespeelde spellen"
+          }
         }
       }
     },
@@ -3094,6 +3616,12 @@
           }
         },
         "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A"
+          }
+        },
+        "nl" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "A"
@@ -3133,6 +3661,12 @@
             "state" : "translated",
             "value" : "A+"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A+"
+          }
         }
       }
     },
@@ -3164,6 +3698,12 @@
           }
         },
         "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "B"
+          }
+        },
+        "nl" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "B"
@@ -3203,6 +3743,12 @@
             "state" : "translated",
             "value" : "B+"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "B+"
+          }
         }
       }
     },
@@ -3238,6 +3784,12 @@
             "state" : "translated",
             "value" : "初心者"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beginner"
+          }
         }
       }
     },
@@ -3269,6 +3821,12 @@
           }
         },
         "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "C"
+          }
+        },
+        "nl" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "C"
@@ -3308,6 +3866,12 @@
             "state" : "translated",
             "value" : "C+"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "C+"
+          }
         }
       }
     },
@@ -3339,6 +3903,12 @@
           }
         },
         "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "D"
+          }
+        },
+        "nl" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "D"
@@ -3378,6 +3948,12 @@
             "state" : "translated",
             "value" : "熟練者"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Expert"
+          }
         }
       }
     },
@@ -3412,6 +3988,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "練習中"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lerend"
           }
         }
       }
@@ -3448,6 +4030,12 @@
             "state" : "translated",
             "value" : "達人"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Meester"
+          }
         }
       }
     },
@@ -3482,6 +4070,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "中級者"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bedreven"
           }
         }
       }
@@ -3518,6 +4112,12 @@
             "state" : "translated",
             "value" : "最高スコア"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beste score"
+          }
         }
       }
     },
@@ -3552,6 +4152,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ゲーム履歴を削除しました。"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "De spelgeschiedenis is gewist."
           }
         }
       }
@@ -3588,6 +4194,12 @@
             "state" : "translated",
             "value" : "ホーム"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start"
+          }
         }
       }
     },
@@ -3622,6 +4234,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "遊び方"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zo speel je"
           }
         }
       }
@@ -3658,6 +4276,12 @@
             "state" : "translated",
             "value" : "遊び方"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Uitleg"
+          }
         }
       }
     },
@@ -3689,6 +4313,12 @@
           }
         },
         "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "To me every hour of the light and dark is a miracle, Every cubic inch of space is a miracle,"
+          }
+        },
+        "nl" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "To me every hour of the light and dark is a miracle, Every cubic inch of space is a miracle,"
@@ -3728,6 +4358,12 @@
             "state" : "translated",
             "value" : "Miracles"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Miracles"
+          }
         }
       }
     },
@@ -3759,6 +4395,12 @@
           }
         },
         "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1856"
+          }
+        },
+        "nl" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "1856"
@@ -3798,6 +4440,12 @@
             "state" : "translated",
             "value" : "着想"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inspiratie"
+          }
         }
       }
     },
@@ -3832,6 +4480,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ブロックパズルへの愛情と、広告への苛立ち、そしてウォルト・ホイットマンの時を超えた詩から生まれました。"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ontstaan uit liefde voor blokpuzzels, ergernis over advertenties en inspiratie door de tijdloze poëzie van Walt Whitman."
           }
         }
       }
@@ -3868,6 +4522,12 @@
             "state" : "translated",
             "value" : "前回のスコア: %@"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vorige score: %@"
+          }
         }
       }
     },
@@ -3902,6 +4562,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ライン"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rijen"
           }
         }
       }
@@ -3938,6 +4604,12 @@
             "state" : "translated",
             "value" : "消したライン"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gewiste rijen"
+          }
         }
       }
     },
@@ -3972,6 +4644,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "最長コンボ"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Langste combo"
           }
         }
       }
@@ -4008,6 +4686,12 @@
             "state" : "translated",
             "value" : "メガコンボ！"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "MEGACOMBO!"
+          }
         }
       }
     },
@@ -4042,6 +4726,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "メニュー"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Menu"
           }
         }
       }
@@ -4078,6 +4768,12 @@
             "state" : "translated",
             "value" : "新しいゲーム"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nieuw spel"
+          }
         }
       }
     },
@@ -4113,6 +4809,12 @@
             "state" : "translated",
             "value" : "新しいゲーム"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nieuw spel"
+          }
         }
       }
     },
@@ -4144,6 +4846,12 @@
           }
         },
         "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        },
+        "nl" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "OK"
@@ -4183,6 +4891,12 @@
             "state" : "translated",
             "value" : "ポイント"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Punten"
+          }
         }
       }
     },
@@ -4217,6 +4931,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "上達のコツ"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Handige tips"
           }
         }
       }
@@ -4253,6 +4973,12 @@
             "state" : "translated",
             "value" : "すべてのデータをリセット"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle gegevens wissen"
+          }
         }
       }
     },
@@ -4287,6 +5013,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "リセット完了"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wissen voltooid"
           }
         }
       }
@@ -4323,6 +5055,12 @@
             "state" : "translated",
             "value" : "履歴、最高スコア、設定を含む「すべての」ゲームデータが完全に削除されます。この操作は取り消せません。"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hiermee worden ALLE spelgegevens definitief verwijderd, inclusief geschiedenis, topscores en voorkeuren. Dit kan niet ongedaan worden gemaakt."
+          }
         }
       }
     },
@@ -4357,6 +5095,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "すべてリセット"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alles wissen"
           }
         }
       }
@@ -4393,6 +5137,12 @@
             "state" : "translated",
             "value" : "スコア"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Score"
+          }
         }
       }
     },
@@ -4427,6 +5177,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "置いたブロックの1マスごとに入るポイント"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Punten voor elk vakje van een blok dat je plaatst"
           }
         }
       }
@@ -4463,6 +5219,12 @@
             "state" : "translated",
             "value" : "消したライン1本ごとに入るポイント"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Punten voor elke volle rij die je wist"
+          }
         }
       }
     },
@@ -4497,6 +5259,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "同時に消したライン1本ごとに加算されるボーナス"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bonuspunten voor elke extra rij die je tegelijk wist"
           }
         }
       }
@@ -4533,6 +5301,12 @@
             "state" : "translated",
             "value" : "スコア"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Punten"
+          }
         }
       }
     },
@@ -4567,6 +5341,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "設定"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Instellingen"
           }
         }
       }
@@ -4603,6 +5383,12 @@
             "state" : "translated",
             "value" : "設定"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Instellingen"
+          }
         }
       }
     },
@@ -4634,6 +5420,12 @@
           }
         },
         "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The day erased, the lesson done"
+          }
+        },
+        "nl" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "The day erased, the lesson done"
@@ -4673,6 +5465,12 @@
             "state" : "translated",
             "value" : "A Clear Midnight"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A Clear Midnight"
+          }
         }
       }
     },
@@ -4704,6 +5502,12 @@
           }
         },
         "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1880"
+          }
+        },
+        "nl" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "1880"
@@ -4743,6 +5547,12 @@
             "state" : "translated",
             "value" : "エリア消去"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vlak wissen"
+          }
         }
       }
     },
@@ -4777,6 +5587,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "エリア消去は最強のブロックです。この紫のブロックは、置いた場所を中心に3×3の範囲を消します。ここぞという場面で使いましょう。"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vlak wissen is het krachtigste blok. Dit paarse blok wist een gebied van 3×3 rond de plek waar je het neerlegt. Bewaar het voor het juiste moment."
           }
         }
       }
@@ -4813,6 +5629,12 @@
             "state" : "translated",
             "value" : "列消去"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kolom wissen"
+          }
         }
       }
     },
@@ -4847,6 +5669,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "行消去は、置くと横一行をまるごと消す強力な赤いブロックです。詰まった盤面を切り開くのに向いています。"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rij wissen is een krachtig rood blok dat bij plaatsing meteen een hele horizontale rij wist. Ideaal om een vastgelopen speelveld open te breken."
           }
         }
       }
@@ -4883,6 +5711,12 @@
             "state" : "translated",
             "value" : "通常の\nブロック"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gewone\nblokken"
+          }
         }
       }
     },
@@ -4917,6 +5751,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "通常ブロックは基本となる駒です。形も大きさもさまざまで、1〜9マスあります。行や列を埋めて消しましょう。"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gewone blokken zijn je bouwstenen. Ze komen in allerlei vormen en maten (1 tot 9 vakjes). Vul rijen en kolommen om ze te wissen."
           }
         }
       }
@@ -4953,6 +5793,12 @@
             "state" : "translated",
             "value" : "行消去"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rij wissen"
+          }
         }
       }
     },
@@ -4987,6 +5833,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "列消去は、置くと縦一列をまるごと消す強力な青いブロックです。スペースを作るのに最適です。"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kolom wissen is een krachtig blauw blok dat bij plaatsing meteen een hele verticale kolom wist. Perfect om ruimte te maken."
           }
         }
       }
@@ -5023,6 +5875,12 @@
             "state" : "translated",
             "value" : "ブロックの形"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Blokvormen"
+          }
         }
       }
     },
@@ -5057,6 +5915,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "結果を見る"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Resultaat tonen"
           }
         }
       }
@@ -5093,6 +5957,12 @@
             "state" : "translated",
             "value" : "平均効率"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gem. efficiëntie"
+          }
         }
       }
     },
@@ -5127,6 +5997,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "最高コンボ"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beste combo"
           }
         }
       }
@@ -5163,6 +6039,12 @@
             "state" : "translated",
             "value" : "プレイ日数"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Speeldagen"
+          }
         }
       }
     },
@@ -5194,6 +6076,12 @@
           }
         },
         "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld%%"
+          }
+        },
+        "nl" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld%%"
@@ -5233,6 +6121,12 @@
             "state" : "translated",
             "value" : "よく遊ぶ難易度"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Favoriete modus"
+          }
         }
       }
     },
@@ -5267,6 +6161,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld時間%lld分"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld u %lld min"
           }
         }
       }
@@ -5303,6 +6203,12 @@
             "state" : "translated",
             "value" : "最長プレイ"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Langste spel"
+          }
         }
       }
     },
@@ -5337,6 +6243,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld分"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld min"
           }
         }
       }
@@ -5373,6 +6285,12 @@
             "state" : "translated",
             "value" : "最多ライン"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Meeste rijen"
+          }
         }
       }
     },
@@ -5407,6 +6325,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "アクティビティ"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Activiteit"
           }
         }
       }
@@ -5443,6 +6367,12 @@
             "state" : "translated",
             "value" : "記録"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Records"
+          }
         }
       }
     },
@@ -5477,6 +6407,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "スキル"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Vaardigheid"
           }
         }
       }
@@ -5513,6 +6449,12 @@
             "state" : "translated",
             "value" : "総プレイ時間"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Totale speeltijd"
+          }
         }
       }
     },
@@ -5548,6 +6490,12 @@
             "state" : "translated",
             "value" : "平均評価"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gebruikelijk cijfer"
+          }
         }
       }
     },
@@ -5579,6 +6527,12 @@
           }
         },
         "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "—"
+          }
+        },
+        "nl" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "—"
@@ -5618,6 +6572,12 @@
             "state" : "translated",
             "value" : "戦略的なプレイ"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Strategisch spel"
+          }
         }
       }
     },
@@ -5652,6 +6612,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ラインを消す準備や先読みの上手さに応じて、初心者から達人まで評価されます。1手で複数のラインを消せる場面を探しましょう。"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Je strategisch inzicht krijgt een waardering van Beginner tot Meester, op basis van hoe goed je rijen voorbereidt en vooruitdenkt. Let op kansen om met één blok meerdere rijen tegelijk te wissen."
           }
         }
       }
@@ -5688,6 +6654,12 @@
             "state" : "translated",
             "value" : "戦略"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Strategie"
+          }
         }
       }
     },
@@ -5722,6 +6694,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "タップで履歴へ"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tik voor geschiedenis"
           }
         }
       }
@@ -5758,6 +6736,12 @@
             "state" : "translated",
             "value" : "SwiftUI で開発、iOS 18.0 以降に対応。広告なし。第三者による追跡なし。データの販売なし。標準ではオフラインでプレイでき、Apple Game Center のリーダーボードと実績は任意で利用できます。"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gebouwd met SwiftUI voor iOS 18.0 en hoger. Geen advertenties. Geen tracking door derden. Geen verkoop van gegevens. Standaard offline te spelen: Game Center van Apple, voor ranglijsten en prestaties, is optioneel."
+          }
         }
       }
     },
@@ -5792,6 +6776,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "技術情報"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Technische details"
           }
         }
       }
@@ -5828,6 +6818,12 @@
             "state" : "translated",
             "value" : "盤面"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Het speelveld"
+          }
         }
       }
     },
@@ -5862,6 +6858,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "盤面は64マスの8×8グリッドです。横の行や縦の列をすべて埋めると消えてポイントになります。最初からいくつかブロックが置かれていて、序盤から考えどころがあります。"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Je speelveld is een raster van 8×8 met 64 vakjes. Het doel: hele horizontale rijen of verticale kolommen vullen om ze te wissen en punten te scoren. Er liggen al een paar blokken klaar bij de start, zodat het meteen interessant is."
           }
         }
       }
@@ -5898,6 +6900,12 @@
             "state" : "translated",
             "value" : "プレイ時間"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Speeltijd"
+          }
         }
       }
     },
@@ -5932,6 +6940,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "盤面が埋まってきたら、角と端をうまく使いましょう"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gebruik hoeken en randen bewust als het speelveld voller wordt"
           }
         }
       }
@@ -5968,6 +6982,12 @@
             "state" : "translated",
             "value" : "整理された戦略的なプレイほど、効率の評価は上がります"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Je efficiëntiecijfer stijgt als je overzichtelijk en doordacht speelt"
+          }
         }
       }
     },
@@ -6002,6 +7022,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "盤面は整理して、穴が散らばらないようにしましょう"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Houd je speelveld overzichtelijk: voorkom verspreide gaten"
           }
         }
       }
@@ -6038,6 +7064,12 @@
             "state" : "translated",
             "value" : "1手で複数のラインを消せる場面を探しましょう"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Let op zetten waarmee je meerdere rijen tegelijk wist"
+          }
         }
       }
     },
@@ -6072,6 +7104,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "1つ置く前に、3つのブロックすべてを見比べましょう"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bekijk alle drie de blokken voordat je er een plaatst"
           }
         }
       }
@@ -6108,6 +7146,12 @@
             "state" : "translated",
             "value" : "小さなブロックは狭い場所と詰めの一手のために取っておきましょう"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bewaar kleine blokken voor krappe plekken en het laatste zetje"
+          }
         }
       }
     },
@@ -6142,6 +7186,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "総ブロック数"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Totaal aantal blokken"
           }
         }
       }
@@ -6178,6 +7228,12 @@
             "state" : "translated",
             "value" : "取り消し"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ongedaan maken"
+          }
         }
       }
     },
@@ -6212,6 +7268,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "バージョン %@"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Versie %@"
           }
         }
       }
@@ -6248,6 +7310,12 @@
             "state" : "translated",
             "value" : "Game Center を開く"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Game Center openen"
+          }
         }
       }
     },
@@ -6282,6 +7350,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "リーダーボードを見る"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ranglijst bekijken"
           }
         }
       }
@@ -6318,6 +7392,12 @@
             "state" : "translated",
             "value" : "盤面を見る"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Speelveld bekijken"
+          }
         }
       }
     },
@@ -6352,6 +7432,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "最後の盤面を表示して、どう終わったかを確認します"
+          }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toont het speelveld zoals het er aan het einde van het spel bij lag"
           }
         }
       }
@@ -6388,6 +7474,12 @@
             "state" : "translated",
             "value" : "結果を見る"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Overzicht bekijken"
+          }
         }
       }
     },
@@ -6423,6 +7515,12 @@
             "state" : "translated",
             "value" : "ウェブサイト"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Website"
+          }
         }
       }
     },
@@ -6454,6 +7552,12 @@
           }
         },
         "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "That you are here—that life exists and identity,"
+          }
+        },
+        "nl" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "That you are here—that life exists and identity,"
@@ -6493,6 +7597,12 @@
             "state" : "translated",
             "value" : "That the powerful play goes on, and you may contribute a verse."
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "That the powerful play goes on, and you may contribute a verse."
+          }
         }
       }
     },
@@ -6528,6 +7638,12 @@
             "state" : "translated",
             "value" : "O Me! O Life!"
           }
+        },
+        "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O Me! O Life!"
+          }
         }
       }
     },
@@ -6559,6 +7675,12 @@
           }
         },
         "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1867"
+          }
+        },
+        "nl" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "1867"

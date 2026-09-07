@@ -37,7 +37,9 @@ private let languages = LocalizationBundles.translations
 /// added here should be attestable in the language, and reviewable by someone
 /// who reads it (conventions/translation.md).
 private let attestedCognates: Set<String> = [
-    "fr:grade_expert"
+    "fr:grade_expert",
+    "nl:grade_beginner",
+    "nl:grade_expert"
 ]
 
 // MARK: - Tests
