@@ -34,13 +34,17 @@ private func anyPlaceablePosition(for block: BlockShape, on state: GameState) ->
     return GameLogic.findValidPositions(for: block, in: state.grid).first
 }
 
-/// A known two-cell normal block.
+/// A known normal block: two cells side by side unless given other cells.
 ///
 /// Tests that need *a block* build one rather than searching the generated
 /// tray for a suitable draw. The tray comes from BlockGenerator, which is
 /// weighted and random and can legitimately hand back three large or special
 /// shapes — a run where nothing matched used to fail the test that was looking,
 /// which reported a fixture problem as if the behaviour under test had broken.
+///
+/// - Parameters:
+///   - cells: The block's shape, as (row, column) offsets from its origin.
+///   - color: Distinguishes blocks in a tray that holds more than one.
 private func normalBlock(_ cells: [(row: Int, col: Int)] = [(0, 0), (0, 1)],
                          color: BlockColor = .blue) -> BlockShape {
     BlockShape(positions: cells.map { GridPosition(row: $0.row, col: $0.col) }, color: color)
