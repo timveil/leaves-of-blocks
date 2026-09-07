@@ -104,7 +104,12 @@ locale is done — that is how the German and Japanese layouts were checked.
 ## App Store metadata has its own rules
 
 - `keywords.txt` is a **search set**, not a translation. Research what people
-  in that territory type. It is comma-separated with no spaces, 100 characters.
+  in that territory type.
+  - Comma-separated, with **no space after the comma** — every character counts
+    against a 100-character budget, and a space after each comma spends several
+    of them on nothing.
+  - Spaces *inside* a term are fine and often the point: `block blast`,
+    `sans pub`, `zonder reclame`, `jeu de blocs` are phrases people type.
 - `name.txt` keeps the brand: *Leaves of Blocks* in every locale.
 - `subtitle.txt` carries the local pitch.
 - The description follows the same accuracy rule as everything else.
