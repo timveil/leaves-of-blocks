@@ -338,11 +338,18 @@ end
 # Generate App Store release notes from CHANGELOG.md, preferring AI prose
 # when ANTHROPIC_API_KEY is configured and falling back to a template.
 #
-# Written to every locale the project ships, not just en-US. While the listing
-# was English-only the distinction did not exist; the moment a second listing
-# did, writing one file would have frozen that listing's notes at whatever
-# shipped the day it was created while every later release passed it by --
-# silently, since nothing about a release would fail.
+# Written to every locale the project ships, in that locale's own language.
+#
+# Two rules decide what lands, and both choose consistency over partial
+# success, because the failure being guarded against is a listing quietly
+# showing notes for a version the reader does not have:
+#
+#   * with no ANTHROPIC_API_KEY the template runs, and the template is English,
+#     so every listing gets English. Deliberate: notes in the wrong language
+#     still describe the right version.
+#   * if generation fails for any one locale, every locale falls back to the
+#     template together. A mix of languages across listings is worse than a
+#     uniform fallback, and nothing is written until all of them succeed.
 #
 # `root` and `locales` are injectable so the fan-out can be tested without a
 # real release; both default to the real thing.
@@ -382,22 +389,38 @@ def generate_release_notes(version:, root: project_root('CHANGELOG.md'), locales
   end
 
   # === AI PROSE GENERATION ATTEMPT ===
-  prose = nil
+  #
+  # The locale is handed to the generator rather than a language name, so
+  # adding a locale needs no second registry mapping one to the other. The
+  # model reads "de-DE" and "es-MX" as well as it reads "German" and "Spanish
+  # (Mexico)", and a registry that has to be kept in step with .locales is the
+  # thing scripts/check-locales.sh exists to make unnecessary.
+  prose_by_locale = {}
   if AIHelper.available?
-    FastlaneCore::UI.message("Attempting AI-generated release notes...")
-    prose = AIHelper.generate_prose(changelog_section: section_content, version: version)
+    FastlaneCore::UI.message("Attempting AI-generated release notes for #{locales.join(', ')}...")
+    locales.each do |locale|
+      prose_by_locale[locale] =
+        AIHelper.generate_prose(changelog_section: section_content, version: version, locale: locale)
+    end
 
-    if prose
-      FastlaneCore::UI.message("AI prose generation succeeded")
+    failed = prose_by_locale.select { |_, value| value.nil? || value.to_s.strip.empty? }.keys
+    if failed.any?
+      FastlaneCore::UI.important(
+        "AI prose generation returned nothing for #{failed.join(', ')}; falling back to " \
+        "the template for every locale so the listings stay consistent"
+      )
+      prose_by_locale = {}
     else
-      FastlaneCore::UI.important("AI prose generation returned no results, using template fallback")
+      FastlaneCore::UI.message("AI prose generation succeeded for every locale")
     end
   else
-    FastlaneCore::UI.message("ANTHROPIC_API_KEY not set, using template-based release notes")
+    FastlaneCore::UI.message("ANTHROPIC_API_KEY not set, using template-based release notes (English, every locale)")
   end
 
+  prose = nil
+
   # === FALLBACK: Template-based generation ===
-  unless prose
+  if prose_by_locale.empty?
     added = extract_items(section_content, 'Added')
     changed = extract_items(section_content, 'Changed')
     fixed = extract_items(section_content, 'Fixed')
@@ -433,19 +456,35 @@ def generate_release_notes(version:, root: project_root('CHANGELOG.md'), locales
 
     prose = sentences.join(" ").gsub("  ", " ").strip
     prose = prose.gsub("..", ".").gsub(". .", ".")
+
+    # One English template, written to every listing. See the note above the
+    # method: uniform beats stale, and beats a mix of languages.
+    locales.each { |locale| prose_by_locale[locale] = prose }
   end
 
-  if prose.length > 4000
-    prose = prose[0..3950] + "...\n\nThank you for playing Leaves of Blocks!"
+  # The App Store limit is 4000. The sentence marking the cut is English, so it
+  # is added only to English listings -- ending Japanese prose with an English
+  # closing is the mixing this method exists to avoid, and it would be strange
+  # in the one place a reader is already being shown that something was cut.
+  prose_by_locale.each do |locale, text|
+    next unless text.length > 4000
+
+    closing = locale.start_with?('en') ? "...\n\nThank you for playing Leaves of Blocks!" : "..."
+    prose_by_locale[locale] = text[0..(3999 - closing.length)] + closing
   end
 
-  locales.each do |locale|
-    File.write(File.join(metadata_dir, locale, 'release_notes.txt'), prose)
+  prose_by_locale.each do |locale, text|
+    File.write(File.join(metadata_dir, locale, 'release_notes.txt'), text)
   end
+
   FastlaneCore::UI.message("Release notes generated for #{locales.join(', ')}: #{version}")
-  FastlaneCore::UI.message("Preview:\n#{prose}")
 
-  prose
+  # Preview one language; printing all of them would bury the notes in
+  # translations of themselves.
+  preview = prose_by_locale[locales.first]
+  FastlaneCore::UI.message("Preview (#{locales.first}):\n#{preview}")
+
+  preview
 end
 
 # Update CHANGELOG.md with a new section for new_version, derived from git
