@@ -143,8 +143,11 @@ end
 SCREENSHOT_DEVICES = [
   "iPhone 17 Pro Max"
 ]
+# Kept in step with .locales by scripts/check-locales.sh, which fails CI if
+# this list and the manifest disagree.
 SCREENSHOT_LANGUAGES = [
-  "en-US"
+  "en-US",
+  "es-MX"
 ]
 
 # Fastlane Paths
