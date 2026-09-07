@@ -1,11 +1,26 @@
 name: CodeQL
 
 on:
-  # Push trigger removed deliberately. Every push to main lands via PR, and the
-  # PR run already gates code into main, so a second run on the merge commit is
-  # duplicative — paying ~13 min of macOS Swift trace overhead twice for the
-  # same diff. The weekly cron keeps drift coverage if a query suite update
-  # surfaces new findings against unchanged code.
+  # Swift runs here, on the merge commit, and nowhere else in the PR path.
+  #
+  # The split is a cost/benefit one, measured rather than assumed: the traced
+  # xcodebuild CodeQL needs takes ~18 min on a macOS runner and cannot be cached
+  # (extraction wraps the compiler, so a warm cache silently analyzes less than
+  # the whole codebase), while Swift analysis has produced zero findings in 30
+  # runs. Every alert this repository has had came from Ruby and Actions, which
+  # analyze from source on Ubuntu in under a minute and still run on every PR.
+  #
+  # So a pull request no longer waits ~22 min for a language that has never
+  # found anything, main is still gated before anyone can build on the merge,
+  # and the weekly schedule remains the backstop for query-suite drift. The
+  # policy itself lives in scripts/codeql-languages.sh, with tests.
+  push:
+    branches: [ "main" ]
+    paths-ignore:
+      - '**.md'
+      - 'LICENSE'
+      - 'fastlane/metadata/**'
+      - 'fastlane/screenshots/**'
   #
   # paths-ignore decides only whether this workflow STARTS. Which languages
   # actually get analyzed is decided per-run by the `changes` job below —
@@ -20,6 +35,14 @@ on:
       - 'fastlane/screenshots/**'
   schedule:
     - cron: '21 6 * * 1'
+
+# A new push supersedes the previous run's answer, so letting the old one finish
+# only holds a macOS runner that the new one then queues behind. Merges are not
+# cancelled: main's analysis is what gates the branch, and losing it to a
+# rapid second merge would leave a commit unanalyzed.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   changes:
@@ -48,12 +71,28 @@ jobs:
         id: detect
         run: |
           set -euo pipefail
-          if [ "${{ github.event_name }}" = "pull_request" ]; then
-            git diff --name-only "${{ github.event.pull_request.base.sha }}" HEAD \
-              | ./scripts/codeql-languages.sh >> "$GITHUB_OUTPUT"
-          else
-            ./scripts/codeql-languages.sh --all >> "$GITHUB_OUTPUT"
-          fi
+          case "${{ github.event_name }}" in
+            pull_request)
+              git diff --name-only "${{ github.event.pull_request.base.sha }}" HEAD \
+                | ./scripts/codeql-languages.sh --event pull_request >> "$GITHUB_OUTPUT"
+              ;;
+            push)
+              # github.event.before is all-zeros for the first push to a branch,
+              # and points at a rewritten commit after a force-push. Neither
+              # yields a usable diff, so fall back to analyzing everything
+              # rather than silently analyzing nothing.
+              before="${{ github.event.before }}"
+              if [ -n "$before" ] && git cat-file -e "$before^{commit}" 2>/dev/null; then
+                git diff --name-only "$before" HEAD \
+                  | ./scripts/codeql-languages.sh --event push >> "$GITHUB_OUTPUT"
+              else
+                ./scripts/codeql-languages.sh --event push --all >> "$GITHUB_OUTPUT"
+              fi
+              ;;
+            *)
+              ./scripts/codeql-languages.sh --all >> "$GITHUB_OUTPUT"
+              ;;
+          esac
 
       - name: Report selection
         run: |

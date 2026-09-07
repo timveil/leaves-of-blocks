@@ -41,6 +41,14 @@ on:
 permissions:
   contents: read
 
+# A superseded run's answer is worthless, but it keeps a runner busy to
+# completion -- and with four macOS jobs per pull request against a capped
+# macOS concurrency, the next push queues behind runs nobody will read.
+# Pushes to main are not cancelled: that run is the signal for main itself.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   build:
     name: Build for Testing
@@ -119,9 +127,23 @@ jobs:
           if-no-files-found: warn
 
   ui-tests:
-    name: UI Tests
+    # The UI suite is the pull request's critical path: it runs serially,
+    # because parallel simulator clones crash (see scripts/build.sh), so its
+    # wall time is the sum of every test's. Splitting it over two runners buys
+    # the parallelism from separate machines instead, which is the part that
+    # was never unstable.
+    #
+    # Shard 1 runs "everything the other shard is not taking", so a test the
+    # split does not know about still runs rather than silently running
+    # nowhere. Raising the shard count needs only this list changed.
+    name: UI Tests (${{ matrix.shard }}/2)
     runs-on: macos-latest
     needs: build
+
+    strategy:
+      fail-fast: false
+      matrix:
+        shard: [1, 2]
 
     steps:
       - name: Checkout
@@ -141,6 +163,8 @@ jobs:
           "$DEVELOPER_DIR/usr/bin/xcodebuild" -version
 
       - name: Run UI Tests
+        env:
+          TEST_SHARD: ${{ matrix.shard }}/2
         run: ./scripts/build.sh test-ui-without-building
 
       - name: Render Test Summary
@@ -151,7 +175,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v7
         with:
-          name: ui-test-results
+          name: ui-test-results-${{ matrix.shard }}
           path: |
             build/results/test-ui-*.xcresult
             build/logs/test-ui-*.log
