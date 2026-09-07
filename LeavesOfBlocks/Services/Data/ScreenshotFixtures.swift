@@ -49,24 +49,49 @@ enum ScreenshotFixtures {
     ///
     /// `nonisolated` for the same reason as `clearAllRecords`: it is called
     /// from inside `performAndWait` and touches only the passed context.
+    /// The session the screenshots pose against, described the way the game
+    /// describes one.
+    ///
+    /// Written as `SessionMetrics` so the grades are *derived* rather than
+    /// typed alongside the numbers they are supposed to follow from. They were
+    /// typed, and both were wrong: an efficiency of 0.85 earns A+ and the
+    /// fixture claimed A, while the strategy slot held `grade_a_plus` — a
+    /// value from the efficiency ladder, which the strategy ladder never
+    /// returns. The App Store screenshots showed a screen the app could not
+    /// produce, in every language.
+    nonisolated private static let highScoreSession = PlayerBehaviorTracker.SessionMetrics(
+        score: 941,
+        blocksPlaced: 45,
+        linesCleared: 12,
+        longestCombo: 3,
+        gameTime: 385.2, // 6:25
+        difficulty: .easy,
+        averageGridEfficiency: 0.85,
+        averageFragmentation: 0.23,
+        strategicPlayRating: 0.92,
+        fallbackActivations: 2,
+        challengeMaintained: 0.78
+    )
+
     nonisolated private static func insertHighScoreFixture(into context: NSManagedObjectContext) {
+        let session = highScoreSession
         let highScoreGame = GameRecord(context: context)
         highScoreGame.id = UUID()
-        highScoreGame.score = 941
-        highScoreGame.difficulty = DifficultyMode.easy.rawValue
-        highScoreGame.blocksPlaced = 45
-        highScoreGame.linesCleared = 12
-        highScoreGame.longestCombo = 3
-        highScoreGame.gameTime = 385.2 // 6:25
+        highScoreGame.score = Int32(session.score)
+        highScoreGame.difficulty = session.difficulty.rawValue
+        highScoreGame.blocksPlaced = Int32(session.blocksPlaced)
+        highScoreGame.linesCleared = Int32(session.linesCleared)
+        highScoreGame.longestCombo = Int32(session.longestCombo)
+        highScoreGame.gameTime = session.gameTime
         highScoreGame.date = sampleDate
 
-        highScoreGame.averageGridEfficiency = 0.85
-        highScoreGame.averageFragmentation = 0.23
-        highScoreGame.strategicPlayRating = 0.92
-        highScoreGame.challengeMaintained = 0.78
-        highScoreGame.fallbackActivations = 2
-        highScoreGame.efficiencyGrade = "grade_a"
-        highScoreGame.strategicGrade = "grade_a_plus"
+        highScoreGame.averageGridEfficiency = session.averageGridEfficiency
+        highScoreGame.averageFragmentation = session.averageFragmentation
+        highScoreGame.strategicPlayRating = session.strategicPlayRating
+        highScoreGame.challengeMaintained = session.challengeMaintained
+        highScoreGame.fallbackActivations = Int32(session.fallbackActivations)
+        highScoreGame.efficiencyGrade = session.efficiencyGrade
+        highScoreGame.strategicGrade = session.strategicGrade
     }
 
     /// Anchored to May 31, 1819 — a recognizable date that unambiguously signals
