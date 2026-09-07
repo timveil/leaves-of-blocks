@@ -1,4 +1,4 @@
-name: Tooling
+name: Scripts and Fastlane
 
 # The release pipeline and the CI logic itself had no test coverage: a Fastfile
 # or helper script that no longer loads would merge green and surface later,
@@ -46,7 +46,7 @@ concurrency:
 
 jobs:
   tooling:
-    name: Scripts and fastlane
+    name: Run script suites and load fastlane
     # macOS because the script suites exercise real Xcode discovery
     # (xcode-version.sh --check reads the installed xcodebuild).
     runs-on: macos-latest

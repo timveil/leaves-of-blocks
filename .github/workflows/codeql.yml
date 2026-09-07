@@ -1,4 +1,4 @@
-name: CodeQL
+name: Code Scanning
 
 on:
   # Swift runs here, on the merge commit, and nowhere else in the PR path.
@@ -94,7 +94,7 @@ jobs:
               ;;
           esac
 
-      - name: Report selection
+      - name: Report language selection
         run: |
           set -euo pipefail
           {
@@ -108,7 +108,7 @@ jobs:
           } >> "$GITHUB_STEP_SUMMARY"
 
   analyze:
-    name: Analyze (${{ matrix.language }})
+    name: Analyze ${{ matrix.display }}
     needs: changes
     if: needs.changes.outputs.any == 'true'
     runs-on: ${{ matrix.runner }}
@@ -145,7 +145,7 @@ jobs:
           echo "DEVELOPER_DIR=$DEVELOPER_DIR" >> "$GITHUB_ENV"
           "$DEVELOPER_DIR/usr/bin/xcodebuild" -version
 
-      - name: Build Swift
+      - name: Build Swift for tracing
         if: matrix.language == 'swift'
         run: |
           xcodebuild build \
@@ -157,7 +157,7 @@ jobs:
             CODE_SIGNING_ALLOWED=NO \
             COMPILER_INDEX_STORE_ENABLE=NO
 
-      - name: Perform CodeQL Analysis
+      - name: Analyze with CodeQL
         uses: github/codeql-action/analyze@v4.37.9
         with:
           category: "/language:${{ matrix.language }}"
