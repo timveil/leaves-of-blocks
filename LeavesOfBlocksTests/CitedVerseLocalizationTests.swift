@@ -53,6 +53,15 @@ struct CitedVerseLocalizationTests {
         )
     }
 
+    // Both tests above are parameterized over the languages the bundle reports,
+    // and a parameterized test over an empty array runs no cases and reports
+    // success. Without this, a bundle that resolved to the XCTest runner would
+    // turn the whole suite green by checking nothing.
+    @Test("The app bundle carries languages to check")
+    func theBundleCarriesTranslations() {
+        #expect(!languages.isEmpty, "no translations found in \(LocalizationBundles.app.bundlePath)")
+    }
+
     @Test("The game-over line is app copy, and is translated", arguments: languages)
     func thePasticheIsTranslated(language: String) throws {
         // Given the unattributed line the app wrote itself
