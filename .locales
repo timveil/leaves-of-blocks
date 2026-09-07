@@ -12,8 +12,13 @@
 # "-" means "not shipped on that side". A store locale with no app language is
 # a localized listing for an English build; an app language with no store
 # locale is a translated build whose product page is still English -- which is
-# exactly where Spanish stands until the listing lands.
+# where Spanish stood until its listing landed.
+#
+# es-MX rather than es-ES: the Spanish-speaking downloads are Latin American by
+# a wide margin (MX, CL, AR, CO, PE, PA against ES), and Apple resolves within
+# a language, so Spain sees this listing too. The copy is written to read
+# naturally in both -- no vosotros, no Spain-only idiom.
 #
 # store   app
 en-US     en
--         es
+es-MX     es

@@ -311,11 +311,59 @@ def extract_changelog_section(content, version)
   match[1].strip
 end
 
+# The App Store locales this project ships, read from the .locales manifest.
+#
+# Shelling out to check-locales.sh rather than reading the manifest here: its
+# format -- two columns, "-" for a side that does not ship yet -- is defined
+# once, in the script CI holds every other locale registry to. A second reader
+# would be a second definition to keep in step
+# (conventions/shared-rule-single-source.md).
+def shipped_store_locales(root: project_root('.locales'))
+  require 'shellwords'
+
+  unless root
+    FastlaneCore::UI.user_error!("Could not locate .locales starting from #{Dir.pwd}")
+  end
+
+  script = File.join(root, 'scripts', 'check-locales.sh')
+  output = `#{script.shellescape} --store 2>&1`
+
+  unless $?.success?
+    FastlaneCore::UI.user_error!("Could not read the shipped store locales:\n#{output.strip}")
+  end
+
+  output.split("\n").map(&:strip).reject(&:empty?)
+end
+
 # Generate App Store release notes from CHANGELOG.md, preferring AI prose
 # when ANTHROPIC_API_KEY is configured and falling back to a template.
-def generate_release_notes(version:)
-  changelog_path = File.join(Dir.pwd, '..', 'CHANGELOG.md')
-  release_notes_path = File.join(Dir.pwd, 'metadata', 'en-US', 'release_notes.txt')
+#
+# Written to every locale the project ships, not just en-US. While the listing
+# was English-only the distinction did not exist; the moment a second listing
+# did, writing one file would have frozen that listing's notes at whatever
+# shipped the day it was created while every later release passed it by --
+# silently, since nothing about a release would fail.
+#
+# `root` and `locales` are injectable so the fan-out can be tested without a
+# real release; both default to the real thing.
+def generate_release_notes(version:, root: project_root('CHANGELOG.md'), locales: nil)
+  unless root
+    FastlaneCore::UI.user_error!("Could not locate CHANGELOG.md starting from #{Dir.pwd}")
+  end
+
+  changelog_path = File.join(root, 'CHANGELOG.md')
+  metadata_dir = File.join(root, 'fastlane', 'metadata')
+  locales ||= shipped_store_locales(root: root)
+
+  # Checked before anything is written, so a misconfigured manifest fails
+  # whole rather than leaving some listings updated and others not.
+  missing = locales.reject { |locale| File.directory?(File.join(metadata_dir, locale)) }
+  if missing.any?
+    FastlaneCore::UI.user_error!(
+      ".locales declares #{missing.join(', ')}, but fastlane/metadata has no directory for " \
+      "#{missing.length == 1 ? 'it' : 'them'}. Create the listing, or drop the locale from the manifest."
+    )
+  end
 
   unless File.exist?(changelog_path)
     FastlaneCore::UI.important("CHANGELOG.md not found, skipping release notes generation")
@@ -391,8 +439,10 @@ def generate_release_notes(version:)
     prose = prose[0..3950] + "...\n\nThank you for playing Leaves of Blocks!"
   end
 
-  File.write(release_notes_path, prose)
-  FastlaneCore::UI.message("Release notes generated: #{version}")
+  locales.each do |locale|
+    File.write(File.join(metadata_dir, locale, 'release_notes.txt'), prose)
+  end
+  FastlaneCore::UI.message("Release notes generated for #{locales.join(', ')}: #{version}")
   FastlaneCore::UI.message("Preview:\n#{prose}")
 
   prose
