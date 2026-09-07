@@ -12,6 +12,15 @@ import Testing
 
 // MARK: - Helpers
 
+/// The app bundle, resolved through a type that lives in the app module.
+///
+/// `Bundle.main` is the app only for as long as these tests are hosted by it.
+/// If the target ever ran unhosted, `.main` would be the XCTest runner, no
+/// `.lproj` would be found, and assertions about localization would quietly
+/// stop meaning anything. A class from the app module resolves to the bundle
+/// that actually carries the compiled strings either way.
+private let appBundle = Bundle(for: CoreDataManager.self)
+
 /// The compiled strings for one language, read the way the app reads them.
 ///
 /// A String Catalog compiles only the keys that carry a value for the
@@ -19,17 +28,17 @@ import Testing
 /// `es.lproj` and `localizedString(forKey:)` hands back the key itself. That
 /// is exactly what a player sees: the raw key, or the English source through
 /// the fallback chain. It is also what makes the absence assertable here.
-private func bundle(for language: String) -> Bundle {
-    guard let path = Bundle.main.path(forResource: language, ofType: "lproj"),
-          let bundle = Bundle(path: path) else {
-        Issue.record("No \(language).lproj in the app bundle")
-        return .main
-    }
-    return bundle
+///
+/// A missing `.lproj` fails here rather than substituting a fallback bundle:
+/// comparing one bundle against itself would report agreement it never
+/// established.
+private func bundle(for language: String) throws -> Bundle {
+    let path = try #require(
+        appBundle.path(forResource: language, ofType: "lproj"),
+        "No \(language).lproj in \(appBundle.bundlePath)"
+    )
+    return try #require(Bundle(path: path), "\(language).lproj is not loadable as a bundle")
 }
-
-private let spanish = bundle(for: "es")
-private let english = bundle(for: "en")
 
 private func value(_ key: String, in bundle: Bundle) -> String {
     bundle.localizedString(forKey: key, value: nil, table: nil)
@@ -52,21 +61,21 @@ private let letterGradeKeys = [
 struct SpanishGradeLocalizationTests {
 
     @Test("Every grade and challenge key carries a Spanish value", arguments: translatedKeys + letterGradeKeys)
-    func everyGradeKeyHasASpanishValue(key: String) {
+    func everyGradeKeyHasASpanishValue(key: String) throws {
         // Given a key the Summary screen renders
         // When it is looked up in the Spanish bundle
-        let localized = value(key, in: spanish)
+        let localized = value(key, in: try bundle(for: "es"))
 
         // Then the lookup resolves rather than handing back the key
         #expect(localized != key, "\(key) has no Spanish value, so it renders as its own key")
     }
 
     @Test("The strategy ladder and challenge tiers read in Spanish", arguments: translatedKeys)
-    func prosePlainlyDiffersFromEnglish(key: String) {
+    func prosePlainlyDiffersFromEnglish(key: String) throws {
         // Given a key whose value is prose rather than a glyph
         // When both languages are looked up
-        let localized = value(key, in: spanish)
-        let source = value(key, in: english)
+        let localized = value(key, in: try bundle(for: "es"))
+        let source = value(key, in: try bundle(for: "en"))
 
         // Then Spanish says something of its own
         #expect(localized != source, "\(key) still reads as English: \"\(source)\"")
@@ -78,11 +87,11 @@ struct SpanishGradeLocalizationTests {
     // Efficiency card is one glyph wide. The entries exist so the choice is
     // recorded rather than arrived at by falling through to English.
     @Test("The letter ladder keeps its glyphs in Spanish", arguments: letterGradeKeys)
-    func letterGradesAreIdenticalInBothLanguages(key: String) {
+    func letterGradesAreIdenticalInBothLanguages(key: String) throws {
         // Given a letter grade
         // When both languages are looked up
-        let localized = value(key, in: spanish)
-        let source = value(key, in: english)
+        let localized = value(key, in: try bundle(for: "es"))
+        let source = value(key, in: try bundle(for: "en"))
 
         // Then Spanish carries the same glyph, by decision
         #expect(localized == source, "\(key) diverges: es \"\(localized)\" vs en \"\(source)\"")
