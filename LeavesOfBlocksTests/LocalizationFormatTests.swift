@@ -55,24 +55,37 @@ private func specifiers(in format: String) -> [Specifier] {
     return found.sorted { $0.argument < $1.argument }
 }
 
+/// The app bundle, resolved through a type that lives in the app module.
+///
+/// `Bundle.main` is the app only for as long as these tests are hosted by it.
+/// Run unhosted, `.main` would be the XCTest runner, which carries no `.lproj`
+/// at all -- and a check that silently finds no languages to compare is worse
+/// than no check, because it stays green.
+private let appBundle = Bundle(for: CoreDataManager.self)
+
 /// The compiled strings table for one language, as shipped.
 ///
 /// Read from the built `.lproj` rather than the `.xcstrings` source so the
-/// assertion covers what a device actually loads.
-private func strings(for language: String) -> [String: String] {
-    guard let path = Bundle.main.path(forResource: language, ofType: "lproj"),
-          let bundle = Bundle(path: path),
-          let url = bundle.url(forResource: "Localizable", withExtension: "strings"),
-          let table = NSDictionary(contentsOf: url) as? [String: String] else {
-        Issue.record("No compiled Localizable.strings for \(language)")
-        return [:]
-    }
-    return table
+/// assertion covers what a device actually loads. A missing table fails the
+/// case rather than returning an empty dictionary, which would compare
+/// nothing and report success.
+private func strings(for language: String) throws -> [String: String] {
+    let path = try #require(
+        appBundle.path(forResource: language, ofType: "lproj"),
+        "No \(language).lproj in \(appBundle.bundlePath)"
+    )
+    let bundle = try #require(Bundle(path: path), "\(language).lproj is not loadable as a bundle")
+    let url = try #require(
+        bundle.url(forResource: "Localizable", withExtension: "strings"),
+        "No compiled Localizable.strings in \(language).lproj"
+    )
+    return try #require(NSDictionary(contentsOf: url) as? [String: String],
+                        "\(language) Localizable.strings is not a string table")
 }
 
 /// Every language the app bundle carries, source language first.
 private let sourceLanguage = "en"
-private let translations: [String] = Bundle.main.localizations
+private let translations: [String] = appBundle.localizations
     .filter { $0 != sourceLanguage && $0 != "Base" }
     .sorted()
 
@@ -89,10 +102,10 @@ struct LocalizationFormatTests {
     // German and Japanese reorder more aggressively than Spanish does, so this
     // matters more with each locale added, not less.
     @Test("Every translation consumes the same arguments as the source language", arguments: translations)
-    func translationsMatchTheSourceLanguageSpecifiers(language: String) {
+    func translationsMatchTheSourceLanguageSpecifiers(language: String) throws {
         // Given the compiled tables for the source language and one translation
-        let source = strings(for: sourceLanguage)
-        let translated = strings(for: language)
+        let source = try strings(for: sourceLanguage)
+        let translated = try strings(for: language)
         #expect(!source.isEmpty, "no source strings to compare against")
 
         // When each shared key's specifiers are compared by argument
@@ -112,6 +125,15 @@ struct LocalizationFormatTests {
                 """
             )
         }
+    }
+
+    // A parameterized test over an empty array runs no cases and reports
+    // success, so the list of languages is itself worth asserting -- otherwise
+    // a bundle that resolved to the wrong place would look like a pass.
+    @Test("The app bundle carries the translations to check")
+    func theBundleCarriesTranslations() {
+        #expect(!translations.isEmpty, "no translations found in \(appBundle.bundlePath)")
+        #expect(translations.contains("es"), "expected Spanish among \(translations)")
     }
 
     @Test("The specifier parser reads argument order, not appearance order")
