@@ -25,9 +25,22 @@ struct ScreenshotFixturesTests {
     // grades were typed in beside the metrics rather than derived from them,
     // and both disagreed with the ladders in PlayerBehaviorTracker — the
     // Strategy card showed a letter grade, which that ladder never returns.
+    //
+    // Every field is required rather than defaulted. Falling back to .easy
+    // here would have hidden a fixture that stopped persisting a difficulty,
+    // because .easy is what this fixture happens to use — the test would have
+    // agreed with itself.
     @Test("The fixture's grades are the ones its metrics would earn")
     func gradesAgreeWithTheMetricsBesideThem() async throws {
         let record = try #require(await installedRecord())
+
+        // Two statements rather than one nested pair: #require cannot expand
+        // inside itself.
+        let rawDifficulty = try #require(record.difficulty, "the fixture persisted no difficulty")
+        let difficulty = try #require(
+            DifficultyMode(rawValue: rawDifficulty),
+            "the fixture's difficulty \"\(rawDifficulty)\" is not a DifficultyMode"
+        )
 
         let metrics = PlayerBehaviorTracker.SessionMetrics(
             score: Int(record.score),
@@ -35,7 +48,7 @@ struct ScreenshotFixturesTests {
             linesCleared: Int(record.linesCleared),
             longestCombo: Int(record.longestCombo),
             gameTime: record.gameTime,
-            difficulty: DifficultyMode(rawValue: record.difficulty ?? "") ?? .easy,
+            difficulty: difficulty,
             averageGridEfficiency: record.averageGridEfficiency,
             averageFragmentation: record.averageFragmentation,
             strategicPlayRating: record.strategicPlayRating,
