@@ -21,6 +21,14 @@ permissions:
 # in the PR get squashed away; what lands on main is the subject GitHub composes
 # from the PR title (or the single commit's subject) plus " (#N)".
 
+# A superseded run's answer is worthless, but it keeps a runner busy to
+# completion -- and with four macOS jobs per pull request against a capped
+# macOS concurrency, the next push queues behind runs nobody will read.
+# Pushes to main are not cancelled: that run is the signal for main itself.
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
 jobs:
   lint:
     name: Validate commit messages

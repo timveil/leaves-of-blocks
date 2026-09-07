@@ -146,6 +146,7 @@ run_tests() {
     local skip_testing=""
     local test_label="tests"
     local xctestrun_file=""
+    local shard_args=()
 
     destination=$(get_test_destination) || exit 1
     sim_name=$(get_simulator_name)
@@ -178,6 +179,65 @@ run_tests() {
             ;;
     esac
 
+    # TEST_SHARD=<index>/<total> runs only that slice of the UI suite, so CI can
+    # spread it over separate runners. The parallelism comes from jobs rather
+    # than simulator clones on one machine, which is what was disabled above for
+    # being unstable.
+    #
+    # Shard 1 is defined as "everything except the other shards" rather than as
+    # a list of its own. That is the safety property: the split is derived from
+    # the test sources, and if that derivation ever misses a test -- an unusual
+    # declaration, a new file, a renamed class -- the test still runs, in shard
+    # 1, instead of silently running nowhere. A wrong derivation costs balance,
+    # never coverage.
+    #
+    # xcodebuild's own -enumerate-tests is deliberately not used: it boots the
+    # test runner on a simulator, so it is both slow and subject to the very
+    # instability this sharding works around -- and it fails soft, reporting
+    # TEST EXECUTE SUCCEEDED with a single bogus identifier when the runner
+    # cannot launch.
+    if [[ -n "${TEST_SHARD:-}" && "$test_type" == "ui" ]]; then
+        local ui_tests shard_ids
+        ui_tests=$(awk '
+            /^(final )?class [A-Za-z_]+/ { cls = $0; sub(/^(final )?class /, "", cls); sub(/[^A-Za-z0-9_].*$/, "", cls) }
+            /func test[A-Za-z0-9_]*\(/ {
+                name = $0
+                sub(/^.*func /, "", name)
+                sub(/\(.*$/, "", name)
+                if (cls != "" && name != "testCaptureScreenshots") print "LeavesOfBlocksUITests/" cls "/" name
+            }
+        ' "$PROJECT_ROOT"/LeavesOfBlocksUITests/*.swift | sort -u)
+
+        if [[ -z "$ui_tests" ]]; then
+            echo -e "${RED}Error: found no UI tests to shard${NC}"
+            exit 1
+        fi
+
+        shard_ids=$(printf '%s\n' "$ui_tests" | "$SCRIPT_DIR/shard-tests.sh" "$TEST_SHARD")
+        test_label="UI tests (shard $TEST_SHARD)"
+
+        if [[ "${TEST_SHARD%%/*}" == "1" ]]; then
+            # Everything the other shards are not taking, plus anything the
+            # derivation above did not see.
+            while IFS= read -r id; do
+                [[ -n "$id" ]] || continue
+                if ! grep -qxF "$id" <<< "$shard_ids"; then
+                    shard_args+=("-skip-testing:$id")
+                fi
+            done <<< "$ui_tests"
+        else
+            if [[ -z "$shard_ids" ]]; then
+                echo -e "${YELLOW}Shard $TEST_SHARD has no tests to run${NC}"
+                return 0
+            fi
+            only_testing=""
+            while IFS= read -r id; do
+                [[ -n "$id" ]] || continue
+                shard_args+=("-only-testing:$id")
+            done <<< "$shard_ids"
+        fi
+    fi
+
     # Test artifacts: text log (via tee, for tail/grep during the run) plus
     # an .xcresult bundle (via -resultBundlePath, for structured analysis
     # afterward — query with `xcrun xcresulttool get test-results tests
@@ -208,6 +268,7 @@ run_tests() {
             -resultBundlePath "$result_bundle" \
             ${only_testing:+"$only_testing"} \
             ${skip_testing:+"$skip_testing"} \
+            ${shard_args[@]+"${shard_args[@]}"} \
             -parallel-testing-enabled "$parallel_testing" \
             -maximum-parallel-testing-workers "$workers" \
             CODE_SIGNING_ALLOWED='NO' 2>&1 | tee "$log_file"
@@ -223,6 +284,7 @@ run_tests() {
             -resultBundlePath "$result_bundle" \
             ${only_testing:+"$only_testing"} \
             ${skip_testing:+"$skip_testing"} \
+            ${shard_args[@]+"${shard_args[@]}"} \
             -parallel-testing-enabled "$parallel_testing" \
             -maximum-parallel-testing-workers "$workers" \
             CODE_SIGNING_ALLOWED='NO' 2>&1 | tee "$log_file"
