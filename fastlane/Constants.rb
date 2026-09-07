@@ -154,6 +154,7 @@ SCREENSHOT_LANGUAGES = [
   "ko",
   "nl-NL",
   "pt-BR",
+  "zh-Hans",
   "zh-Hant"
 ]
 
