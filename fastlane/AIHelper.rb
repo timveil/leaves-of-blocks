@@ -45,7 +45,23 @@ module AIHelper
   end
 
   ANTHROPIC_API_URL = "https://api.anthropic.com/v1/messages"
-  ANTHROPIC_MODEL = "claude-sonnet-4-6"
+  # The model that writes released copy: changelog categorization, and App Store
+  # release notes in every language .locales declares.
+  #
+  # Pinned rather than floating, and worth knowing what it is pinned *for*:
+  # moving it changes the voice of text that ships to the App Store in seven
+  # languages, most of which nobody on this project reads. Treat a bump like a
+  # copy change -- run a real release-notes generation with a key set and read
+  # the English and at least one translated result -- not like a dependency
+  # bump.
+  #
+  # Sonnet rather than Opus or Haiku: this is bounded rewriting of a changelog
+  # section that is already written, where the tier has been adequate. Sonnet 5
+  # is the current generation of that tier and costs less than the 4.6 it
+  # replaces ($2/$10 against $3/$15 per MTok). Haiku 4.5 would be cheaper again
+  # and is worth measuring, but the output is multilingual store copy that
+  # cannot be proofread here, so the saving is not obviously worth it.
+  ANTHROPIC_MODEL = "claude-sonnet-5"
   MAX_TOKENS_CHANGELOG = 2000
   MAX_TOKENS_RELEASE_NOTES = 1500
 
