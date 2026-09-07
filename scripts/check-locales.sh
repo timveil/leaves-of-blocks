@@ -78,6 +78,7 @@ contains() {
 
 STORE_LOCALES=()
 APP_LANGUAGES=()
+LOCALE_PAIRS=()
 
 read_manifest() {
   [ -f "$MANIFEST" ] || setup_error "missing $MANIFEST"
@@ -99,6 +100,10 @@ read_manifest() {
     fi
     if [ "$store" != "-" ]; then STORE_LOCALES+=("$store"); fi
     if [ "$app" != "-" ]; then APP_LANGUAGES+=("$app"); fi
+    # Only rows shipping on both sides pair up. A listing with no app language
+    # is an English build with a localized store page; there is no language to
+    # attribute its copy to.
+    if [ "$store" != "-" ] && [ "$app" != "-" ]; then LOCALE_PAIRS+=("$store $app"); fi
   done < "$MANIFEST"
 
   if [ "${#STORE_LOCALES[@]}" -eq 0 ] && [ "${#APP_LANGUAGES[@]}" -eq 0 ]; then
@@ -402,8 +407,13 @@ case "${1:-}" in
     if [ "${#APP_LANGUAGES[@]}" -gt 0 ]; then printf '%s\n' "${APP_LANGUAGES[@]}"; fi
     exit 0
     ;;
+  --pairs)
+    read_manifest
+    if [ "${#LOCALE_PAIRS[@]}" -gt 0 ]; then printf '%s\n' "${LOCALE_PAIRS[@]}"; fi
+    exit 0
+    ;;
   *)
-    echo "usage: $0 [--store | --app]" >&2
+    echo "usage: $0 [--store | --app | --pairs]" >&2
     exit 2
     ;;
 esac

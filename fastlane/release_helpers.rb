@@ -932,6 +932,169 @@ end
 # Warns rather than raises. It runs after deliver, so the binary and metadata
 # are already up; a mismatch is something to go and fix in App Store Connect,
 # not a reason to report the release as failed.
+# The wrong register looks like this, per language.
+#
+# conventions/translation.md declares what each language's register *is*; this
+# says what a violation of it looks like, which is not the same knowledge and
+# does not belong in a document written for translators. Only languages whose
+# register is a pronoun appear -- Japanese declares です/ます and Korean 해요체,
+# neither of which is a word to grep for, so neither is guessed at.
+FORMAL_REGISTER_MARKERS = {
+  'de' => /\b(?:Sie|Ihre|Ihren|Ihrem|Ihrer|Ihnen)\b/,
+  'fr' => /\b(?:vous|votre|vos)\b/i,
+  'es' => /\bustedes?\b/i,
+  'nl' => /\buw\b/i
+}.freeze
+
+# Store locale and app language together, from the manifest that pairs them.
+#
+# Read rather than derived: fastlane/metadata is keyed by store locale and the
+# register table by app language, and truncating "de-DE" to "de" is exactly the
+# guess .locales' two columns exist to prevent.
+def shipped_locale_pairs(root: project_root('.locales'))
+  require 'shellwords'
+
+  unless root
+    FastlaneCore::UI.user_error!("Could not locate .locales starting from #{Dir.pwd}")
+  end
+
+  script = File.join(root, 'scripts', 'check-locales.sh')
+  output = `#{script.shellescape} --pairs 2>&1`
+
+  unless $?.success?
+    FastlaneCore::UI.user_error!("Could not read the shipped locale pairs:\n#{output.strip}")
+  end
+
+  output.split("\n").map(&:split).reject(&:empty?)
+end
+
+# The register each language declares, parsed from the table in
+# conventions/translation.md. Returns {app_language => register text}.
+def declared_registers(root:)
+  path = File.join(root, 'conventions', 'translation.md')
+  return {} unless File.exist?(path)
+
+  File.read(path).lines.each_with_object({}) do |line, registers|
+    # | German (`de`) | `du` | what German games use |
+    match = line.match(/^\|[^|]*`([a-zA-Z-]+)`[^|]*\|([^|]*)\|/)
+    next unless match
+
+    registers[match[1]] = match[2].strip
+  end
+end
+
+# Check the generated release notes before deliver uploads them.
+#
+# Both defects that reached ten App Store listings in 2.1.0 were found by a
+# person reading the files afterwards, with every check in the repository
+# green: the English template written to all ten locales, and a scoring claim
+# the app contradicts. Nothing between the generator and deliver read the text.
+#
+# This raises rather than warns, unlike verify_uploaded_screenshots. That one
+# runs after the upload and can only tell you to go look; this one runs before
+# anything has been sent, where stopping costs a re-run and not a listing.
+#
+# What it does not check is whether the prose is any good, or true. A claim
+# like "10 points per square" can only be checked against the app, and a
+# listing that reads badly still reads badly in grammatical sentences. This
+# catches the mechanical failures, which is what every defect so far has been.
+def verify_release_notes(root: project_root('CHANGELOG.md'), locales: nil, pairs: nil)
+  unless root
+    FastlaneCore::UI.user_error!("Could not locate the project root starting from #{Dir.pwd}")
+  end
+
+  # Every store locale is checked, not only the paired ones.
+  # generate_release_notes writes a file for each locale in this same list, and
+  # a row shipping store-side only -- a localized listing for an English build,
+  # which .locales allows and explains -- would otherwise be written and never
+  # looked at. The pairs answer a narrower question: which language a listing
+  # is written in, which only the register check needs and only paired rows
+  # have an answer for.
+  locales ||= shipped_store_locales(root: root)
+  pairs ||= shipped_locale_pairs(root: root)
+  language_of = pairs.to_h
+  registers = declared_registers(root: root)
+  problems = []
+  by_locale = {}
+
+  locales.each do |store_locale|
+    app_language = language_of[store_locale]
+    path = File.join(root, 'fastlane', 'metadata', store_locale, 'release_notes.txt')
+
+    unless File.exist?(path)
+      problems << "#{store_locale}: no release_notes.txt, but .locales declares the listing"
+      next
+    end
+
+    text = File.read(path)
+    if text.strip.empty?
+      problems << "#{store_locale}: release_notes.txt is empty"
+      next
+    end
+
+    by_locale[store_locale] = text
+
+    # The App Store limit is 4000. Being at it means something upstream failed
+    # to truncate, so it is reported rather than trimmed here.
+    if text.length > 4000
+      problems << "#{store_locale}: #{text.length} characters, over the App Store limit of 4000"
+    end
+
+    # "Never translate: Game Center, Leaves of Blocks, ..." -- the convention
+    # already says so. A listing that never names the product has renamed it.
+    unless text.include?('Leaves of Blocks')
+      problems << "#{store_locale}: never names Leaves of Blocks; the product name was translated"
+    end
+
+    # Store copy describing a line break by printing one is a developer
+    # reading their own bug report back to a player.
+    if text.match?(/\\[nt]/)
+      problems << "#{store_locale}: contains a literal escape sequence"
+    end
+
+    marker = app_language && FORMAL_REGISTER_MARKERS[app_language]
+    declared = app_language && registers[app_language]
+    # Skipped when the convention itself declares the formal form: the file is
+    # the authority on which register is wanted, and this only knows what the
+    # other one looks like.
+    if marker && declared && !declared.match?(marker) && text.match?(marker)
+      problems << "#{store_locale}: formal register, but conventions/translation.md " \
+                  "declares #{declared.split(',').first.strip} for #{app_language}"
+    end
+
+    # A store-only listing carries the English build's copy, so the closing
+    # rule applies to it by its locale rather than by a language it has none of.
+    english = (app_language || store_locale).start_with?('en')
+    next unless english
+
+    closings = text.lines.count { |line| line.match?(/thank(?:s|\syou)?\b/i) }
+    if closings > 1
+      problems << "#{store_locale}: closes #{closings} times"
+    end
+  end
+
+  # Ten locales cannot legitimately hold the same bytes. When they do, the
+  # generator fell back to its English template and wrote it everywhere --
+  # which is precisely what 2.1.0 uploaded.
+  by_locale.group_by { |_, text| text }.each_value do |group|
+    next if group.length < 2
+
+    locales = group.map(&:first).sort.join(', ')
+    problems << "#{locales}: identical notes, which is the English template written to every listing"
+  end
+
+  if problems.any?
+    FastlaneCore::UI.user_error!(
+      "Release notes are not fit to upload:\n" +
+      problems.map { |p| "  #{p}" }.join("\n") +
+      "\n\nFix the notes (or the generator) and run the lane again; nothing has been uploaded."
+    )
+  end
+
+  FastlaneCore::UI.message("Release notes verified for #{locales.join(', ')}")
+  true
+end
+
 def verify_uploaded_screenshots
   # Resolved through project_root, not Dir.pwd. fastlane runs with Dir.pwd at
   # either the repo root or fastlane/, so a hardcoded relative glob finds
@@ -1528,6 +1691,12 @@ def _release_core(api_key:, options:, submit:)
   if changelog_updated
     FastlaneCore::UI.message("▸ Generating release notes")
     generate_release_notes(version: new_version)
+
+    # Before the commit, before the build number is spent, before anything is
+    # uploaded: a failure here costs a re-run. The same defect found one step
+    # later costs a listing in ten languages, which is what 2.1.0 shipped.
+    FastlaneCore::UI.message("▸ Verifying release notes")
+    verify_release_notes
   end
 
   # Local commit only. If anything below fails, recovery is one

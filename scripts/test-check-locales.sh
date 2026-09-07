@@ -150,6 +150,20 @@ if [ "$out" = "$expected_store" ]; then ok "--store prints the store column of .
 out=$("$CHECK" --app 2>&1)
 if [ "$out" = "$expected_app" ]; then ok "--app prints the app column of .locales"; else bad "--app output" "want: $expected_app, got: $out"; fi
 
+# --pairs exists because the two columns have to be read together to answer
+# "which language is this listing written in": fastlane/metadata is keyed by
+# store locale, and conventions/translation.md declares register by app
+# language. Deriving one from the other by truncating "de-DE" to "de" is the
+# guess the manifest's two columns exist to prevent -- Japanese is "ja" on both
+# sides, and nothing says the next locale will be so obliging.
+expected_pairs="$(awk '$0 !~ /^[[:space:]]*#/ && NF == 2 && $1 != "-" && $2 != "-" { print $1 " " $2 }' "$SCRIPT_DIR/../.locales")"
+out=$("$CHECK" --pairs 2>&1)
+if [ "$out" = "$expected_pairs" ]; then ok "--pairs prints store and app together"; else bad "--pairs output" "want: $expected_pairs, got: $out"; fi
+
+# A row shipping on one side only has no pair, and must not appear as one with
+# a "-" standing in for the missing half.
+if ! printf '%s\n' "$out" | grep -q -- '-$\|^-'; then ok "--pairs omits rows that ship on one side only"; else bad "--pairs half-rows" "got: $out"; fi
+
 # Something is declared somewhere, so the two comparisons above cannot both be
 # vacuous. Deliberately not "both columns": a row shipping on one side only is
 # legal and expected -- Spanish spent this whole issue series app-side with "-"
