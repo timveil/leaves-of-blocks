@@ -15,6 +15,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Stop the board crashing when the game is played in Spanish
+- Break the “Normal Blocks” label across two lines in English and Spanish, where it was showing the characters “\n” instead
 - Say a block scores 10 points per square, not 10 points per block
 - Correct the App Store description's shape count, difficulty mode names and scoring claim
 
