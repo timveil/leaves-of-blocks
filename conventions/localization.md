@@ -60,6 +60,29 @@ leaving it to be discovered from a product page in the wrong language.
 Adding or removing a locale means editing `.locales` first, then making the
 registries agree with it.
 
+## Whitman is quoted, not translated
+
+The verse on the About, Settings and How to Play screens stays in English in
+every language, and always will.
+
+`WhitmanQuoteCard` renders those lines with a poem title and a year, so they
+are presented as citations. A citation reproduces its source: translating one
+would be authoring a new poem and attributing it to Whitman, and the published
+translations are separately copyrighted works besides. The keys are
+`answer`, `whitman_quote_*`, `settings_quote`, `how_to_play_quote`, and the
+title and year that accompany each.
+
+The boundary worth keeping straight is `game_over_quote`. It echoes the verse's
+cadence, but the app wrote it, and it appears with no attribution — so it is
+copy like any other and gets translated. "Written in the style of" is not a
+quotation.
+
+Enforced by `LeavesOfBlocksTests/CitedVerseLocalizationTests.swift`, which
+asserts the cited lines are identical in every shipped language and that the
+game-over line is not. Spanish translated all eight of them before this was
+settled; the test exists so the next locale does not have to rediscover the
+decision from a review comment.
+
 ## Why it is strict
 
 The rule costs a few seconds per string. Breaking it costs an audit of every
