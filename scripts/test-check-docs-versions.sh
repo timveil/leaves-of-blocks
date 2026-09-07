@@ -89,22 +89,30 @@ echo "the string catalog is in scope"
 # and technical_description on the About screen said "iOS 18.5+" for months
 # afterwards, in two languages. The copy users actually read in the app was the
 # one copy nothing checked.
+# Built with printf/heredoc rather than sed -i: BSD and GNU sed disagree on
+# in-place editing, and a test helper is a poor place to make someone remember
+# that. The separator is a parameter so the scan can be tested against the file
+# being written differently.
 catalog_fixture() {
-  cat > "$1" <<'EOF'
+  local path="$1" en="$2" de="$3" sep="${4-}"
+  # Everything between the "value" key and the text: colon, spacing, and the
+  # opening quote. Parameterized so the scan can be tested against the file
+  # being written with different whitespace.
+  [ -n "$sep" ] || sep=' : "' 
+  cat > "$path" <<EOF
 {
   "sourceLanguage" : "en",
   "strings" : {
     "technical_description" : {
       "localizations" : {
-        "en" : { "stringUnit" : { "state" : "translated", "value" : "Built with SwiftUI for iOS %EN%." } },
-        "de" : { "stringUnit" : { "state" : "translated", "value" : "Mit SwiftUI für iOS %DE% entwickelt." } }
+        "en" : { "stringUnit" : { "state" : "translated", "value"${sep}Built with SwiftUI for iOS ${en}." } },
+        "de" : { "stringUnit" : { "state" : "translated", "value"${sep}Mit SwiftUI für iOS ${de} entwickelt." } }
       }
     }
   },
   "version" : "1.1"
 }
 EOF
-  sed -i '' "s/%EN%/$2/; s/%DE%/$3/" "$1"
 }
 
 catalog_fixture "$TMP/catalog.xcstrings" "18.0" "18.0"
@@ -143,6 +151,38 @@ cat > "$TMP/catalog.xcstrings" <<'EOF'
 EOF
 DOCS_CHECK_CATALOG="$TMP/catalog.xcstrings" "$CHECK" >/dev/null 2>&1; code=$?
 if [ "$code" -eq 0 ]; then ok "keys and comments are not mistaken for user-visible copy"; else bad "keys and comments ignored" "want exit 0, got $code"; fi
+
+# The scan reads the file as text, so it has to survive the file being written
+# differently. Xcode owns this format, and a reformat that quietly turned the
+# check off would be the worst outcome available: green, and blind.
+catalog_fixture "$TMP/catalog.xcstrings" "18.5" "18.0" ': "'
+DOCS_CHECK_CATALOG="$TMP/catalog.xcstrings" "$CHECK" >/dev/null 2>&1; code=$?
+if [ "$code" -eq 1 ]; then ok "a catalog written without the usual spacing is still scanned"; else bad "spacing tolerated" "want exit 1, got $code"; fi
+
+catalog_fixture "$TMP/catalog.xcstrings" "18.5" "18.0" '    :    "'
+DOCS_CHECK_CATALOG="$TMP/catalog.xcstrings" "$CHECK" >/dev/null 2>&1; code=$?
+if [ "$code" -eq 1 ]; then ok "extra whitespace around the colon is tolerated"; else bad "whitespace tolerated" "want exit 1, got $code"; fi
+
+# And if the shape changes past recognition, say so rather than reporting an
+# agreement nobody verified.
+cat > "$TMP/catalog.xcstrings" <<'EOF'
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "technical_description" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "text" : "Built with SwiftUI for iOS 18.5." } }
+      }
+    }
+  },
+  "version" : "1.1"
+}
+EOF
+DOCS_CHECK_CATALOG="$TMP/catalog.xcstrings" "$CHECK" >/dev/null 2>&1; code=$?
+if [ "$code" -eq 2 ]; then ok "a catalog with no readable values is a setup error"; else bad "unreadable catalog exits 2" "want 2, got $code"; fi
+
+err=$(DOCS_CHECK_CATALOG="$TMP/catalog.xcstrings" "$CHECK" 2>&1 >/dev/null)
+if grep -qiF "value" <<<"$err"; then ok "and says what it could not find"; else bad "explains itself" "got: $(head -2 <<<"$err")"; fi
 
 echo
 echo "App Store copy is in scope"

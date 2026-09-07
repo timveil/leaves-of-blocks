@@ -125,11 +125,30 @@ done
 # them: checking the source language alone would pass while a translation still
 # advertised the old floor, which is precisely the state Spanish was in.
 if [ -f "$CATALOG" ]; then
+  # Whitespace-tolerant, because Xcode owns this file's formatting and a
+  # reformat must not turn the check off. A stricter pattern would still find
+  # nothing and still exit 0 -- green and blind, which is the failure this
+  # whole script exists to prevent.
+  catalog_values="$(grep -nE '"value"[[:space:]]*:' "$CATALOG" || true)"
+
+  # If the shape ever changes past recognition, say so rather than reporting an
+  # agreement nobody verified. stringUnit is the marker: a catalog containing
+  # one has localized values, so finding none means the scan no longer knows
+  # how to read the file.
+  if [ -z "$catalog_values" ] && grep -q '"stringUnit"' "$CATALOG"; then
+    {
+      echo "check-docs-versions.sh: found no \"value\" entries in ${CATALOG#"$ROOT/"},"
+      echo "but the file contains stringUnit entries — its format has changed and this"
+      echo "scan can no longer read it. Update the scan rather than leaving it silent."
+    } >&2
+    exit 2
+  fi
+
   while IFS= read -r line; do
     [ -n "$line" ] || continue
     status=1
     echo "${CATALOG#"$ROOT/"}: $line" >&2
-  done < <(grep -n '"value" : ' "$CATALOG" \
+  done < <(printf '%s\n' "$catalog_values" \
     | grep -E "iOS${IOS_SEP}[0-9]+\.[0-9]+" \
     | grep -vE "iOS${IOS_SEP}${target//./\\.}" \
     | grep -viE "iOS${IOS_SEP}26|iOS 17\.0 or newer" || true)
