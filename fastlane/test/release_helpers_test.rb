@@ -58,6 +58,59 @@ require 'fileutils'
 require 'open3'
 require 'json'
 
+# app_store_edit_version is the one network helper covered here, because the way
+# it reports failure decides whether preflight can be trusted. Spaceship comes
+# from fastlane at lane time and is not loaded in this suite, so App.find is
+# stubbed down to the three outcomes that matter.
+APP_IDENTIFIER = 'timothy.veil.LeavesOfBlocks' unless defined?(APP_IDENTIFIER)
+
+module Spaceship
+  module ConnectAPI
+    class StubEditVersion
+      attr_reader :version_string, :app_store_state
+
+      def initialize(version_string, app_store_state)
+        @version_string = version_string
+        @app_store_state = app_store_state
+      end
+    end
+
+    class App
+      class << self
+        attr_accessor :stub_edit, :stub_in_review, :stub_pending_release, :stub_error
+
+        def find(_identifier)
+          raise stub_error if stub_error
+
+          new
+        end
+
+        def reset_stubs!
+          self.stub_edit = nil
+          self.stub_in_review = nil
+          self.stub_pending_release = nil
+          self.stub_error = nil
+        end
+      end
+
+      # Three accessors, three disjoint state filters. Spaceship splits them
+      # this way, and asking only the first is what let a version in review
+      # look like an empty slot.
+      def get_edit_app_store_version(*)
+        self.class.stub_edit
+      end
+
+      def get_in_review_app_store_version(*)
+        self.class.stub_in_review
+      end
+
+      def get_pending_release_app_store_version(*)
+        self.class.stub_pending_release
+      end
+    end
+  end
+end
+
 require_relative '../release_helpers'
 
 $pass = 0
@@ -630,6 +683,68 @@ assert_equal(true, message.include?('no processed build'), "a pending version wi
 message = _describe_pending_submission(version: '2.0.7', state: 'WAITING_FOR_REVIEW', build: 29)
 assert_equal(false, message.include?('ready to submit'), "a version in review is never 'ready to submit'")
 assert_equal(true, message.include?('WAITING_FOR_REVIEW'), "it reports the state it is actually in")
+
+puts
+puts "app_store_edit_version"
+
+Spaceship::ConnectAPI::App.reset_stubs!
+assert_equal(nil, app_store_edit_version, "an app with no version in progress reports nil")
+
+Spaceship::ConnectAPI::App.stub_edit = Spaceship::ConnectAPI::StubEditVersion.new('2.0.7', 'WAITING_FOR_REVIEW')
+info = app_store_edit_version
+assert_equal('2.0.7', info[:version], "the occupying version is reported")
+assert_equal('WAITING_FOR_REVIEW', info[:state], "with the state App Store Connect gave")
+assert_equal(:locked, info[:status], "and the status derived from it")
+
+# get_edit_app_store_version filters on a fixed state list that stops at
+# WAITING_FOR_REVIEW. The moment Apple starts reviewing, it returns nil -- and
+# nil is a PASS. Watched live: 2.0.7 moved WAITING_FOR_REVIEW -> IN_REVIEW and
+# the row flipped from correctly failing to "free — no version in progress"
+# while Apple was actively reviewing it.
+Spaceship::ConnectAPI::App.reset_stubs!
+Spaceship::ConnectAPI::App.stub_in_review = Spaceship::ConnectAPI::StubEditVersion.new('2.0.7', 'IN_REVIEW')
+info = app_store_edit_version
+assert_equal('2.0.7', info[:version], "a version in review still holds the slot")
+assert_equal(:locked, info[:status], "and is reported as locked, not absent")
+
+# Same gap one state further on: an approved version awaiting release is
+# invisible to the edit accessor and still occupies the slot.
+Spaceship::ConnectAPI::App.reset_stubs!
+Spaceship::ConnectAPI::App.stub_pending_release = Spaceship::ConnectAPI::StubEditVersion.new('2.0.7', 'PENDING_DEVELOPER_RELEASE')
+info = app_store_edit_version
+assert_equal('2.0.7', info[:version], "a version awaiting release still holds the slot")
+assert_equal(:locked, info[:status], "and is reported as locked")
+
+Spaceship::ConnectAPI::App.reset_stubs!
+Spaceship::ConnectAPI::App.stub_edit = Spaceship::ConnectAPI::StubEditVersion.new('2.1.0', 'PREPARE_FOR_SUBMISSION')
+assert_equal(:editable, app_store_edit_version[:status], "a version waiting on the developer is editable")
+
+# The failure mode that matters. Rescuing to nil makes an unreachable App Store
+# Connect indistinguishable from an empty slot -- and an empty slot is a PASS,
+# so a network blip would have reported "Release slot: free" and waved through
+# the release this row exists to stop. Raising lets _preflight record the row as
+# failed and lets the submit lane report the real reason.
+Spaceship::ConnectAPI::App.reset_stubs!
+Spaceship::ConnectAPI::App.stub_error = StandardError.new('connection reset by peer')
+
+raised = begin
+  app_store_edit_version
+  false
+rescue StandardError
+  true
+end
+assert_equal(true, raised, "an unreadable App Store Connect raises rather than reporting an empty slot")
+
+message = begin
+  app_store_edit_version
+  ''
+rescue StandardError => e
+  e.message
+end
+assert_equal(true, message.include?('connection reset by peer'), "and carries the underlying reason")
+assert_equal(true, message.include?('App Store Connect'), "and says what could not be read")
+
+Spaceship::ConnectAPI::App.reset_stubs!
 
 puts
 if $fail.zero?

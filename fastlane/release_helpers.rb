@@ -1004,11 +1004,34 @@ end
 # no build at all. App Store Connect is the only thing that knows which version
 # is actually pending.
 #
-# Returns { version:, state:, status: }, or nil when there is no edit version
-# or App Store Connect cannot be read.
+# Returns { version:, state:, status: }, or nil when there is no edit version.
+#
+# A failed read raises rather than returning nil, and the distinction is the
+# whole point: nil means "the slot is empty", which is a PASS. Rescuing to nil
+# would make an unreachable App Store Connect indistinguishable from a free
+# slot, so a network blip would report "Release slot: free" and wave through the
+# release this check exists to stop -- the same false green in a new place.
+#
+# Both callers are better off with the exception. _preflight rescues per row and
+# records the message, so the row reads as failed for the reason it failed; the
+# submit lane aborts saying App Store Connect could not be read, rather than
+# claiming nothing is awaiting submission.
 def app_store_edit_version
   app = Spaceship::ConnectAPI::App.find(APP_IDENTIFIER)
-  edit = app.get_edit_app_store_version
+
+  # Three accessors, because one is not enough to see the slot.
+  # get_edit_app_store_version filters on a fixed state list that stops at
+  # WAITING_FOR_REVIEW, so the moment Apple starts reviewing it returns nil --
+  # and nil means "free", which passes. Watched happen: 2.0.7 moved
+  # WAITING_FOR_REVIEW -> IN_REVIEW and this row flipped from correctly failing
+  # to "free — no version in progress" while Apple was reviewing it.
+  #
+  # A version in review or awaiting release holds the slot just as firmly as one
+  # being prepared. Spaceship's own filters define which states each accessor
+  # covers, so they are asked rather than re-listed here.
+  edit = app.get_edit_app_store_version ||
+         app.get_in_review_app_store_version ||
+         app.get_pending_release_app_store_version
   return nil unless edit
 
   {
@@ -1017,8 +1040,7 @@ def app_store_edit_version
     status: _app_store_slot_status(edit.app_store_state)
   }
 rescue StandardError => e
-  FastlaneCore::UI.important("Could not read the pending version from App Store Connect: #{e.message}")
-  nil
+  raise "Could not read the pending version from App Store Connect: #{e.message}"
 end
 
 # Build number of the most recent processed build for a marketing version.
@@ -1265,14 +1287,24 @@ def run_release_preflight(api_key:, bump_type:)
   end
 
   # Read once and shared by the two rows below, rather than paying for the same
-  # round trip twice.
-  pending = app_store_edit_version
+  # round trip twice. A failed read is captured and re-raised inside each row,
+  # so _preflight records it as that row's failure rather than aborting the
+  # whole table on the way to building it.
+  pending = nil
+  pending_error = nil
+  begin
+    pending = app_store_edit_version
+  rescue StandardError => e
+    pending_error = e
+  end
 
   # The row whose absence let a green preflight sit in front of a release that
   # could not have worked (#149). Every other blocking condition here is a
   # :fail, and this one guarantees failure at upload_to_app_store -- after the
   # changelog is committed, the version bumped, and a build uploaded.
   _preflight(rows, 'Release slot') do
+    raise pending_error if pending_error
+
     status, message = _release_slot_row(version: pending&.fetch(:version), state: pending&.fetch(:state))
     raise message if status == :fail
 
@@ -1280,6 +1312,7 @@ def run_release_preflight(api_key:, bump_type:)
   end
 
   _preflight(rows, 'Pending submission', severity: :warn) do
+    raise pending_error if pending_error
     next nil unless pending
 
     # Only a version genuinely waiting on the developer needs its build looked
