@@ -8,8 +8,21 @@
 # README badge -- the first thing anyone reads, understating who can install
 # the app. Nothing caught it, because prose has no compiler.
 #
-# The project file is the source of truth; the docs are checked against it
-# (conventions/shared-rule-single-source.md).
+# The project file is the source of truth; everything that states the floor is
+# checked against it (conventions/shared-rule-single-source.md).
+#
+# "Docs" is broader than Markdown, which is what this originally missed. The
+# guard found the five documents from #89 and then sat green for months while
+# technical_description on the About screen advertised iOS 18.5 in two
+# languages -- the one copy of the claim that users actually read. Anything
+# that states the floor to a person is now in scope: the string catalog (every
+# localization), the App Store descriptions, and the two Ruby files CLAUDE.md
+# already requires to stay consistent with the description.
+#
+# Release notes are deliberately not scanned. They describe a moment in time
+# and may name older versions perfectly truthfully -- the current ones say the
+# release fixed installing on iOS 18.0 through 18.4, which is history, not a
+# claim about the floor.
 #
 # Usage:
 #   ./scripts/check-docs-versions.sh              # check the real docs
@@ -28,6 +41,21 @@ DOCS=("README.md" "CLAUDE.md" "CONTRIBUTING.md")
 while IFS= read -r doc; do
   DOCS+=("${doc#"$ROOT/"}")
 done < <(find "$ROOT/conventions" -name '*.md' 2>/dev/null | sort)
+
+# Prose that is not Markdown. APP_DESCRIPTION and APP_CONTEXT are named by
+# CLAUDE.md as having to stay consistent with the description, and the
+# descriptions themselves state the floor to someone who has not installed the
+# app yet.
+DOCS+=("fastlane/Constants.rb" "fastlane/AIHelper.rb")
+while IFS= read -r doc; do
+  DOCS+=("${doc#"$ROOT/"}")
+done < <(find "$ROOT/fastlane/metadata" -name 'description.txt' 2>/dev/null | sort)
+
+# The string catalog is JSON, so it is scanned separately: only the localized
+# values are user-visible copy. Keys and Xcode's auto-generated comments are
+# not, and a key like "note_about_ios_18_5" should not fail a check about what
+# a player reads.
+CATALOG="${DOCS_CHECK_CATALOG:-$ROOT/LeavesOfBlocks/Resources/Localizable.xcstrings}"
 
 # The project file carries IPHONEOS_DEPLOYMENT_TARGET once per build
 # configuration. Taking the first and moving on would hide the very failure
@@ -92,6 +120,20 @@ for doc in "${DOCS[@]}"; do
     | grep -vE "iOS${IOS_SEP}${target//./\\.}" \
     | grep -viE "iOS${IOS_SEP}26|iOS 17\.0 or newer" || true)
 done
+
+# Every localization carries its own copy of the claim, so this covers all of
+# them: checking the source language alone would pass while a translation still
+# advertised the old floor, which is precisely the state Spanish was in.
+if [ -f "$CATALOG" ]; then
+  while IFS= read -r line; do
+    [ -n "$line" ] || continue
+    status=1
+    echo "${CATALOG#"$ROOT/"}: $line" >&2
+  done < <(grep -n '"value" : ' "$CATALOG" \
+    | grep -E "iOS${IOS_SEP}[0-9]+\.[0-9]+" \
+    | grep -vE "iOS${IOS_SEP}${target//./\\.}" \
+    | grep -viE "iOS${IOS_SEP}26|iOS 17\.0 or newer" || true)
+fi
 
 if [ "$status" -ne 0 ]; then
   cat >&2 <<EOF

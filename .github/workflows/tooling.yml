@@ -19,6 +19,9 @@ on:
       # deployment target, so both sides of that comparison must trigger it.
       # #89 changed the project and left five documents contradicting it;
       # without these paths the guard would not have run on either commit.
+      # It now also reads the string catalog and the App Store descriptions
+      # (#128), which arrive through the fastlane/** and Localizable.xcstrings
+      # paths already listed below.
       - '*.md'
       - 'conventions/**'
       - 'LeavesOfBlocks.xcodeproj/**'
