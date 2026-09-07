@@ -146,6 +146,7 @@ SCREENSHOT_DEVICES = [
 # Kept in step with .locales by scripts/check-locales.sh, which fails CI if
 # this list and the manifest disagree.
 SCREENSHOT_LANGUAGES = [
+  "de-DE",
   "en-US",
   "es-MX"
 ]
