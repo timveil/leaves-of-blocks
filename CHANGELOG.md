@@ -8,7 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- Play in seven languages — the game and its App Store listing are now available in English, Spanish, German, Japanese, French, Dutch and Korean
+- Play in your own language — the game and its App Store listing are now available in English, Spanish, German, Japanese, French, Dutch, Korean, Brazilian Portuguese and Chinese (Traditional and Simplified)
 
 ### Changed
 - Quote Whitman in English in every language; the app cites the poet rather than translating him

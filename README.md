@@ -10,7 +10,7 @@
   [![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-FE5196?logo=conventionalcommits&logoColor=white)](https://www.conventionalcommits.org)
   [![No Ads](https://img.shields.io/badge/ads-none-success)](#privacy-by-default)
   [![No Trackers](https://img.shields.io/badge/trackers-none-success)](#privacy-by-default)
-  [![Localized](https://img.shields.io/badge/localized-en%20%C2%B7%20de%20%C2%B7%20es%20%C2%B7%20fr%20%C2%B7%20ja%20%C2%B7%20ko%20%C2%B7%20nl-blue)](.locales)
+  [![Localized](https://img.shields.io/badge/localized-see%20.locales-blue)](.locales)
   
   **A Whitman-inspired, privacy-first Block Blast alternative for iOS — zero ads, zero tracking, zero in-app purchases.**
   
@@ -50,7 +50,7 @@
 - **Intuitive Controls**: Smooth drag-and-drop with haptic feedback
 - **Responsive UI**: Optimized for all iPhone sizes with 60fps performance
 - **Accessibility**: Full accessibility support built-in
-- **Speaks your language**: English, German, Spanish, French, Japanese, Korean and Dutch — interface, App Store listing and screenshots, not just the menus
+- **Speaks your language**: every locale declared in [`.locales`](.locales) gets the interface, the App Store listing and the screenshots — not just the menus
 
 ### Rich Analytics
 - **Performance Grades**: A+ through D efficiency ratings
@@ -66,10 +66,10 @@
 
 ### Localization
 
-The app, its App Store listing and its screenshots ship in English, German,
-Spanish, French, Japanese, Korean and Dutch. Whitman's verse is the deliberate
-exception: it is quoted in the original English on every screen that cites it,
-because translating a poem is authoring one.
+The app, its App Store listing and its screenshots ship in every locale declared
+in [`.locales`](.locales). Whitman's verse is the deliberate exception: it is
+quoted in the original English on every screen that cites it, because
+translating a poem is authoring one.
 
 Which locales ship is declared once in [`.locales`](.locales) and enforced by
 [`scripts/check-locales.sh`](scripts/check-locales.sh), which fails the build

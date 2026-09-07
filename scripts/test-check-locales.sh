@@ -191,6 +191,33 @@ run_fixture "$TMP/comments" >/dev/null 2>&1; code=$?
 if [ "$code" -eq 0 ]; then ok "comments and blank lines are ignored"; else bad "comments ignored" "exit $code: $(fixture_err "$TMP/comments" | head -2)"; fi
 
 echo
+echo "hyphenated regions are quoted by Xcode"
+
+# pbxproj quotes any identifier containing a hyphen, so "pt-BR" and "zh-Hans"
+# arrive as "pt-BR", -- with the quotes. A parser that reads bare identifiers
+# only sees no such region and reports the language as missing from a project
+# that carries it. Every locale shipped before this one (de, en, es, fr, ja,
+# ko, nl) is a bare subtag, so nothing exercised the quoted form.
+make_fixture "$TMP/quoted"; write_manifest "$TMP/quoted" "en-US	en" "pt-BR	pt-BR"
+write_pbxproj "$TMP/quoted" en '"pt-BR"' Base
+write_catalog "$TMP/quoted" "game_over:en,pt-BR"
+write_metadata "$TMP/quoted" pt-BR
+write_constants "$TMP/quoted" en-US pt-BR
+run_fixture "$TMP/quoted" >/dev/null 2>&1; code=$?
+if [ "$code" -eq 0 ]; then ok "a quoted hyphenated region is recognized"; else bad "quoted region recognized" "exit $code: $(fixture_problems "$TMP/quoted" | head -2)"; fi
+
+# And the reverse still has to fail: a region the manifest does not declare is
+# a problem whether or not it is quoted.
+make_fixture "$TMP/quoted_extra"; write_manifest "$TMP/quoted_extra" "en-US	en"
+write_pbxproj "$TMP/quoted_extra" en '"pt-BR"' Base
+write_catalog "$TMP/quoted_extra" "game_over:en"
+run_fixture "$TMP/quoted_extra" >/dev/null 2>&1; code=$?
+if [ "$code" -eq 1 ]; then ok "an undeclared quoted region is still caught"; else bad "undeclared quoted region caught" "want exit 1, got $code"; fi
+
+err=$(fixture_problems "$TMP/quoted_extra")
+if grep -qF "pt-BR" <<<"$err"; then ok "and is named without its quotes"; else bad "named without quotes" "got: $(head -2 <<<"$err")"; fi
+
+echo
 echo "the two identifier spaces are checked independently"
 
 # The state Spanish is in today: shipped in-app, no App Store listing yet. The

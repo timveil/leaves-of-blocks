@@ -111,8 +111,15 @@ check_known_regions() {
   [ -f "$PBXPROJ" ] || setup_error "missing $PBXPROJ"
 
   local before="$status" regions region language
+  # The quotes are optional in the pattern because they are not optional in the
+  # file: pbxproj quotes any identifier containing a hyphen, so "pt-BR",
+  # "zh-Hans" and "zh-Hant" arrive quoted while every unhyphenated subtag does
+  # not. Reading bare identifiers only, this saw no such region and reported the
+  # language missing from a project that carried it -- and every locale shipped
+  # before those three was unhyphenated, so nothing had exercised the quoted
+  # form.
   regions="$(sed -n '/knownRegions = (/,/);/p' "$PBXPROJ" \
-    | sed -nE 's/^[[:space:]]*([A-Za-z0-9_+-]+),[[:space:]]*$/\1/p' || true)"
+    | sed -nE 's/^[[:space:]]*"?([A-Za-z0-9_+-]+)"?,[[:space:]]*$/\1/p' || true)"
 
   [ -n "$regions" ] || setup_error "could not read knownRegions from $PBXPROJ"
 
