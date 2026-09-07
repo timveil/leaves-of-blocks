@@ -142,12 +142,15 @@ if [ "$out" = "$expected_store" ]; then ok "--store prints the store column of .
 out=$("$CHECK" --app 2>&1)
 if [ "$out" = "$expected_app" ]; then ok "--app prints the app column of .locales"; else bad "--app output" "want: $expected_app, got: $out"; fi
 
-# Both columns carry something today, so the comparisons above are not
-# vacuously comparing empty strings.
-if [ -n "$expected_store" ] && [ -n "$expected_app" ]; then
-  ok "the manifest declares locales on both sides"
+# Something is declared somewhere, so the two comparisons above cannot both be
+# vacuous. Deliberately not "both columns": a row shipping on one side only is
+# legal and expected -- Spanish spent this whole issue series app-side with "-"
+# in the store column -- so demanding both would fail on a manifest the format
+# explicitly allows.
+if [ -n "$expected_store$expected_app" ]; then
+  ok "the manifest declares at least one locale"
 else
-  bad "manifest declares both sides" "store: '$expected_store', app: '$expected_app'"
+  bad "manifest declares a locale" "both columns are empty"
 fi
 
 echo
