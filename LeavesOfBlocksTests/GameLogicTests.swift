@@ -280,3 +280,123 @@ struct FindValidPositionsTests {
         #expect(GameLogic.findValidPositions(for: block, in: grid).isEmpty)
     }
 }
+
+// MARK: - Highlighted Cells
+
+/// Direct coverage for the footprint resolver behind the hint highlight.
+///
+/// `HintTests` exercises it only through `findHint`, which always reports the
+/// first scan-order placement — so every case there lands at the top-left and
+/// the interior, mid-grid behavior went unpinned.
+///
+/// The other `GameLogic` members without direct tests are deliberate omissions:
+/// `DifficultyPatternConfig.forDifficulty` is `private` and reachable only
+/// through `randomlyFillGrid`, and `randomlyFillGrid` /
+/// `fillGridWithGeometricPatterns` draw from the global RNG, so they admit
+/// property assertions (fill stays under target, no line completed) rather
+/// than examples. Neither is covered here.
+@Suite("GameLogic.highlightedCells")
+struct HighlightedCellsTests {
+    private static let size = AppConfiguration.GameRules.gridSize
+
+    @Test("A normal block's cells are its offsets translated by the position")
+    func normalBlockCellsAreOffsetsTranslatedByThePosition() {
+        // Given an L-shaped normal block and an interior placement
+        let block = BlockShape(
+            positions: [
+                GridPosition(row: 0, col: 0),
+                GridPosition(row: 1, col: 0),
+                GridPosition(row: 1, col: 1)
+            ],
+            color: .blue
+        )
+        let position = GridPosition(row: 3, col: 4)
+
+        // When the footprint is resolved
+        let cells = GameLogic.highlightedCells(for: block, at: position)
+
+        // Then every offset appears translated by the placement position
+        #expect(Set(cells) == Set([
+            GridPosition(row: 3, col: 4),
+            GridPosition(row: 4, col: 4),
+            GridPosition(row: 4, col: 5)
+        ]))
+    }
+
+    @Test("A horizontal-clear block covers its whole row and nothing else")
+    func horizontalClearCoversItsWholeRowAndNothingElse() {
+        // Given a horizontal-clear block whose own footprint is a single cell
+        let block = BlockShape(positions: [GridPosition(row: 0, col: 0)], color: .red, type: .horizontalClear)
+        let position = GridPosition(row: 5, col: 2)
+
+        // When the footprint is resolved
+        let cells = GameLogic.highlightedCells(for: block, at: position)
+
+        // Then it is exactly row 5, regardless of the column placed in
+        #expect(Set(cells) == Set((0..<Self.size).map { GridPosition(row: 5, col: $0) }))
+    }
+
+    @Test("A vertical-clear block covers its whole column and nothing else")
+    func verticalClearCoversItsWholeColumnAndNothingElse() {
+        // Given a vertical-clear block placed away from the first row
+        let block = BlockShape(positions: [GridPosition(row: 0, col: 0)], color: .red, type: .verticalClear)
+        let position = GridPosition(row: 6, col: 3)
+
+        // When the footprint is resolved
+        let cells = GameLogic.highlightedCells(for: block, at: position)
+
+        // Then it is exactly column 3, regardless of the row placed in
+        #expect(Set(cells) == Set((0..<Self.size).map { GridPosition(row: $0, col: 3) }))
+    }
+
+    @Test("An area-clear block away from the edges covers the full 3x3 neighborhood")
+    func areaClearAwayFromEdgesCoversTheFullNeighborhood() {
+        // Given an area-clear block centered where no edge clips it
+        let block = BlockShape(positions: [GridPosition(row: 0, col: 0)], color: .red, type: .areaClear)
+        let position = GridPosition(row: 4, col: 4)
+
+        // When the footprint is resolved
+        let cells = GameLogic.highlightedCells(for: block, at: position)
+
+        // Then it is the center plus all eight neighbors
+        let expected = Set((-1...1).flatMap { rowOffset in
+            (-1...1).map { GridPosition(row: 4 + rowOffset, col: 4 + $0) }
+        })
+        #expect(Set(cells) == expected)
+    }
+
+    @Test("An area-clear block at a corner drops the cells outside the grid")
+    func areaClearAtACornerDropsTheCellsOutsideTheGrid() {
+        // Given an area-clear block centered on the bottom-right corner
+        let block = BlockShape(positions: [GridPosition(row: 0, col: 0)], color: .red, type: .areaClear)
+        let last = Self.size - 1
+        let position = GridPosition(row: last, col: last)
+
+        // When the footprint is resolved
+        let cells = GameLogic.highlightedCells(for: block, at: position)
+
+        // Then only the in-bounds quadrant survives
+        #expect(Set(cells) == Set([
+            GridPosition(row: last - 1, col: last - 1),
+            GridPosition(row: last - 1, col: last),
+            GridPosition(row: last, col: last - 1),
+            GridPosition(row: last, col: last)
+        ]))
+    }
+
+    @Test("A special block's own shape does not widen its footprint")
+    func specialBlockOwnShapeDoesNotWidenItsFootprint() {
+        // Given a horizontal-clear block carrying a two-cell shape
+        let block = BlockShape(
+            positions: [GridPosition(row: 0, col: 0), GridPosition(row: 1, col: 0)],
+            color: .red,
+            type: .horizontalClear
+        )
+
+        // When the footprint is resolved
+        let cells = GameLogic.highlightedCells(for: block, at: GridPosition(row: 2, col: 0))
+
+        // Then the second shape row is not highlighted — only the placed row is
+        #expect(cells.allSatisfy { $0.row == 2 })
+    }
+}
