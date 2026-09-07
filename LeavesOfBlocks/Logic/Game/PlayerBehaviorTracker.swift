@@ -183,7 +183,13 @@ final class PlayerBehaviorTracker {
             }
         }
 
-        BuildConfiguration.log("Recorded grid state - Efficiency: \(String(format: "%.3f", metrics.efficiency)), Tier: \(tier.description)\(isInitialSeed ? " (seed)" : "")", level: .verbose)
+        // Guarded: `log(_:level:)` takes a String, so this message — a
+        // `String(format:)` and two interpolations — is built before the level
+        // guard runs, and release never emits .verbose. Once per placement.
+        if BuildConfiguration.LogLevel.verbose.rawValue
+            >= BuildConfiguration.currentLogLevel.rawValue {
+            BuildConfiguration.log("Recorded grid state - Efficiency: \(String(format: "%.3f", metrics.efficiency)), Tier: \(tier.description)\(isInitialSeed ? " (seed)" : "")", level: .verbose)
+        }
     }
     
     /// Appends `value` to `history`, dropping the oldest entry once the cap is exceeded.

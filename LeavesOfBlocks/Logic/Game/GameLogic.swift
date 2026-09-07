@@ -314,9 +314,14 @@ enum GameLogic {
     }
 
     /// Resolves the absolute grid cells affected by placing `block` at
-    /// `position`, including the row / column / 3x3 footprint of special blocks.
-    /// Cells outside the grid are dropped so the caller can iterate the result
-    /// without a bounds check.
+    /// `position`, including the row / column / 3x3 footprint of special
+    /// blocks. A special block's own shape is ignored — only `position`
+    /// decides its footprint.
+    ///
+    /// The 3x3 area-clear footprint is clipped to the grid, since it is the
+    /// only case that can overhang an edge from a legal placement. A normal
+    /// block's cells are translated as they are: callers place it only where
+    /// `canPlaceBlock` already said it fits, so every cell is in bounds.
     static func highlightedCells(for block: BlockShape, at position: GridPosition) -> [GridPosition] {
         let size = AppConfiguration.GameRules.gridSize
         switch block.type {

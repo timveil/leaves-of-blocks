@@ -30,6 +30,11 @@ enum ScreenshotFixtures {
         }
     }
 
+    /// Deletes every persisted `GameRecord` in `context`.
+    ///
+    /// `nonisolated` because it runs inside `performAndWait`, whose closure is
+    /// not main-actor isolated. It touches no actor state — only the context
+    /// it is handed, on whatever queue that context owns.
     nonisolated private static func clearAllRecords(in context: NSManagedObjectContext) {
         let fetchRequest: NSFetchRequest<NSFetchRequestResult> = GameRecord.fetchRequest()
         let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
@@ -40,6 +45,10 @@ enum ScreenshotFixtures {
         }
     }
 
+    /// Inserts the single deterministic high-score session the screenshots pose against.
+    ///
+    /// `nonisolated` for the same reason as `clearAllRecords`: it is called
+    /// from inside `performAndWait` and touches only the passed context.
     nonisolated private static func insertHighScoreFixture(into context: NSManagedObjectContext) {
         let highScoreGame = GameRecord(context: context)
         highScoreGame.id = UUID()
@@ -62,6 +71,10 @@ enum ScreenshotFixtures {
 
     /// Anchored to May 31, 1819 — a recognizable date that unambiguously signals
     /// "screenshot fixture" rather than real user data.
+    ///
+    /// `nonisolated` because it is read from `insertHighScoreFixture`, which is
+    /// itself off the main actor. An immutable `Date` is `Sendable`, so the
+    /// value crosses isolation domains safely.
     nonisolated private static let sampleDate: Date = {
         var components = DateComponents()
         components.year = 1819
