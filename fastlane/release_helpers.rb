@@ -293,6 +293,36 @@ def _parse_unreleased_subsections(changelog_content)
   sections
 end
 
+# How many entries [Unreleased] actually holds.
+#
+# extract_changelog_section counts lines, so a block of empty "### Added" /
+# "### Changed" / "### Fixed" headers reads as a five-line section and passes
+# any is-it-present check -- which is exactly how preflight reported
+# "5 line(s) under [Unreleased]" across 26 commits that had authored nothing.
+# Bullets are the only thing that counts.
+def _unreleased_entry_count(content)
+  _entry_total(_parse_unreleased_subsections(content))
+end
+
+# Bullets across every subsection of a parsed block.
+def _entry_total(sections)
+  (sections || {}).values.sum(&:length)
+end
+
+# Whether a release section should be derived from commit subjects.
+#
+# Only when the pull requests authored nothing (conventions/changelog.md).
+# Deriving on top of authored entries described the same work twice: uniq!
+# compares exact strings, so a hand-written "Play in seven languages" and a
+# generated "Add French, Dutch and Korean localizations" both survived, and
+# CI and test commits arrived as bullets no player could observe.
+#
+# Generation stays as the backstop for the section nobody wrote, so a release
+# is never left with no notes at all.
+def _derive_from_commits?(authored_sections)
+  (authored_sections || {}).empty?
+end
+
 # Extract the body of one version's CHANGELOG section.
 #
 # A section runs from its "## [x.y.z]" heading to whichever comes first: the
@@ -528,9 +558,21 @@ def update_changelog_from_commits(new_version:)
   filtered_commits = commits.reject { |c| c.match?(/^chore: Release v/i) }
   FastlaneCore::UI.message("#{filtered_commits.length} commits after filtering release commits")
 
+  # Authored entries are the release section, not a preface to a generated one
+  # (conventions/changelog.md). Dropping the commits here rather than filtering
+  # the results afterwards also means no tokens are spent asking for prose that
+  # would be discarded.
+  unless _derive_from_commits?(manual_sections)
+    FastlaneCore::UI.message(
+      "[Unreleased] holds #{_entry_total(manual_sections)} authored entries; " \
+      "not deriving any from commit subjects"
+    )
+    filtered_commits = []
+  end
+
   # === AI ENHANCEMENT ATTEMPT ===
   ai_result = nil
-  if AIHelper.available?
+  if filtered_commits.any? && AIHelper.available?
     FastlaneCore::UI.message("Attempting AI-enhanced changelog generation...")
     ai_result = AIHelper.enhance_changelog(commits: filtered_commits, new_version: new_version)
 
@@ -1321,11 +1363,22 @@ def run_release_preflight(api_key:, bump_type:)
     _describe_pending_submission(version: pending[:version], state: pending[:state], build: build)
   end
 
+  # Counts entries, not lines. A block of empty "### Added" / "### Changed" /
+  # "### Fixed" headers is five lines, and this row reported exactly that --
+  # "5 line(s) under [Unreleased]", green -- across 26 commits that had
+  # authored nothing, right up to the release that would have written the App
+  # Store notes from commit subjects instead (conventions/changelog.md).
   _preflight(rows, 'CHANGELOG section') do
     raise 'target version unresolved' unless target_version
     path = File.join(Dir.pwd, '..', 'CHANGELOG.md')
-    section = File.exist?(path) ? extract_changelog_section(File.read(path), 'Unreleased') : nil
-    section ? "#{section.lines.count} line(s) under [Unreleased]" : (raise '[Unreleased] is empty; the release would have no notes')
+    raise 'CHANGELOG.md not found' unless File.exist?(path)
+
+    count = _unreleased_entry_count(File.read(path))
+    if count.zero?
+      raise '[Unreleased] holds no entries; write what changed for players before releasing'
+    end
+
+    "#{count} authored #{count == 1 ? 'entry' : 'entries'} under [Unreleased]"
   end
 
   _preflight(rows, 'TestFlight notes') do

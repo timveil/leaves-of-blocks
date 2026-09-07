@@ -18,6 +18,7 @@ PR. Swift style is not here — that lives in
 | [Workflow scripts](workflow-scripts.md) | A GitHub Actions `run:` step invokes a command; it does not implement logic. |
 | [One rule, one definition](shared-rule-single-source.md) | A rule enforced in two places is defined once and called twice. |
 | [Commit messages](commit-messages.md) | Conventional Commits, enforced locally and in CI. |
+| [Changelog](changelog.md) | A player-visible change says so under `[Unreleased]`, on the PR that made it. |
 | [Localization](localization.md) | User-visible text goes through `.localized`. Always. |
 | [Translation](translation.md) | Translate the app, not the English string. One register, one glossary, per language. |
 | [Runtime dependencies](runtime-dependencies.md) | No third-party runtime dependencies. System frameworks only. |

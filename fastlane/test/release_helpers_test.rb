@@ -683,6 +683,69 @@ assert_equal(true, message.include?('no processed build'), "a pending version wi
 message = _describe_pending_submission(version: '2.0.7', state: 'WAITING_FOR_REVIEW', build: 29)
 assert_equal(false, message.include?('ready to submit'), "a version in review is never 'ready to submit'")
 assert_equal(true, message.include?('WAITING_FOR_REVIEW'), "it reports the state it is actually in")
+# conventions/changelog.md: the entries a pull request authors ARE the release
+# section. Deriving a second set from commit subjects and appending it to them
+# described the same work twice -- uniq! compares exact strings, so "Play in
+# seven languages" and "Add French, Dutch and Korean localizations" both
+# survived -- and swept in CI and test commits no player can observe.
+puts
+puts "_unreleased_entry_count"
+
+EMPTY_UNRELEASED = <<~MD
+  # Changelog
+
+  ## [Unreleased]
+
+  ### Added
+
+  ### Changed
+
+  ### Fixed
+
+  ## [2.0.7] - 2026-09-06
+
+  ### Fixed
+  - Something released
+MD
+
+AUTHORED_UNRELEASED = <<~MD
+  # Changelog
+
+  ## [Unreleased]
+
+  ### Added
+  - Play in seven languages
+  - Something else
+
+  ### Changed
+
+  ### Fixed
+  - Stop the board crashing in Spanish
+
+  ## [2.0.7] - 2026-09-06
+
+  ### Fixed
+  - Something released
+MD
+
+# The exact state 26 commits accumulated against: headers present, nothing
+# under them. extract_changelog_section calls this section non-empty, which is
+# why preflight reported "5 line(s) under [Unreleased]" for it and passed.
+assert_equal(0, _unreleased_entry_count(EMPTY_UNRELEASED), "empty subsection headers are not entries")
+assert_equal(3, _unreleased_entry_count(AUTHORED_UNRELEASED), "authored bullets are counted across subsections")
+assert_equal(0, _unreleased_entry_count("# Changelog\n\n## [1.0] - 2020-01-01\n"), "no [Unreleased] block is zero entries")
+# Counting the whole file rather than the block would pick these up.
+assert_equal(false, _unreleased_entry_count(EMPTY_UNRELEASED) > 0, "released sections below are not counted")
+
+puts
+puts "_derive_from_commits?"
+
+assert_equal(true, _derive_from_commits?(_parse_unreleased_subsections(EMPTY_UNRELEASED)),
+             "an unauthored section still falls back to commit subjects")
+assert_equal(false, _derive_from_commits?(_parse_unreleased_subsections(AUTHORED_UNRELEASED)),
+             "an authored section is the release; nothing is derived on top of it")
+assert_equal(true, _derive_from_commits?({}), "no authored sections means derive")
+assert_equal(true, _derive_from_commits?(nil), "a missing section is not a crash")
 
 puts
 puts "app_store_edit_version"
