@@ -34,17 +34,46 @@ private func anyPlaceablePosition(for block: BlockShape, on state: GameState) ->
     return GameLogic.findValidPositions(for: block, in: state.grid).first
 }
 
+/// A known normal block: two cells side by side unless given other cells.
+///
+/// Tests that need *a block* build one rather than searching the generated
+/// tray for a suitable draw. The tray comes from BlockGenerator, which is
+/// weighted and random and can legitimately hand back three large or special
+/// shapes — a run where nothing matched used to fail the test that was looking,
+/// which reported a fixture problem as if the behaviour under test had broken.
+///
+/// - Parameters:
+///   - cells: The block's shape, as (row, column) offsets from its origin.
+///   - color: Distinguishes blocks in a tray that holds more than one.
+private func normalBlock(_ cells: [(row: Int, col: Int)] = [(0, 0), (0, 1)],
+                         color: BlockColor = .blue) -> BlockShape {
+    BlockShape(positions: cells.map { GridPosition(row: $0.row, col: $0.col) }, color: color)
+}
+
+/// A state whose tray and grid are both known.
+///
+/// The grid defaults to empty so a placement always has somewhere to go: these
+/// tests assert what placing a block does, not whether the generator produced
+/// one that fits. Genuine randomized coverage lives in PropertyTests.swift and
+/// BlockGeneratorPropertyTests, where the randomness is the subject rather than
+/// the fixture.
+@MainActor
+private func makeStateWithBlocks(_ blocks: [BlockShape],
+                                 grid: [[GridCell]] = GameLogic.createEmptyGrid(),
+                                 difficulty: DifficultyMode = .easy) -> (GameState, URL) {
+    let (state, url) = makeFreshState(difficulty: difficulty)
+    state._setTestState(currentBlocks: blocks, grid: grid)
+    return (state, url)
+}
+
 // MARK: - Invalid Placement is a No-op
 
 @Suite("GameState.placeBlock: invalid placement leaves state unchanged")
 struct InvalidPlacementIsNoOpTests {
     @Test @MainActor
     func invalidPositionDoesNothing() {
-        let (state, _) = makeFreshState()
-        guard let block = state.currentBlocks.first else {
-            Issue.record("expected currentBlocks to be non-empty after init")
-            return
-        }
+        let (state, _) = makeStateWithBlocks([normalBlock()])
+        let block = state.currentBlocks[0]
 
         let scoreBefore = state.score
         let blocksPlacedBefore = state.blocksPlaced
@@ -62,21 +91,17 @@ struct InvalidPlacementIsNoOpTests {
 
     @Test @MainActor
     func placingOntoOccupiedCellsDoesNothing() {
-        let (state, _) = makeFreshState()
         // Fill the entire grid so no normal block can be placed.
         var fullGrid = GameLogic.createEmptyGrid()
         for r in 0..<8 { for c in 0..<8 { fullGrid[r][c].isFilled = true } }
-        state._setTestState(grid: fullGrid)
-        guard let normalBlock = state.currentBlocks.first(where: { $0.type == .normal }) else {
-            Issue.record("expected at least one normal block in currentBlocks")
-            return
-        }
+        let (state, _) = makeStateWithBlocks([normalBlock()], grid: fullGrid)
+        let block = state.currentBlocks[0]
 
         let scoreBefore = state.score
         let blocksPlacedBefore = state.blocksPlaced
         let currentBlocksBefore = state.currentBlocks
 
-        state.placeBlock(normalBlock, at: GridPosition(row: 0, col: 0))
+        state.placeBlock(block, at: GridPosition(row: 0, col: 0))
 
         #expect(state.score == scoreBefore)
         #expect(state.blocksPlaced == blocksPlacedBefore)
@@ -89,13 +114,10 @@ struct InvalidPlacementIsNoOpTests {
 @Suite("GameState.placeBlock: successful placement updates state consistently")
 struct SuccessfulPlacementInvariantsTests {
     @Test @MainActor
-    func blocksPlacedIncrementsByOne() {
-        let (state, _) = makeFreshState()
-        guard let block = state.currentBlocks.first(where: { $0.type == .normal }),
-              let pos = anyPlaceablePosition(for: block, on: state) else {
-            Issue.record("could not find a placeable normal block on a fresh grid")
-            return
-        }
+    func blocksPlacedIncrementsByOne() throws {
+        let (state, _) = makeStateWithBlocks([normalBlock()])
+        let block = state.currentBlocks[0]
+        let pos = try #require(anyPlaceablePosition(for: block, on: state))
 
         let before = state.blocksPlaced
         state.placeBlock(block, at: pos)
@@ -103,13 +125,10 @@ struct SuccessfulPlacementInvariantsTests {
     }
 
     @Test @MainActor
-    func scoreNeverDecreasesAfterPlacement() {
-        let (state, _) = makeFreshState()
-        guard let block = state.currentBlocks.first(where: { $0.type == .normal }),
-              let pos = anyPlaceablePosition(for: block, on: state) else {
-            Issue.record("could not find a placeable normal block on a fresh grid")
-            return
-        }
+    func scoreNeverDecreasesAfterPlacement() throws {
+        let (state, _) = makeStateWithBlocks([normalBlock()])
+        let block = state.currentBlocks[0]
+        let pos = try #require(anyPlaceablePosition(for: block, on: state))
 
         let before = state.score
         state.placeBlock(block, at: pos)
@@ -117,22 +136,18 @@ struct SuccessfulPlacementInvariantsTests {
     }
 
     @Test @MainActor
-    func normalBlockScoreMatchesGameLogicFormula() {
-        // A placement on an EMPTY grid (no line clear possible from a single
-        // small block) should bump score by exactly the block-score formula.
-        // makeFreshState's grid is pre-filled by randomlyFillGrid, so we
-        // explicitly clear it to make this test deterministic — without the
-        // clear, the random pre-fill could combine with the chosen placement
-        // to complete a row/column and inflate the delta past the formula.
-        let (state, _) = makeFreshState()
-        state._setTestState(grid: GameLogic.createEmptyGrid())
-        guard let block = state.currentBlocks.first(where: {
-                $0.type == .normal && $0.positions.count <= 4
-            }),
-              let pos = anyPlaceablePosition(for: block, on: state) else {
-            Issue.record("could not find a small normal block on a fresh grid")
-            return
-        }
+    func normalBlockScoreMatchesGameLogicFormula() throws {
+        // A placement on an EMPTY grid cannot complete a line, so the delta is
+        // exactly the block-score formula. Both halves of that are now fixed
+        // rather than drawn: makeStateWithBlocks clears the grid, which
+        // makeFreshState pre-fills at random, and the block is built here.
+        //
+        // This is the test that flaked. It asked the tray for a normal block of
+        // four cells or fewer, and a run where the generator offered none failed
+        // on the fixture without ever reaching the assertion.
+        let (state, _) = makeStateWithBlocks([normalBlock()])
+        let block = state.currentBlocks[0]
+        let pos = try #require(anyPlaceablePosition(for: block, on: state))
 
         let scoreBefore = state.score
         let expectedDelta = GameLogic.calculateBlockScore(block: block)
@@ -145,22 +160,20 @@ struct SuccessfulPlacementInvariantsTests {
     }
 
     @Test @MainActor
-    func placedBlockIsRemovedFromCurrentBlocks() {
-        let (state, _) = makeFreshState()
-        guard let block = state.currentBlocks.first(where: { $0.type == .normal }),
-              let pos = anyPlaceablePosition(for: block, on: state) else {
-            Issue.record("no placeable block")
-            return
-        }
+    func placedBlockIsRemovedFromCurrentBlocks() throws {
+        // Two blocks, so removal is observable on its own: placing the last one
+        // triggers generateNewBlocks, and the refill used to make this assert
+        // "removed OR refilled", which passes either way. The refill path has
+        // its own test below.
+        let (state, _) = makeStateWithBlocks([normalBlock(), normalBlock([(0, 0)], color: .green)])
+        let block = state.currentBlocks[0]
+        let pos = try #require(anyPlaceablePosition(for: block, on: state))
+
         let countBefore = state.currentBlocks.count
         state.placeBlock(block, at: pos)
-        // Block is removed (or, if it was the last block, currentBlocks is
-        // refilled by generateNewBlocks — count goes back up rather than to 0).
-        let removed = !state.currentBlocks.contains(where: {
-            $0.positions == block.positions && $0.color == block.color
-        })
-        let refilled = state.currentBlocks.count > countBefore - 1
-        #expect(removed || refilled)
+
+        #expect(!state.currentBlocks.contains { $0.id == block.id }, "the placed block is still in the tray")
+        #expect(state.currentBlocks.count == countBefore - 1)
     }
 
     @Test @MainActor
@@ -239,13 +252,11 @@ struct ComboAndSpecialsTrackingTests {
     }
 
     @Test @MainActor
-    func normalBlockDoesNotIncrementSpecialShapesUsed() {
-        let (state, _) = makeFreshState()
-        guard let normal = state.currentBlocks.first(where: { $0.type == .normal }),
-              let pos = anyPlaceablePosition(for: normal, on: state) else {
-            Issue.record("no placeable normal block")
-            return
-        }
+    func normalBlockDoesNotIncrementSpecialShapesUsed() throws {
+        let (state, _) = makeStateWithBlocks([normalBlock()])
+        let normal = state.currentBlocks[0]
+        let pos = try #require(anyPlaceablePosition(for: normal, on: state))
+
         let before = state.specialShapesUsed
         state.placeBlock(normal, at: pos)
         #expect(state.specialShapesUsed == before)
