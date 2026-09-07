@@ -324,7 +324,7 @@ bundle exec fastlane ios screenshots_only           # update screenshots only
 
 That trailing bump is not cosmetic. App Store Connect refuses further builds under an approved version, so a project left on the just-shipped number makes `beta` unusable from approval until the next release. Moving on immediately means TestFlight builds go out as the next version, which is also what the next `deploy` will ship.
 
-**Check before releasing.** `preflight` runs every read-only check the release path depends on — Xcode floor, clean tree, branch, simulator runtime, App Store Connect auth and next build number, target version, tag and version availability, CHANGELOG section, TestFlight notes, and `gh` — and reports them as a table. It writes nothing, anywhere.
+**Check before releasing.** `preflight` runs every read-only check the release path depends on — Xcode floor, clean tree, branch, simulator runtime, App Store Connect auth and next build number, target version, tag and version availability, whether the App Store version slot can accept a release at all, CHANGELOG section, TestFlight notes, and `gh` — and reports them as a table. It writes nothing, anywhere.
 
 It cannot cover signing, archiving, upload, submission, phased rollout, or the `gh` call itself; those first execute during a real run. The sequence that de-risks a release is **`preflight` → `beta` → `deploy`**: `beta` exercises signing, the archive, the App Store Connect build number and the TestFlight notes without touching the App Store listing.
 

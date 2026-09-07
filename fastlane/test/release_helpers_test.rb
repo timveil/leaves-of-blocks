@@ -560,6 +560,77 @@ Dir.mktmpdir do |root|
                "a missing changelog returns nil rather than raising")
 end
 
+# The release slot: whether App Store Connect's edit version can take a release.
+#
+# preflight reported "2.0.7 (29) ready to submit" while 2.0.7 was sitting in
+# WAITING_FOR_REVIEW (#148). App Store Connect keeps calling a version the
+# "edit" version right through review, so reading the version string without
+# its state cannot tell "waiting for you" from "waiting for Apple" -- and the
+# second one means a release written into that slot is rejected (#149).
+puts
+puts "_app_store_slot_status"
+
+assert_equal(:none, _app_store_slot_status(nil), "no edit version means no occupied slot")
+assert_equal(:none, _app_store_slot_status(''), "an empty state means no occupied slot")
+
+assert_equal(:editable, _app_store_slot_status('PREPARE_FOR_SUBMISSION'), "PREPARE_FOR_SUBMISSION is editable")
+assert_equal(:editable, _app_store_slot_status('DEVELOPER_REJECTED'), "a version pulled from review is editable again")
+assert_equal(:editable, _app_store_slot_status('REJECTED'), "a rejected version is back in the developer's hands")
+assert_equal(:editable, _app_store_slot_status('METADATA_REJECTED'), "a metadata rejection is editable")
+assert_equal(:editable, _app_store_slot_status('INVALID_BINARY'), "an invalid binary is editable")
+
+assert_equal(:locked, _app_store_slot_status('WAITING_FOR_REVIEW'), "WAITING_FOR_REVIEW is locked -- the state that produced #148")
+assert_equal(:locked, _app_store_slot_status('IN_REVIEW'), "IN_REVIEW is locked")
+assert_equal(:locked, _app_store_slot_status('PENDING_DEVELOPER_RELEASE'), "an approved version still holds the slot")
+assert_equal(:locked, _app_store_slot_status('PENDING_APPLE_RELEASE'), "a version awaiting Apple's release holds the slot")
+assert_equal(:locked, _app_store_slot_status('PROCESSING_FOR_APP_STORE'), "a processing version holds the slot")
+
+# Default-deny. Apple has added states before, and the two failures are not
+# symmetric: a wrong "locked" costs a human one look at the named state, while
+# a wrong "editable" costs a release that dies at upload_to_app_store with the
+# changelog already committed and a build number already spent.
+assert_equal(:locked, _app_store_slot_status('SOME_STATE_APPLE_ADDS_LATER'),
+             "an unrecognized state is treated as locked, not assumed safe")
+
+puts
+puts "_release_slot_row"
+
+status, message = _release_slot_row(version: nil, state: nil)
+assert_equal(:ok, status, "an empty slot passes")
+assert_equal(true, message.include?('free'), "and says the slot is free")
+
+status, message = _release_slot_row(version: '2.1.0', state: 'PREPARE_FOR_SUBMISSION')
+assert_equal(:ok, status, "an editable slot passes")
+assert_equal(true, message.include?('2.1.0'), "and names the version occupying it")
+
+status, message = _release_slot_row(version: '2.0.7', state: 'WAITING_FOR_REVIEW')
+assert_equal(:fail, status, "a locked slot fails rather than warns")
+assert_equal(true, message.include?('2.0.7'), "and names the version holding the slot")
+assert_equal(true, message.include?('WAITING_FOR_REVIEW'), "and names the state, so the wait is understood")
+# The two remedies have very different costs -- waiting keeps the queued
+# version's place, removing it forfeits that -- so the row has to say both
+# rather than leave the reader to guess which one it means.
+assert_equal(true, message.downcase.include?('remove'), "and names removing it from review as the other remedy")
+
+puts
+puts "_describe_pending_submission"
+
+# The row preflight actually prints. It said "ready to submit" for a version
+# already queued, which is the sentence that misled the release decision.
+assert_equal(nil, _describe_pending_submission(version: nil, state: nil, build: nil),
+             "nothing pending reports nothing")
+
+message = _describe_pending_submission(version: '2.0.7', state: 'PREPARE_FOR_SUBMISSION', build: 29)
+assert_equal(true, message.include?('ready to submit'), "a genuinely pending version is ready to submit")
+assert_equal(true, message.include?('29'), "and names its build")
+
+message = _describe_pending_submission(version: '2.0.7', state: 'PREPARE_FOR_SUBMISSION', build: nil)
+assert_equal(true, message.include?('no processed build'), "a pending version with no build says so")
+
+message = _describe_pending_submission(version: '2.0.7', state: 'WAITING_FOR_REVIEW', build: 29)
+assert_equal(false, message.include?('ready to submit'), "a version in review is never 'ready to submit'")
+assert_equal(true, message.include?('WAITING_FOR_REVIEW'), "it reports the state it is actually in")
+
 puts
 if $fail.zero?
   puts "All #{$pass} checks passed."
