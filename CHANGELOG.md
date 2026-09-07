@@ -8,10 +8,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- Play in seven languages — the game and its App Store listing are now available in English, Spanish, German, Japanese, French, Dutch and Korean
 
 ### Changed
+- Quote Whitman in English in every language; the app cites the poet rather than translating him
 
 ### Fixed
+- Stop the board crashing when the game is played in Spanish
+- Say a block scores 10 points per square, not 10 points per block
+- Correct the App Store description's shape count, difficulty mode names and scoring claim
 
 ## [2.0.7] - 2026-09-06
 
