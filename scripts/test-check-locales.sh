@@ -96,6 +96,14 @@ write_metadata() {
   done
 }
 
+# Screenshots are generated artifacts rather than checked-in source, so a
+# fixture states their presence per locale rather than always having them.
+write_screenshots() {
+  local root="$1" locale="$2"
+  mkdir -p "$root/fastlane/screenshots/$locale"
+  printf 'not-a-real-png\n' > "$root/fastlane/screenshots/$locale/01_home.png"
+}
+
 # A consistent repository: one store locale, one app language, one real key and
 # one format fragment. Each test breaks exactly one thing afterwards.
 make_fixture() {
@@ -189,6 +197,65 @@ if [ "$code" -eq 2 ]; then ok "a row shipping on neither side is a setup error";
 make_fixture "$TMP/comments"; write_manifest "$TMP/comments" "# store	app" "" "en-US	en"
 run_fixture "$TMP/comments" >/dev/null 2>&1; code=$?
 if [ "$code" -eq 0 ]; then ok "comments and blank lines are ignored"; else bad "comments ignored" "exit $code: $(fixture_err "$TMP/comments" | head -2)"; fi
+
+echo
+echo "screenshots are held to the manifest too"
+
+# The gap #160 found: after three locales were added, fastlane/metadata carried
+# ten and fastlane/screenshots carried seven, and everything was green.
+# SCREENSHOT_LANGUAGES declaring a locale says what snapshot will capture, not
+# what deliver will upload -- and deliver uploads what is on disk, so a locale
+# with nothing on disk keeps whatever its product page already had.
+
+# Screenshots are generated, so a fresh clone or a CI checkout legitimately has
+# none. Failing every locale in that state would be noise nobody reads.
+make_fixture "$TMP/shots_none"; write_manifest "$TMP/shots_none" "en-US	en" "de-DE	de"
+write_pbxproj "$TMP/shots_none" en de Base
+write_catalog "$TMP/shots_none" "game_over:en,de"
+write_constants "$TMP/shots_none" en-US de-DE
+write_metadata "$TMP/shots_none" de-DE
+run_fixture "$TMP/shots_none" >/dev/null 2>&1; code=$?
+if [ "$code" -eq 0 ]; then ok "a tree with no screenshots at all is not a failure"; else bad "empty tree passes" "exit $code: $(fixture_problems "$TMP/shots_none" | head -2)"; fi
+
+# Every declared store locale present: the state a release should be in.
+make_fixture "$TMP/shots_all"; write_manifest "$TMP/shots_all" "en-US	en" "de-DE	de"
+write_pbxproj "$TMP/shots_all" en de Base
+write_catalog "$TMP/shots_all" "game_over:en,de"
+write_constants "$TMP/shots_all" en-US de-DE
+write_metadata "$TMP/shots_all" de-DE
+write_screenshots "$TMP/shots_all" en-US; write_screenshots "$TMP/shots_all" de-DE
+run_fixture "$TMP/shots_all" >/dev/null 2>&1; code=$?
+if [ "$code" -eq 0 ]; then ok "screenshots for every declared store locale pass"; else bad "complete screenshots pass" "exit $code: $(fixture_problems "$TMP/shots_all" | head -2)"; fi
+
+# The actual defect: some locales have screenshots and one does not.
+make_fixture "$TMP/shots_partial"; write_manifest "$TMP/shots_partial" "en-US	en" "de-DE	de"
+write_pbxproj "$TMP/shots_partial" en de Base
+write_catalog "$TMP/shots_partial" "game_over:en,de"
+write_constants "$TMP/shots_partial" en-US de-DE
+write_metadata "$TMP/shots_partial" de-DE
+write_screenshots "$TMP/shots_partial" en-US
+run_fixture "$TMP/shots_partial" >/dev/null 2>&1; code=$?
+if [ "$code" -eq 1 ]; then ok "a locale added without regenerating screenshots fails"; else bad "partial screenshots fail" "want exit 1, got $code"; fi
+
+err=$(fixture_problems "$TMP/shots_partial")
+if grep -qF "de-DE" <<<"$err"; then ok "and the locale without screenshots is named"; else bad "missing locale named" "got: $(head -2 <<<"$err")"; fi
+if grep -qF "screenshots" <<<"$err"; then ok "and the registry is named"; else bad "registry named" "got: $(head -2 <<<"$err")"; fi
+
+# An orphaned directory is the mirror image, and the other registries already
+# flag extras: a locale dropped from .locales whose screenshots stayed behind
+# is a set deliver can still upload.
+make_fixture "$TMP/shots_extra"; write_screenshots "$TMP/shots_extra" en-US; write_screenshots "$TMP/shots_extra" fr-FR
+run_fixture "$TMP/shots_extra" >/dev/null 2>&1; code=$?
+if [ "$code" -eq 1 ]; then ok "screenshots for an undeclared locale are caught"; else bad "undeclared screenshots caught" "want exit 1, got $code"; fi
+
+# An app-only language has no product page, so it has no screenshots to be
+# missing -- the same split the metadata check already respects.
+make_fixture "$TMP/shots_inapp"; write_manifest "$TMP/shots_inapp" "en-US	en" "-	es"
+write_pbxproj "$TMP/shots_inapp" en es Base
+write_catalog "$TMP/shots_inapp" "game_over:en,es"
+write_screenshots "$TMP/shots_inapp" en-US
+run_fixture "$TMP/shots_inapp" >/dev/null 2>&1; code=$?
+if [ "$code" -eq 0 ]; then ok "an in-app-only language demands no screenshots"; else bad "in-app-only skips screenshots" "exit $code: $(fixture_problems "$TMP/shots_inapp" | head -2)"; fi
 
 echo
 echo "hyphenated regions are quoted by Xcode"

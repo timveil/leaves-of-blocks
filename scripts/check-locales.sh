@@ -44,6 +44,7 @@ PBXPROJ="$ROOT/LeavesOfBlocks.xcodeproj/project.pbxproj"
 CATALOG="$ROOT/LeavesOfBlocks/Resources/Localizable.xcstrings"
 CONSTANTS="$ROOT/fastlane/Constants.rb"
 METADATA_DIR="$ROOT/fastlane/metadata"
+SCREENSHOTS_DIR="$ROOT/fastlane/screenshots"
 SOURCES="$ROOT/LeavesOfBlocks"
 
 # What deliver uploads per locale. The first six need translating; the three
@@ -283,6 +284,56 @@ check_metadata() {
   if [ "$status" -eq "$before" ]; then good "fastlane/metadata carries the declared store locales"; fi
 }
 
+# ── screenshots ─────────────────────────────────────────────────────────────
+
+# SCREENSHOT_LANGUAGES declaring a locale says what `snapshot` will capture. It
+# does not say a set exists, and deliver uploads what is on disk -- so a locale
+# with nothing on disk keeps whatever its product page already had, which is
+# English screenshots beside translated copy.
+#
+# That is how three locales were added with metadata for ten and screenshots for
+# seven, every check green (#160). verify_uploaded_screenshots could not see it
+# either: it builds its comparison by walking the local directories, so a locale
+# absent from disk is absent from the comparison.
+#
+# Screenshots are generated artifacts, though, so an empty tree is not a
+# failure -- a fresh clone and a CI checkout both have one, and failing every
+# locale there is noise nobody reads. The invariant is conditional: if any
+# locale has screenshots, every declared store locale has them. That stays quiet
+# on an empty tree and fails exactly when a locale was added and the set was
+# never regenerated.
+check_screenshots() {
+  local before="$status" locale directory name present=()
+
+  if [ -d "$SCREENSHOTS_DIR" ]; then
+    for directory in "$SCREENSHOTS_DIR"/*/; do
+      [ -d "$directory" ] || continue
+      present+=("$(basename "$directory")")
+    done
+  fi
+
+  if [ "${#present[@]}" -eq 0 ]; then
+    good "no screenshots in this checkout; nothing to hold to .locales"
+    return
+  fi
+
+  for locale in ${STORE_LOCALES[@]+"${STORE_LOCALES[@]}"}; do
+    if ! contains "$locale" ${present[@]+"${present[@]}"}; then
+      problem "fastlane/screenshots/$locale/ does not exist, so that territory keeps the screenshots it already has (run: bundle exec fastlane ios screenshots)"
+    fi
+  done
+
+  # A set left behind by a dropped locale keeps being uploaded, the same way a
+  # stale metadata directory does.
+  for name in "${present[@]}"; do
+    if ! contains "$name" ${STORE_LOCALES[@]+"${STORE_LOCALES[@]}"}; then
+      problem "fastlane/screenshots/$name/ is uploaded but .locales does not declare '$name'"
+    fi
+  done
+
+  if [ "$status" -eq "$before" ]; then good "fastlane/screenshots carries the declared store locales"; fi
+}
+
 # ── every .localized key resolves ───────────────────────────────────────────
 
 check_localized_keys() {
@@ -355,6 +406,7 @@ check_known_regions
 check_catalog
 check_screenshot_languages
 check_metadata
+check_screenshots
 check_localized_keys
 report_coverage
 
@@ -373,6 +425,7 @@ is not shipped yet -- say so in .locales with "-" in that column.
   Localizable.xcstrings             Xcode: String Catalog editor
   fastlane/Constants.rb             SCREENSHOT_LANGUAGES
   fastlane/metadata/<locale>/       the App Store listing
+  fastlane/screenshots/<locale>/    the screenshots deliver uploads
 ────────────────────────────────────────────────────────────────────
 EOF
   exit 1
