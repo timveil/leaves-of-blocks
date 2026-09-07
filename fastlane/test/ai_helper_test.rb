@@ -51,6 +51,14 @@ assert_equal(true, parse('Short and sweet.', 'en-US').include?(CLOSING),
              "an explicit English locale gets one too")
 
 already = "All good. #{CLOSING} Leaves of Blocks!"
+# The net matched the literal "Thank you for playing", so a model that closed
+# with "Thanks so much for playing" was judged to have no closing and got a
+# second one bolted on. The 2.1.0 English notes went out of the generator with
+# two thank-yous, one under the other.
+thanked = 'All good things. Thanks so much for playing Leaves of Blocks!'
+assert_equal(1, parse(thanked).scan(/[Tt]hank/).length,
+             "any closing thanks counts as one; no second is appended")
+
 assert_equal(1, parse(already).scan(CLOSING).length,
              "a closing already present is not doubled")
 
@@ -116,6 +124,56 @@ changelog_thinking = {
 assert_equal(['A feature'],
              AIHelper.send(:parse_changelog_response, changelog_thinking)&.fetch(:added, nil),
              "the changelog parser reads the text block too")
+
+puts
+puts "bullets"
+
+# App Store notes are scanned, not read (#164), so the prompt asks for bullet
+# lines. The markdown cleanup used to delete them: Ruby anchors ^ at every
+# line start, so gsub(/^\*++/, '') stripped an asterisk bullet down to bare
+# indentation. A model reaching for "*" instead of the requested "•" would
+# have produced bullet-less lines, intermittently and per locale -- the same
+# shape of failure as #162.
+starred = "Neu:\n* Zehn Sprachen\n* Absturz behoben"
+assert_equal("Neu:\n• Zehn Sprachen\n• Absturz behoben", parse(starred, 'de-DE'),
+             "asterisk bullets are normalised, not deleted")
+
+dashed = "Neu:\n- Zehn Sprachen\n- Absturz behoben"
+assert_equal("Neu:\n• Zehn Sprachen\n• Absturz behoben", parse(dashed, 'de-DE'),
+             "dash bullets are normalised too")
+
+dotted = "Neu:\n• Zehn Sprachen\n• Absturz behoben"
+assert_equal(dotted, parse(dotted, 'de-DE'),
+             "the requested bullet character is left alone")
+
+# A hyphen that is not a bullet has no space after it and must survive: a
+# score line reading "-5 Punkte" is prose, not a list item.
+assert_equal("Abzug: -5 Punkte.", parse("Abzug: -5 Punkte.", 'de-DE'),
+             "a hyphen without a following space is not a bullet")
+
+# The product name is not a word to be translated. zh-Hans came back calling
+# the game 《叶块消消乐》 -- a name it is not published under, and one whose
+# 消消乐 announces a match-3 game this is not -- while ko transliterated it to
+# 리브즈 오브 블록스. A player searching the store for what the notes call the
+# game would not find it.
+name_prompt = AIHelper.send(:build_prose_prompt, "### Added\n- A thing", '2.1.0', 'zh-Hans')
+assert_equal(true, name_prompt.include?('never translated'),
+             "the prompt keeps the product name in English")
+
+# Four listings described the escape-sequence fix by printing the escape
+# sequence. "\n" is a thing a developer reads, not a thing a player does.
+assert_equal(true, name_prompt.include?('escape sequence'),
+             "the prompt asks for the player's terms, not the code's")
+
+# The prompt is what asks for the format, so it is asserted here rather than
+# left to whoever next reads the file.
+prompt = AIHelper.send(:build_prose_prompt, "### Added\n- A thing", '2.1.0', 'de-DE')
+assert_equal(true, prompt.include?('•'), "the prompt pins the bullet character")
+assert_equal(false, prompt.include?('Do NOT use bullet points'),
+             "the prompt no longer forbids the format it now asks for")
+
+puts
+puts "payload handling, continued"
 
 # The blocks a response actually carries, when none of them is text.
 assert_equal(nil,

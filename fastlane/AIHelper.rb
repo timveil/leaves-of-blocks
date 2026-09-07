@@ -232,19 +232,29 @@ module AIHelper
 
         Write engaging, friendly release notes that will appear in the App Store "What's New" section.
 
+        Readers scan this panel rather than reading it, and the App Store
+        shows only its first lines before "more" -- so the changes go in a
+        list, and the most important one goes first.
+
         Requirements:
-        1. Start with a warm, brief opening (1-2 sentences) that sets the tone
-        2. Naturally mention the most important changes in flowing prose
-        3. Use conversational, accessible language that any user can understand
-        4. End with a warm thank-you for playing Leaves of Blocks, in the language you are writing in
+        1. Open with a single short line naming the headline change
+        2. Then one bullet per change, four to six of them, longest-lived first
+        3. Keep each bullet to one line: what changed, in the player's terms
+        4. Close with a warm thank-you for playing Leaves of Blocks, in the language you are writing in
 
         CRITICAL CONSTRAINTS:
         - MUST be under 3800 characters total (App Store limit is 4000)
-        - Do NOT use bullet points, numbered lists, or any markdown formatting
+        - Start every bullet with "• " -- not "-", not "*", not a number
+        - Do NOT use markdown formatting: no **bold**, no ## headings
         - Do NOT use emojis
-        - Write in flowing paragraphs, not a list format
+        - "Leaves of Blocks" is the product name and is never translated or
+          transliterated, whatever language you are writing in -- it is how the
+          game is listed on the store and how a player searches for it
+        - Never print an escape sequence such as \n. Describe what the player
+          saw, in their terms: "stray characters" rather than the characters
+        - The opening line names the change; a bullet may still carry its specifics
         - Be warm and appreciative but not overly enthusiastic
-        - If there are only minor fixes, keep it brief (2-3 sentences total)
+        - If there is only one small fix, a sentence or two beats a one-item list
 
         Return ONLY the release notes text, ready for App Store submission. No introduction or explanation.
         #{language_instruction}
@@ -308,6 +318,16 @@ module AIHelper
       # Clean up the response
       prose = content.strip
 
+      # Bullets first, because the markdown strip below would eat them. Ruby
+      # anchors ^ at every line start, so gsub(/^\*++/, '') reduced "* item"
+      # to " item" -- the requested list silently flattened into indented
+      # prose whenever the model reached for "*" rather than the "•" the
+      # prompt asks for.
+      #
+      # The trailing space is what separates a bullet from prose: "-5 points"
+      # is a score, not a list item, and must survive untouched.
+      prose = prose.gsub(/^[ \t]*+[-*][ \t]++/, '• ')
+
       # Remove any accidental markdown formatting (possessive quantifiers prevent ReDoS)
       prose = prose.gsub(/^\*++/, '').gsub(/\*++$/, '')
       prose = prose.gsub(/^#+\s*/, '')
@@ -337,8 +357,12 @@ module AIHelper
       # Only English, because appending an English sentence to German or
       # Japanese prose would be worse than having no closing at all. A
       # translated listing simply goes without.
+      # Matched loosely on purpose. The literal "Thank you for playing" missed a
+      # model that wrote "Thanks so much for playing", so the net appended a
+      # second closing under the first and the English listing carried two
+      # thank-yous. A closing is a closing however it is phrased.
       english = locale.nil? || locale.start_with?('en')
-      if english && !prose.include?("Thank you for playing")
+      if english && !prose.match?(/thank(s|\syou)?\b/i)
         prose += "\n\nThank you for playing Leaves of Blocks!"
       end
 
