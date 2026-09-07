@@ -3,6 +3,43 @@
 **Every review comment — human or Copilot — is addressed and its thread
 resolved before the pull request merges.** No open threads at merge time.
 
+## When the work is done
+
+A change is **not** done when the code is written, and **not** when the pull
+request opens.
+
+It is done when the pull request is open, CI is green, and every review thread
+is resolved.
+
+That distinction is the one actually worth writing down, because "before merge"
+is a deadline and says nothing about when the author may stop — and in practice
+those get treated as the same moment. Copilot reviews arrive *after* the pull
+request opens, so "no comments yet" at the moment of opening means nothing at
+all. Check back, and check that a review actually landed rather than that no
+comments are showing:
+
+```bash
+gh api repos/timveil/leaves-of-blocks/pulls/PR_NUMBER/reviews \
+  --jq '[.[] | .user.login] | unique'
+```
+
+An empty list means nobody has reviewed yet — which is not the same as a clean
+review, and is the state most likely to be mistaken for one.
+
+Reporting a pull request as finished while its findings are unread is a false
+completion signal: it looks exactly like finished work, and the difference is
+only discovered by whoever trusts it.
+
+Two findings from one session, neither cosmetic, both on pull requests already
+described as done:
+
+- `app_store_edit_version` rescued a failed App Store Connect read to `nil` —
+  which is also the *passing* value for the release-slot row, so a network blip
+  would have reported the slot free and waved a release through.
+- The changelog generator logged `ANTHROPIC_API_KEY not set` on the path where
+  the key is set, which would have printed on most releases and sent the next
+  reader hunting for a key that was never missing.
+
 ## What "addressed" means
 
 One of two things:

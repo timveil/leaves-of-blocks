@@ -23,7 +23,7 @@ PR. Swift style is not here — that lives in
 | [Translation](translation.md) | Translate the app, not the English string. One register, one glossary, per language. |
 | [Runtime dependencies](runtime-dependencies.md) | No third-party runtime dependencies. System frameworks only. |
 | [Testing](testing.md) | New unit tests use Swift Testing, in Given-When-Then shape. |
-| [Review comments](review-comments.md) | Every review comment is addressed and resolved before merge. |
+| [Review comments](review-comments.md) | Not done until the PR is open, CI is green, and every thread is resolved. |
 | [Invariants, not counts](invariants-not-counts.md) | Documentation states what is always true, not what was true when written. |
 
 ## Adding one
