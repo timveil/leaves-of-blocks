@@ -24,6 +24,12 @@
     "about_menu" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Info"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -41,6 +47,12 @@
     "about_the_game" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Über das Spiel"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -58,6 +70,12 @@
     "adaptive_difficulty" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Intelligente Blockauswahl"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -75,6 +93,12 @@
     "adaptive_difficulty_description" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Das Spiel analysiert dein Feld und passt die Blöcke an, die du bekommst: fordernd, aber nie ausweglos. Wenn es eng wird, kommen automatisch hilfreichere Formen."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -92,6 +116,12 @@
     "advanced_features" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Erweiterte Funktionen"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -109,6 +139,12 @@
     "advanced_features_description" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leaves of Blocks bringt Systeme mit, die sich deinem Spielstil anpassen und dir helfen, mit der Zeit besser zu werden."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -126,6 +162,12 @@
     "all_data_reset_message" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle Spieldaten wurden zurückgesetzt."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -143,6 +185,12 @@
     "answer" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Answer."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -160,6 +208,12 @@
     "assists" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hilfen"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -177,6 +231,12 @@
     "assists_description" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Für enge Situationen. Rückgängig und Tipp kannst du je einmal pro Spiel nutzen:"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -194,6 +254,12 @@
     "assist_undo" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rückgängig: nimmt deinen letzten gesetzten Block zurück."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -211,6 +277,12 @@
     "assist_hint" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tipp: hebt einen möglichen Zug auf dem Feld hervor."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -228,6 +300,12 @@
     "assist_view_board" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Feld ansehen: zeigt nach Spielende das letzte Feld, so wie es ausgegangen ist."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -245,6 +323,12 @@
     "average_score" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Durchschnitt"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -262,6 +346,12 @@
     "ax_area_clear_block" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Flächen-Power-up"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -279,6 +369,12 @@
     "ax_available_blocks_format" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%d Blöcke verfügbar"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -296,6 +392,12 @@
     "ax_block_format" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%2$@ Block mit %1$d Feldern"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -313,6 +415,12 @@
     "ax_color_blue" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "blauer"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -330,6 +438,12 @@
     "ax_color_green" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "grüner"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -347,6 +461,12 @@
     "ax_color_orange" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "oranger"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -364,6 +484,12 @@
     "ax_color_pink" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "pinker"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -381,6 +507,12 @@
     "ax_color_purple" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "lila"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -398,6 +530,12 @@
     "ax_color_red" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "roter"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -415,6 +553,12 @@
     "ax_color_yellow" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "gelber"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -432,6 +576,12 @@
     "ax_column_clear_block" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spalten-Power-up"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -449,6 +599,12 @@
     "ax_combo_format" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@, %d Reihen geräumt, %d Bonuspunkte"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -466,6 +622,12 @@
     "ax_difficulty_hint" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wische nach oben oder unten, um die Schwierigkeit zu ändern"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -483,6 +645,12 @@
     "ax_difficulty_slider" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schwierigkeit"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -500,6 +668,12 @@
     "ax_game_grid" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spielfeld, 8 mal 8"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -517,6 +691,12 @@
     "ax_hint_available" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tipp, einer verfügbar"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -534,6 +714,12 @@
     "ax_hint_used" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tipp, bereits genutzt"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -551,6 +737,12 @@
     "ax_row_clear_block" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reihen-Power-up"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -568,6 +760,12 @@
     "ax_score_format" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@ Punkte, %@ Reihen geräumt"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -585,6 +783,12 @@
     "ax_undo_available" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rückgängig, einmal verfügbar"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -602,6 +806,12 @@
     "ax_undo_used" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rückgängig, bereits genutzt"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -619,6 +829,12 @@
     "best_ever" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bestwert"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -636,6 +852,12 @@
     "best_score" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bestwert"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -653,6 +875,12 @@
     "blocks_placed" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gesetzte Blöcke"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -670,6 +898,12 @@
     "cancel" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abbrechen"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -687,6 +921,12 @@
     "continue_game" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spiel fortsetzen"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -704,6 +944,12 @@
     "continue_game_format" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Punkte: %lld"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -721,6 +967,12 @@
     "discard_confirm" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verwerfen"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -738,6 +990,12 @@
     "discard_game_message" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dein laufendes Spiel wird verworfen und lässt sich nicht wiederherstellen."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -755,6 +1013,12 @@
     "discard_game_title" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neues Spiel starten?"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -772,6 +1036,12 @@
     "history_menu" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verlauf"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -789,6 +1059,12 @@
     "play_game" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spielen"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -806,6 +1082,12 @@
     "no_games_yet" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Noch keine Spiele — beende eine Runde, dann erscheint sie hier."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -823,6 +1105,12 @@
     "statistics_menu" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Statistik"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -840,6 +1128,12 @@
     "resume_game_menu" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spiel fortsetzen"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -857,6 +1151,12 @@
     "challenge_high" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hoch"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -874,6 +1174,12 @@
     "challenge_low" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Niedrig"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -891,6 +1197,12 @@
     "challenge_medium" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mittel"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -908,6 +1220,12 @@
     "clear_all_game_history" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gesamten Verlauf löschen"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -925,6 +1243,12 @@
     "clear_game_history" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Verlauf löschen"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -942,6 +1266,12 @@
     "clear_history_warning" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Damit werden alle gespeicherten Spiele und Statistiken dauerhaft gelöscht. Das lässt sich nicht rückgängig machen."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -959,6 +1289,12 @@
     "clear_lines" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reihen räumen"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -976,6 +1312,12 @@
     "clear_lines_description" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sobald du eine Reihe oder Spalte vollständig füllst, verschwindet sie und bringt dir Punkte. Räume mehrere auf einmal für Bonuspunkte: je mehr gleichzeitig, desto größer der Combo-Bonus."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -993,6 +1335,12 @@
     "combo" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "COMBO"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1010,6 +1358,12 @@
     "combo_excited" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "COMBO!"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1027,6 +1381,12 @@
     "company_website" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "leavesofblocks.com"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1044,6 +1404,12 @@
     "creator" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Entwickler"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1061,6 +1427,12 @@
     "creator_description_suffix" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ", Softwareentwickler und Vater, für den Spiele eine Auszeit sein sollten und kein Ärgernis."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1078,6 +1450,12 @@
     "creator_name" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tim Veil"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1095,6 +1473,12 @@
     "dedication" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Widmung"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1112,6 +1496,12 @@
     "dedication_text" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Für Emma, Annie und Grace. Möge dieses Spiel eine kurze Ablenkung von den großen und kleinen Mühen des Lebens sein."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1129,6 +1519,12 @@
     "developed_by_prefix" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Entwickelt von "
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1146,6 +1542,12 @@
     "difficulty" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schwierigkeit"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1163,6 +1565,12 @@
     "difficulty_bold" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kühn"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1180,6 +1588,12 @@
     "difficulty_easy_desc" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sanft ist ideal für den Einstieg — mehr kleine, gut platzierbare Blöcke"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1197,6 +1611,12 @@
     "difficulty_gentle" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sanft"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1214,6 +1634,12 @@
     "difficulty_hard_desc" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wild ist für erfahrene Spieler — rechne mit mehr großen, komplexen Blöcken, die strategisches Denken verlangen"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1231,6 +1657,12 @@
     "difficulty_header" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Schwierigkeit"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1248,6 +1680,12 @@
     "difficulty_moderate_desc" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Kühn bietet eine ausgewogene Herausforderung mit einer guten Mischung aus kleinen und großen Blöcken"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1265,6 +1703,12 @@
     "difficulty_wild" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wild"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1282,6 +1726,12 @@
     "drag_drop" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "So wird gespielt"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1299,6 +1749,12 @@
     "drag_drop_description" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Unten am Bildschirm siehst du bis zu 3 Blockformen. Zieh eine davon auf das Feld, wo sie vollständig hineinpasst. Blöcke dürfen weder andere überlappen noch über den Rand hinausragen. Hast du alle 3 gesetzt, bekommst du automatisch 3 neue."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1316,6 +1772,12 @@
     "efficiency" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Effizienz"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1333,6 +1795,12 @@
     "efficiency_system" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leistungsauswertung"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1350,6 +1818,12 @@
     "efficiency_system_description" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Das Spiel verfolgt, wie effizient du den Platz auf dem Feld nutzt, und vergibt Noten von A+ bis D. Eine hohe Effizienz erreichst du, indem du das Feld aufgeräumt hältst und wenig Platz verschenkst."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1367,6 +1841,12 @@
     "final_score" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Endstand"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1384,6 +1864,12 @@
     "game_center_enable" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Game Center aktivieren"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1401,6 +1887,12 @@
     "game_center_enable_description" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Wenn aktiv, werden dein Endstand und erreichte Erfolge an Apples Game Center gesendet. Standardmäßig aus — deine Daten bleiben auf diesem Gerät, bis du zustimmst. Keine Werbung, kein Tracking durch Dritte, kein Datenverkauf."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1418,6 +1910,12 @@
     "game_over" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spiel vorbei"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1435,6 +1933,12 @@
     "game_over_description" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Das Spiel endet, wenn keiner deiner 3 Blöcke mehr irgendwo aufs Feld passt. Keine Sorge — das Spiel steuert dem entgegen, indem es die Art der Blöcke an deine Feldsituation anpasst."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1452,6 +1956,12 @@
     "game_over_quote" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dass das mächtige Spiel geendet hat und Du keinen Block beitragen konntest."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1469,6 +1979,12 @@
     "game_over_rules" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spielende"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1486,6 +2002,12 @@
     "games_played" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gespielte Spiele"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1503,6 +2025,12 @@
     "grade_a" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1520,6 +2048,12 @@
     "grade_a_plus" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A+"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1537,6 +2071,12 @@
     "grade_b" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "B"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1554,6 +2094,12 @@
     "grade_b_plus" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "B+"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1571,6 +2117,12 @@
     "grade_beginner" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anfänger"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1588,6 +2140,12 @@
     "grade_c" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "C"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1605,6 +2163,12 @@
     "grade_c_plus" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "C+"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1622,6 +2186,12 @@
     "grade_d" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "D"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1639,6 +2209,12 @@
     "grade_expert" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Experte"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1656,6 +2232,12 @@
     "grade_learning" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lernend"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1673,6 +2255,12 @@
     "grade_master" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Meister"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1690,6 +2278,12 @@
     "grade_skilled" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geübt"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1707,6 +2301,12 @@
     "high_score" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bestwert"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1724,6 +2324,12 @@
     "history_cleared_message" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Der Spielverlauf wurde gelöscht."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1741,6 +2347,12 @@
     "home" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Start"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1758,6 +2370,12 @@
     "how_to_play" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "So wird gespielt"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1775,6 +2393,12 @@
     "how_to_play_menu" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Anleitung"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1792,6 +2416,12 @@
     "how_to_play_quote" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "To me every hour of the light and dark is a miracle, Every cubic inch of space is a miracle,"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1809,6 +2439,12 @@
     "how_to_play_title" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Miracles"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1826,6 +2462,12 @@
     "how_to_play_year" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1856"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1843,6 +2485,12 @@
     "inspiration" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inspiration"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1860,6 +2508,12 @@
     "inspiration_quote" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Entstanden aus der Liebe zu Block-Puzzles, dem Ärger über Werbung und der Inspiration durch die zeitlose Dichtung Walt Whitmans."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1877,6 +2531,12 @@
     "last_score_format" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Letzter Stand: %@"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1894,6 +2554,12 @@
     "lines" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reihen"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1911,6 +2577,12 @@
     "lines_cleared" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geräumte Reihen"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1928,6 +2600,12 @@
     "longest_combo" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Längste Combo"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1945,6 +2623,12 @@
     "mega_combo" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "MEGA-COMBO!"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1962,6 +2646,12 @@
     "menu_title" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Menü"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1979,6 +2669,12 @@
     "new_game" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neues Spiel"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1996,6 +2692,12 @@
     "new_game_menu" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Neues Spiel"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2013,6 +2715,12 @@
     "ok" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2030,6 +2738,12 @@
     "points" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Punkte"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2047,6 +2761,12 @@
     "pro_tips" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Profi-Tipps"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2064,6 +2784,12 @@
     "reset_all_data" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alle Daten zurücksetzen"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2081,6 +2807,12 @@
     "reset_complete" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zurückgesetzt"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2098,6 +2830,12 @@
     "reset_data_warning" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Damit werden ALLE Spieldaten dauerhaft gelöscht, auch Verlauf, Bestwerte und Einstellungen. Das lässt sich nicht rückgängig machen."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2115,6 +2853,12 @@
     "reset_everything" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alles zurücksetzen"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2132,6 +2876,12 @@
     "score" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Punkte"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2149,6 +2899,12 @@
     "scoring_blocks_placed" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Punkte für jeden Block, den du aufs Feld setzt"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2166,6 +2922,12 @@
     "scoring_clear_lines" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Punkte für jede vollständig geräumte Reihe"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2183,6 +2945,12 @@
     "scoring_combo_bonus" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bonuspunkte für jede weitere Reihe, die gleichzeitig geräumt wird"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2200,6 +2968,12 @@
     "scoring_header" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Punkte"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2217,6 +2991,12 @@
     "settings" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einstellungen"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2234,6 +3014,12 @@
     "settings_menu" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Einstellungen"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2251,6 +3037,12 @@
     "settings_quote" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The day erased, the lesson done"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2268,6 +3060,12 @@
     "settings_title" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A Clear Midnight"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2285,6 +3083,12 @@
     "settings_year" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1880"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2302,6 +3106,12 @@
     "shape_area_clear" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fläche räumen"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2319,6 +3129,12 @@
     "shape_area_desc" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fläche räumen ist der stärkste Block. Dieser lila Block räumt ein 3×3-Feld rund um die Stelle, an der du ihn setzt. Setz ihn klug ein, dann wirkt er am meisten."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2336,6 +3152,12 @@
     "shape_column_clear" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spalte räumen"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2353,6 +3175,12 @@
     "shape_horizontal_desc" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reihe räumen ist ein starker roter Block, der beim Setzen sofort eine ganze waagerechte Reihe räumt. Ideal, um festgefahrene Stellen aufzubrechen."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2370,6 +3198,12 @@
     "shape_normal_blocks" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Normale\nBlöcke"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2387,6 +3221,12 @@
     "shape_normal_desc" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Normale Blöcke sind deine Bausteine. Sie kommen in vielen Formen und Größen (je 1–9 Felder). Füll Reihen und Spalten, um sie zu räumen."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2404,6 +3244,12 @@
     "shape_row_clear" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reihe räumen"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2421,6 +3267,12 @@
     "shape_vertical_desc" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spalte räumen ist ein starker blauer Block, der beim Setzen sofort eine ganze senkrechte Spalte räumt. Perfekt, um Platz zu schaffen."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2438,6 +3290,12 @@
     "shapes_header" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Blockformen"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2455,6 +3313,12 @@
     "show_results" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ergebnis zeigen"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2472,6 +3336,12 @@
     "stats_avg_efficiency" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ø Effizienz"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2489,6 +3359,12 @@
     "stats_best_combo" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Beste Combo"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2506,6 +3382,12 @@
     "stats_days_played" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spieltage"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2523,6 +3405,12 @@
     "stats_efficiency_format" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld%%"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2540,6 +3428,12 @@
     "stats_favorite_difficulty" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Liebster Modus"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2557,6 +3451,12 @@
     "stats_hours_minutes_format" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld Std. %lld Min."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2574,6 +3474,12 @@
     "stats_longest_game" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Längstes Spiel"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2591,6 +3497,12 @@
     "stats_minutes_only_format" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld Min."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2608,6 +3520,12 @@
     "stats_most_lines_game" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Meiste Reihen"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2625,6 +3543,12 @@
     "stats_section_activity" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aktivität"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2642,6 +3566,12 @@
     "stats_section_records" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rekorde"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2659,6 +3589,12 @@
     "stats_section_skill" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Können"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2676,6 +3612,12 @@
     "stats_total_play_time" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Gesamtspielzeit"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2693,6 +3635,12 @@
     "stats_typical_grade" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Übliche Note"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2710,6 +3658,12 @@
     "stats_value_unavailable" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "—"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2727,6 +3681,12 @@
     "strategic_grading" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Strategisches Spiel"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2744,6 +3704,12 @@
     "strategic_grading_description" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dein strategisches Können wird von Anfänger bis Meister bewertet — danach, wie gut du Reihen vorbereitest und vorausdenkst. Halte Ausschau nach Gelegenheiten, mit einem einzigen Block mehrere Reihen zu räumen."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2761,6 +3727,12 @@
     "strategy" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Strategie"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2778,6 +3750,12 @@
     "tap_for_history" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Für Verlauf tippen"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2795,16 +3773,22 @@
     "technical_description" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mit SwiftUI für iOS 18.0+ entwickelt. Keine Werbung. Kein Tracking durch Dritte. Kein Datenverkauf. Standardmäßig offline — Apple Game Center für Bestenlisten und Erfolge ist optional."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Built with SwiftUI for iOS 18.5+. No ads. No third-party tracking. No data sold. Play offline by default — opt in to Apple Game Center for leaderboards and achievements."
+            "value" : "Built with SwiftUI for iOS 18.0+. No ads. No third-party tracking. No data sold. Play offline by default — opt in to Apple Game Center for leaderboards and achievements."
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Construido con SwiftUI para iOS 18.5+. Sin anuncios. Sin rastreo de terceros. Sin venta de datos. Juega sin conexión por defecto — actívalo en Game Center para tablas de clasificación y logros."
+            "value" : "Construido con SwiftUI para iOS 18.0+. Sin anuncios. Sin rastreo de terceros. Sin venta de datos. Juega sin conexión por defecto — actívalo en Game Center para tablas de clasificación y logros."
           }
         }
       }
@@ -2812,6 +3796,12 @@
     "technical_details" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Technische Details"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2829,6 +3819,12 @@
     "the_grid" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Das Spielfeld"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2846,6 +3842,12 @@
     "the_grid_description" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dein Spielfeld ist ein 8×8-Raster mit 64 Plätzen. Ziel ist es, ganze waagerechte Reihen oder senkrechte Spalten zu füllen, um sie zu räumen und Punkte zu sammeln. Zu Beginn liegen schon ein paar Blöcke auf dem Feld, damit es gleich interessant wird."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2863,6 +3865,12 @@
     "time_played" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Spielzeit"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2880,6 +3888,12 @@
     "tip_corners_edges" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nutze Ecken und Ränder gezielt, wenn das Feld voller wird"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2897,6 +3911,12 @@
     "tip_efficiency_matters" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deine Effizienznote steigt, wenn du aufgeräumt und planvoll spielst"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2914,6 +3934,12 @@
     "tip_keep_organized" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Halte dein Feld aufgeräumt — vermeide verstreute Lücken"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2931,6 +3957,12 @@
     "tip_multiple_lines" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Halte Ausschau nach Zügen, die mehrere Reihen auf einmal räumen"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2948,6 +3980,12 @@
     "tip_plan_ahead" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sieh dir alle drei Blöcke an, bevor du einen setzt"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2965,6 +4003,12 @@
     "tip_save_small_blocks" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Heb kleine Blöcke für enge Lücken und den letzten Zug auf"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2982,6 +4026,12 @@
     "total_blocks" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Blöcke gesamt"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2999,6 +4049,12 @@
     "undo" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Rückgängig"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3016,6 +4072,12 @@
     "version_format" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Version %@"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3033,6 +4095,12 @@
     "view_game_center" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Game Center öffnen"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3050,6 +4118,12 @@
     "view_leaderboard" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bestenliste ansehen"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3067,6 +4141,12 @@
     "view_board" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Feld ansehen"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3084,6 +4164,12 @@
     "view_board_hint" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zeigt das letzte Feld, so wie das Spiel ausgegangen ist"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3101,6 +4187,12 @@
     "view_summary" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Übersicht ansehen"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3118,6 +4210,12 @@
     "website" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Website"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3135,6 +4233,12 @@
     "whitman_quote_1" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "That you are here—that life exists and identity,"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3152,6 +4256,12 @@
     "whitman_quote_2" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "That the powerful play goes on, and you may contribute a verse.."
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3169,6 +4279,12 @@
     "whitman_title" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O Me! O Life!"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3186,6 +4302,12 @@
     "whitman_year" : {
       "extractionState" : "manual",
       "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1867"
+          }
+        },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
