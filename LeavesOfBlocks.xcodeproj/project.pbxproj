@@ -213,6 +213,7 @@
 				de,
 				en,
 				es,
+				fr,
 				ja,
 				Base,
 			);

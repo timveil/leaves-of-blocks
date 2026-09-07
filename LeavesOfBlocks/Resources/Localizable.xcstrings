@@ -42,6 +42,12 @@
             "value" : "Info"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Infos"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -69,6 +75,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Acerca de"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "À propos du jeu"
           }
         },
         "ja" : {
@@ -100,6 +112,12 @@
             "value" : "Generación Inteligente de Bloques"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Génération intelligente"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -127,6 +145,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "El juego analiza tu cuadrícula y ajusta los bloques que recibes para mantener el desafío mientras previene situaciones imposibles. Cuando estás en dificultades, proporciona formas más útiles automáticamente."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le jeu analyse ta grille et ajuste les blocs qu'il te propose : de quoi rester stimulant sans jamais te bloquer. Quand ça se complique, les formes utiles arrivent d'elles-mêmes."
           }
         },
         "ja" : {
@@ -158,6 +182,12 @@
             "value" : "Funciones Avanzadas"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fonctions avancées"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -185,6 +215,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Leaves of Blocks incluye sistemas sofisticados que se adaptan a tu estilo de juego y te ayudan a mejorar con el tiempo."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leaves of Blocks embarque des systèmes qui s'adaptent à ta façon de jouer et t'aident à progresser."
           }
         },
         "ja" : {
@@ -216,6 +252,12 @@
             "value" : "Todos los datos del juego se han restablecido exitosamente."
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toutes les données de jeu ont été réinitialisées."
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -240,6 +282,12 @@
           }
         },
         "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Answer."
+          }
+        },
+        "fr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Answer."
@@ -274,6 +322,12 @@
             "value" : "Ayudas"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aides"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -301,6 +355,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ayudas para cuando estás en un apuro. Deshacer y Pista se pueden usar una vez por partida cada una:"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pour les moments difficiles. Annuler et Indice s'utilisent chacun une fois par partie :"
           }
         },
         "ja" : {
@@ -332,6 +392,12 @@
             "value" : "Deshacer: recupera tu última colocación de bloque."
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Annuler le coup : reprend le dernier bloc que tu as posé."
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -359,6 +425,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pista: resalta una jugada sugerida en el tablero."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Indice : met en évidence un coup possible sur la grille."
           }
         },
         "ja" : {
@@ -390,6 +462,12 @@
             "value" : "Ver tablero: cuando termina la partida, muestra el tablero final para ver cómo terminó."
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Voir la grille : à la fin de la partie, affiche la grille telle qu'elle s'est terminée."
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -417,6 +495,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Puntuación Promedio"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Score moyen"
           }
         },
         "ja" : {
@@ -448,6 +532,12 @@
             "value" : "Potenciador de limpieza de área"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bonus zone"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -475,6 +565,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%d bloques disponibles"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%d blocs disponibles"
           }
         },
         "ja" : {
@@ -506,6 +602,12 @@
             "value" : "Bloque %2$@ de %1$d celdas"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "bloc %2$@ de %1$d cases"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -533,6 +635,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "azul"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "bleu"
           }
         },
         "ja" : {
@@ -564,6 +672,12 @@
             "value" : "verde"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "vert"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -591,6 +705,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "naranja"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "orange"
           }
         },
         "ja" : {
@@ -622,6 +742,12 @@
             "value" : "rosa"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "rose"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -649,6 +775,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "púrpura"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "violet"
           }
         },
         "ja" : {
@@ -680,6 +812,12 @@
             "value" : "rojo"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "rouge"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -707,6 +845,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "amarillo"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "jaune"
           }
         },
         "ja" : {
@@ -738,6 +882,12 @@
             "value" : "Potenciador de limpieza de columna"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bonus colonne"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -765,6 +915,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@, %d líneas limpiadas, %d puntos de bonificación"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@, %d lignes effacées, %d points bonus"
           }
         },
         "ja" : {
@@ -796,6 +952,12 @@
             "value" : "Desliza hacia arriba o abajo para cambiar la dificultad"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Balaye vers le haut ou le bas pour changer de difficulté"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -823,6 +985,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Dificultad"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Difficulté"
           }
         },
         "ja" : {
@@ -854,6 +1022,12 @@
             "value" : "Cuadrícula de juego, 8 por 8"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Grille de jeu, 8 sur 8"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -881,6 +1055,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pista, una disponible"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Indice, un disponible"
           }
         },
         "ja" : {
@@ -912,6 +1092,12 @@
             "value" : "Pista, ya utilizada"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Indice, déjà utilisé"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -939,6 +1125,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Potenciador de limpieza de fila"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bonus ligne"
           }
         },
         "ja" : {
@@ -970,6 +1162,12 @@
             "value" : "Puntuación %@, %@ líneas limpiadas"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Score %@, %@ lignes effacées"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -997,6 +1195,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Deshacer, uno disponible"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Annuler le coup, un disponible"
           }
         },
         "ja" : {
@@ -1028,6 +1232,12 @@
             "value" : "Deshacer, ya utilizado"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Annuler le coup, déjà utilisé"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1055,6 +1265,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mejor de Todos"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Record"
           }
         },
         "ja" : {
@@ -1086,6 +1302,12 @@
             "value" : "Mejor Puntuación"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Meilleur score"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1113,6 +1335,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bloques Colocados"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Blocs posés"
           }
         },
         "ja" : {
@@ -1144,6 +1372,12 @@
             "value" : "Cancelar"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Annuler"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1171,6 +1405,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Continuar Partida"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reprendre la partie"
           }
         },
         "ja" : {
@@ -1202,6 +1442,12 @@
             "value" : "Puntuación: %lld"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Score : %lld"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1229,6 +1475,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Descartar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abandonner"
           }
         },
         "ja" : {
@@ -1260,6 +1512,12 @@
             "value" : "Tu partida actual se descartará y no podrá recuperarse."
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ta partie en cours sera abandonnée et ne pourra pas être récupérée."
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1287,6 +1545,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "¿Empezar una nueva partida?"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Commencer une nouvelle partie ?"
           }
         },
         "ja" : {
@@ -1318,6 +1582,12 @@
             "value" : "Historial"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Historique"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1345,6 +1615,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Jugar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jouer"
           }
         },
         "ja" : {
@@ -1376,6 +1652,12 @@
             "value" : "Aún no hay partidas — termina una para verla aquí."
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aucune partie pour l'instant : termines-en une et elle apparaîtra ici."
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1403,6 +1685,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Estadísticas"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Statistiques"
           }
         },
         "ja" : {
@@ -1434,6 +1722,12 @@
             "value" : "Reanudar"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Reprendre la partie"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1461,6 +1755,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Alto"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Élevé"
           }
         },
         "ja" : {
@@ -1492,6 +1792,12 @@
             "value" : "Bajo"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Faible"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1519,6 +1825,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Medio"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Moyen"
           }
         },
         "ja" : {
@@ -1550,6 +1862,12 @@
             "value" : "Borrar Todo el Historial"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Effacer tout l'historique"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1577,6 +1895,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Borrar Historial"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Effacer l'historique"
           }
         },
         "ja" : {
@@ -1608,6 +1932,12 @@
             "value" : "Esto eliminará permanentemente todas tus partidas guardadas y estadísticas. Esta acción no se puede deshacer."
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toutes tes parties enregistrées et tes statistiques seront définitivement supprimées. Cette action est irréversible."
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1635,6 +1965,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Completar Líneas"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Effacer des lignes"
           }
         },
         "ja" : {
@@ -1666,6 +2002,12 @@
             "value" : "Cuando completas una fila horizontal o columna vertical, ¡desaparece y ganas puntos! Elimina múltiples líneas a la vez para obtener puntos de bonificación. Cuantas más líneas elimines simultáneamente, mayor será tu bonificación de combo."
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dès qu'une ligne ou une colonne est entièrement remplie, elle disparaît et te rapporte des points. Efface-en plusieurs d'un coup pour un bonus : plus il y en a en même temps, plus le combo est généreux."
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1690,6 +2032,12 @@
           }
         },
         "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "COMBO"
+          }
+        },
+        "fr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "COMBO"
@@ -1724,6 +2072,12 @@
             "value" : "COMBO!"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "COMBO !"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1748,6 +2102,12 @@
           }
         },
         "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "leavesofblocks.com"
+          }
+        },
+        "fr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "leavesofblocks.com"
@@ -1782,6 +2142,12 @@
             "value" : "Creador"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Créateur"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1811,6 +2177,12 @@
             "value" : ", un ingeniero de software y padre que cree que los juegos deberían proporcionar un respiro, no rabia."
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ", ingénieur logiciel et père de famille, convaincu qu'un jeu doit offrir une respiration et non une crise de nerfs."
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1835,6 +2207,12 @@
           }
         },
         "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tim Veil"
+          }
+        },
+        "fr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tim Veil"
@@ -1869,6 +2247,12 @@
             "value" : "Dedicatoria"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dédicace"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1896,6 +2280,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Para Emma, Annie y Grace. Que este juego sirva como una distracción momentánea de las luchas de la vida, grandes y pequeñas."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pour Emma, Annie et Grace. Que ce jeu offre une parenthèse aux petites et grandes épreuves de la vie."
           }
         },
         "ja" : {
@@ -1927,6 +2317,12 @@
             "value" : "Desarrollado por "
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Développé par "
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1954,6 +2350,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Dificultad"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Difficulté"
           }
         },
         "ja" : {
@@ -1985,6 +2387,12 @@
             "value" : "Audaz"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Audacieux"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2012,6 +2420,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "El modo Gentil es perfecto para principiantes — más bloques pequeños y manejables que son más fáciles de colocar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le mode Doux est idéal pour débuter : davantage de petits blocs faciles à placer"
           }
         },
         "ja" : {
@@ -2043,6 +2457,12 @@
             "value" : "Gentil"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Doux"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2070,6 +2490,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "El modo Salvaje es para jugadores experimentados — espera más bloques grandes y complejos que requieren pensamiento estratégico"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le mode Sauvage s'adresse aux joueurs aguerris : attends-toi à de grands blocs complexes qui demandent de la stratégie"
           }
         },
         "ja" : {
@@ -2101,6 +2527,12 @@
             "value" : "Dificultad"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Difficulté"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2128,6 +2560,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "El modo Audaz ofrece un desafío equilibrado con una buena mezcla de bloques pequeños y grandes"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le mode Audacieux offre un défi équilibré, avec un bon mélange de petits et de grands blocs"
           }
         },
         "ja" : {
@@ -2159,6 +2597,12 @@
             "value" : "Salvaje"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sauvage"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2186,6 +2630,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cómo Jugar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Comment jouer"
           }
         },
         "ja" : {
@@ -2217,6 +2667,12 @@
             "value" : "Verás hasta 3 formas de bloques en la parte inferior de la pantalla. Simplemente arrastra cualquier forma a la cuadrícula donde quepa completamente. Los bloques no pueden superponerse a piezas existentes ni extenderse más allá de los bordes de la cuadrícula. Cuando uses los 3 bloques, recibirás 3 nuevos automáticamente."
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jusqu'à 3 formes apparaissent en bas de l'écran. Fais glisser celle de ton choix sur la grille, là où elle tient entièrement. Les blocs ne peuvent ni se chevaucher ni dépasser du bord. Une fois les 3 posés, 3 nouveaux arrivent automatiquement."
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2244,6 +2700,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Eficiencia"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Efficacité"
           }
         },
         "ja" : {
@@ -2275,6 +2737,12 @@
             "value" : "Seguimiento de Rendimiento"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suivi des performances"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2302,6 +2770,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "El juego rastrea qué tan eficientemente usas el espacio de la cuadrícula y proporciona calificaciones de A+ a D. Mayor eficiencia proviene de mantener la cuadrícula organizada y minimizar el espacio desperdiciado."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Le jeu mesure l'efficacité avec laquelle tu occupes la grille et attribue une note de A+ à D. Plus la grille reste ordonnée et l'espace bien utilisé, plus la note monte."
           }
         },
         "ja" : {
@@ -2333,6 +2807,12 @@
             "value" : "Puntuación Final"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Score final"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2360,6 +2840,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Activar Game Center"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Activer Game Center"
           }
         },
         "ja" : {
@@ -2391,6 +2877,12 @@
             "value" : "Cuando está activado, tu puntuación final y logros se envían a Game Center de Apple. Desactivado por defecto — tus datos permanecen en este dispositivo hasta que aceptes. Sin anuncios, sin rastreo de terceros, sin venta de datos."
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Une fois activé, ton score final et tes succès sont envoyés à Game Center d'Apple. Désactivé par défaut : tes données restent sur cet appareil tant que tu n'as rien activé. Aucune publicité, aucun pistage tiers, aucune revente de données."
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2418,6 +2910,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Fin del Juego"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Partie terminée"
           }
         },
         "ja" : {
@@ -2449,6 +2947,12 @@
             "value" : "El juego termina cuando ninguno de tus 3 bloques actuales puede caber en ningún lugar de la cuadrícula. No te preocupes - el juego incluye funciones inteligentes para ayudar a prevenir esto ajustando los tipos de bloques que recibes según la situación de tu cuadrícula."
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La partie s'arrête quand aucun de tes 3 blocs ne peut plus être posé. Pas d'inquiétude : le jeu adapte les blocs proposés à l'état de ta grille pour retarder ce moment."
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2476,6 +2980,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Que el poderoso juego ha terminado, y Tú no pudiste contribuir un bloque."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Que le puissant jeu s'est achevé, et que Tu n'as pu y apporter un bloc."
           }
         },
         "ja" : {
@@ -2507,6 +3017,12 @@
             "value" : "Fin del Juego"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fin de partie"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2536,6 +3052,12 @@
             "value" : "Partidas Jugadas"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Parties jouées"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2560,6 +3082,12 @@
           }
         },
         "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A"
+          }
+        },
+        "fr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "A"
@@ -2594,6 +3122,12 @@
             "value" : "A+"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A+"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2618,6 +3152,12 @@
           }
         },
         "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "B"
+          }
+        },
+        "fr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "B"
@@ -2652,6 +3192,12 @@
             "value" : "B+"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "B+"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2681,6 +3227,12 @@
             "value" : "Novato"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Débutant"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2705,6 +3257,12 @@
           }
         },
         "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "C"
+          }
+        },
+        "fr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "C"
@@ -2739,6 +3297,12 @@
             "value" : "C+"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "C+"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2763,6 +3327,12 @@
           }
         },
         "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "D"
+          }
+        },
+        "fr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "D"
@@ -2797,6 +3367,12 @@
             "value" : "Experto"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Expert"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2824,6 +3400,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Aprendiz"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "En progrès"
           }
         },
         "ja" : {
@@ -2855,6 +3437,12 @@
             "value" : "Maestro"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Maître"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2882,6 +3470,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Hábil"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Confirmé"
           }
         },
         "ja" : {
@@ -2913,6 +3507,12 @@
             "value" : "Puntuación Máxima"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Meilleur score"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2940,6 +3540,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "El historial de partidas se ha borrado exitosamente."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "L'historique des parties a été effacé."
           }
         },
         "ja" : {
@@ -2971,6 +3577,12 @@
             "value" : "Inicio"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Accueil"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2998,6 +3610,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cómo Jugar"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Comment jouer"
           }
         },
         "ja" : {
@@ -3029,6 +3647,12 @@
             "value" : "Ayuda"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Règles"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3053,6 +3677,12 @@
           }
         },
         "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "To me every hour of the light and dark is a miracle, Every cubic inch of space is a miracle,"
+          }
+        },
+        "fr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "To me every hour of the light and dark is a miracle, Every cubic inch of space is a miracle,"
@@ -3087,6 +3717,12 @@
             "value" : "Miracles"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Miracles"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3111,6 +3747,12 @@
           }
         },
         "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1856"
+          }
+        },
+        "fr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "1856"
@@ -3145,6 +3787,12 @@
             "value" : "Inspiración"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inspiration"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3172,6 +3820,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nacido del amor por los rompecabezas de bloques, la frustración con los anuncios y la inspiración de la poesía atemporal de Walt Whitman."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Né d'un amour des jeux de blocs, d'une lassitude devant la publicité et de l'inspiration de la poésie intemporelle de Walt Whitman."
           }
         },
         "ja" : {
@@ -3203,6 +3857,12 @@
             "value" : "Última Puntuación: %@"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dernier score : %@"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3230,6 +3890,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Líneas"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lignes"
           }
         },
         "ja" : {
@@ -3261,6 +3927,12 @@
             "value" : "Líneas Completadas"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Lignes effacées"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3288,6 +3960,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Combo Más Largo"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plus long combo"
           }
         },
         "ja" : {
@@ -3319,6 +3997,12 @@
             "value" : "MEGA COMBO!"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "MÉGA COMBO !"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3346,6 +4030,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Menú"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Menu"
           }
         },
         "ja" : {
@@ -3377,6 +4067,12 @@
             "value" : "Nueva Partida"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nouvelle partie"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3404,6 +4100,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nueva"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nouvelle partie"
           }
         },
         "ja" : {
@@ -3435,6 +4137,12 @@
             "value" : "Aceptar"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3462,6 +4170,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Puntos"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Points"
           }
         },
         "ja" : {
@@ -3493,6 +4207,12 @@
             "value" : "Consejos Pro"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Conseils"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3520,6 +4240,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Restablecer Todos los Datos"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réinitialiser les données"
           }
         },
         "ja" : {
@@ -3551,6 +4277,12 @@
             "value" : "Restablecimiento Completo"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réinitialisation terminée"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3578,6 +4310,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Esto eliminará permanentemente TODOS los datos del juego incluyendo historial, puntuaciones máximas y preferencias. Esta acción no se puede deshacer."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "TOUTES les données de jeu seront définitivement supprimées : historique, records et préférences compris. Cette action est irréversible."
           }
         },
         "ja" : {
@@ -3609,6 +4347,12 @@
             "value" : "Restablecer Todo"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tout réinitialiser"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3636,6 +4380,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Puntuación"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Score"
           }
         },
         "ja" : {
@@ -3667,6 +4417,12 @@
             "value" : "Puntos ganados por cada cuadro del bloque que colocas"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Points gagnés pour chaque case du bloc que tu poses"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3694,6 +4450,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Puntos ganados por cada línea completa eliminada"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Points gagnés pour chaque ligne complète effacée"
           }
         },
         "ja" : {
@@ -3725,6 +4487,12 @@
             "value" : "Puntos extra por cada línea adicional eliminada simultáneamente"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Points bonus pour chaque ligne supplémentaire effacée en même temps"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3752,6 +4520,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Puntuación"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Score"
           }
         },
         "ja" : {
@@ -3783,6 +4557,12 @@
             "value" : "Configuración"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réglages"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3812,6 +4592,12 @@
             "value" : "Ajustes"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Réglages"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3836,6 +4622,12 @@
           }
         },
         "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The day erased, the lesson done"
+          }
+        },
+        "fr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "The day erased, the lesson done"
@@ -3870,6 +4662,12 @@
             "value" : "A Clear Midnight"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A Clear Midnight"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3894,6 +4692,12 @@
           }
         },
         "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1880"
+          }
+        },
+        "fr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "1880"
@@ -3928,6 +4732,12 @@
             "value" : "Eliminar Área"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zone"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3955,6 +4765,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Eliminar Área es el bloque de poder definitivo. Este bloque morado elimina un área de 3×3 alrededor de donde lo coloques. Úsalo sabiamente para máximo impacto."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Zone est le bloc le plus puissant. Ce bloc violet efface une zone de 3×3 autour de l'endroit où tu le poses. À garder pour le bon moment."
           }
         },
         "ja" : {
@@ -3986,6 +4802,12 @@
             "value" : "Eliminar Columna"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Colonne"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4013,6 +4835,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Eliminar Fila es un poderoso bloque rojo que elimina instantáneamente toda una fila horizontal al colocarlo. Ideal para superar situaciones difíciles."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ligne est un puissant bloc rouge qui efface toute une ligne horizontale dès qu'il est posé. Parfait pour débloquer une grille encombrée."
           }
         },
         "ja" : {
@@ -4044,6 +4872,12 @@
             "value" : "Bloques\\nNormales"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Blocs\nclassiques"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4071,6 +4905,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Los bloques normales son tus piezas principales. Vienen en muchas formas y tamaños (1–9 cuadros cada uno). Llena filas y columnas para eliminarlas."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Les blocs classiques sont tes pièces de base. Ils existent en de nombreuses formes et tailles (de 1 à 9 cases). Remplis lignes et colonnes pour les effacer."
           }
         },
         "ja" : {
@@ -4102,6 +4942,12 @@
             "value" : "Eliminar Fila"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ligne"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4129,6 +4975,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Eliminar Columna es un poderoso bloque azul que elimina instantáneamente toda una columna vertical al colocarlo. Perfecto para crear espacio."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Colonne est un puissant bloc bleu qui efface toute une colonne verticale dès qu'il est posé. Idéal pour faire de la place."
           }
         },
         "ja" : {
@@ -4160,6 +5012,12 @@
             "value" : "Formas de Bloques"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Formes de blocs"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4187,6 +5045,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ver Resultados"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Voir le résultat"
           }
         },
         "ja" : {
@@ -4218,6 +5082,12 @@
             "value" : "Eficiencia Prom."
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Efficacité moy."
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4245,6 +5115,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mejor Combo"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Meilleur combo"
           }
         },
         "ja" : {
@@ -4276,6 +5152,12 @@
             "value" : "Días Jugados"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jours joués"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4300,6 +5182,12 @@
           }
         },
         "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld%%"
+          }
+        },
+        "fr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld%%"
@@ -4334,6 +5222,12 @@
             "value" : "Modo Favorito"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mode favori"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4361,6 +5255,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lldh %lldm"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld h %lld min"
           }
         },
         "ja" : {
@@ -4392,6 +5292,12 @@
             "value" : "Partida Más Larga"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Partie la plus longue"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4419,6 +5325,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lldm"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld min"
           }
         },
         "ja" : {
@@ -4450,6 +5362,12 @@
             "value" : "Más Líneas"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Plus de lignes"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4477,6 +5395,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Actividad"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Activité"
           }
         },
         "ja" : {
@@ -4508,6 +5432,12 @@
             "value" : "Récords"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Records"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4535,6 +5465,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Habilidad"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Maîtrise"
           }
         },
         "ja" : {
@@ -4566,6 +5502,12 @@
             "value" : "Tiempo Total Jugado"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Temps de jeu total"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4595,6 +5537,12 @@
             "value" : "Calificación Típica"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Note habituelle"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4619,6 +5567,12 @@
           }
         },
         "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "—"
+          }
+        },
+        "fr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "—"
@@ -4653,6 +5607,12 @@
             "value" : "Juego Estratégico"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jeu stratégique"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4680,6 +5640,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tus habilidades estratégicas se califican de Principiante a Maestro según qué tan bien preparas las eliminaciones de líneas y planificas con anticipación. Busca oportunidades para eliminar múltiples líneas con una sola colocación de bloque."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ton sens tactique est évalué de Débutant à Maître selon ta façon de préparer les lignes et d'anticiper. Cherche les coups qui effacent plusieurs lignes d'un seul bloc."
           }
         },
         "ja" : {
@@ -4711,6 +5677,12 @@
             "value" : "Estrategia"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Stratégie"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4738,6 +5710,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Toca para Historial"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toucher pour l'historique"
           }
         },
         "ja" : {
@@ -4769,6 +5747,12 @@
             "value" : "Construido con SwiftUI para iOS 18.0+. Sin anuncios. Sin rastreo de terceros. Sin venta de datos. Juega sin conexión por defecto — actívalo en Game Center para tablas de clasificación y logros."
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Développé avec SwiftUI pour iOS 18.0 et versions ultérieures. Aucune publicité. Aucun pistage tiers. Aucune revente de données. Hors ligne par défaut : Game Center d'Apple, pour les classements et les succès, reste facultatif."
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4796,6 +5780,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Detalles Técnicos"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Détails techniques"
           }
         },
         "ja" : {
@@ -4827,6 +5817,12 @@
             "value" : "El Campo de Juego"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "La grille"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4854,6 +5850,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tu tablero de juego es una cuadrícula de 8×8 con 64 espacios. Tu objetivo es completar filas horizontales o columnas verticales para eliminarlas y ganar puntos. La cuadrícula comienza con algunos bloques aleatorios ya colocados para crear desafíos interesantes."
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ta grille compte 64 cases, en 8×8. L'objectif : remplir des lignes horizontales ou des colonnes verticales entières pour les effacer et marquer des points. Quelques blocs sont déjà posés au départ, histoire de rendre les choses intéressantes tout de suite."
           }
         },
         "ja" : {
@@ -4885,6 +5887,12 @@
             "value" : "Tiempo Jugado"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Temps de jeu"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4912,6 +5920,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Usa las esquinas y bordes estratégicamente cuando la cuadrícula se llene"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Utilise les coins et les bords à bon escient quand la grille se remplit"
           }
         },
         "ja" : {
@@ -4943,6 +5957,12 @@
             "value" : "Tu calificación de eficiencia mejora con juego organizado y estratégico"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Une grille ordonnée et un jeu réfléchi font monter ta note d'efficacité"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4970,6 +5990,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mantén tu cuadrícula organizada - evita crear huecos dispersos"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Garde ta grille rangée : évite de laisser des trous éparpillés"
           }
         },
         "ja" : {
@@ -5001,6 +6027,12 @@
             "value" : "Busca oportunidades para eliminar múltiples líneas con una colocación"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Guette les coups qui effacent plusieurs lignes à la fois"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5028,6 +6060,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Considera los tres bloques disponibles antes de colocar cualquiera"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Regarde les trois blocs avant d'en poser un"
           }
         },
         "ja" : {
@@ -5059,6 +6097,12 @@
             "value" : "Guarda los bloques pequeños para espacios reducidos y movimientos finales"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Garde les petits blocs pour les espaces étroits et les fins de partie"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5086,6 +6130,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bloques Totales"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Blocs au total"
           }
         },
         "ja" : {
@@ -5117,6 +6167,12 @@
             "value" : "Deshacer"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Annuler le coup"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5144,6 +6200,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Versión %@"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Version %@"
           }
         },
         "ja" : {
@@ -5175,6 +6237,12 @@
             "value" : "Ver Game Center"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ouvrir Game Center"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5202,6 +6270,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ver Tabla de Clasificación"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Voir le classement"
           }
         },
         "ja" : {
@@ -5233,6 +6307,12 @@
             "value" : "Ver Tablero"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Voir la grille"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5260,6 +6340,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Muestra el tablero final para ver cómo terminó la partida"
+          }
+        },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Affiche la grille telle qu'elle était à la fin de la partie"
           }
         },
         "ja" : {
@@ -5291,6 +6377,12 @@
             "value" : "Ver Resumen"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Voir le résumé"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5320,6 +6412,12 @@
             "value" : "Sitio Web"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Site web"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5344,6 +6442,12 @@
           }
         },
         "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "That you are here—that life exists and identity,"
+          }
+        },
+        "fr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "That you are here—that life exists and identity,"
@@ -5378,6 +6482,12 @@
             "value" : "That the powerful play goes on, and you may contribute a verse."
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "That the powerful play goes on, and you may contribute a verse."
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5407,6 +6517,12 @@
             "value" : "O Me! O Life!"
           }
         },
+        "fr" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O Me! O Life!"
+          }
+        },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5431,6 +6547,12 @@
           }
         },
         "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1867"
+          }
+        },
+        "fr" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "1867"

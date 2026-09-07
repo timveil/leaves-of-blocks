@@ -26,6 +26,20 @@ private let letterGradeKeys = [
 
 private let languages = LocalizationBundles.translations
 
+/// Values that legitimately read the same as English, as "<language>:<key>".
+///
+/// The test below exists to catch a key nobody translated. A cognate defeats
+/// it honestly: French really does call that rank *Expert* — the natural
+/// ladder there is Débutant, Confirmé, Expert, Maître — and bending the
+/// translation to make a test go green would be the tail wagging the dog.
+///
+/// So the exception is recorded rather than the assertion weakened. Anything
+/// added here should be attestable in the language, and reviewable by someone
+/// who reads it (conventions/translation.md).
+private let attestedCognates: Set<String> = [
+    "fr:grade_expert"
+]
+
 // MARK: - Tests
 
 @Suite("Grade ladder localization")
@@ -51,8 +65,13 @@ struct GradeLadderLocalizationTests {
         let localized = LocalizationBundles.value(key, in: try LocalizationBundles.bundle(for: language))
         let source = LocalizationBundles.value(key, in: try LocalizationBundles.bundle(for: LocalizationBundles.source))
 
-        // Then the translation says something of its own
-        #expect(localized != source, "\(language) \(key) still reads as English: \"\(source)\"")
+        // Then the translation says something of its own, unless the language
+        // genuinely shares the word
+        if attestedCognates.contains("\(language):\(key)") {
+            #expect(localized == source, "\(language) \(key) is recorded as a cognate but no longer matches English — remove it from attestedCognates")
+        } else {
+            #expect(localized != source, "\(language) \(key) still reads as English: \"\(source)\"")
+        }
     }
 
     // The letter ladder is a game rank, not a school grade. Spain and Mexico
