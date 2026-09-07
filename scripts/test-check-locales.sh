@@ -378,6 +378,20 @@ printf '/// let title = "documented_example".localized\n' > "$TMP/comment/Leaves
 run_fixture "$TMP/comment" >/dev/null 2>&1; code=$?
 if [ "$code" -eq 0 ]; then ok "a lookup inside a comment is not a key"; else bad "comment lookups ignored" "exit $code: $(fixture_err "$TMP/comment" | head -2)"; fi
 
+# A block comment opens with "/*" -- only its continuation lines start with
+# "*", so matching those alone leaves the first line of every /* ... */ block
+# being read as live code.
+make_fixture "$TMP/blockcomment"
+printf '/* let title = "documented_example".localized */\n' > "$TMP/blockcomment/LeavesOfBlocks/Views/Block.swift"
+run_fixture "$TMP/blockcomment" >/dev/null 2>&1; code=$?
+if [ "$code" -eq 0 ]; then ok "a lookup on a block comment's opening line is not a key"; else bad "block comment opening ignored" "exit $code: $(fixture_problems "$TMP/blockcomment" | head -1)"; fi
+
+# The continuation lines of the same block.
+make_fixture "$TMP/blockbody"
+printf '/*\n * let title = "documented_example".localized\n */\n' > "$TMP/blockbody/LeavesOfBlocks/Views/Body.swift"
+run_fixture "$TMP/blockbody" >/dev/null 2>&1; code=$?
+if [ "$code" -eq 0 ]; then ok "a lookup on a block comment's body line is not a key"; else bad "block comment body ignored" "exit $code: $(fixture_problems "$TMP/blockbody" | head -1)"; fi
+
 make_fixture "$TMP/withargs"
 printf 'Text("no_such_format".localized(with: 1))\n' > "$TMP/withargs/LeavesOfBlocks/Views/Args.swift"
 run_fixture "$TMP/withargs" >/dev/null 2>&1; code=$?

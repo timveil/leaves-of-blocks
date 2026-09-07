@@ -292,12 +292,18 @@ check_localized_keys() {
 
     # A lookup inside a comment is an illustration, not a key:
     # String+Extensions.swift documents the pattern with `"Game Over".localized`
-    # and no catalog entry backs it, nor should one. Only whole-line comments
-    # are skipped -- a lookup trailing live code after `//` would still be
-    # checked, which has not come up and would be a strange line to write.
+    # and no catalog entry backs it, nor should one.
+    #
+    # Three shapes: `//`, a block comment's opening `/*`, and the `*` its
+    # continuation lines carry. Matching only the last two would leave the first
+    # line of every /* ... */ block read as live code.
+    #
+    # Only whole-line comments are skipped -- a lookup trailing live code after
+    # `//` is still checked, which has not come up and would be a strange line
+    # to write.
     trimmed="${content#"${content%%[![:space:]]*}"}"
     case "$trimmed" in
-      //*|\**) continue ;;
+      //*|/\**|\**) continue ;;
     esac
 
     while IFS= read -r literal; do
