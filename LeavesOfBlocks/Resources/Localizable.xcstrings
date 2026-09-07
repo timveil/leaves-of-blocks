@@ -65,6 +65,12 @@
             "state" : "translated",
             "value" : "Info"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sobre"
+          }
         }
       }
     },
@@ -111,6 +117,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Over het spel"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sobre"
           }
         }
       }
@@ -159,6 +171,12 @@
             "state" : "translated",
             "value" : "Slimme blokkeuze"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Geração Inteligente de Blocos"
+          }
         }
       }
     },
@@ -205,6 +223,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Het spel bekijkt je speelveld en past de blokken aan die je krijgt: uitdagend, maar nooit uitzichtloos. Wordt het krap, dan komen er vanzelf handiger vormen."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O jogo analisa sua grade e ajusta os blocos que você recebe para manter o desafio e evitar situações impossíveis. Quando você está em dificuldade, ele oferece formas mais úteis automaticamente."
           }
         }
       }
@@ -253,6 +277,12 @@
             "state" : "translated",
             "value" : "Geavanceerde functies"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recursos Avançados"
+          }
         }
       }
     },
@@ -299,6 +329,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Leaves of Blocks heeft systemen aan boord die zich aanpassen aan hoe jij speelt en je helpen beter te worden."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O Leaves of Blocks tem sistemas sofisticados que se adaptam ao seu estilo de jogo e ajudam você a melhorar com o tempo."
           }
         }
       }
@@ -347,6 +383,12 @@
             "state" : "translated",
             "value" : "Alle spelgegevens zijn gewist."
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Todos os dados do jogo foram redefinidos com sucesso."
+          }
         }
       }
     },
@@ -390,6 +432,12 @@
           }
         },
         "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Answer."
+          }
+        },
+        "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Answer."
@@ -441,6 +489,12 @@
             "state" : "translated",
             "value" : "Hulpmiddelen"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajudas"
+          }
         }
       }
     },
@@ -487,6 +541,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Voor als het krap wordt. Ongedaan maken en Hint kun je elk één keer per spel gebruiken:"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Auxílios para quando você estiver em apuros. Desfazer e Dica podem ser usados uma vez por partida:"
           }
         }
       }
@@ -535,6 +595,12 @@
             "state" : "translated",
             "value" : "Ongedaan maken: neemt je laatst geplaatste blok terug."
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desfazer: volta atrás na sua última colocação de bloco."
+          }
         }
       }
     },
@@ -581,6 +647,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Hint: laat een mogelijke zet op het speelveld zien."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dica: destaca uma jogada sugerida no tabuleiro."
           }
         }
       }
@@ -629,6 +701,12 @@
             "state" : "translated",
             "value" : "Speelveld bekijken: toont na afloop het speelveld zoals het eindigde."
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ver Tabuleiro: quando a partida termina, revela o tabuleiro final para você ver como ela acabou."
+          }
         }
       }
     },
@@ -675,6 +753,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Gemiddelde score"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pontuação Média"
           }
         }
       }
@@ -723,6 +807,12 @@
             "state" : "translated",
             "value" : "Vlak wissen-bonus"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bônus de limpar área"
+          }
         }
       }
     },
@@ -769,6 +859,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%d blokken beschikbaar"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%d blocos disponíveis"
           }
         }
       }
@@ -817,6 +913,12 @@
             "state" : "translated",
             "value" : "%2$@ blok van %1$d vakjes"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "bloco %2$@ de %1$d casas"
+          }
         }
       }
     },
@@ -863,6 +965,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "blauw"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "azul"
           }
         }
       }
@@ -911,6 +1019,12 @@
             "state" : "translated",
             "value" : "groen"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "verde"
+          }
         }
       }
     },
@@ -957,6 +1071,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "oranje"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "laranja"
           }
         }
       }
@@ -1005,6 +1125,12 @@
             "state" : "translated",
             "value" : "roze"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "rosa"
+          }
         }
       }
     },
@@ -1051,6 +1177,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "paars"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "roxo"
           }
         }
       }
@@ -1099,6 +1231,12 @@
             "state" : "translated",
             "value" : "rood"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "vermelho"
+          }
         }
       }
     },
@@ -1145,6 +1283,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "geel"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "amarelo"
           }
         }
       }
@@ -1193,6 +1337,12 @@
             "state" : "translated",
             "value" : "Kolom wissen-bonus"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bônus de limpar coluna"
+          }
         }
       }
     },
@@ -1239,6 +1389,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@, %d rijen gewist, %d bonuspunten"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@, %d linhas eliminadas, %d pontos de bônus"
           }
         }
       }
@@ -1287,6 +1443,12 @@
             "state" : "translated",
             "value" : "Veeg omhoog of omlaag om de moeilijkheid te wijzigen"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Deslize para cima ou para baixo para mudar a dificuldade"
+          }
         }
       }
     },
@@ -1333,6 +1495,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Moeilijkheid"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dificuldade"
           }
         }
       }
@@ -1381,6 +1549,12 @@
             "state" : "translated",
             "value" : "Speelveld, 8 bij 8"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Grade do jogo, 8 por 8"
+          }
         }
       }
     },
@@ -1427,6 +1601,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Hint, één beschikbaar"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dica, uma disponível"
           }
         }
       }
@@ -1475,6 +1655,12 @@
             "state" : "translated",
             "value" : "Hint, al gebruikt"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dica, já usada"
+          }
         }
       }
     },
@@ -1521,6 +1707,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Rij wissen-bonus"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bônus de limpar linha"
           }
         }
       }
@@ -1569,6 +1761,12 @@
             "state" : "translated",
             "value" : "Score %@, %@ rijen gewist"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pontuação %@, %@ linhas eliminadas"
+          }
         }
       }
     },
@@ -1615,6 +1813,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ongedaan maken, één beschikbaar"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desfazer, um disponível"
           }
         }
       }
@@ -1663,6 +1867,12 @@
             "state" : "translated",
             "value" : "Ongedaan maken, al gebruikt"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desfazer, já usado"
+          }
         }
       }
     },
@@ -1709,6 +1919,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Beste ooit"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recorde Absoluto"
           }
         }
       }
@@ -1757,6 +1973,12 @@
             "state" : "translated",
             "value" : "Beste score"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Melhor Pontuação"
+          }
         }
       }
     },
@@ -1803,6 +2025,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Geplaatste blokken"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Blocos Colocados"
           }
         }
       }
@@ -1851,6 +2079,12 @@
             "state" : "translated",
             "value" : "Annuleer"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Cancelar"
+          }
         }
       }
     },
@@ -1897,6 +2131,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Spel hervatten"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Continuar Partida"
           }
         }
       }
@@ -1945,6 +2185,12 @@
             "state" : "translated",
             "value" : "Score: %lld"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pontuação: %lld"
+          }
         }
       }
     },
@@ -1991,6 +2237,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Verwerpen"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Descartar"
           }
         }
       }
@@ -2039,6 +2291,12 @@
             "state" : "translated",
             "value" : "Je huidige spel wordt verworpen en kan niet worden hersteld."
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sua partida atual será descartada e não poderá ser recuperada."
+          }
         }
       }
     },
@@ -2085,6 +2343,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nieuw spel beginnen?"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Começar uma nova partida?"
           }
         }
       }
@@ -2133,6 +2397,12 @@
             "state" : "translated",
             "value" : "Geschiedenis"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Histórico de Partidas"
+          }
         }
       }
     },
@@ -2179,6 +2449,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Spelen"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jogar"
           }
         }
       }
@@ -2227,6 +2503,12 @@
             "state" : "translated",
             "value" : "Nog geen spellen: speel er een uit en hij verschijnt hier."
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nenhuma partida ainda — termine uma para vê-la aqui."
+          }
         }
       }
     },
@@ -2273,6 +2555,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Statistieken"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estatísticas"
           }
         }
       }
@@ -2321,6 +2609,12 @@
             "state" : "translated",
             "value" : "Spel hervatten"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Retomar Partida"
+          }
         }
       }
     },
@@ -2367,6 +2661,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Hoog"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alto"
           }
         }
       }
@@ -2415,6 +2715,12 @@
             "state" : "translated",
             "value" : "Laag"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Baixo"
+          }
         }
       }
     },
@@ -2461,6 +2767,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Gemiddeld"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Médio"
           }
         }
       }
@@ -2509,6 +2821,12 @@
             "state" : "translated",
             "value" : "Volledige geschiedenis wissen"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apagar Todo o Histórico"
+          }
         }
       }
     },
@@ -2555,6 +2873,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Geschiedenis wissen"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Apagar Histórico"
           }
         }
       }
@@ -2603,6 +2927,12 @@
             "state" : "translated",
             "value" : "Hiermee worden al je opgeslagen spellen en statistieken definitief verwijderd. Dit kan niet ongedaan worden gemaakt."
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Isso vai apagar permanentemente todas as suas partidas salvas e estatísticas. Esta ação não pode ser desfeita."
+          }
         }
       }
     },
@@ -2649,6 +2979,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Rijen wissen"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eliminando Linhas"
           }
         }
       }
@@ -2697,6 +3033,12 @@
             "state" : "translated",
             "value" : "Zodra je een rij of kolom helemaal vult, verdwijnt die en levert hij punten op. Wis er meerdere tegelijk voor bonuspunten: hoe meer tegelijk, hoe groter de combobonus."
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quando você preenche completamente uma linha horizontal ou uma coluna vertical, ela desaparece e você ganha pontos! Elimine várias linhas de uma vez para ganhar pontos de bônus. Quanto mais linhas você eliminar ao mesmo tempo, maior o seu bônus de combo."
+          }
         }
       }
     },
@@ -2740,6 +3082,12 @@
           }
         },
         "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "COMBO"
+          }
+        },
+        "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "COMBO"
@@ -2791,6 +3139,12 @@
             "state" : "translated",
             "value" : "COMBO!"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "COMBO!"
+          }
         }
       }
     },
@@ -2834,6 +3188,12 @@
           }
         },
         "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "leavesofblocks.com"
+          }
+        },
+        "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "leavesofblocks.com"
@@ -2885,6 +3245,12 @@
             "state" : "translated",
             "value" : "Maker"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Criador"
+          }
         }
       }
     },
@@ -2932,6 +3298,12 @@
             "state" : "translated",
             "value" : ", software-engineer en vader, die vindt dat een spel rust moet geven in plaats van ergernis."
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ", engenheiro de software e pai, que acredita que um jogo deve dar um respiro e não um ataque de nervos."
+          }
         }
       }
     },
@@ -2975,6 +3347,12 @@
           }
         },
         "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tim Veil"
+          }
+        },
+        "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tim Veil"
@@ -3026,6 +3404,12 @@
             "state" : "translated",
             "value" : "Opdracht"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dedicatória"
+          }
         }
       }
     },
@@ -3072,6 +3456,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Voor Emma, Annie en Grace. Moge dit spel even afleiding bieden van de grote en kleine beslommeringen van het leven."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Para Emma, Annie e Grace. Que este jogo sirva de distração momentânea das dificuldades da vida, grandes e pequenas."
           }
         }
       }
@@ -3120,6 +3510,12 @@
             "state" : "translated",
             "value" : "Ontwikkeld door "
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desenvolvido por "
+          }
         }
       }
     },
@@ -3166,6 +3562,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Moeilijkheid"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dificuldade"
           }
         }
       }
@@ -3214,6 +3616,12 @@
             "state" : "translated",
             "value" : "Gedurfd"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ousado"
+          }
         }
       }
     },
@@ -3260,6 +3668,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Zacht is ideaal om te beginnen: meer kleine blokken die makkelijk te plaatsen zijn"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O modo Suave é perfeito para quem está começando — mais blocos pequenos e fáceis de encaixar"
           }
         }
       }
@@ -3308,6 +3722,12 @@
             "state" : "translated",
             "value" : "Zacht"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Suave"
+          }
         }
       }
     },
@@ -3354,6 +3774,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Wild is voor ervaren spelers: reken op meer grote, ingewikkelde blokken die om strategie vragen"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O modo Selvagem é para jogadores experientes — espere mais blocos grandes e complexos, que exigem pensar com estratégia"
           }
         }
       }
@@ -3402,6 +3828,12 @@
             "state" : "translated",
             "value" : "Moeilijkheid"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dificuldade"
+          }
         }
       }
     },
@@ -3448,6 +3880,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Gedurfd biedt een evenwichtige uitdaging met een goede mix van kleine en grote blokken"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O modo Ousado oferece um desafio equilibrado, com uma boa mistura de blocos pequenos e grandes"
           }
         }
       }
@@ -3496,6 +3934,12 @@
             "state" : "translated",
             "value" : "Wild"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Selvagem"
+          }
         }
       }
     },
@@ -3542,6 +3986,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Zo speel je"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Como Jogar"
           }
         }
       }
@@ -3590,6 +4040,12 @@
             "state" : "translated",
             "value" : "Onder in beeld zie je maximaal 3 blokvormen. Sleep er een naar het speelveld, op een plek waar hij helemaal past. Blokken mogen niet over elkaar heen liggen of buiten de rand vallen. Heb je alle 3 geplaatst, dan krijg je automatisch 3 nieuwe."
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Você verá até 3 formas de bloco na parte de baixo da tela. Basta arrastar qualquer forma até um lugar da grade onde ela caiba por completo. Os blocos não podem se sobrepor às peças já colocadas nem passar das bordas da grade. Quando você usar os 3 blocos, recebe 3 novos automaticamente."
+          }
         }
       }
     },
@@ -3636,6 +4092,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Efficiëntie"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eficiência"
           }
         }
       }
@@ -3684,6 +4146,12 @@
             "state" : "translated",
             "value" : "Prestatiemeting"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Acompanhamento de Desempenho"
+          }
         }
       }
     },
@@ -3730,6 +4198,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Het spel houdt bij hoe efficiënt je de ruimte op het speelveld gebruikt en geeft een cijfer van A+ tot D. Hoe overzichtelijker je speelveld en hoe minder ruimte je verspilt, hoe hoger het cijfer."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O jogo acompanha com que eficiência você usa o espaço da grade e dá notas de A+ a D. A eficiência sobe quando você mantém a grade organizada e desperdiça menos espaço."
           }
         }
       }
@@ -3778,6 +4252,12 @@
             "state" : "translated",
             "value" : "Eindscore"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pontuação Final"
+          }
         }
       }
     },
@@ -3824,6 +4304,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Game Center inschakelen"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ativar o Game Center"
           }
         }
       }
@@ -3872,6 +4358,12 @@
             "state" : "translated",
             "value" : "Als dit aanstaat, worden je eindscore en behaalde prestaties naar Game Center van Apple gestuurd. Staat standaard uit: je gegevens blijven op dit apparaat totdat je ermee instemt. Geen advertenties, geen tracking door derden, geen verkoop van gegevens."
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Quando ativado, sua pontuação final e as conquistas obtidas são enviadas ao Game Center da Apple. Desativado por padrão — seus dados ficam neste dispositivo até você escolher ativá-lo. Sem anúncios, sem rastreamento de terceiros, sem venda de dados."
+          }
         }
       }
     },
@@ -3918,6 +4410,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Spel voorbij"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fim de Jogo"
           }
         }
       }
@@ -3966,6 +4464,12 @@
             "state" : "translated",
             "value" : "Het spel eindigt als geen van je 3 blokken nog ergens past. Geen zorgen: het spel stemt de soort blokken af op je speelveld om dat uit te stellen."
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A partida termina quando nenhum dos seus 3 blocos atuais couber em lugar nenhum da grade. Não se preocupe — o jogo tem recursos inteligentes que ajudam a evitar isso, ajustando os tipos de bloco que você recebe conforme a situação da sua grade."
+          }
         }
       }
     },
@@ -4012,6 +4516,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Dat het machtige spel geëindigd is, en Jij geen blok kon bijdragen."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Que o poderoso jogo terminou, e Tu não pudeste contribuir com um bloco."
           }
         }
       }
@@ -4060,6 +4570,12 @@
             "state" : "translated",
             "value" : "Einde spel"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Fim de Jogo"
+          }
         }
       }
     },
@@ -4107,6 +4623,12 @@
             "state" : "translated",
             "value" : "Gespeelde spellen"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Partidas Jogadas"
+          }
         }
       }
     },
@@ -4150,6 +4672,12 @@
           }
         },
         "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A"
+          }
+        },
+        "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "A"
@@ -4201,6 +4729,12 @@
             "state" : "translated",
             "value" : "A+"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A+"
+          }
         }
       }
     },
@@ -4244,6 +4778,12 @@
           }
         },
         "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "B"
+          }
+        },
+        "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "B"
@@ -4295,6 +4835,12 @@
             "state" : "translated",
             "value" : "B+"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "B+"
+          }
         }
       }
     },
@@ -4342,6 +4888,12 @@
             "state" : "translated",
             "value" : "Beginner"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Iniciante"
+          }
         }
       }
     },
@@ -4385,6 +4937,12 @@
           }
         },
         "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "C"
+          }
+        },
+        "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "C"
@@ -4436,6 +4994,12 @@
             "state" : "translated",
             "value" : "C+"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "C+"
+          }
         }
       }
     },
@@ -4479,6 +5043,12 @@
           }
         },
         "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "D"
+          }
+        },
+        "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "D"
@@ -4530,6 +5100,12 @@
             "state" : "translated",
             "value" : "Expert"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Especialista"
+          }
         }
       }
     },
@@ -4576,6 +5152,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Lerend"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aprendendo"
           }
         }
       }
@@ -4624,6 +5206,12 @@
             "state" : "translated",
             "value" : "Meester"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mestre"
+          }
         }
       }
     },
@@ -4670,6 +5258,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bedreven"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Habilidoso"
           }
         }
       }
@@ -4718,6 +5312,12 @@
             "state" : "translated",
             "value" : "Beste score"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recorde"
+          }
         }
       }
     },
@@ -4764,6 +5364,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "De spelgeschiedenis is gewist."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O histórico de partidas foi apagado com sucesso."
           }
         }
       }
@@ -4812,6 +5418,12 @@
             "state" : "translated",
             "value" : "Start"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Início"
+          }
         }
       }
     },
@@ -4858,6 +5470,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Zo speel je"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Como Jogar"
           }
         }
       }
@@ -4906,6 +5524,12 @@
             "state" : "translated",
             "value" : "Uitleg"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Como Jogar"
+          }
         }
       }
     },
@@ -4949,6 +5573,12 @@
           }
         },
         "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "To me every hour of the light and dark is a miracle, Every cubic inch of space is a miracle,"
+          }
+        },
+        "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "To me every hour of the light and dark is a miracle, Every cubic inch of space is a miracle,"
@@ -5000,6 +5630,12 @@
             "state" : "translated",
             "value" : "Miracles"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Miracles"
+          }
         }
       }
     },
@@ -5043,6 +5679,12 @@
           }
         },
         "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1856"
+          }
+        },
+        "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "1856"
@@ -5094,6 +5736,12 @@
             "state" : "translated",
             "value" : "Inspiratie"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Inspiração"
+          }
         }
       }
     },
@@ -5140,6 +5788,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ontstaan uit liefde voor blokpuzzels, ergernis over advertenties en inspiratie door de tijdloze poëzie van Walt Whitman."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nasceu do amor por quebra-cabeças de blocos, da irritação com anúncios e da inspiração na poesia atemporal de Walt Whitman."
           }
         }
       }
@@ -5188,6 +5842,12 @@
             "state" : "translated",
             "value" : "Vorige score: %@"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Última pontuação: %@"
+          }
         }
       }
     },
@@ -5234,6 +5894,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Rijen"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Linhas"
           }
         }
       }
@@ -5282,6 +5948,12 @@
             "state" : "translated",
             "value" : "Gewiste rijen"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Linhas Eliminadas"
+          }
         }
       }
     },
@@ -5328,6 +6000,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Langste combo"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Combo Mais Longo"
           }
         }
       }
@@ -5376,6 +6054,12 @@
             "state" : "translated",
             "value" : "MEGACOMBO!"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "MEGA COMBO!"
+          }
         }
       }
     },
@@ -5419,6 +6103,12 @@
           }
         },
         "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Menu"
+          }
+        },
+        "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Menu"
@@ -5470,6 +6160,12 @@
             "state" : "translated",
             "value" : "Nieuw spel"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nova Partida"
+          }
         }
       }
     },
@@ -5517,6 +6213,12 @@
             "state" : "translated",
             "value" : "Nieuw spel"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nova Partida"
+          }
         }
       }
     },
@@ -5560,6 +6262,12 @@
           }
         },
         "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
+        },
+        "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "OK"
@@ -5611,6 +6319,12 @@
             "state" : "translated",
             "value" : "Punten"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pontos"
+          }
         }
       }
     },
@@ -5657,6 +6371,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Handige tips"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dicas de Mestre"
           }
         }
       }
@@ -5705,6 +6425,12 @@
             "state" : "translated",
             "value" : "Alle gegevens wissen"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Redefinir Todos os Dados"
+          }
         }
       }
     },
@@ -5751,6 +6477,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Wissen voltooid"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Redefinição Concluída"
           }
         }
       }
@@ -5799,6 +6531,12 @@
             "state" : "translated",
             "value" : "Hiermee worden ALLE spelgegevens definitief verwijderd, inclusief geschiedenis, topscores en voorkeuren. Dit kan niet ongedaan worden gemaakt."
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Isso vai apagar permanentemente TODOS os dados do jogo, incluindo histórico, recordes e preferências. Esta ação não pode ser desfeita."
+          }
         }
       }
     },
@@ -5845,6 +6583,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Alles wissen"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Redefinir Tudo"
           }
         }
       }
@@ -5893,6 +6637,12 @@
             "state" : "translated",
             "value" : "Score"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pontuação"
+          }
         }
       }
     },
@@ -5939,6 +6689,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Punten voor elk vakje van een blok dat je plaatst"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pontos ganhos por cada casa de um bloco que você coloca"
           }
         }
       }
@@ -5987,6 +6743,12 @@
             "state" : "translated",
             "value" : "Punten voor elke volle rij die je wist"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pontos ganhos por cada linha completa eliminada"
+          }
         }
       }
     },
@@ -6033,6 +6795,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bonuspunten voor elke extra rij die je tegelijk wist"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pontos de bônus por cada linha adicional eliminada ao mesmo tempo"
           }
         }
       }
@@ -6081,6 +6849,12 @@
             "state" : "translated",
             "value" : "Punten"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Pontuação"
+          }
         }
       }
     },
@@ -6127,6 +6901,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Instellingen"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajustes"
           }
         }
       }
@@ -6175,6 +6955,12 @@
             "state" : "translated",
             "value" : "Instellingen"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ajustes"
+          }
         }
       }
     },
@@ -6218,6 +7004,12 @@
           }
         },
         "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The day erased, the lesson done"
+          }
+        },
+        "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "The day erased, the lesson done"
@@ -6269,6 +7061,12 @@
             "state" : "translated",
             "value" : "A Clear Midnight"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A Clear Midnight"
+          }
         }
       }
     },
@@ -6312,6 +7110,12 @@
           }
         },
         "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1880"
+          }
+        },
+        "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "1880"
@@ -6363,6 +7167,12 @@
             "state" : "translated",
             "value" : "Vlak wissen"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Limpar Área"
+          }
         }
       }
     },
@@ -6409,6 +7219,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Vlak wissen is het krachtigste blok. Dit paarse blok wist een gebied van 3×3 rond de plek waar je het neerlegt. Bewaar het voor het juiste moment."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Limpar Área é o bloco mais poderoso de todos. Este bloco roxo limpa uma área de 3×3 ao redor do ponto onde você o coloca. Use com sabedoria para causar o maior impacto."
           }
         }
       }
@@ -6457,6 +7273,12 @@
             "state" : "translated",
             "value" : "Kolom wissen"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Limpar Coluna"
+          }
         }
       }
     },
@@ -6503,6 +7325,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Rij wissen is een krachtig rood blok dat bij plaatsing meteen een hele horizontale rij wist. Ideaal om een vastgelopen speelveld open te breken."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Limpar Linha é um poderoso bloco vermelho que elimina na hora uma linha horizontal inteira ao ser colocado. Ótimo para abrir caminho em espaços apertados."
           }
         }
       }
@@ -6551,6 +7379,12 @@
             "state" : "translated",
             "value" : "Gewone\nblokken"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Blocos\nComuns"
+          }
         }
       }
     },
@@ -6597,6 +7431,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Gewone blokken zijn je bouwstenen. Ze komen in allerlei vormen en maten (1 tot 9 vakjes). Vul rijen en kolommen om ze te wissen."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Os blocos comuns são suas peças principais. Vêm em muitos formatos e tamanhos, de 1 a 9 casas cada. Preencha linhas e colunas para eliminá-las."
           }
         }
       }
@@ -6645,6 +7485,12 @@
             "state" : "translated",
             "value" : "Rij wissen"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Limpar Linha"
+          }
         }
       }
     },
@@ -6691,6 +7537,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Kolom wissen is een krachtig blauw blok dat bij plaatsing meteen een hele verticale kolom wist. Perfect om ruimte te maken."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Limpar Coluna é um poderoso bloco azul que elimina na hora uma coluna vertical inteira ao ser colocado. Perfeito para criar espaço."
           }
         }
       }
@@ -6739,6 +7591,12 @@
             "state" : "translated",
             "value" : "Blokvormen"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Formatos de Bloco"
+          }
         }
       }
     },
@@ -6785,6 +7643,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Resultaat tonen"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ver Resultados"
           }
         }
       }
@@ -6833,6 +7697,12 @@
             "state" : "translated",
             "value" : "Gem. efficiëntie"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Eficiência Média"
+          }
         }
       }
     },
@@ -6879,6 +7749,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Beste combo"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Melhor Combo"
           }
         }
       }
@@ -6927,6 +7803,12 @@
             "state" : "translated",
             "value" : "Speeldagen"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Dias Jogados"
+          }
         }
       }
     },
@@ -6970,6 +7852,12 @@
           }
         },
         "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld%%"
+          }
+        },
+        "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld%%"
@@ -7021,6 +7909,12 @@
             "state" : "translated",
             "value" : "Favoriete modus"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Modo Favorito"
+          }
         }
       }
     },
@@ -7067,6 +7961,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld u %lld min"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lldh %lldmin"
           }
         }
       }
@@ -7115,6 +8015,12 @@
             "state" : "translated",
             "value" : "Langste spel"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Partida Mais Longa"
+          }
         }
       }
     },
@@ -7161,6 +8067,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld min"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lldmin"
           }
         }
       }
@@ -7209,6 +8121,12 @@
             "state" : "translated",
             "value" : "Meeste rijen"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mais Linhas"
+          }
         }
       }
     },
@@ -7255,6 +8173,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Activiteit"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Atividade"
           }
         }
       }
@@ -7303,6 +8227,12 @@
             "state" : "translated",
             "value" : "Records"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Recordes"
+          }
         }
       }
     },
@@ -7349,6 +8279,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Vaardigheid"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Habilidade"
           }
         }
       }
@@ -7397,6 +8333,12 @@
             "state" : "translated",
             "value" : "Totale speeltijd"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tempo Total de Jogo"
+          }
         }
       }
     },
@@ -7444,6 +8386,12 @@
             "state" : "translated",
             "value" : "Gebruikelijk cijfer"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Nota Típica"
+          }
         }
       }
     },
@@ -7487,6 +8435,12 @@
           }
         },
         "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "—"
+          }
+        },
+        "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "—"
@@ -7538,6 +8492,12 @@
             "state" : "translated",
             "value" : "Strategisch spel"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Jogo Estratégico"
+          }
         }
       }
     },
@@ -7584,6 +8544,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Je strategisch inzicht krijgt een waardering van Beginner tot Meester, op basis van hoe goed je rijen voorbereidt en vooruitdenkt. Let op kansen om met één blok meerdere rijen tegelijk te wissen."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sua habilidade estratégica é avaliada de Iniciante a Mestre, conforme você prepara eliminações de linha e planeja com antecedência. Procure oportunidades de eliminar várias linhas com uma única colocação."
           }
         }
       }
@@ -7632,6 +8598,12 @@
             "state" : "translated",
             "value" : "Strategie"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Estratégia"
+          }
         }
       }
     },
@@ -7678,6 +8650,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tik voor geschiedenis"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Toque para ver o histórico"
           }
         }
       }
@@ -7726,6 +8704,12 @@
             "state" : "translated",
             "value" : "Gebouwd met SwiftUI voor iOS 18.0 en hoger. Geen advertenties. Geen tracking door derden. Geen verkoop van gegevens. Standaard offline te spelen: Game Center van Apple, voor ranglijsten en prestaties, is optioneel."
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desenvolvido com SwiftUI para iOS 18.0 ou posterior. Sem anúncios. Sem rastreamento de terceiros. Sem venda de dados. Você joga offline por padrão — o Game Center da Apple, para classificações e conquistas, é opcional."
+          }
         }
       }
     },
@@ -7772,6 +8756,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Technische details"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Detalhes Técnicos"
           }
         }
       }
@@ -7820,6 +8810,12 @@
             "state" : "translated",
             "value" : "Het speelveld"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O Campo de Jogo"
+          }
         }
       }
     },
@@ -7866,6 +8862,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Je speelveld is een raster van 8×8 met 64 vakjes. Het doel: hele horizontale rijen of verticale kolommen vullen om ze te wissen en punten te scoren. Er liggen al een paar blokken klaar bij de start, zodat het meteen interessant is."
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Seu tabuleiro é uma grade de 8×8 com 64 espaços. Seu objetivo é preencher linhas horizontais ou colunas verticais completas para eliminá-las e ganhar pontos. A grade começa com alguns blocos já colocados ao acaso, para criar desafios interessantes."
           }
         }
       }
@@ -7914,6 +8916,12 @@
             "state" : "translated",
             "value" : "Speeltijd"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tempo de Jogo"
+          }
         }
       }
     },
@@ -7960,6 +8968,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Gebruik hoeken en randen bewust als het speelveld voller wordt"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Use os cantos e as bordas com estratégia quando a grade encher"
           }
         }
       }
@@ -8008,6 +9022,12 @@
             "state" : "translated",
             "value" : "Je efficiëntiecijfer stijgt als je overzichtelijk en doordacht speelt"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Sua nota de eficiência melhora com um jogo organizado e estratégico"
+          }
         }
       }
     },
@@ -8054,6 +9074,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Houd je speelveld overzichtelijk: voorkom verspreide gaten"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Mantenha a grade organizada — evite deixar buracos espalhados"
           }
         }
       }
@@ -8102,6 +9128,12 @@
             "state" : "translated",
             "value" : "Let op zetten waarmee je meerdere rijen tegelijk wist"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Procure oportunidades de eliminar várias linhas com uma só colocação"
+          }
         }
       }
     },
@@ -8148,6 +9180,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bekijk alle drie de blokken voordat je er een plaatst"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Considere os três blocos disponíveis antes de colocar qualquer um"
           }
         }
       }
@@ -8196,6 +9234,12 @@
             "state" : "translated",
             "value" : "Bewaar kleine blokken voor krappe plekken en het laatste zetje"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Guarde os blocos menores para espaços apertados e jogadas finais"
+          }
         }
       }
     },
@@ -8242,6 +9286,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Totaal aantal blokken"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Total de Blocos"
           }
         }
       }
@@ -8290,6 +9340,12 @@
             "state" : "translated",
             "value" : "Ongedaan maken"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Desfazer"
+          }
         }
       }
     },
@@ -8336,6 +9392,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Versie %@"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Versão %@"
           }
         }
       }
@@ -8384,6 +9446,12 @@
             "state" : "translated",
             "value" : "Game Center openen"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Abrir o Game Center"
+          }
         }
       }
     },
@@ -8430,6 +9498,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ranglijst bekijken"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ver Classificação"
           }
         }
       }
@@ -8478,6 +9552,12 @@
             "state" : "translated",
             "value" : "Speelveld bekijken"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ver Tabuleiro"
+          }
         }
       }
     },
@@ -8524,6 +9604,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Toont het speelveld zoals het er aan het einde van het spel bij lag"
+          }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Revela o tabuleiro final para você ver como a partida terminou"
           }
         }
       }
@@ -8572,6 +9658,12 @@
             "state" : "translated",
             "value" : "Overzicht bekijken"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Ver Resumo"
+          }
         }
       }
     },
@@ -8619,6 +9711,12 @@
             "state" : "translated",
             "value" : "Website"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Site"
+          }
         }
       }
     },
@@ -8662,6 +9760,12 @@
           }
         },
         "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "That you are here—that life exists and identity,"
+          }
+        },
+        "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "That you are here—that life exists and identity,"
@@ -8713,6 +9817,12 @@
             "state" : "translated",
             "value" : "That the powerful play goes on, and you may contribute a verse."
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "That the powerful play goes on, and you may contribute a verse."
+          }
         }
       }
     },
@@ -8760,6 +9870,12 @@
             "state" : "translated",
             "value" : "O Me! O Life!"
           }
+        },
+        "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O Me! O Life!"
+          }
         }
       }
     },
@@ -8803,6 +9919,12 @@
           }
         },
         "nl" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1867"
+          }
+        },
+        "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "1867"
