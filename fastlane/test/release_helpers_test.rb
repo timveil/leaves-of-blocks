@@ -29,13 +29,29 @@ module FastlaneCore
 end
 
 # generate_release_notes reaches for AIHelper when ANTHROPIC_API_KEY is set.
-# Stub it absent so the template path runs deterministically, offline, and
-# without spending tokens to assert where a file gets written.
+# Stubbed so the paths through it run deterministically, offline, and without
+# spending tokens to assert which file gets which language.
 module AIHelper
-  def self.available?
-    false
+  class << self
+    attr_accessor :stub_available, :stub_prose, :locales_asked
+
+    def available?
+      stub_available
+    end
+
+    def generate_prose(changelog_section:, version:, locale: nil)
+      locales_asked << locale
+      stub_prose.respond_to?(:call) ? stub_prose.call(locale) : stub_prose
+    end
+
+    def reset!(available: false, prose: nil)
+      self.stub_available = available
+      self.stub_prose = prose
+      self.locales_asked = []
+    end
   end
 end
+AIHelper.reset!
 
 require 'tmpdir'
 require 'fileutils'
@@ -460,6 +476,60 @@ Dir.mktmpdir do |root|
   assert_raises("a declared locale with no metadata directory is a clear error") do
     generate_release_notes(version: '2.0.6', root: root, locales: %w[en-US es-MX])
   end
+end
+
+puts
+puts "release notes are written in each locale's own language"
+
+# Every locale getting the same English prose was the known limitation of the
+# fan-out: correct on the day the listings were created and English forever
+# after. The generator is now asked once per locale, and told which one.
+Dir.mktmpdir do |root|
+  %w[en-US de-DE ja].each { |l| FileUtils.mkdir_p(File.join(root, 'fastlane', 'metadata', l)) }
+  File.write(File.join(root, 'CHANGELOG.md'), CHANGELOG)
+  AIHelper.reset!(available: true, prose: ->(locale) { "notes for #{locale}" })
+
+  generate_release_notes(version: '2.0.6', root: root, locales: %w[en-US de-DE ja])
+
+  assert_equal(%w[en-US de-DE ja], AIHelper.locales_asked, "each locale is asked for separately")
+  %w[en-US de-DE ja].each do |locale|
+    written = File.read(File.join(root, 'fastlane', 'metadata', locale, 'release_notes.txt'))
+    assert_equal("notes for #{locale}", written, "#{locale} gets its own prose")
+  end
+end
+
+# Without a key the template path runs, and the template is English. Writing
+# English into every listing is the deliberate answer rather than an accident:
+# notes in the wrong language still describe the right version, where stale
+# notes describe a release the user does not have.
+Dir.mktmpdir do |root|
+  %w[en-US de-DE].each { |l| FileUtils.mkdir_p(File.join(root, 'fastlane', 'metadata', l)) }
+  File.write(File.join(root, 'CHANGELOG.md'), CHANGELOG)
+  AIHelper.reset!(available: false)
+
+  generate_release_notes(version: '2.0.6', root: root, locales: %w[en-US de-DE])
+
+  english = File.read(File.join(root, 'fastlane', 'metadata', 'en-US', 'release_notes.txt'))
+  german  = File.read(File.join(root, 'fastlane', 'metadata', 'de-DE', 'release_notes.txt'))
+  assert_equal([], AIHelper.locales_asked, "no generation is attempted without a key")
+  assert_equal(english, german, "every locale gets the template when there is no key")
+  assert_equal(true, english.downcase.include?('undo and hint assists'), "the template still comes from the changelog")
+end
+
+# One locale failing must not ship a mix of languages, and must not leave a
+# listing on notes for an older version. Consistency over partial success:
+# everything falls back together.
+Dir.mktmpdir do |root|
+  %w[en-US de-DE ja].each { |l| FileUtils.mkdir_p(File.join(root, 'fastlane', 'metadata', l)) }
+  File.write(File.join(root, 'CHANGELOG.md'), CHANGELOG)
+  AIHelper.reset!(available: true, prose: ->(locale) { locale == 'de-DE' ? nil : "notes for #{locale}" })
+
+  generate_release_notes(version: '2.0.6', root: root, locales: %w[en-US de-DE ja])
+
+  written = %w[en-US de-DE ja].map { |l| File.read(File.join(root, 'fastlane', 'metadata', l, 'release_notes.txt')) }
+  assert_equal(1, written.uniq.length, "a failure for one locale falls back for all of them")
+  assert_equal(false, written.first.include?('notes for'), "no locale keeps its AI prose when another failed")
+  assert_equal(true, written.first.downcase.include?('undo and hint assists'), "the fallback is the template")
 end
 
 # A missing changelog is reported, not raised: the release can still proceed

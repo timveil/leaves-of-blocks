@@ -84,14 +84,20 @@ module AIHelper
       nil
     end
 
-    # Generate engaging App Store release notes prose from changelog
+    # Generate engaging App Store release notes prose from changelog.
+    #
+    # `locale` is an App Store locale ("de-DE", "ja"), and the notes come back
+    # in that locale's language. It is passed through to the prompt rather than
+    # resolved to a language name here, so adding a locale to .locales needs no
+    # matching entry in a table somewhere -- the model reads the locale code.
+    #
     # Returns: String (prose text) or nil on failure
-    def generate_prose(changelog_section:, version:)
+    def generate_prose(changelog_section:, version:, locale: nil)
       return nil unless available?
 
-      prompt = build_prose_prompt(changelog_section, version)
+      prompt = build_prose_prompt(changelog_section, version, locale)
       response = call_claude_api(prompt, MAX_TOKENS_RELEASE_NOTES)
-      parse_prose_response(response)
+      parse_prose_response(response, locale)
     rescue StandardError => e
       # See FALLBACK note in enhance_changelog above.
       AIHelper.ui_important("FALLBACK: AI prose generation failed (#{e.message}) — using template-based release notes")
@@ -186,11 +192,24 @@ module AIHelper
       PROMPT
     end
 
-    def build_prose_prompt(changelog_section, version)
+    def build_prose_prompt(changelog_section, version, locale = nil)
+      # Stated twice, at the top and in the constraints, because the rest of
+      # the prompt and the changelog it quotes are both English -- a single
+      # instruction competes with everything around it.
+      language_instruction =
+        if locale.nil? || locale.start_with?('en')
+          ''
+        else
+          "\nWrite the release notes in the language of the App Store locale #{locale}, " \
+            "as a native speaker in that territory would read them. Do not include an " \
+            "English version alongside.\n"
+        end
+
       <<~PROMPT
         #{APP_CONTEXT}
 
         You are writing App Store release notes for version #{version} of Leaves of Blocks.
+        #{language_instruction}
 
         Here is the structured changelog for this version:
         #{changelog_section}
@@ -201,7 +220,7 @@ module AIHelper
         1. Start with a warm, brief opening (1-2 sentences) that sets the tone
         2. Naturally mention the most important changes in flowing prose
         3. Use conversational, accessible language that any user can understand
-        4. End with exactly: "Thank you for playing Leaves of Blocks!"
+        4. End with a warm thank-you for playing Leaves of Blocks, in the language you are writing in
 
         CRITICAL CONSTRAINTS:
         - MUST be under 3800 characters total (App Store limit is 4000)
@@ -212,6 +231,7 @@ module AIHelper
         - If there are only minor fixes, keep it brief (2-3 sentences total)
 
         Return ONLY the release notes text, ready for App Store submission. No introduction or explanation.
+        #{language_instruction}
       PROMPT
     end
 
@@ -242,7 +262,7 @@ module AIHelper
       nil
     end
 
-    def parse_prose_response(response)
+    def parse_prose_response(response, locale = nil)
       content = response.dig('content', 0, 'text')
       return nil unless content
 
@@ -256,15 +276,25 @@ module AIHelper
       # Enforce character limit with intelligent truncation
       if prose.length > 3800
         truncated = prose[0..3700]
-        # Find last complete sentence
-        last_period = truncated.rindex(/[.!?]/)
+        # Find last complete sentence. The CJK stops matter now that notes are
+        # written per locale: Japanese ends a sentence with U+3002, so a
+        # Latin-only class would find no boundary in Japanese prose and cut it
+        # mid-sentence instead of at one.
+        last_period = truncated.rindex(/[.!?。！？]/)
         if last_period && last_period > 3000
           prose = truncated[0..last_period]
         else
           prose = truncated
         end
-        # Ensure closing
-        unless prose.include?("Thank you for playing")
+        # Ensure closing, in English only.
+        #
+        # The prompt asks for a closing in whichever language the notes are
+        # written in, so this is the safety net for when the model drops it
+        # under truncation. Appending the English sentence to German or
+        # Japanese prose would be worse than having no closing at all, so a
+        # translated listing simply goes without.
+        english = locale.nil? || locale.start_with?('en')
+        if english && !prose.include?("Thank you for playing")
           prose += "\n\nThank you for playing Leaves of Blocks!"
         end
       end
