@@ -8,6 +8,14 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+
+### Changed
+
+### Fixed
+
+## [2.1.0] - 2026-09-07
+
+### Added
 - Play in your own language — the game and its App Store listing are now available in English, Spanish, German, Japanese, French, Dutch, Korean, Brazilian Portuguese and Chinese (Traditional and Simplified)
 
 ### Changed
@@ -276,7 +284,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - COPPA compliant with no data collection
 - iPhone-optimized experience with portrait orientation
 
-[Unreleased]: https://github.com/timveil/leaves-of-blocks/compare/v2.0.7...HEAD
+[Unreleased]: https://github.com/timveil/leaves-of-blocks/compare/v2.1.0...HEAD
+[2.1.0]: https://github.com/timveil/leaves-of-blocks/compare/v2.0.7...v2.1.0
 [2.0.7]: https://github.com/timveil/leaves-of-blocks/compare/v2.0.6...v2.0.7
 [2.0.6]: https://github.com/timveil/leaves-of-blocks/compare/v2.0.5...v2.0.6
 [2.0.5]: https://github.com/timveil/leaves-of-blocks/compare/v2.0.3...v2.0.5
