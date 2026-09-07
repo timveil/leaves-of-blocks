@@ -3,9 +3,9 @@ Born from a love of pure puzzle gameplay and inspired by Walt Whitman's timeless
 Like Whitman's child who "went forth every day" and became part of all he encountered, each puzzle session invites you to absorb strategy, develop patience, and find meaning in the simple act of thoughtful placement. Every block becomes part of your growing mastery.
 
 THE POWERFUL PLAY CONTINUES
-• Drag and drop 21 unique block shapes with precision
+• Drag and drop more than twenty unique block shapes with precision
 • Clear lines horizontally and vertically to score and create space
-• Choose from Easy, Moderate, or Hard difficulty modes
+• Choose from Gentle, Bold, or Wild difficulty modes
 • Enjoy intelligent generation ensuring every puzzle is solvable
 • Experience smooth animations and satisfying haptic feedback
 
@@ -16,7 +16,7 @@ WHAT GOOD AMID THESE?
 In answer to life's overwhelming questions, sometimes the good is found in simple moments of focus and accomplishment. This game offers exactly that: a refuge where your strategic thinking can flourish without the bombardment of ads or data harvesting.
 
 CONTRIBUTE YOUR VERSE
-• Score 10 points per block, 100 per line cleared
+• Score 10 points per square placed, 100 per line cleared
 • Earn combo bonuses for clearing multiple lines at once
 • Plan strategically with block previews and adaptive difficulty
 • Challenge yourself with advanced performance metrics

@@ -16,7 +16,7 @@ Sigue tu progreso con estadísticas detalladas: eficiencia, calificaciones de de
 Ante las preguntas que abruman, a veces lo bueno está en los momentos simples de concentración y logro. Este juego ofrece exactamente eso: un refugio donde tu pensamiento estratégico florece sin bombardeo de anuncios ni recolección de datos.
 
 CONTRIBUYE CON TU VERSO
-• Suma 10 puntos por bloque y 100 por línea completada
+• Suma 10 puntos por cada cuadro colocado y 100 por línea completada
 • Gana bonificaciones al eliminar varias líneas a la vez
 • Planea con anticipación gracias a la vista previa de bloques y la dificultad adaptativa
 • Ponte a prueba con métricas de desempeño avanzadas
