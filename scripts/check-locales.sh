@@ -303,12 +303,21 @@ check_metadata() {
 # on an empty tree and fails exactly when a locale was added and the set was
 # never regenerated.
 check_screenshots() {
-  local before="$status" locale directory name present=()
+  local before="$status" locale shot name present=()
 
+  # A locale counts as present when it holds a screenshot, not when it holds a
+  # directory. An interrupted capture leaves the folder behind with nothing in
+  # it, and deliver uploads files -- so counting the container would stay green
+  # while that locale shipped nothing, which is this check's whole subject.
+  #
+  # The glob takes direct children only, which also excludes <locale>/framed/:
+  # frameit's output is not what deliver uploads, and verify_uploaded_screenshots
+  # already skips those paths for the same reason.
   if [ -d "$SCREENSHOTS_DIR" ]; then
-    for directory in "$SCREENSHOTS_DIR"/*/; do
-      [ -d "$directory" ] || continue
-      present+=("$(basename "$directory")")
+    for shot in "$SCREENSHOTS_DIR"/*/*.png; do
+      [ -f "$shot" ] || continue
+      name="$(basename "$(dirname "$shot")")"
+      contains "$name" ${present[@]+"${present[@]}"} || present+=("$name")
     done
   fi
 

@@ -257,6 +257,46 @@ write_screenshots "$TMP/shots_inapp" en-US
 run_fixture "$TMP/shots_inapp" >/dev/null 2>&1; code=$?
 if [ "$code" -eq 0 ]; then ok "an in-app-only language demands no screenshots"; else bad "in-app-only skips screenshots" "exit $code: $(fixture_problems "$TMP/shots_inapp" | head -2)"; fi
 
+# A directory is not a screenshot. An interrupted capture leaves the folder
+# behind with nothing in it, and deliver uploads files -- so treating the
+# container as the content would stay green while that locale shipped nothing,
+# which is the exact failure this check exists to prevent.
+make_fixture "$TMP/shots_empty_dir"; write_manifest "$TMP/shots_empty_dir" "en-US	en" "de-DE	de"
+write_pbxproj "$TMP/shots_empty_dir" en de Base
+write_catalog "$TMP/shots_empty_dir" "game_over:en,de"
+write_constants "$TMP/shots_empty_dir" en-US de-DE
+write_metadata "$TMP/shots_empty_dir" de-DE
+write_screenshots "$TMP/shots_empty_dir" en-US
+mkdir -p "$TMP/shots_empty_dir/fastlane/screenshots/de-DE"
+run_fixture "$TMP/shots_empty_dir" >/dev/null 2>&1; code=$?
+if [ "$code" -eq 1 ]; then ok "an empty locale directory is not mistaken for screenshots"; else bad "empty dir caught" "want exit 1, got $code"; fi
+
+# frameit writes its output to <locale>/framed/, and verify_uploaded_screenshots
+# already excludes those paths -- they are not what deliver uploads, so they
+# cannot stand in for a locale's set either.
+make_fixture "$TMP/shots_framed"; write_manifest "$TMP/shots_framed" "en-US	en" "de-DE	de"
+write_pbxproj "$TMP/shots_framed" en de Base
+write_catalog "$TMP/shots_framed" "game_over:en,de"
+write_constants "$TMP/shots_framed" en-US de-DE
+write_metadata "$TMP/shots_framed" de-DE
+write_screenshots "$TMP/shots_framed" en-US
+mkdir -p "$TMP/shots_framed/fastlane/screenshots/de-DE/framed"
+printf 'not-a-real-png\n' > "$TMP/shots_framed/fastlane/screenshots/de-DE/framed/01_home.png"
+run_fixture "$TMP/shots_framed" >/dev/null 2>&1; code=$?
+if [ "$code" -eq 1 ]; then ok "framed output does not stand in for a locale's screenshots"; else bad "framed excluded" "want exit 1, got $code"; fi
+
+# And the conditional gate uses the same definition: a tree of empty
+# directories has produced no screenshots, so it is the quiet case, not a
+# hundred failures.
+make_fixture "$TMP/shots_all_empty"; write_manifest "$TMP/shots_all_empty" "en-US	en" "de-DE	de"
+write_pbxproj "$TMP/shots_all_empty" en de Base
+write_catalog "$TMP/shots_all_empty" "game_over:en,de"
+write_constants "$TMP/shots_all_empty" en-US de-DE
+write_metadata "$TMP/shots_all_empty" de-DE
+mkdir -p "$TMP/shots_all_empty/fastlane/screenshots/en-US" "$TMP/shots_all_empty/fastlane/screenshots/de-DE"
+run_fixture "$TMP/shots_all_empty" >/dev/null 2>&1; code=$?
+if [ "$code" -eq 0 ]; then ok "directories with no screenshots in them are the quiet case"; else bad "empty tree quiet" "exit $code: $(fixture_problems "$TMP/shots_all_empty" | head -2)"; fi
+
 echo
 echo "hyphenated regions are quoted by Xcode"
 
