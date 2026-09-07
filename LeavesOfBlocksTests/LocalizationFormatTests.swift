@@ -13,17 +13,29 @@ import Testing
 // MARK: - Helpers
 
 /// One format specifier, reduced to what `String(format:)` will do with it:
-/// which argument it consumes and whether that argument must be an object.
+/// which argument it consumes, and how.
 private struct Specifier: Hashable, CustomStringConvertible {
     let argument: Int
-    let wantsObject: Bool
 
-    var description: String { "%\(argument)$\(wantsObject ? "@" : "d")" }
+    /// Length modifier plus conversion character, e.g. `lld`, `d`, `f`, `@`.
+    ///
+    /// The pair together decides how the argument is pulled off the variadic
+    /// list, so both halves have to match: `%lld` against `%d` reads a
+    /// different width, and `%f` against `%d` reads a different register class
+    /// entirely. Collapsing these to "object or not" would let a translation
+    /// swap them and still pass, which is the case this suite exists to catch.
+    ///
+    /// Flags, width and precision are deliberately not compared — `%.2f`
+    /// against `%f` renders differently but consumes the same argument, and a
+    /// translation is entitled to that choice.
+    let conversion: String
+
+    var description: String { "%\(argument)$\(conversion)" }
 }
 
 /// `%[argnum$][flags][width][.precision][length]conversion`
 private let specifierPattern = try! NSRegularExpression(
-    pattern: #"%(?:(\d+)\$)?[-+ #0]*[\d*]*(?:\.\d+)?(?:hh|h|ll|l|q|L|z|t|j)?([@dDiuUxXoOfeEgGcCsSpaAF%])"#
+    pattern: #"%(?:(\d+)\$)?[-+ #0]*[\d*]*(?:\.\d+)?(hh|h|ll|l|q|L|z|t|j)?([@dDiuUxXoOfeEgGcCsSpaAF%])"#
 )
 
 /// The specifiers a format string will consume, in argument order.
@@ -38,7 +50,7 @@ private func specifiers(in format: String) -> [Specifier] {
     var implicit = 0
 
     for match in specifierPattern.matches(in: format, range: range) {
-        guard let conversion = Range(match.range(at: 2), in: format).map({ String(format[$0]) }) else { continue }
+        guard let conversion = Range(match.range(at: 3), in: format).map({ String(format[$0]) }) else { continue }
         if conversion == "%" { continue }  // "%%" is an escaped percent, not an argument
 
         let position: Int
@@ -49,7 +61,8 @@ private func specifiers(in format: String) -> [Specifier] {
             position = implicit
         }
 
-        found.append(Specifier(argument: position, wantsObject: "@sSpC".contains(conversion)))
+        let length = Range(match.range(at: 2), in: format).map { String(format[$0]) } ?? ""
+        found.append(Specifier(argument: position, conversion: length + conversion))
     }
 
     return found.sorted { $0.argument < $1.argument }
@@ -138,11 +151,29 @@ struct LocalizationFormatTests {
 
     @Test("The specifier parser reads argument order, not appearance order")
     func specifierParsingHandlesPositionalForms() {
-        // Given a format string that reorders its arguments positionally
-        // When its specifiers are read
+        // Given format strings that reorder their arguments positionally
+        // When their specifiers are read
         // Then they come back in argument order, matching the unordered form
         #expect(specifiers(in: "%d-cell %@ block") == specifiers(in: "Bloque %2$@ de %1$d celdas"))
         #expect(specifiers(in: "%d%%") == specifiers(in: "%d por ciento"))
         #expect(specifiers(in: "%@ %@") != specifiers(in: "%@"))
+    }
+
+    // Width and register class are what make a mismatch dangerous rather than
+    // merely wrong: %lld against %d reads a different number of bytes, and %f
+    // against %d reads from a different register class. The catalog already
+    // carries both %d and %lld strings, so a translation swapping them is a
+    // reachable mistake and has to fail here.
+    @Test("Conversions differing only in width or register class are not equal")
+    func specifierComparisonIsNotCollapsedToObjectOrNot() {
+        // Given two format strings whose arguments are consumed differently
+        // When their specifiers are compared
+        // Then they do not match
+        #expect(specifiers(in: "%lld points") != specifiers(in: "%d points"))
+        #expect(specifiers(in: "%d items") != specifiers(in: "%f items"))
+        #expect(specifiers(in: "%@ name") != specifiers(in: "%s name"))
+
+        // And an identical conversion still matches, reordered or not
+        #expect(specifiers(in: "%lld of %lld") == specifiers(in: "%2$lld de %1$lld"))
     }
 }
