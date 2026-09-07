@@ -28,6 +28,15 @@ module FastlaneCore
   end
 end
 
+# generate_release_notes reaches for AIHelper when ANTHROPIC_API_KEY is set.
+# Stub it absent so the template path runs deterministically, offline, and
+# without spending tokens to assert where a file gets written.
+module AIHelper
+  def self.available?
+    false
+  end
+end
+
 require 'tmpdir'
 require 'fileutils'
 require 'open3'
@@ -408,6 +417,58 @@ end
 
 # The real thing, as a sanity check that the scan agrees with reality.
 assert_equal(true, executable_in_path?('ruby'), "ruby is found on the real PATH")
+
+puts
+puts "shipped_store_locales"
+
+REPO_ROOT = File.expand_path('../..', __dir__)
+
+# The manifest is the single declaration of what ships (conventions/
+# shared-rule-single-source.md); this reads it through the same script that
+# CI checks the other registries with, rather than parsing it a second time.
+locales = shipped_store_locales(root: REPO_ROOT)
+assert_equal(true, locales.include?('en-US'), "the English listing is declared")
+assert_equal(true, locales.include?('es-MX'), "the Spanish listing is declared")
+assert_equal(locales, locales.uniq, "no locale is listed twice")
+
+puts
+puts "generate_release_notes writes every shipped locale"
+
+# The whole point: a release used to update en-US only, so the moment a second
+# listing existed its notes would freeze at whatever shipped that day while
+# every later release quietly passed it by.
+Dir.mktmpdir do |root|
+  %w[en-US es-MX].each { |l| FileUtils.mkdir_p(File.join(root, 'fastlane', 'metadata', l)) }
+  File.write(File.join(root, 'CHANGELOG.md'), CHANGELOG)
+
+  prose = generate_release_notes(version: '2.0.6', root: root, locales: %w[en-US es-MX])
+
+  english = File.read(File.join(root, 'fastlane', 'metadata', 'en-US', 'release_notes.txt'))
+  spanish = File.read(File.join(root, 'fastlane', 'metadata', 'es-MX', 'release_notes.txt'))
+
+  assert_equal(true, english.downcase.include?('undo and hint assists'), "the notes come from the changelog section")
+  assert_equal(english, spanish, "every shipped locale gets the notes")
+  assert_equal(prose, english, "the returned prose is what was written")
+end
+
+# A locale declared but not yet created would otherwise crash mid-release with
+# Errno::ENOENT, after the archive and partway through deliver.
+Dir.mktmpdir do |root|
+  FileUtils.mkdir_p(File.join(root, 'fastlane', 'metadata', 'en-US'))
+  File.write(File.join(root, 'CHANGELOG.md'), CHANGELOG)
+
+  assert_raises("a declared locale with no metadata directory is a clear error") do
+    generate_release_notes(version: '2.0.6', root: root, locales: %w[en-US es-MX])
+  end
+end
+
+# A missing changelog is reported, not raised: the release can still proceed
+# with whatever notes are already in place.
+Dir.mktmpdir do |root|
+  FileUtils.mkdir_p(File.join(root, 'fastlane', 'metadata', 'en-US'))
+  assert_equal(nil, generate_release_notes(version: '2.0.6', root: root, locales: %w[en-US]),
+               "a missing changelog returns nil rather than raising")
+end
 
 puts
 if $fail.zero?
