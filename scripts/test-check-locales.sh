@@ -128,11 +128,27 @@ echo "against the real repository"
 "$CHECK" >/dev/null 2>&1; code=$?
 if [ "$code" -eq 0 ]; then ok "the checked-in registries agree"; else bad "registries agree" "exit $code: $("$CHECK" 2>&1 >/dev/null | head -3)"; fi
 
-out=$("$CHECK" --store 2>&1)
-if [ "$out" = "en-US" ]; then ok "--store prints the declared store locales"; else bad "--store output" "got: $out"; fi
+# Compared against the manifest rather than against literals: a test that
+# hard-codes today's locales has to be edited every time one is added, and it
+# fails the PR that adds it rather than the mistake it was written to catch
+# (conventions/invariants-not-counts.md). The awk here is a deliberately
+# independent parse -- if it and the script ever disagree, one of them is wrong.
+expected_store="$(awk '$0 !~ /^[[:space:]]*#/ && NF == 2 && $1 != "-" { print $1 }' "$SCRIPT_DIR/../.locales")"
+expected_app="$(awk '$0 !~ /^[[:space:]]*#/ && NF == 2 && $2 != "-" { print $2 }' "$SCRIPT_DIR/../.locales")"
 
-out=$("$CHECK" --app 2>&1 | tr '\n' ' ')
-if [ "$out" = "en es " ]; then ok "--app prints the declared app languages"; else bad "--app output" "got: $out"; fi
+out=$("$CHECK" --store 2>&1)
+if [ "$out" = "$expected_store" ]; then ok "--store prints the store column of .locales"; else bad "--store output" "want: $expected_store, got: $out"; fi
+
+out=$("$CHECK" --app 2>&1)
+if [ "$out" = "$expected_app" ]; then ok "--app prints the app column of .locales"; else bad "--app output" "want: $expected_app, got: $out"; fi
+
+# Both columns carry something today, so the comparisons above are not
+# vacuously comparing empty strings.
+if [ -n "$expected_store" ] && [ -n "$expected_app" ]; then
+  ok "the manifest declares locales on both sides"
+else
+  bad "manifest declares both sides" "store: '$expected_store', app: '$expected_app'"
+fi
 
 echo
 echo "argument handling"
