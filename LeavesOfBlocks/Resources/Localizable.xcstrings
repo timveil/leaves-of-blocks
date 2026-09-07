@@ -71,6 +71,12 @@
             "state" : "translated",
             "value" : "Sobre"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "關於"
+          }
         }
       }
     },
@@ -123,6 +129,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sobre"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "關於"
           }
         }
       }
@@ -177,6 +189,12 @@
             "state" : "translated",
             "value" : "Geração Inteligente de Blocos"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "智慧方塊生成"
+          }
         }
       }
     },
@@ -229,6 +247,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "O jogo analisa sua grade e ajusta os blocos que você recebe para manter o desafio e evitar situações impossíveis. Quando você está em dificuldade, ele oferece formas mais úteis automaticamente."
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "遊戲會分析你的方格狀況，調整發給你的方塊，在維持挑戰性的同時避免出現無解的局面。當你陷入苦戰時，系統會自動提供更好用的形狀。"
           }
         }
       }
@@ -283,6 +307,12 @@
             "state" : "translated",
             "value" : "Recursos Avançados"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "進階功能"
+          }
         }
       }
     },
@@ -335,6 +365,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "O Leaves of Blocks tem sistemas sofisticados que se adaptam ao seu estilo de jogo e ajudam você a melhorar com o tempo."
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leaves of Blocks 具備精巧的系統，會配合你的遊玩風格調整，並幫助你逐步進步。"
           }
         }
       }
@@ -389,6 +425,12 @@
             "state" : "translated",
             "value" : "Todos os dados do jogo foram redefinidos com sucesso."
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "所有遊戲資料都已成功重設。"
+          }
         }
       }
     },
@@ -438,6 +480,12 @@
           }
         },
         "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Answer."
+          }
+        },
+        "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Answer."
@@ -495,6 +543,12 @@
             "state" : "translated",
             "value" : "Ajudas"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "輔助功能"
+          }
         }
       }
     },
@@ -547,6 +601,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Auxílios para quando você estiver em apuros. Desfazer e Dica podem ser usados uma vez por partida:"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "在你陷入困境時派上用場。還原與提示每局各可使用一次："
           }
         }
       }
@@ -601,6 +661,12 @@
             "state" : "translated",
             "value" : "Desfazer: volta atrás na sua última colocação de bloco."
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "還原：收回你上一次放置的方塊。"
+          }
         }
       }
     },
@@ -653,6 +719,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Dica: destaca uma jogada sugerida no tabuleiro."
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "提示：在棋盤上標出一步建議的走法。"
           }
         }
       }
@@ -707,6 +779,12 @@
             "state" : "translated",
             "value" : "Ver Tabuleiro: quando a partida termina, revela o tabuleiro final para você ver como ela acabou."
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "查看棋盤：遊戲結束時，顯示最終棋盤，讓你看看這局是怎麼收尾的。"
+          }
         }
       }
     },
@@ -759,6 +837,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pontuação Média"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "平均分數"
           }
         }
       }
@@ -813,6 +897,12 @@
             "state" : "translated",
             "value" : "Bônus de limpar área"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "區域消除道具"
+          }
         }
       }
     },
@@ -865,6 +955,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%d blocos disponíveis"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "尚有 %d 個方塊"
           }
         }
       }
@@ -919,6 +1015,12 @@
             "state" : "translated",
             "value" : "bloco %2$@ de %1$d casas"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$d 格的%2$@方塊"
+          }
         }
       }
     },
@@ -971,6 +1073,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "azul"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "藍色"
           }
         }
       }
@@ -1025,6 +1133,12 @@
             "state" : "translated",
             "value" : "verde"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "綠色"
+          }
         }
       }
     },
@@ -1077,6 +1191,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "laranja"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "橘色"
           }
         }
       }
@@ -1131,6 +1251,12 @@
             "state" : "translated",
             "value" : "rosa"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "粉紅色"
+          }
         }
       }
     },
@@ -1183,6 +1309,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "roxo"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "紫色"
           }
         }
       }
@@ -1237,6 +1369,12 @@
             "state" : "translated",
             "value" : "vermelho"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "紅色"
+          }
         }
       }
     },
@@ -1289,6 +1427,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "amarelo"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "黃色"
           }
         }
       }
@@ -1343,6 +1487,12 @@
             "state" : "translated",
             "value" : "Bônus de limpar coluna"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "直欄消除道具"
+          }
         }
       }
     },
@@ -1395,6 +1545,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@, %d linhas eliminadas, %d pontos de bônus"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@，消除 %d 排，獲得 %d 分獎勵"
           }
         }
       }
@@ -1449,6 +1605,12 @@
             "state" : "translated",
             "value" : "Deslize para cima ou para baixo para mudar a dificuldade"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "上下滑動以變更難度"
+          }
         }
       }
     },
@@ -1501,6 +1663,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Dificuldade"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "難度"
           }
         }
       }
@@ -1555,6 +1723,12 @@
             "state" : "translated",
             "value" : "Grade do jogo, 8 por 8"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "遊戲方格，8 乘 8"
+          }
         }
       }
     },
@@ -1607,6 +1781,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Dica, uma disponível"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "提示，尚有一次"
           }
         }
       }
@@ -1661,6 +1841,12 @@
             "state" : "translated",
             "value" : "Dica, já usada"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "提示，已使用"
+          }
         }
       }
     },
@@ -1713,6 +1899,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bônus de limpar linha"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "橫列消除道具"
           }
         }
       }
@@ -1767,6 +1959,12 @@
             "state" : "translated",
             "value" : "Pontuação %@, %@ linhas eliminadas"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "分數 %@，已消除 %@ 排"
+          }
         }
       }
     },
@@ -1819,6 +2017,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Desfazer, um disponível"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "還原，尚有一次"
           }
         }
       }
@@ -1873,6 +2077,12 @@
             "state" : "translated",
             "value" : "Desfazer, já usado"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "還原，已使用"
+          }
         }
       }
     },
@@ -1925,6 +2135,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Recorde Absoluto"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "歷來最佳"
           }
         }
       }
@@ -1979,6 +2195,12 @@
             "state" : "translated",
             "value" : "Melhor Pontuação"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最佳分數"
+          }
         }
       }
     },
@@ -2031,6 +2253,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Blocos Colocados"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已放置方塊"
           }
         }
       }
@@ -2085,6 +2313,12 @@
             "state" : "translated",
             "value" : "Cancelar"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "取消"
+          }
         }
       }
     },
@@ -2137,6 +2371,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Continuar Partida"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "繼續遊戲"
           }
         }
       }
@@ -2191,6 +2431,12 @@
             "state" : "translated",
             "value" : "Pontuação: %lld"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "分數：%lld"
+          }
         }
       }
     },
@@ -2243,6 +2489,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Descartar"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "捨棄"
           }
         }
       }
@@ -2297,6 +2549,12 @@
             "state" : "translated",
             "value" : "Sua partida atual será descartada e não poderá ser recuperada."
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "你目前這一局將被捨棄，且無法復原。"
+          }
         }
       }
     },
@@ -2349,6 +2607,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Começar uma nova partida?"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "要開始新遊戲嗎？"
           }
         }
       }
@@ -2403,6 +2667,12 @@
             "state" : "translated",
             "value" : "Histórico de Partidas"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "遊戲紀錄"
+          }
         }
       }
     },
@@ -2455,6 +2725,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Jogar"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "開始遊戲"
           }
         }
       }
@@ -2509,6 +2785,12 @@
             "state" : "translated",
             "value" : "Nenhuma partida ainda — termine uma para vê-la aqui."
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "還沒有紀錄——完成一局就會顯示在這裡。"
+          }
         }
       }
     },
@@ -2561,6 +2843,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Estatísticas"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "統計"
           }
         }
       }
@@ -2615,6 +2903,12 @@
             "state" : "translated",
             "value" : "Retomar Partida"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "繼續遊戲"
+          }
         }
       }
     },
@@ -2667,6 +2961,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Alto"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "高"
           }
         }
       }
@@ -2721,6 +3021,12 @@
             "state" : "translated",
             "value" : "Baixo"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "低"
+          }
         }
       }
     },
@@ -2773,6 +3079,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Médio"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "中"
           }
         }
       }
@@ -2827,6 +3139,12 @@
             "state" : "translated",
             "value" : "Apagar Todo o Histórico"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "清除所有遊戲紀錄"
+          }
         }
       }
     },
@@ -2879,6 +3197,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Apagar Histórico"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "清除紀錄"
           }
         }
       }
@@ -2933,6 +3257,12 @@
             "state" : "translated",
             "value" : "Isso vai apagar permanentemente todas as suas partidas salvas e estatísticas. Esta ação não pode ser desfeita."
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "這會永久刪除你所有已儲存的遊戲與統計資料。此動作無法復原。"
+          }
         }
       }
     },
@@ -2985,6 +3315,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Eliminando Linhas"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "消除整排"
           }
         }
       }
@@ -3039,6 +3375,12 @@
             "state" : "translated",
             "value" : "Quando você preenche completamente uma linha horizontal ou uma coluna vertical, ela desaparece e você ganha pontos! Elimine várias linhas de uma vez para ganhar pontos de bônus. Quanto mais linhas você eliminar ao mesmo tempo, maior o seu bônus de combo."
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "當你完全填滿一整條橫列或一整條直欄，它就會消失，你也會得分！一次消除多排還能獲得獎勵分數。同時消除的排數愈多，連消獎勵就愈高。"
+          }
         }
       }
     },
@@ -3091,6 +3433,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "COMBO"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "連消"
           }
         }
       }
@@ -3145,6 +3493,12 @@
             "state" : "translated",
             "value" : "COMBO!"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "連消！"
+          }
         }
       }
     },
@@ -3194,6 +3548,12 @@
           }
         },
         "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "leavesofblocks.com"
+          }
+        },
+        "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "leavesofblocks.com"
@@ -3251,6 +3611,12 @@
             "state" : "translated",
             "value" : "Criador"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "作者"
+          }
         }
       }
     },
@@ -3304,6 +3670,12 @@
             "state" : "translated",
             "value" : ", engenheiro de software e pai, que acredita que um jogo deve dar um respiro e não um ataque de nervos."
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "，一位軟體工程師，也是一位爸爸，相信遊戲該帶來喘息，而不是火氣。"
+          }
         }
       }
     },
@@ -3353,6 +3725,12 @@
           }
         },
         "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tim Veil"
+          }
+        },
+        "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tim Veil"
@@ -3410,6 +3788,12 @@
             "state" : "translated",
             "value" : "Dedicatória"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "獻詞"
+          }
         }
       }
     },
@@ -3462,6 +3846,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Para Emma, Annie e Grace. Que este jogo sirva de distração momentânea das dificuldades da vida, grandes e pequenas."
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "獻給 Emma、Annie 與 Grace。願這款遊戲能成為生活大小難處中片刻的轉移。"
           }
         }
       }
@@ -3516,6 +3906,12 @@
             "state" : "translated",
             "value" : "Desenvolvido por "
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "開發者："
+          }
         }
       }
     },
@@ -3568,6 +3964,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Dificuldade"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "難度"
           }
         }
       }
@@ -3622,6 +4024,12 @@
             "state" : "translated",
             "value" : "Ousado"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "大膽"
+          }
         }
       }
     },
@@ -3674,6 +4082,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "O modo Suave é perfeito para quem está começando — mais blocos pequenos e fáceis de encaixar"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "溫和模式最適合新手——小而好放的方塊更多"
           }
         }
       }
@@ -3728,6 +4142,12 @@
             "state" : "translated",
             "value" : "Suave"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "溫和"
+          }
         }
       }
     },
@@ -3780,6 +4200,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "O modo Selvagem é para jogadores experientes — espere mais blocos grandes e complexos, que exigem pensar com estratégia"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "狂野模式適合老手——會出現更多又大又複雜、需要動腦布局的方塊"
           }
         }
       }
@@ -3834,6 +4260,12 @@
             "state" : "translated",
             "value" : "Dificuldade"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "難度"
+          }
         }
       }
     },
@@ -3886,6 +4318,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "O modo Ousado oferece um desafio equilibrado, com uma boa mistura de blocos pequenos e grandes"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "大膽模式提供均衡的挑戰，大小方塊搭配得宜"
           }
         }
       }
@@ -3940,6 +4378,12 @@
             "state" : "translated",
             "value" : "Selvagem"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "狂野"
+          }
         }
       }
     },
@@ -3992,6 +4436,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Como Jogar"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "玩法"
           }
         }
       }
@@ -4046,6 +4496,12 @@
             "state" : "translated",
             "value" : "Você verá até 3 formas de bloco na parte de baixo da tela. Basta arrastar qualquer forma até um lugar da grade onde ela caiba por completo. Os blocos não podem se sobrepor às peças já colocadas nem passar das bordas da grade. Quando você usar os 3 blocos, recebe 3 novos automaticamente."
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "畫面下方最多會出現 3 個方塊形狀。把任一形狀拖到方格中能完整容納它的位置即可。方塊不能與既有的棋子重疊，也不能超出方格邊界。3 個方塊都用完後，會自動補上 3 個新的。"
+          }
         }
       }
     },
@@ -4098,6 +4554,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Eficiência"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "效率"
           }
         }
       }
@@ -4152,6 +4614,12 @@
             "state" : "translated",
             "value" : "Acompanhamento de Desempenho"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "表現追蹤"
+          }
         }
       }
     },
@@ -4204,6 +4672,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "O jogo acompanha com que eficiência você usa o espaço da grade e dá notas de A+ a D. A eficiência sobe quando você mantém a grade organizada e desperdiça menos espaço."
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "遊戲會追蹤你運用方格空間的效率，並給出 A+ 到 D 的評等。把方格維持得井然有序、少浪費空間，效率就會提高。"
           }
         }
       }
@@ -4258,6 +4732,12 @@
             "state" : "translated",
             "value" : "Pontuação Final"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最終分數"
+          }
         }
       }
     },
@@ -4310,6 +4790,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ativar o Game Center"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "啟用 Game Center"
           }
         }
       }
@@ -4364,6 +4850,12 @@
             "state" : "translated",
             "value" : "Quando ativado, sua pontuação final e as conquistas obtidas são enviadas ao Game Center da Apple. Desativado por padrão — seus dados ficam neste dispositivo até você escolher ativá-lo. Sem anúncios, sem rastreamento de terceiros, sem venda de dados."
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "啟用後，你的最終分數與獲得的成就會傳送到 Apple 的 Game Center。預設為關閉——在你選擇啟用之前，資料都留在這台裝置上。沒有廣告，沒有第三方追蹤，不販售資料。"
+          }
         }
       }
     },
@@ -4416,6 +4908,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Fim de Jogo"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "遊戲結束"
           }
         }
       }
@@ -4470,6 +4968,12 @@
             "state" : "translated",
             "value" : "A partida termina quando nenhum dos seus 3 blocos atuais couber em lugar nenhum da grade. Não se preocupe — o jogo tem recursos inteligentes que ajudam a evitar isso, ajustando os tipos de bloco que você recebe conforme a situação da sua grade."
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "當你手上這 3 個方塊在方格中都無處可放時，這一局就結束了。別擔心——遊戲內建的智慧功能會依照你的方格狀況調整發給你的方塊類型，盡量避免這種情形。"
+          }
         }
       }
     },
@@ -4522,6 +5026,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Que o poderoso jogo terminou, e Tu não pudeste contribuir com um bloco."
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "強大的遊戲已然落幕，而你未能獻上一塊方磚。"
           }
         }
       }
@@ -4576,6 +5086,12 @@
             "state" : "translated",
             "value" : "Fim de Jogo"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "遊戲結束"
+          }
         }
       }
     },
@@ -4629,6 +5145,12 @@
             "state" : "translated",
             "value" : "Partidas Jogadas"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "遊玩局數"
+          }
         }
       }
     },
@@ -4678,6 +5200,12 @@
           }
         },
         "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A"
+          }
+        },
+        "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "A"
@@ -4735,6 +5263,12 @@
             "state" : "translated",
             "value" : "A+"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A+"
+          }
         }
       }
     },
@@ -4784,6 +5318,12 @@
           }
         },
         "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "B"
+          }
+        },
+        "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "B"
@@ -4841,6 +5381,12 @@
             "state" : "translated",
             "value" : "B+"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "B+"
+          }
         }
       }
     },
@@ -4894,6 +5440,12 @@
             "state" : "translated",
             "value" : "Iniciante"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新手"
+          }
         }
       }
     },
@@ -4943,6 +5495,12 @@
           }
         },
         "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "C"
+          }
+        },
+        "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "C"
@@ -5000,6 +5558,12 @@
             "state" : "translated",
             "value" : "C+"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "C+"
+          }
         }
       }
     },
@@ -5049,6 +5613,12 @@
           }
         },
         "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "D"
+          }
+        },
+        "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "D"
@@ -5106,6 +5676,12 @@
             "state" : "translated",
             "value" : "Especialista"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "專家"
+          }
         }
       }
     },
@@ -5158,6 +5734,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Aprendendo"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "學習中"
           }
         }
       }
@@ -5212,6 +5794,12 @@
             "state" : "translated",
             "value" : "Mestre"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "大師"
+          }
         }
       }
     },
@@ -5264,6 +5852,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Habilidoso"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "熟練"
           }
         }
       }
@@ -5318,6 +5912,12 @@
             "state" : "translated",
             "value" : "Recorde"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最高分"
+          }
         }
       }
     },
@@ -5370,6 +5970,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "O histórico de partidas foi apagado com sucesso."
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "遊戲紀錄已成功清除。"
           }
         }
       }
@@ -5424,6 +6030,12 @@
             "state" : "translated",
             "value" : "Início"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "首頁"
+          }
         }
       }
     },
@@ -5476,6 +6088,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Como Jogar"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "玩法"
           }
         }
       }
@@ -5530,6 +6148,12 @@
             "state" : "translated",
             "value" : "Como Jogar"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "玩法"
+          }
         }
       }
     },
@@ -5579,6 +6203,12 @@
           }
         },
         "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "To me every hour of the light and dark is a miracle, Every cubic inch of space is a miracle,"
+          }
+        },
+        "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "To me every hour of the light and dark is a miracle, Every cubic inch of space is a miracle,"
@@ -5636,6 +6266,12 @@
             "state" : "translated",
             "value" : "Miracles"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Miracles"
+          }
         }
       }
     },
@@ -5685,6 +6321,12 @@
           }
         },
         "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1856"
+          }
+        },
+        "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "1856"
@@ -5742,6 +6384,12 @@
             "state" : "translated",
             "value" : "Inspiração"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "靈感"
+          }
         }
       }
     },
@@ -5794,6 +6442,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nasceu do amor por quebra-cabeças de blocos, da irritação com anúncios e da inspiração na poesia atemporal de Walt Whitman."
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "源於對方塊益智遊戲的喜愛、對廣告的厭煩，以及惠特曼雋永詩作的啟發。"
           }
         }
       }
@@ -5848,6 +6502,12 @@
             "state" : "translated",
             "value" : "Última pontuação: %@"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "上一局分數：%@"
+          }
         }
       }
     },
@@ -5900,6 +6560,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Linhas"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "排數"
           }
         }
       }
@@ -5954,6 +6620,12 @@
             "state" : "translated",
             "value" : "Linhas Eliminadas"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "已消除排數"
+          }
         }
       }
     },
@@ -6006,6 +6678,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Combo Mais Longo"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最長連消"
           }
         }
       }
@@ -6060,6 +6738,12 @@
             "state" : "translated",
             "value" : "MEGA COMBO!"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "超級連消！"
+          }
         }
       }
     },
@@ -6112,6 +6796,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Menu"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "選單"
           }
         }
       }
@@ -6166,6 +6856,12 @@
             "state" : "translated",
             "value" : "Nova Partida"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新遊戲"
+          }
         }
       }
     },
@@ -6218,6 +6914,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nova Partida"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新遊戲"
           }
         }
       }
@@ -6272,6 +6974,12 @@
             "state" : "translated",
             "value" : "OK"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "好"
+          }
         }
       }
     },
@@ -6324,6 +7032,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pontos"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "分"
           }
         }
       }
@@ -6378,6 +7092,12 @@
             "state" : "translated",
             "value" : "Dicas de Mestre"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "高手訣竅"
+          }
         }
       }
     },
@@ -6430,6 +7150,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Redefinir Todos os Dados"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重設所有資料"
           }
         }
       }
@@ -6484,6 +7210,12 @@
             "state" : "translated",
             "value" : "Redefinição Concluída"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "重設完成"
+          }
         }
       }
     },
@@ -6536,6 +7268,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Isso vai apagar permanentemente TODOS os dados do jogo, incluindo histórico, recordes e preferências. Esta ação não pode ser desfeita."
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "這會永久刪除「所有」遊戲資料，包括紀錄、最高分與偏好設定。此動作無法復原。"
           }
         }
       }
@@ -6590,6 +7328,12 @@
             "state" : "translated",
             "value" : "Redefinir Tudo"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "全部重設"
+          }
         }
       }
     },
@@ -6642,6 +7386,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pontuação"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "分數"
           }
         }
       }
@@ -6696,6 +7446,12 @@
             "state" : "translated",
             "value" : "Pontos ganhos por cada casa de um bloco que você coloca"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "放置的方塊每一格可得的分數"
+          }
         }
       }
     },
@@ -6748,6 +7504,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pontos ganhos por cada linha completa eliminada"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "每消除一整排可得的分數"
           }
         }
       }
@@ -6802,6 +7564,12 @@
             "state" : "translated",
             "value" : "Pontos de bônus por cada linha adicional eliminada ao mesmo tempo"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "同時多消除一排可得的獎勵分數"
+          }
         }
       }
     },
@@ -6854,6 +7622,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pontuação"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "計分方式"
           }
         }
       }
@@ -6908,6 +7682,12 @@
             "state" : "translated",
             "value" : "Ajustes"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "設定"
+          }
         }
       }
     },
@@ -6961,6 +7741,12 @@
             "state" : "translated",
             "value" : "Ajustes"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "設定"
+          }
         }
       }
     },
@@ -7010,6 +7796,12 @@
           }
         },
         "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The day erased, the lesson done"
+          }
+        },
+        "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "The day erased, the lesson done"
@@ -7067,6 +7859,12 @@
             "state" : "translated",
             "value" : "A Clear Midnight"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A Clear Midnight"
+          }
         }
       }
     },
@@ -7116,6 +7914,12 @@
           }
         },
         "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1880"
+          }
+        },
+        "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "1880"
@@ -7173,6 +7977,12 @@
             "state" : "translated",
             "value" : "Limpar Área"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "區域消除"
+          }
         }
       }
     },
@@ -7225,6 +8035,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Limpar Área é o bloco mais poderoso de todos. Este bloco roxo limpa uma área de 3×3 ao redor do ponto onde você o coloca. Use com sabedoria para causar o maior impacto."
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "區域消除是威力最強的方塊。這個紫色方塊會清掉放置處周圍 3×3 的範圍。善加運用，效果最大。"
           }
         }
       }
@@ -7279,6 +8095,12 @@
             "state" : "translated",
             "value" : "Limpar Coluna"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "直欄消除"
+          }
         }
       }
     },
@@ -7331,6 +8153,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Limpar Linha é um poderoso bloco vermelho que elimina na hora uma linha horizontal inteira ao ser colocado. Ótimo para abrir caminho em espaços apertados."
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "橫列消除是威力強大的紅色方塊，放下後會立刻清掉一整條橫列。要打通擁擠的地方特別好用。"
           }
         }
       }
@@ -7385,6 +8213,12 @@
             "state" : "translated",
             "value" : "Blocos\nComuns"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "一般\n方塊"
+          }
         }
       }
     },
@@ -7437,6 +8271,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Os blocos comuns são suas peças principais. Vêm em muitos formatos e tamanhos, de 1 a 9 casas cada. Preencha linhas e colunas para eliminá-las."
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "一般方塊是你主要的建構材料，形狀與大小各異，每個佔 1 到 9 格。填滿橫列與直欄就能消除它們。"
           }
         }
       }
@@ -7491,6 +8331,12 @@
             "state" : "translated",
             "value" : "Limpar Linha"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "橫列消除"
+          }
         }
       }
     },
@@ -7543,6 +8389,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Limpar Coluna é um poderoso bloco azul que elimina na hora uma coluna vertical inteira ao ser colocado. Perfeito para criar espaço."
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "直欄消除是威力強大的藍色方塊，放下後會立刻清掉一整條直欄。想空出位置時最合適。"
           }
         }
       }
@@ -7597,6 +8449,12 @@
             "state" : "translated",
             "value" : "Formatos de Bloco"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "方塊形狀"
+          }
         }
       }
     },
@@ -7649,6 +8507,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ver Resultados"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "查看結果"
           }
         }
       }
@@ -7703,6 +8567,12 @@
             "state" : "translated",
             "value" : "Eficiência Média"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "平均效率"
+          }
         }
       }
     },
@@ -7755,6 +8625,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Melhor Combo"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最佳連消"
           }
         }
       }
@@ -7809,6 +8685,12 @@
             "state" : "translated",
             "value" : "Dias Jogados"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "遊玩天數"
+          }
         }
       }
     },
@@ -7858,6 +8740,12 @@
           }
         },
         "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld%%"
+          }
+        },
+        "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld%%"
@@ -7915,6 +8803,12 @@
             "state" : "translated",
             "value" : "Modo Favorito"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "常用模式"
+          }
         }
       }
     },
@@ -7967,6 +8861,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lldh %lldmin"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld 小時 %lld 分"
           }
         }
       }
@@ -8021,6 +8921,12 @@
             "state" : "translated",
             "value" : "Partida Mais Longa"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最長一局"
+          }
         }
       }
     },
@@ -8073,6 +8979,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lldmin"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld 分"
           }
         }
       }
@@ -8127,6 +9039,12 @@
             "state" : "translated",
             "value" : "Mais Linhas"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "單局最多排數"
+          }
         }
       }
     },
@@ -8179,6 +9097,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Atividade"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "活動"
           }
         }
       }
@@ -8233,6 +9157,12 @@
             "state" : "translated",
             "value" : "Recordes"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "紀錄"
+          }
         }
       }
     },
@@ -8285,6 +9215,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Habilidade"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "技巧"
           }
         }
       }
@@ -8339,6 +9275,12 @@
             "state" : "translated",
             "value" : "Tempo Total de Jogo"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "總遊玩時間"
+          }
         }
       }
     },
@@ -8392,6 +9334,12 @@
             "state" : "translated",
             "value" : "Nota Típica"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "常見評等"
+          }
         }
       }
     },
@@ -8441,6 +9389,12 @@
           }
         },
         "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "—"
+          }
+        },
+        "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "—"
@@ -8498,6 +9452,12 @@
             "state" : "translated",
             "value" : "Jogo Estratégico"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "策略表現"
+          }
         }
       }
     },
@@ -8550,6 +9510,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sua habilidade estratégica é avaliada de Iniciante a Mestre, conforme você prepara eliminações de linha e planeja com antecedência. Procure oportunidades de eliminar várias linhas com uma única colocação."
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "系統會依照你鋪陳消除與提前布局的能力，將你的策略功力從新手評到大師。多留意能一次消除多排的落子機會。"
           }
         }
       }
@@ -8604,6 +9570,12 @@
             "state" : "translated",
             "value" : "Estratégia"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "策略"
+          }
         }
       }
     },
@@ -8656,6 +9628,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Toque para ver o histórico"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "點一下查看紀錄"
           }
         }
       }
@@ -8710,6 +9688,12 @@
             "state" : "translated",
             "value" : "Desenvolvido com SwiftUI para iOS 18.0 ou posterior. Sem anúncios. Sem rastreamento de terceiros. Sem venda de dados. Você joga offline por padrão — o Game Center da Apple, para classificações e conquistas, é opcional."
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "以 SwiftUI 開發，支援 iOS 18.0 以上。沒有廣告。沒有第三方追蹤。不販售資料。預設離線遊玩——是否使用 Apple Game Center 的排行榜與成就，由你自己決定。"
+          }
         }
       }
     },
@@ -8762,6 +9746,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Detalhes Técnicos"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "技術細節"
           }
         }
       }
@@ -8816,6 +9806,12 @@
             "state" : "translated",
             "value" : "O Campo de Jogo"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "遊戲場地"
+          }
         }
       }
     },
@@ -8868,6 +9864,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Seu tabuleiro é uma grade de 8×8 com 64 espaços. Seu objetivo é preencher linhas horizontais ou colunas verticais completas para eliminá-las e ganhar pontos. A grade começa com alguns blocos já colocados ao acaso, para criar desafios interessantes."
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "你的棋盤是 8×8 的方格，共 64 格。目標是填滿完整的橫列或直欄，把它們消除並得分。方格一開始就會隨機放上一些方塊，讓局面更有看頭。"
           }
         }
       }
@@ -8922,6 +9924,12 @@
             "state" : "translated",
             "value" : "Tempo de Jogo"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "遊玩時間"
+          }
         }
       }
     },
@@ -8974,6 +9982,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Use os cantos e as bordas com estratégia quando a grade encher"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "方格變擠時，善用角落與邊緣"
           }
         }
       }
@@ -9028,6 +10042,12 @@
             "state" : "translated",
             "value" : "Sua nota de eficiência melhora com um jogo organizado e estratégico"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "下得有條理、有策略，效率評等就會進步"
+          }
         }
       }
     },
@@ -9080,6 +10100,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mantenha a grade organizada — evite deixar buracos espalhados"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "把方格維持得井然有序——別留下零散的空洞"
           }
         }
       }
@@ -9134,6 +10160,12 @@
             "state" : "translated",
             "value" : "Procure oportunidades de eliminar várias linhas com uma só colocação"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "留意一次落子就能消除多排的機會"
+          }
         }
       }
     },
@@ -9186,6 +10218,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Considere os três blocos disponíveis antes de colocar qualquer um"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "放下任何一個之前，先看過全部三個可用方塊"
           }
         }
       }
@@ -9240,6 +10278,12 @@
             "state" : "translated",
             "value" : "Guarde os blocos menores para espaços apertados e jogadas finais"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "把小方塊留給狹窄的空隙與收尾的一步"
+          }
         }
       }
     },
@@ -9292,6 +10336,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Total de Blocos"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "方塊總數"
           }
         }
       }
@@ -9346,6 +10396,12 @@
             "state" : "translated",
             "value" : "Desfazer"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "還原"
+          }
         }
       }
     },
@@ -9398,6 +10454,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Versão %@"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "版本 %@"
           }
         }
       }
@@ -9452,6 +10514,12 @@
             "state" : "translated",
             "value" : "Abrir o Game Center"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "開啟 Game Center"
+          }
         }
       }
     },
@@ -9504,6 +10572,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ver Classificação"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "查看排行榜"
           }
         }
       }
@@ -9558,6 +10632,12 @@
             "state" : "translated",
             "value" : "Ver Tabuleiro"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "查看棋盤"
+          }
         }
       }
     },
@@ -9610,6 +10690,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Revela o tabuleiro final para você ver como a partida terminou"
+          }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "顯示最終棋盤，看看這一局是怎麼結束的"
           }
         }
       }
@@ -9664,6 +10750,12 @@
             "state" : "translated",
             "value" : "Ver Resumo"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "查看總結"
+          }
         }
       }
     },
@@ -9717,6 +10809,12 @@
             "state" : "translated",
             "value" : "Site"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "網站"
+          }
         }
       }
     },
@@ -9766,6 +10864,12 @@
           }
         },
         "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "That you are here—that life exists and identity,"
+          }
+        },
+        "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "That you are here—that life exists and identity,"
@@ -9823,6 +10927,12 @@
             "state" : "translated",
             "value" : "That the powerful play goes on, and you may contribute a verse."
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "That the powerful play goes on, and you may contribute a verse."
+          }
         }
       }
     },
@@ -9876,6 +10986,12 @@
             "state" : "translated",
             "value" : "O Me! O Life!"
           }
+        },
+        "zh-Hant" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O Me! O Life!"
+          }
         }
       }
     },
@@ -9925,6 +11041,12 @@
           }
         },
         "pt-BR" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1867"
+          }
+        },
+        "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "1867"

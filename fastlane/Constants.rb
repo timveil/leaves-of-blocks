@@ -153,7 +153,8 @@ SCREENSHOT_LANGUAGES = [
   "ja",
   "ko",
   "nl-NL",
-  "pt-BR"
+  "pt-BR",
+  "zh-Hant"
 ]
 
 # Fastlane Paths
