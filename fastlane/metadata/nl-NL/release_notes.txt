@@ -1,3 +1,10 @@
-Goed nieuws als je Leaves of Blocks nog niet kon installeren: deze update verhelpt een compatibiliteitsprobleem waardoor het spel niet te installeren was op iOS 18.0 tot en met 18.4. Het spel draaide op die versies altijd al prima, en nu is het er ook op te installeren. Daarnaast hebben we een geleidelijke uitrol ingeschakeld, zodat volgende updates je betrouwbaar bereiken.
+Speel Leaves of Blocks nu in je eigen taal.
 
-Bedankt voor het spelen van Leaves of Blocks!
+• De game en de App Store-pagina zijn nu beschikbaar in het Engels, Spaans, Duits, Japans, Frans, Nederlands, Koreaans, Braziliaans Portugees en Chinees (Traditioneel en Vereenvoudigd)
+• Een blok scoort voortaan zichtbaar 10 punten per vakje, niet per blok
+• De beschrijving in de App Store noemt nu het juiste aantal vormen, de juiste namen van de moeilijkheidsgraden en de juiste puntentelling
+• Het label "Normale blokken" wordt weer netjes over twee regels getoond, in plaats van met vreemde tekens ertussen
+• Het bord crasht niet meer wanneer je in het Spaans speelt
+• Citaten van Whitman blijven in het Engels staan, precies zoals de dichter ze schreef
+
+Bedankt dat je Leaves of Blocks speelt - we vinden het fijn dat je erbij bent.

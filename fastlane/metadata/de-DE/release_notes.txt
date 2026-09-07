@@ -1,3 +1,10 @@
-Gute Nachrichten, falls du Leaves of Blocks bisher nicht installieren konntest: Dieses Update behebt ein Kompatibilitätsproblem, das die Installation unter iOS 18.0 bis 18.4 verhindert hat. Das Spiel lief auf diesen Versionen schon immer einwandfrei — jetzt lässt es sich dort auch installieren. Außerdem haben wir eine schrittweise Veröffentlichung aktiviert, damit künftige Updates zuverlässig bei dir ankommen.
+Leaves of Blocks spricht jetzt deine Sprache.
+
+• Neu verfügbar in mehr Sprachen: Spanisch, Deutsch, Japanisch, Französisch, Niederländisch, Koreanisch, brasilianisches Portugiesisch sowie Chinesisch (traditionell und vereinfacht).
+• Whitmans Verse werden in jeder Sprache im englischen Original zitiert, genau wie er sie geschrieben hat.
+• Ein Absturz beim Spielen auf Spanisch wurde behoben.
+• Die Beschriftung „Normal Blocks“ zeigt in der englischen und spanischen Version jetzt korrekt zwei Zeilen statt fehlerhafter Zeichen.
+• Ein Block bringt jetzt richtig 10 Punkte pro Quadrat statt 10 Punkte pro Block.
+• Die App-Store-Beschreibung nennt jetzt die richtige Anzahl an Formen und die korrekten Namen der Schwierigkeitsgrade.
 
 Danke, dass du Leaves of Blocks spielst!
