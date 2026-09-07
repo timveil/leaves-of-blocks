@@ -1,0 +1,3 @@
+Gute Nachrichten, falls du Leaves of Blocks bisher nicht installieren konntest: Dieses Update behebt ein Kompatibilitätsproblem, das die Installation unter iOS 18.0 bis 18.4 verhindert hat. Das Spiel lief auf diesen Versionen schon immer einwandfrei — jetzt lässt es sich dort auch installieren. Außerdem haben wir eine schrittweise Veröffentlichung aktiviert, damit künftige Updates zuverlässig bei dir ankommen.
+
+Danke, dass du Leaves of Blocks spielst!
