@@ -148,7 +148,8 @@ SCREENSHOT_DEVICES = [
 SCREENSHOT_LANGUAGES = [
   "de-DE",
   "en-US",
-  "es-MX"
+  "es-MX",
+  "ja"
 ]
 
 # Fastlane Paths
