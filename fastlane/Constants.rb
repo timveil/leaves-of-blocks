@@ -151,6 +151,7 @@ SCREENSHOT_LANGUAGES = [
   "es-MX",
   "fr-FR",
   "ja",
+  "ko",
   "nl-NL"
 ]
 

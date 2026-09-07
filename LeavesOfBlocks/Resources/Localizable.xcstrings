@@ -54,6 +54,12 @@
             "value" : "情報"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "정보"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -93,6 +99,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "このゲームについて"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "게임 소개"
           }
         },
         "nl" : {
@@ -136,6 +148,12 @@
             "value" : "スマートなブロック生成"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "스마트 블록 생성"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -175,6 +193,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "盤面を分析して、手ごたえを保ちながら詰みを防ぐようにブロックを調整します。苦しい場面では、置きやすい形が自動的に増えます。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "게임이 보드를 분석해 나오는 블록을 조정해요. 도전은 유지하면서도 막다른 상황은 피하도록 돕고, 어려워지면 놓기 쉬운 모양이 더 자주 나와요."
           }
         },
         "nl" : {
@@ -218,6 +242,12 @@
             "value" : "高度な機能"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "고급 기능"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -257,6 +287,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Leaves of Blocks には、プレイスタイルに合わせて上達を後押しする仕組みが備わっています。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leaves of Blocks에는 플레이 방식에 맞춰 적응하고 실력을 키우도록 돕는 기능이 들어 있어요."
           }
         },
         "nl" : {
@@ -300,6 +336,12 @@
             "value" : "すべてのゲームデータをリセットしました。"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "모든 게임 데이터를 초기화했어요."
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -336,6 +378,12 @@
           }
         },
         "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Answer."
+          }
+        },
+        "ko" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Answer."
@@ -382,6 +430,12 @@
             "value" : "アシスト"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "도움 기능"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -421,6 +475,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "苦しいときのための機能です。取り消しとヒントは1ゲームにつき1回ずつ使えます:"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "막혔을 때를 위한 기능이에요. 되돌리기와 힌트는 게임당 한 번씩 쓸 수 있어요:"
           }
         },
         "nl" : {
@@ -464,6 +524,12 @@
             "value" : "取り消し: 直前に置いたブロックを戻します。"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "되돌리기: 마지막에 놓은 블록을 되돌려요."
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -503,6 +569,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ヒント: 盤面におすすめの一手を表示します。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "힌트: 보드에 놓을 만한 수를 표시해요."
           }
         },
         "nl" : {
@@ -546,6 +618,12 @@
             "value" : "盤面を見る: ゲーム終了後に、最後の盤面を表示します。"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "보드 보기: 게임이 끝난 뒤 마지막 보드를 보여줘요."
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -585,6 +663,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "平均スコア"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "평균 점수"
           }
         },
         "nl" : {
@@ -628,6 +712,12 @@
             "value" : "エリア消去のパワーアップ"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "영역 제거 파워업"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -667,6 +757,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ブロック%d個"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "블록 %d개 사용 가능"
           }
         },
         "nl" : {
@@ -710,6 +806,12 @@
             "value" : "%dマスの%@ブロック"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%1$d칸짜리 %2$@ 블록"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -749,6 +851,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "青"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "파란색"
           }
         },
         "nl" : {
@@ -792,6 +900,12 @@
             "value" : "緑"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "초록색"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -831,6 +945,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "オレンジ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "주황색"
           }
         },
         "nl" : {
@@ -874,6 +994,12 @@
             "value" : "ピンク"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "분홍색"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -913,6 +1039,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "紫"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "보라색"
           }
         },
         "nl" : {
@@ -956,6 +1088,12 @@
             "value" : "赤"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "빨간색"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -995,6 +1133,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "黄"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "노란색"
           }
         },
         "nl" : {
@@ -1038,6 +1182,12 @@
             "value" : "列消去のパワーアップ"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "열 제거 파워업"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1077,6 +1227,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@、%d列消去、ボーナス%dポイント"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@, %d줄 제거, 보너스 %d점"
           }
         },
         "nl" : {
@@ -1120,6 +1276,12 @@
             "value" : "上下にスワイプすると難易度を変更できます"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "위아래로 쓸어넘겨 난이도를 바꿔요"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1159,6 +1321,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "難易度"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "난이도"
           }
         },
         "nl" : {
@@ -1202,6 +1370,12 @@
             "value" : "盤面、8×8"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "게임 보드, 8 곱하기 8"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1241,6 +1415,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ヒント、残り1回"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "힌트, 한 번 사용 가능"
           }
         },
         "nl" : {
@@ -1284,6 +1464,12 @@
             "value" : "ヒント、使用済み"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "힌트, 이미 사용함"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1323,6 +1509,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "行消去のパワーアップ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "행 제거 파워업"
           }
         },
         "nl" : {
@@ -1366,6 +1558,12 @@
             "value" : "スコア%@、%@行消去"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "점수 %@, %@줄 제거"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1405,6 +1603,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "取り消し、残り1回"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "되돌리기, 한 번 사용 가능"
           }
         },
         "nl" : {
@@ -1448,6 +1652,12 @@
             "value" : "取り消し、使用済み"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "되돌리기, 이미 사용함"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1487,6 +1697,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "自己ベスト"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "최고 기록"
           }
         },
         "nl" : {
@@ -1530,6 +1746,12 @@
             "value" : "最高スコア"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "최고 점수"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1569,6 +1791,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "配置ブロック"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "놓은 블록"
           }
         },
         "nl" : {
@@ -1612,6 +1840,12 @@
             "value" : "キャンセル"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "취소"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1651,6 +1885,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ゲームを再開"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이어서 하기"
           }
         },
         "nl" : {
@@ -1694,6 +1934,12 @@
             "value" : "スコア: %lld"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "점수: %lld"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1733,6 +1979,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "破棄"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "버리기"
           }
         },
         "nl" : {
@@ -1776,6 +2028,12 @@
             "value" : "プレイ中のゲームは破棄され、元に戻せません。"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "진행 중인 게임은 버려지고 복구할 수 없어요."
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1815,6 +2073,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "新しいゲームを始めますか？"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "새 게임을 시작할까요?"
           }
         },
         "nl" : {
@@ -1858,6 +2122,12 @@
             "value" : "ゲーム履歴"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "게임 기록"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1897,6 +2167,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "プレイ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "플레이"
           }
         },
         "nl" : {
@@ -1940,6 +2216,12 @@
             "value" : "まだ記録がありません。1ゲーム終えるとここに表示されます。"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "아직 기록이 없어요. 한 판을 마치면 여기에 나타나요."
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -1979,6 +2261,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "統計"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "통계"
           }
         },
         "nl" : {
@@ -2022,6 +2310,12 @@
             "value" : "ゲームを再開"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "이어서 하기"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2061,6 +2355,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "高"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "높음"
           }
         },
         "nl" : {
@@ -2104,6 +2404,12 @@
             "value" : "低"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "낮음"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2143,6 +2449,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "中"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "보통"
           }
         },
         "nl" : {
@@ -2186,6 +2498,12 @@
             "value" : "履歴をすべて削除"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "모든 기록 삭제"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2225,6 +2543,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "履歴を削除"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "기록 삭제"
           }
         },
         "nl" : {
@@ -2268,6 +2592,12 @@
             "value" : "保存されたゲームと統計がすべて完全に削除されます。この操作は取り消せません。"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "저장된 게임과 통계가 모두 영구히 삭제돼요. 이 작업은 되돌릴 수 없어요."
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2307,6 +2637,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ラインを消す"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "줄 없애기"
           }
         },
         "nl" : {
@@ -2350,6 +2686,12 @@
             "value" : "横の行または縦の列をすべて埋めると、そのラインが消えてスコアになります。複数のラインを同時に消すとボーナス点が入り、同時に消すほどコンボボーナスが大きくなります。"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "가로줄이나 세로줄을 빈틈없이 채우면 그 줄이 사라지면서 점수가 들어와요. 여러 줄을 한 번에 없애면 보너스가 붙고, 동시에 없앤 줄이 많을수록 콤보 보너스가 커져요."
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2389,6 +2731,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "コンボ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "콤보"
           }
         },
         "nl" : {
@@ -2432,6 +2780,12 @@
             "value" : "コンボ！"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "콤보!"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2468,6 +2822,12 @@
           }
         },
         "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "leavesofblocks.com"
+          }
+        },
+        "ko" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "leavesofblocks.com"
@@ -2514,6 +2874,12 @@
             "value" : "開発者"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "개발자"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2555,6 +2921,12 @@
             "value" : "。ゲームは怒りではなく安らぎを与えるものだと考える、ソフトウェアエンジニアであり父親です。"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : ". 게임은 화가 아니라 쉼을 줘야 한다고 믿는 소프트웨어 엔지니어이자 아빠예요."
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2591,6 +2963,12 @@
           }
         },
         "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tim Veil"
+          }
+        },
+        "ko" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tim Veil"
@@ -2637,6 +3015,12 @@
             "value" : "献辞"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "헌사"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2676,6 +3060,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "エマ、アニー、グレースへ。このゲームが、大小さまざまな人生の苦労からのひとときの気晴らしになりますように。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "엠마, 애니, 그레이스에게. 이 게임이 크고 작은 삶의 무게에서 잠시 벗어나는 시간이 되기를."
           }
         },
         "nl" : {
@@ -2719,6 +3109,12 @@
             "value" : "開発: "
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "개발: "
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2758,6 +3154,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "難易度"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "난이도"
           }
         },
         "nl" : {
@@ -2801,6 +3203,12 @@
             "value" : "大胆"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "대담"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2840,6 +3248,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "やさしいは初めての方に最適です。小さくて置きやすいブロックが多く出ます"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "온화는 처음 시작하기에 좋아요. 작고 놓기 쉬운 블록이 더 자주 나와요"
           }
         },
         "nl" : {
@@ -2883,6 +3297,12 @@
             "value" : "やさしい"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "온화"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -2922,6 +3342,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ワイルドは経験者向けです。大きく複雑なブロックが増え、戦略的な判断が求められます"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "와일드는 숙련된 플레이어를 위한 난이도예요. 크고 복잡한 블록이 늘어나 전략적인 판단이 필요해요"
           }
         },
         "nl" : {
@@ -2965,6 +3391,12 @@
             "value" : "難易度"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "난이도"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3004,6 +3436,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "大胆は小さなブロックと大きなブロックがほどよく混ざった、バランスの取れた難易度です"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "대담은 작은 블록과 큰 블록이 고루 섞인 균형 잡힌 난이도예요"
           }
         },
         "nl" : {
@@ -3047,6 +3485,12 @@
             "value" : "ワイルド"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "와일드"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3086,6 +3530,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "遊び方"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "플레이 방법"
           }
         },
         "nl" : {
@@ -3129,6 +3579,12 @@
             "value" : "画面下部に最大3つのブロックが表示されます。すべて収まる場所にドラッグして配置してください。ブロックは既存のマスと重ねたり、盤面の外にはみ出したりできません。3つすべてを使うと、自動的に新しい3つが配られます。"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "화면 아래에 최대 3개의 블록이 나와요. 완전히 들어가는 자리에 끌어다 놓으세요. 블록은 이미 놓인 칸과 겹치거나 보드 밖으로 나갈 수 없어요. 3개를 모두 쓰면 새 블록 3개가 자동으로 나와요."
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3168,6 +3624,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "効率"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "효율"
           }
         },
         "nl" : {
@@ -3211,6 +3673,12 @@
             "value" : "パフォーマンス記録"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "실력 기록"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3250,6 +3718,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "盤面のスペースをどれだけ効率よく使えているかを記録し、A+ から D までの評価を付けます。盤面を整理して無駄を減らすほど、効率は高くなります。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "보드 공간을 얼마나 효율적으로 쓰는지 기록해 A+부터 D까지 등급을 매겨요. 보드를 정돈하고 빈 공간을 덜 낭비할수록 등급이 올라가요."
           }
         },
         "nl" : {
@@ -3293,6 +3767,12 @@
             "value" : "最終スコア"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "최종 점수"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3332,6 +3812,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Game Center を有効にする"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Game Center 사용"
           }
         },
         "nl" : {
@@ -3375,6 +3861,12 @@
             "value" : "オンにすると、最終スコアと獲得した実績が Apple の Game Center に送信されます。初期設定はオフで、オンにするまでデータはこの端末に留まります。広告なし、第三者による追跡なし、データの販売なし。"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "켜면 최종 점수와 획득한 업적이 Apple Game Center로 전송돼요. 기본값은 꺼짐이며, 켜기 전까지 데이터는 이 기기에만 남아요. 광고 없음, 제3자 추적 없음, 데이터 판매 없음."
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3414,6 +3906,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ゲーム終了"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "게임 종료"
           }
         },
         "nl" : {
@@ -3457,6 +3955,12 @@
             "value" : "手持ちの3つのブロックがどこにも置けなくなるとゲーム終了です。盤面の状況に応じて配られるブロックの種類が調整されるので、そう簡単には終わりません。"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "가진 블록 3개를 어디에도 놓을 수 없게 되면 게임이 끝나요. 걱정 마세요. 보드 상황에 맞춰 나오는 블록 종류가 조정되니까요."
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3496,6 +4000,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "力強きゲームは終わり、あなたはひとつのブロックも捧げられなかった。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "힘찬 놀이가 끝났고, 그대는 블록 하나 보태지 못했으니."
           }
         },
         "nl" : {
@@ -3539,6 +4049,12 @@
             "value" : "ゲーム終了"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "게임 종료"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3580,6 +4096,12 @@
             "value" : "プレイ回数"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "플레이 횟수"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3616,6 +4138,12 @@
           }
         },
         "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A"
+          }
+        },
+        "ko" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "A"
@@ -3662,6 +4190,12 @@
             "value" : "A+"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A+"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3698,6 +4232,12 @@
           }
         },
         "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "B"
+          }
+        },
+        "ko" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "B"
@@ -3744,6 +4284,12 @@
             "value" : "B+"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "B+"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3785,6 +4331,12 @@
             "value" : "初心者"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "입문"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3821,6 +4373,12 @@
           }
         },
         "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "C"
+          }
+        },
+        "ko" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "C"
@@ -3867,6 +4425,12 @@
             "value" : "C+"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "C+"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3903,6 +4467,12 @@
           }
         },
         "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "D"
+          }
+        },
+        "ko" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "D"
@@ -3949,6 +4519,12 @@
             "value" : "熟練者"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "숙련"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -3988,6 +4564,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "練習中"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "성장 중"
           }
         },
         "nl" : {
@@ -4031,6 +4613,12 @@
             "value" : "達人"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "달인"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4070,6 +4658,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "中級者"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "중급"
           }
         },
         "nl" : {
@@ -4113,6 +4707,12 @@
             "value" : "最高スコア"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "최고 점수"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4152,6 +4752,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ゲーム履歴を削除しました。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "게임 기록을 삭제했어요."
           }
         },
         "nl" : {
@@ -4195,6 +4801,12 @@
             "value" : "ホーム"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "홈"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4234,6 +4846,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "遊び方"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "플레이 방법"
           }
         },
         "nl" : {
@@ -4277,6 +4895,12 @@
             "value" : "遊び方"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "플레이 방법"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4313,6 +4937,12 @@
           }
         },
         "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "To me every hour of the light and dark is a miracle, Every cubic inch of space is a miracle,"
+          }
+        },
+        "ko" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "To me every hour of the light and dark is a miracle, Every cubic inch of space is a miracle,"
@@ -4359,6 +4989,12 @@
             "value" : "Miracles"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Miracles"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4395,6 +5031,12 @@
           }
         },
         "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1856"
+          }
+        },
+        "ko" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "1856"
@@ -4441,6 +5083,12 @@
             "value" : "着想"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "영감"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4480,6 +5128,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ブロックパズルへの愛情と、広告への苛立ち、そしてウォルト・ホイットマンの時を超えた詩から生まれました。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "블록 퍼즐을 향한 애정과 광고에 대한 아쉬움, 그리고 월트 휘트먼의 시대를 넘어선 시에서 태어났어요."
           }
         },
         "nl" : {
@@ -4523,6 +5177,12 @@
             "value" : "前回のスコア: %@"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "지난 점수: %@"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4562,6 +5222,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ライン"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "줄"
           }
         },
         "nl" : {
@@ -4605,6 +5271,12 @@
             "value" : "消したライン"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "없앤 줄"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4644,6 +5316,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "最長コンボ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "최장 콤보"
           }
         },
         "nl" : {
@@ -4687,6 +5365,12 @@
             "value" : "メガコンボ！"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "메가 콤보!"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4726,6 +5410,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "メニュー"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "메뉴"
           }
         },
         "nl" : {
@@ -4769,6 +5459,12 @@
             "value" : "新しいゲーム"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "새 게임"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4808,6 +5504,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "新しいゲーム"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "새 게임"
           }
         },
         "nl" : {
@@ -4851,6 +5553,12 @@
             "value" : "OK"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "확인"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4890,6 +5598,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ポイント"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "점"
           }
         },
         "nl" : {
@@ -4933,6 +5647,12 @@
             "value" : "上達のコツ"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "실력 향상 팁"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -4972,6 +5692,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "すべてのデータをリセット"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "모든 데이터 초기화"
           }
         },
         "nl" : {
@@ -5015,6 +5741,12 @@
             "value" : "リセット完了"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "초기화 완료"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5054,6 +5786,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "履歴、最高スコア、設定を含む「すべての」ゲームデータが完全に削除されます。この操作は取り消せません。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "기록, 최고 점수, 설정을 포함한 '모든' 게임 데이터가 영구히 삭제돼요. 이 작업은 되돌릴 수 없어요."
           }
         },
         "nl" : {
@@ -5097,6 +5835,12 @@
             "value" : "すべてリセット"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "전체 초기화"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5136,6 +5880,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "スコア"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "점수"
           }
         },
         "nl" : {
@@ -5179,6 +5929,12 @@
             "value" : "置いたブロックの1マスごとに入るポイント"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "블록을 놓을 때 칸 하나마다 얻는 점수"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5218,6 +5974,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "消したライン1本ごとに入るポイント"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "한 줄을 완성해 없앨 때마다 얻는 점수"
           }
         },
         "nl" : {
@@ -5261,6 +6023,12 @@
             "value" : "同時に消したライン1本ごとに加算されるボーナス"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "동시에 없앤 줄이 하나 늘어날 때마다 붙는 보너스"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5300,6 +6068,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "スコア"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "점수"
           }
         },
         "nl" : {
@@ -5343,6 +6117,12 @@
             "value" : "設定"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "설정"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5384,6 +6164,12 @@
             "value" : "設定"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "설정"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5420,6 +6206,12 @@
           }
         },
         "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The day erased, the lesson done"
+          }
+        },
+        "ko" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "The day erased, the lesson done"
@@ -5466,6 +6258,12 @@
             "value" : "A Clear Midnight"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A Clear Midnight"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5502,6 +6300,12 @@
           }
         },
         "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1880"
+          }
+        },
+        "ko" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "1880"
@@ -5548,6 +6352,12 @@
             "value" : "エリア消去"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "영역 제거"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5587,6 +6397,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "エリア消去は最強のブロックです。この紫のブロックは、置いた場所を中心に3×3の範囲を消します。ここぞという場面で使いましょう。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "영역 제거는 가장 강력한 블록이에요. 이 보라색 블록은 놓은 자리를 중심으로 3×3 영역을 없애요. 꼭 필요한 순간에 쓰세요."
           }
         },
         "nl" : {
@@ -5630,6 +6446,12 @@
             "value" : "列消去"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "열 제거"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5669,6 +6491,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "行消去は、置くと横一行をまるごと消す強力な赤いブロックです。詰まった盤面を切り開くのに向いています。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "행 제거는 놓는 순간 가로 한 줄을 통째로 없애는 강력한 빨간 블록이에요. 꽉 막힌 보드를 뚫는 데 좋아요."
           }
         },
         "nl" : {
@@ -5712,6 +6540,12 @@
             "value" : "通常の\nブロック"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "일반\n블록"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5751,6 +6585,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "通常ブロックは基本となる駒です。形も大きさもさまざまで、1〜9マスあります。行や列を埋めて消しましょう。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "일반 블록은 기본이 되는 조각이에요. 모양과 크기가 다양하고 한 블록에 1~9칸이에요. 행과 열을 채워 없애세요."
           }
         },
         "nl" : {
@@ -5794,6 +6634,12 @@
             "value" : "行消去"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "행 제거"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5833,6 +6679,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "列消去は、置くと縦一列をまるごと消す強力な青いブロックです。スペースを作るのに最適です。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "열 제거는 놓는 순간 세로 한 줄을 통째로 없애는 강력한 파란 블록이에요. 공간을 만들 때 제격이에요."
           }
         },
         "nl" : {
@@ -5876,6 +6728,12 @@
             "value" : "ブロックの形"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "블록 모양"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5915,6 +6773,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "結果を見る"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "결과 보기"
           }
         },
         "nl" : {
@@ -5958,6 +6822,12 @@
             "value" : "平均効率"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "평균 효율"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -5997,6 +6867,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "最高コンボ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "최고 콤보"
           }
         },
         "nl" : {
@@ -6040,6 +6916,12 @@
             "value" : "プレイ日数"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "플레이한 날"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6076,6 +6958,12 @@
           }
         },
         "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld%%"
+          }
+        },
+        "ko" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld%%"
@@ -6122,6 +7010,12 @@
             "value" : "よく遊ぶ難易度"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "자주 쓰는 난이도"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6161,6 +7055,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld時間%lld分"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld시간 %lld분"
           }
         },
         "nl" : {
@@ -6204,6 +7104,12 @@
             "value" : "最長プレイ"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "최장 플레이"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6243,6 +7149,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld分"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld분"
           }
         },
         "nl" : {
@@ -6286,6 +7198,12 @@
             "value" : "最多ライン"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "최다 줄"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6325,6 +7243,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "アクティビティ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "활동"
           }
         },
         "nl" : {
@@ -6368,6 +7292,12 @@
             "value" : "記録"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "기록"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6407,6 +7337,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "スキル"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "실력"
           }
         },
         "nl" : {
@@ -6450,6 +7386,12 @@
             "value" : "総プレイ時間"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "총 플레이 시간"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6491,6 +7433,12 @@
             "value" : "平均評価"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "평소 등급"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6527,6 +7475,12 @@
           }
         },
         "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "—"
+          }
+        },
+        "ko" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "—"
@@ -6573,6 +7527,12 @@
             "value" : "戦略的なプレイ"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "전략적 플레이"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6612,6 +7572,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "ラインを消す準備や先読みの上手さに応じて、初心者から達人まで評価されます。1手で複数のラインを消せる場面を探しましょう。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "줄을 없앨 준비를 얼마나 잘하고 앞을 내다보는지에 따라 입문부터 달인까지 평가해요. 블록 하나로 여러 줄을 없앨 기회를 노려 보세요."
           }
         },
         "nl" : {
@@ -6655,6 +7621,12 @@
             "value" : "戦略"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "전략"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6694,6 +7666,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "タップで履歴へ"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "탭하면 기록으로"
           }
         },
         "nl" : {
@@ -6737,6 +7715,12 @@
             "value" : "SwiftUI で開発、iOS 18.0 以降に対応。広告なし。第三者による追跡なし。データの販売なし。標準ではオフラインでプレイでき、Apple Game Center のリーダーボードと実績は任意で利用できます。"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SwiftUI로 개발했고 iOS 18.0 이상을 지원해요. 광고 없음. 제3자 추적 없음. 데이터 판매 없음. 기본은 오프라인 플레이이고, 순위표와 업적을 위한 Apple Game Center는 선택 사항이에요."
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6776,6 +7760,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "技術情報"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "기술 정보"
           }
         },
         "nl" : {
@@ -6819,6 +7809,12 @@
             "value" : "盤面"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "게임 보드"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6858,6 +7854,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "盤面は64マスの8×8グリッドです。横の行や縦の列をすべて埋めると消えてポイントになります。最初からいくつかブロックが置かれていて、序盤から考えどころがあります。"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "보드는 64칸으로 이뤄진 8×8 격자예요. 가로줄이나 세로줄을 가득 채우면 그 줄이 사라지면서 점수가 돼요. 시작할 때 블록 몇 개가 이미 놓여 있어 처음부터 생각할 거리가 있어요."
           }
         },
         "nl" : {
@@ -6901,6 +7903,12 @@
             "value" : "プレイ時間"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "플레이 시간"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -6940,6 +7948,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "盤面が埋まってきたら、角と端をうまく使いましょう"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "보드가 차오르면 모서리와 가장자리를 잘 활용하세요"
           }
         },
         "nl" : {
@@ -6983,6 +7997,12 @@
             "value" : "整理された戦略的なプレイほど、効率の評価は上がります"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "정돈되고 계획적인 플레이일수록 효율 등급이 올라가요"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7022,6 +8042,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "盤面は整理して、穴が散らばらないようにしましょう"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "보드를 정돈해 빈칸이 여기저기 흩어지지 않게 하세요"
           }
         },
         "nl" : {
@@ -7065,6 +8091,12 @@
             "value" : "1手で複数のラインを消せる場面を探しましょう"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "한 번에 여러 줄을 없앨 수 있는 수를 노려 보세요"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7104,6 +8136,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "1つ置く前に、3つのブロックすべてを見比べましょう"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "하나를 놓기 전에 블록 세 개를 모두 살펴보세요"
           }
         },
         "nl" : {
@@ -7147,6 +8185,12 @@
             "value" : "小さなブロックは狭い場所と詰めの一手のために取っておきましょう"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "작은 블록은 좁은 자리와 마무리 수를 위해 남겨 두세요"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7186,6 +8230,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "総ブロック数"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "전체 블록"
           }
         },
         "nl" : {
@@ -7229,6 +8279,12 @@
             "value" : "取り消し"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "되돌리기"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7268,6 +8324,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "バージョン %@"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "버전 %@"
           }
         },
         "nl" : {
@@ -7311,6 +8373,12 @@
             "value" : "Game Center を開く"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Game Center 열기"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7350,6 +8418,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "リーダーボードを見る"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "순위표 보기"
           }
         },
         "nl" : {
@@ -7393,6 +8467,12 @@
             "value" : "盤面を見る"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "보드 보기"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7432,6 +8512,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "最後の盤面を表示して、どう終わったかを確認します"
+          }
+        },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "게임이 어떻게 끝났는지 마지막 보드를 보여줘요"
           }
         },
         "nl" : {
@@ -7475,6 +8561,12 @@
             "value" : "結果を見る"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "요약 보기"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7516,6 +8608,12 @@
             "value" : "ウェブサイト"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "웹사이트"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7552,6 +8650,12 @@
           }
         },
         "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "That you are here—that life exists and identity,"
+          }
+        },
+        "ko" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "That you are here—that life exists and identity,"
@@ -7598,6 +8702,12 @@
             "value" : "That the powerful play goes on, and you may contribute a verse."
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "That the powerful play goes on, and you may contribute a verse."
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7639,6 +8749,12 @@
             "value" : "O Me! O Life!"
           }
         },
+        "ko" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O Me! O Life!"
+          }
+        },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
@@ -7675,6 +8791,12 @@
           }
         },
         "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1867"
+          }
+        },
+        "ko" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "1867"
