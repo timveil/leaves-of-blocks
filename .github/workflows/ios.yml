@@ -65,10 +65,21 @@ jobs:
           echo "DEVELOPER_DIR=$DEVELOPER_DIR" >> "$GITHUB_ENV"
           "$DEVELOPER_DIR/usr/bin/xcodebuild" -version
 
+      # Caches what the build actually writes. It used to name
+      # ~/Library/Developer/Xcode/DerivedData while build.sh has always sent
+      # build-for-testing to build/DerivedData, so the directory never existed
+      # at save time and nothing was ever stored -- every run logged "Cache not
+      # found" against both the exact key and the broad restore-key, and the
+      # step was decorative.
+      #
+      # Worth watching now that it can hit: a DerivedData archive is large, and
+      # restoring one can cost more than this build does cold (90s, measured).
+      # If the restore does not pay for itself, delete the step rather than
+      # keep an optimization that only looks like one.
       - name: Cache derived data
         uses: actions/cache@v6
         with:
-          path: ~/Library/Developer/Xcode/DerivedData
+          path: build/DerivedData
           key: derived-data-${{ hashFiles('LeavesOfBlocks.xcodeproj/project.pbxproj') }}
           restore-keys: |
             derived-data-
