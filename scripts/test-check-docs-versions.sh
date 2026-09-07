@@ -82,6 +82,123 @@ DOCS_CHECK_PBXPROJ="$TMP/same" "$CHECK" >/dev/null 2>&1; code=$?
 if [ "$code" -eq 0 ]; then ok "repeated identical values are fine"; else bad "identical values accepted" "got $code"; fi
 
 echo
+echo "the string catalog is in scope"
+
+# The defect this closes: #89 lowered the target and five documents kept the old
+# floor. The guard was written for that and found them -- but it read Markdown,
+# and technical_description on the About screen said "iOS 18.5+" for months
+# afterwards, in two languages. The copy users actually read in the app was the
+# one copy nothing checked.
+# Built with printf/heredoc rather than sed -i: BSD and GNU sed disagree on
+# in-place editing, and a test helper is a poor place to make someone remember
+# that. The separator is a parameter so the scan can be tested against the file
+# being written differently.
+catalog_fixture() {
+  local path="$1" en="$2" de="$3" sep="${4-}"
+  # Everything between the "value" key and the text: colon, spacing, and the
+  # opening quote. Parameterized so the scan can be tested against the file
+  # being written with different whitespace.
+  [ -n "$sep" ] || sep=' : "' 
+  cat > "$path" <<EOF
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "technical_description" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value"${sep}Built with SwiftUI for iOS ${en}." } },
+        "de" : { "stringUnit" : { "state" : "translated", "value"${sep}Mit SwiftUI für iOS ${de} entwickelt." } }
+      }
+    }
+  },
+  "version" : "1.1"
+}
+EOF
+}
+
+catalog_fixture "$TMP/catalog.xcstrings" "18.0" "18.0"
+DOCS_CHECK_CATALOG="$TMP/catalog.xcstrings" "$CHECK" >/dev/null 2>&1; code=$?
+if [ "$code" -eq 0 ]; then ok "a catalog agreeing with the project passes"; else bad "agreeing catalog passes" "got $code"; fi
+
+catalog_fixture "$TMP/catalog.xcstrings" "18.5" "18.0"
+DOCS_CHECK_CATALOG="$TMP/catalog.xcstrings" "$CHECK" >/dev/null 2>&1; code=$?
+if [ "$code" -eq 1 ]; then ok "a stale floor in the catalog is caught"; else bad "stale catalog floor caught" "want exit 1, got $code"; fi
+
+err=$(DOCS_CHECK_CATALOG="$TMP/catalog.xcstrings" "$CHECK" 2>&1 >/dev/null)
+if grep -qF "xcstrings" <<<"$err"; then ok "the catalog is named in the failure"; else bad "catalog named" "got: $(head -2 <<<"$err")"; fi
+
+# Every locale carries its own copy of the claim, so checking only the source
+# language would pass while a translation still advertised the old floor --
+# which is exactly the state Spanish was in.
+catalog_fixture "$TMP/catalog.xcstrings" "18.0" "18.5"
+DOCS_CHECK_CATALOG="$TMP/catalog.xcstrings" "$CHECK" >/dev/null 2>&1; code=$?
+if [ "$code" -eq 1 ]; then ok "a stale floor in a translation is caught too"; else bad "translation floor caught" "want exit 1, got $code"; fi
+
+# Keys and Xcode's auto-generated comments are not user-visible copy, and a
+# key like "ios_18_5_note" should not fail a check about what users read.
+cat > "$TMP/catalog.xcstrings" <<'EOF'
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "note_about_ios_18_5" : {
+      "comment" : "Shown on iOS 18.5 and later.",
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "value" : "All good here." } }
+      }
+    }
+  },
+  "version" : "1.1"
+}
+EOF
+DOCS_CHECK_CATALOG="$TMP/catalog.xcstrings" "$CHECK" >/dev/null 2>&1; code=$?
+if [ "$code" -eq 0 ]; then ok "keys and comments are not mistaken for user-visible copy"; else bad "keys and comments ignored" "want exit 0, got $code"; fi
+
+# The scan reads the file as text, so it has to survive the file being written
+# differently. Xcode owns this format, and a reformat that quietly turned the
+# check off would be the worst outcome available: green, and blind.
+catalog_fixture "$TMP/catalog.xcstrings" "18.5" "18.0" ': "'
+DOCS_CHECK_CATALOG="$TMP/catalog.xcstrings" "$CHECK" >/dev/null 2>&1; code=$?
+if [ "$code" -eq 1 ]; then ok "a catalog written without the usual spacing is still scanned"; else bad "spacing tolerated" "want exit 1, got $code"; fi
+
+catalog_fixture "$TMP/catalog.xcstrings" "18.5" "18.0" '    :    "'
+DOCS_CHECK_CATALOG="$TMP/catalog.xcstrings" "$CHECK" >/dev/null 2>&1; code=$?
+if [ "$code" -eq 1 ]; then ok "extra whitespace around the colon is tolerated"; else bad "whitespace tolerated" "want exit 1, got $code"; fi
+
+# And if the shape changes past recognition, say so rather than reporting an
+# agreement nobody verified.
+cat > "$TMP/catalog.xcstrings" <<'EOF'
+{
+  "sourceLanguage" : "en",
+  "strings" : {
+    "technical_description" : {
+      "localizations" : {
+        "en" : { "stringUnit" : { "state" : "translated", "text" : "Built with SwiftUI for iOS 18.5." } }
+      }
+    }
+  },
+  "version" : "1.1"
+}
+EOF
+DOCS_CHECK_CATALOG="$TMP/catalog.xcstrings" "$CHECK" >/dev/null 2>&1; code=$?
+if [ "$code" -eq 2 ]; then ok "a catalog with no readable values is a setup error"; else bad "unreadable catalog exits 2" "want 2, got $code"; fi
+
+err=$(DOCS_CHECK_CATALOG="$TMP/catalog.xcstrings" "$CHECK" 2>&1 >/dev/null)
+if grep -qiF "value" <<<"$err"; then ok "and says what it could not find"; else bad "explains itself" "got: $(head -2 <<<"$err")"; fi
+
+echo
+echo "App Store copy is in scope"
+
+# The listing states the floor to a reader who has not installed the app yet,
+# and CLAUDE.md already requires the description to stay consistent with
+# technical_description. Release notes are deliberately not scanned: they
+# describe a moment in time and may name older versions truthfully.
+probe_dir="fastlane/metadata/zz-probe"
+mkdir -p "$probe_dir"
+printf 'Requires iOS 12.9 or later.\n' > "$probe_dir/description.txt"
+"$CHECK" >/dev/null 2>&1; code=$?
+rm -rf "$probe_dir"
+if [ "$code" -eq 1 ]; then ok "a stale floor in an App Store description is caught"; else bad "description scanned" "want exit 1, got $code"; fi
+
+echo
 echo "convention docs are in scope"
 
 # tooling.yml triggers on conventions/**, so the guard has to actually read
