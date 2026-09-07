@@ -862,6 +862,12 @@
             "state" : "translated",
             "value" : "High"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Alto"
+          }
         }
       }
     },
@@ -873,6 +879,12 @@
             "state" : "translated",
             "value" : "Low"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Bajo"
+          }
         }
       }
     },
@@ -883,6 +895,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Medium"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Medio"
           }
         }
       }
@@ -1490,6 +1508,12 @@
             "state" : "translated",
             "value" : "A"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A"
+          }
         }
       }
     },
@@ -1497,6 +1521,12 @@
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A+"
+          }
+        },
+        "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "A+"
@@ -1512,6 +1542,12 @@
             "state" : "translated",
             "value" : "B"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "B"
+          }
         }
       }
     },
@@ -1519,6 +1555,12 @@
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "B+"
+          }
+        },
+        "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "B+"
@@ -1534,6 +1576,12 @@
             "state" : "translated",
             "value" : "Beginner"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Novato"
+          }
         }
       }
     },
@@ -1541,6 +1589,12 @@
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "C"
+          }
+        },
+        "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "C"
@@ -1556,6 +1610,12 @@
             "state" : "translated",
             "value" : "C+"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "C+"
+          }
         }
       }
     },
@@ -1563,6 +1623,12 @@
       "extractionState" : "manual",
       "localizations" : {
         "en" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "D"
+          }
+        },
+        "es" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "D"
@@ -1578,6 +1644,12 @@
             "state" : "translated",
             "value" : "Expert"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Experto"
+          }
         }
       }
     },
@@ -1588,6 +1660,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Learning"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Aprendiz"
           }
         }
       }
@@ -1600,6 +1678,12 @@
             "state" : "translated",
             "value" : "Master"
           }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Maestro"
+          }
         }
       }
     },
@@ -1610,6 +1694,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Skilled"
+          }
+        },
+        "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Hábil"
           }
         }
       }
