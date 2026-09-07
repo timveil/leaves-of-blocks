@@ -532,6 +532,26 @@ Dir.mktmpdir do |root|
   assert_equal(true, written.first.downcase.include?('undo and hint assists'), "the fallback is the template")
 end
 
+# Over-long notes are cut to fit the App Store limit, and the sentence that
+# marks the cut is English. Adding it to a Japanese listing would put an
+# English sentence on the end of Japanese prose -- the same mixing the
+# generator was just taught to avoid.
+Dir.mktmpdir do |root|
+  %w[en-US ja].each { |l| FileUtils.mkdir_p(File.join(root, 'fastlane', 'metadata', l)) }
+  File.write(File.join(root, 'CHANGELOG.md'), CHANGELOG)
+  AIHelper.reset!(available: true, prose: ->(locale) { "#{locale} " + ('x' * 4100) })
+
+  generate_release_notes(version: '2.0.6', root: root, locales: %w[en-US ja])
+
+  english = File.read(File.join(root, 'fastlane', 'metadata', 'en-US', 'release_notes.txt'))
+  japanese = File.read(File.join(root, 'fastlane', 'metadata', 'ja', 'release_notes.txt'))
+
+  assert_equal(true, english.length <= 4000, "English is cut to the limit")
+  assert_equal(true, japanese.length <= 4000, "Japanese is cut to the limit")
+  assert_equal(true, english.include?('Thank you for playing'), "English says why it stops")
+  assert_equal(false, japanese.include?('Thank you for playing'), "Japanese is not given an English closing")
+end
+
 # A missing changelog is reported, not raised: the release can still proceed
 # with whatever notes are already in place.
 Dir.mktmpdir do |root|

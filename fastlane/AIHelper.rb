@@ -286,17 +286,21 @@ module AIHelper
         else
           prose = truncated
         end
-        # Ensure closing, in English only.
-        #
-        # The prompt asks for a closing in whichever language the notes are
-        # written in, so this is the safety net for when the model drops it
-        # under truncation. Appending the English sentence to German or
-        # Japanese prose would be worse than having no closing at all, so a
-        # translated listing simply goes without.
-        english = locale.nil? || locale.start_with?('en')
-        if english && !prose.include?("Thank you for playing")
-          prose += "\n\nThank you for playing Leaves of Blocks!"
-        end
+      end
+
+      # Ensure closing, in English only, whether or not the text was truncated.
+      #
+      # This used to sit inside the truncation branch, so a short English note
+      # that came back without a closing shipped without one -- the safety net
+      # only caught the long ones. The prompt asks for a closing in whichever
+      # language the notes are written in; this catches a model that drops it.
+      #
+      # Only English, because appending an English sentence to German or
+      # Japanese prose would be worse than having no closing at all. A
+      # translated listing simply goes without.
+      english = locale.nil? || locale.start_with?('en')
+      if english && !prose.include?("Thank you for playing")
+        prose += "\n\nThank you for playing Leaves of Blocks!"
       end
 
       prose

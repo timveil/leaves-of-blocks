@@ -462,10 +462,15 @@ def generate_release_notes(version:, root: project_root('CHANGELOG.md'), locales
     locales.each { |locale| prose_by_locale[locale] = prose }
   end
 
+  # The App Store limit is 4000. The sentence marking the cut is English, so it
+  # is added only to English listings -- ending Japanese prose with an English
+  # closing is the mixing this method exists to avoid, and it would be strange
+  # in the one place a reader is already being shown that something was cut.
   prose_by_locale.each do |locale, text|
     next unless text.length > 4000
 
-    prose_by_locale[locale] = text[0..3950] + "...\n\nThank you for playing Leaves of Blocks!"
+    closing = locale.start_with?('en') ? "...\n\nThank you for playing Leaves of Blocks!" : "..."
+    prose_by_locale[locale] = text[0..(3999 - closing.length)] + closing
   end
 
   prose_by_locale.each do |locale, text|
