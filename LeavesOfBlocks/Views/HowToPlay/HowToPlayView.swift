@@ -64,21 +64,28 @@ struct HowToPlayView: View {
                     .contentCard()
 
                     // Scoring table card
+                    //
+                    // The numbers come from GameRules rather than being typed
+                    // here. They were literals, and the row beside one of them
+                    // described the wrong unit for long enough to reach the App
+                    // Store listing in four languages (#135) — a table that
+                    // states the rules is only worth having if it cannot
+                    // disagree with them.
                     VStack(spacing: 0) {
                         GameTableHeaderView(titleKey: "scoring_header")
 
                         ScoringTableRowView(
-                            points: "10",
+                            points: "\(AppConfiguration.GameRules.baseBlockScore)",
                             description: "scoring_blocks_placed".localized,
                             color: GameTheme.Colors.blockBlue
                         )
                         ScoringTableRowView(
-                            points: "100",
+                            points: "\(AppConfiguration.GameRules.lineScore)",
                             description: "scoring_clear_lines".localized,
                             color: GameTheme.Colors.blockGreen
                         )
                         ScoringTableRowView(
-                            points: "+50",
+                            points: "+\(AppConfiguration.GameRules.comboBonus)",
                             description: "scoring_combo_bonus".localized,
                             color: GameTheme.Colors.blockOrange
                         )

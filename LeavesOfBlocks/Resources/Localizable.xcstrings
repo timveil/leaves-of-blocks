@@ -3652,25 +3652,25 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Punkte für jeden Block, den du aufs Feld setzt"
+            "value" : "Punkte für jedes Feld des Blocks, den du setzt"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Points earned for each block placed on the grid"
+            "value" : "Points earned for each square of a block you place"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Puntos ganados por cada bloque colocado en la cuadrícula"
+            "value" : "Puntos ganados por cada cuadro del bloque que colocas"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "盤面に置いたブロック1つごとに入るポイント"
+            "value" : "置いたブロックの1マスごとに入るポイント"
           }
         }
       }
