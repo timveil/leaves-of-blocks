@@ -80,13 +80,13 @@ check_matrix() {
 }
 
 check_matrix "ruby-only matrix" \
-  '{"include":[{"language":"ruby","runner":"ubuntu-latest","build-mode":"none"}]}' \
+  '{"include":[{"language":"ruby","display":"Ruby","runner":"ubuntu-latest","build-mode":"none"}]}' \
   "fastlane/Deliverfile"
 
 check_matrix "empty matrix on docs-only" '{"include":[]}' "CHANGELOG.md"
 
 got_all=$("$MAPPER" --all | sed -n 's/^matrix=//p')
-want_all='{"include":[{"language":"swift","runner":"macos-latest","build-mode":"manual"},{"language":"ruby","runner":"ubuntu-latest","build-mode":"none"},{"language":"actions","runner":"ubuntu-latest","build-mode":"none"}]}'
+want_all='{"include":[{"language":"swift","display":"Swift","runner":"macos-latest","build-mode":"manual"},{"language":"ruby","display":"Ruby","runner":"ubuntu-latest","build-mode":"none"},{"language":"actions","display":"GitHub Actions","runner":"ubuntu-latest","build-mode":"none"}]}'
 if [ "$got_all" = "$want_all" ]; then
   pass=$((pass + 1)); echo "  ok    --all emits the full matrix (schedule runs)"
 else
@@ -147,7 +147,7 @@ else
 fi
 
 got=$(printf '%s\n' "App.swift" | "$MAPPER" --event push | sed -n 's/^matrix=//p')
-want='{"include":[{"language":"swift","runner":"macos-latest","build-mode":"manual"}]}'
+want='{"include":[{"language":"swift","display":"Swift","runner":"macos-latest","build-mode":"manual"}]}'
 if [ "$got" = "$want" ]; then
   pass=$((pass + 1)); echo "  ok    a push emits the Swift-only matrix"
 else
@@ -194,6 +194,22 @@ if [ "$code" -eq 2 ]; then
 else
   fail=$((fail + 1)); echo "  FAIL  unknown event: want exit 2 got $code"
 fi
+
+echo
+echo "display names"
+
+# The job name is built from the matrix, so "Analyze (actions)" cannot be
+# fixed in YAML alone -- and "actions" there means GitHub Actions workflows,
+# not the actions a job takes.
+for probe in "swift:Swift" "ruby:Ruby" "actions:GitHub Actions"; do
+  lang="${probe%%:*}"; want="${probe#*:}"
+  got=$("$MAPPER" --all | sed -n 's/^matrix=//p' | sed -n "s/.*\"language\":\"$lang\",\"display\":\"\([^\"]*\)\".*/\1/p")
+  if [ "$got" = "$want" ]; then
+    pass=$((pass + 1)); echo "  ok    $lang displays as $want"
+  else
+    fail=$((fail + 1)); echo "  FAIL  $lang display: want '$want' got '$got'"
+  fi
+done
 
 echo
 if [ "$fail" -eq 0 ]; then

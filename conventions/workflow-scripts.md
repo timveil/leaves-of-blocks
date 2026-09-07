@@ -112,6 +112,35 @@ branches on `github.event_name` to choose a script invocation, and `Report
 selection` is straight-line `echo` into `$GITHUB_STEP_SUMMARY` with no logic at
 all.
 
+## Names are read under pressure
+
+The checks list is what someone reads when a pull request goes red, deciding
+whether the failure is theirs. So the names carry weight out of proportion to
+their length, and they follow one rule per level:
+
+| Level | Form | Examples |
+| --- | --- | --- |
+| Workflow | Title Case, naming the subject | `iOS Build and Test`, `Code Scanning`, `Scripts and Fastlane` |
+| Job | sentence case, verb first, saying what ran | `Run unit tests`, `Build for testing`, `Detect affected languages` |
+| Step | sentence case, verb first | `Select Xcode`, `Verify locale registries agree` |
+
+Every row in that list answers "what did this do", which is why the verb comes
+first and why a job called `Tooling` was worth renaming.
+
+**No two checks may share a display name.** GitHub contributes its own
+code-scanning check named literally `CodeQL`, so the workflow that produces it
+is called `Code Scanning` — two rows reading `CodeQL`, one of them ours and one
+not, is a name nobody can act on.
+
+Where a name is built from a matrix, the display value belongs in the matrix
+rather than in the YAML: `scripts/codeql-languages.sh` emits `display` beside
+each language, because CodeQL's own identifiers are lowercase and one of them,
+`actions`, otherwise reads as "the actions this job takes".
+
+Renaming a job renames its check. If a required status check ever exists, the
+rename and the branch-protection rule have to change together — `main` carries
+no protection today, which is the only reason this was a free change.
+
 ## See also
 
 - [One rule, one definition](shared-rule-single-source.md)

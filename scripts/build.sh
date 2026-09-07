@@ -20,6 +20,19 @@
 set -euo pipefail
 
 # Configuration
+#
+# Every xcodebuild invocation here writes to DERIVED_DATA. It used to be passed
+# by build-for-testing and run and omitted everywhere else, which left two trees:
+# products under build/ for those two commands, and Xcode's default under
+# ~/Library for build, clean and the test runners. The trees drift, and the
+# stale one is never cleaned by a run that appears to succeed -- a local
+# build/DerivedData was found months out of date, missing a whole locale's
+# .lproj, while the tests it was blamed for ran from the other tree entirely.
+#
+# Inside the repository on purpose: cleanup-project.sh already removes build/,
+# and it matches what CI uploads between its build and test jobs.
+DERIVED_DATA="build/DerivedData"
+
 PROJECT="LeavesOfBlocks.xcodeproj"
 SCHEME="LeavesOfBlocks"
 BUNDLE_ID="timothy.veil.LeavesOfBlocks"
@@ -105,6 +118,7 @@ cmd_build() {
         -project "$PROJECT" \
         -scheme "$SCHEME" \
         -destination 'generic/platform=iOS Simulator' \
+        -derivedDataPath "$DERIVED_DATA" \
         CODE_SIGNING_ALLOWED='NO'
 }
 
@@ -115,7 +129,7 @@ cmd_build_for_testing() {
         -project "$PROJECT" \
         -scheme "$SCHEME" \
         -destination 'generic/platform=iOS Simulator' \
-        -derivedDataPath "build/DerivedData" \
+        -derivedDataPath "$DERIVED_DATA" \
         CODE_SIGNING_ALLOWED='NO'
 }
 
@@ -125,6 +139,7 @@ cmd_clean() {
     xcodebuild clean build \
         -project "$PROJECT" \
         -scheme "$SCHEME" \
+        -derivedDataPath "$DERIVED_DATA" \
         -destination 'generic/platform=iOS Simulator' \
         CODE_SIGNING_ALLOWED='NO'
 }
@@ -253,7 +268,7 @@ run_tests() {
 
     # Handle test-without-building mode
     if [[ "$without_building" == "true" ]]; then
-        xctestrun_file=$(find build/DerivedData -name "*.xctestrun" -print -quit 2>/dev/null)
+        xctestrun_file=$(find "$DERIVED_DATA" -name "*.xctestrun" -print -quit 2>/dev/null)
         if [[ -z "$xctestrun_file" ]]; then
             echo -e "${RED}Error: No .xctestrun file found. Run 'build-for-testing' first.${NC}"
             exit 1
@@ -265,6 +280,7 @@ run_tests() {
         xcodebuild test-without-building \
             -xctestrun "$xctestrun_file" \
             -destination "$destination" \
+            -derivedDataPath "$DERIVED_DATA" \
             -resultBundlePath "$result_bundle" \
             ${only_testing:+"$only_testing"} \
             ${skip_testing:+"$skip_testing"} \
@@ -281,6 +297,7 @@ run_tests() {
             -project "$PROJECT" \
             -scheme "$SCHEME" \
             -destination "$destination" \
+            -derivedDataPath "$DERIVED_DATA" \
             -resultBundlePath "$result_bundle" \
             ${only_testing:+"$only_testing"} \
             ${skip_testing:+"$skip_testing"} \
@@ -323,7 +340,7 @@ cmd_run() {
         -scheme "$SCHEME" \
         -sdk iphonesimulator \
         -destination "id=$sim_udid" \
-        -derivedDataPath "$build_dir/DerivedData" \
+        -derivedDataPath "$DERIVED_DATA" \
         CODE_SIGNING_ALLOWED='NO' 2>&1 | tail -20; then
         echo -e "${RED}Build failed!${NC}"
         exit 1

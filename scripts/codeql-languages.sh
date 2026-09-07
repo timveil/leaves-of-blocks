@@ -132,15 +132,20 @@ esac
 
 # Build the matrix include list. Runner and build-mode per language: Swift
 # needs a macOS runner and a manual build; the others analyze from source.
+#
+# "display" is what the job calls itself in the checks list. CodeQL's own
+# language identifiers are lowercase, and one of them -- "actions" -- reads as
+# "the actions this job takes" rather than "GitHub Actions workflows". The name
+# is built from the matrix, so it cannot be fixed in the workflow alone.
 entries=()
 if [ "$swift" = true ]; then
-  entries+=('{"language":"swift","runner":"macos-latest","build-mode":"manual"}')
+  entries+=('{"language":"swift","display":"Swift","runner":"macos-latest","build-mode":"manual"}')
 fi
 if [ "$ruby" = true ]; then
-  entries+=('{"language":"ruby","runner":"ubuntu-latest","build-mode":"none"}')
+  entries+=('{"language":"ruby","display":"Ruby","runner":"ubuntu-latest","build-mode":"none"}')
 fi
 if [ "$actions" = true ]; then
-  entries+=('{"language":"actions","runner":"ubuntu-latest","build-mode":"none"}')
+  entries+=('{"language":"actions","display":"GitHub Actions","runner":"ubuntu-latest","build-mode":"none"}')
 fi
 
 any=false
