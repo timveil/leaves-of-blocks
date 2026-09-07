@@ -19,6 +19,7 @@ PR. Swift style is not here — that lives in
 | [One rule, one definition](shared-rule-single-source.md) | A rule enforced in two places is defined once and called twice. |
 | [Commit messages](commit-messages.md) | Conventional Commits, enforced locally and in CI. |
 | [Localization](localization.md) | User-visible text goes through `.localized`. Always. |
+| [Translation](translation.md) | Translate the app, not the English string. One register, one glossary, per language. |
 | [Runtime dependencies](runtime-dependencies.md) | No third-party runtime dependencies. System frameworks only. |
 | [Testing](testing.md) | New unit tests use Swift Testing, in Given-When-Then shape. |
 | [Review comments](review-comments.md) | Every review comment is addressed and resolved before merge. |
