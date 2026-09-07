@@ -63,7 +63,12 @@ module AIHelper
   # cannot be proofread here, so the saving is not obviously worth it.
   ANTHROPIC_MODEL = "claude-sonnet-5"
   MAX_TOKENS_CHANGELOG = 2000
-  MAX_TOKENS_RELEASE_NOTES = 1500
+  # Covers the model's thinking as well as the notes themselves. At 1500 the
+  # model could spend the entire budget thinking and return a response whose
+  # only block was a thinking block -- no text, non-deterministically, and more
+  # often once the translation conventions made the prompt longer. The notes
+  # themselves are capped at 3800 characters well below this.
+  MAX_TOKENS_RELEASE_NOTES = 4000
 
   # App context helps AI understand changes in proper context
   APP_CONTEXT = <<~CONTEXT
@@ -208,6 +213,29 @@ module AIHelper
       PROMPT
     end
 
+    # The project's translation rules, read from the file that declares them.
+    #
+    # Register is chosen once per language in conventions/translation.md and
+    # applied everywhere; a generator that is not told picks one per run, which
+    # is how 2.1.0 came back formal in German and French against a convention
+    # declaring du and tu. Read rather than restated, per
+    # conventions/shared-rule-single-source.md -- a second copy here would
+    # drift from the one the humans edit.
+    #
+    # Returns nil when the file cannot be found, so a checkout without it (or a
+    # lane run from an unexpected directory) still generates notes rather than
+    # failing a release over a prompt section.
+    def translation_conventions
+      dir = __dir__
+      while dir && dir != File.dirname(dir)
+        path = File.join(dir, 'conventions', 'translation.md')
+        return File.read(path) if File.exist?(path)
+
+        dir = File.dirname(dir)
+      end
+      nil
+    end
+
     def build_prose_prompt(changelog_section, version, locale = nil)
       # Stated twice, at the top and in the constraints, because the rest of
       # the prompt and the changelog it quotes are both English -- a single
@@ -221,10 +249,25 @@ module AIHelper
             "English version alongside.\n"
         end
 
+      # English listings get the conventions too: the never-translate list and
+      # the rule that a factual claim is checked against the app rather than
+      # translated faithfully both apply to the source language, which is where
+      # the wrong scoring claim reached the store.
+      conventions = translation_conventions
+      conventions_section =
+        if conventions
+          "\nThe project's translation conventions follow. They are binding, and " \
+            "the register table applies to the language you are writing in:\n\n" \
+            "#{conventions}\n"
+        else
+          ''
+        end
+
       <<~PROMPT
         #{APP_CONTEXT}
 
         You are writing App Store release notes for version #{version} of Leaves of Blocks.
+        #{conventions_section}
         #{language_instruction}
 
         Here is the structured changelog for this version:
@@ -312,6 +355,17 @@ module AIHelper
     end
 
     def parse_prose_response(response, locale = nil)
+      # Truncation is a failure, not a short answer: a response that stops at
+      # the token limit is half a sentence, and half a sentence must not reach
+      # the store. Reported rather than returned quietly, because the caller
+      # only sees nil and would otherwise blame the parse.
+      if response['stop_reason'] == 'max_tokens'
+        AIHelper.ui_important(
+          'The model hit the token limit before finishing; treating this locale as failed'
+        )
+        return nil
+      end
+
       content = response_text(response)
       return nil unless content
 
@@ -357,12 +411,15 @@ module AIHelper
       # Only English, because appending an English sentence to German or
       # Japanese prose would be worse than having no closing at all. A
       # translated listing simply goes without.
-      # Matched loosely on purpose. The literal "Thank you for playing" missed a
-      # model that wrote "Thanks so much for playing", so the net appended a
-      # second closing under the first and the English listing carried two
-      # thank-yous. A closing is a closing however it is phrased.
+      # A closing is whatever the last line says, however it is phrased. The
+      # literal "Thank you for playing" missed a model that wrote "Thanks so
+      # much for playing", so a second closing landed under the first; matching
+      # anywhere in the text then went too far the other way, letting a bullet
+      # that thanked players for their bug reports pass as a closing that was
+      # never written. Position is what distinguishes them.
       english = locale.nil? || locale.start_with?('en')
-      if english && !prose.match?(/thank(s|\syou)?\b/i)
+      last_line = prose.lines.reverse_each.find { |line| !line.strip.empty? }.to_s
+      if english && !last_line.match?(/thank(s|\syou)?\b/i)
         prose += "\n\nThank you for playing Leaves of Blocks!"
       end
 

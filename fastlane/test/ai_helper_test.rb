@@ -62,6 +62,13 @@ assert_equal(1, parse(thanked).scan(/[Tt]hank/).length,
 assert_equal(1, parse(already).scan(CLOSING).length,
              "a closing already present is not doubled")
 
+# Only the last line decides. Matching "thank" anywhere let a bullet thanking
+# players for their bug reports stand in for a closing that was never written,
+# which is the enforcement this net exists to provide.
+mid_text_thanks = "New this month:\n• Thanks for your bug reports, they found this one\n• Faster loading"
+assert_equal(true, parse(mid_text_thanks).end_with?("Thank you for playing Leaves of Blocks!"),
+             "thanks inside a bullet is not a closing; one is still appended")
+
 puts
 puts "translated notes are not given an English closing"
 
@@ -165,6 +172,17 @@ assert_equal(true, name_prompt.include?('never translated'),
 assert_equal(true, name_prompt.include?('escape sequence'),
              "the prompt asks for the player's terms, not the code's")
 
+# Register is declared once per language in conventions/translation.md, and
+# the generator has to be told, or it picks one per run: 2.1.0 came back
+# formal in German ("Ihre Sprache") and French ("votre langue") against a
+# convention that declares du and tu. The convention is read rather than
+# restated here, per conventions/shared-rule-single-source.md.
+de_prompt = AIHelper.send(:build_prose_prompt, "### Added\n- A thing", '2.1.0', 'de-DE')
+assert_equal(true, de_prompt.include?('Register is declared once per language'),
+             "the prompt carries the project's translation conventions")
+assert_equal(true, de_prompt.include?('`du`'),
+             "German's declared register reaches the prompt")
+
 # The prompt is what asks for the format, so it is asserted here rather than
 # left to whoever next reads the file.
 prompt = AIHelper.send(:build_prose_prompt, "### Added\n- A thing", '2.1.0', 'de-DE')
@@ -174,6 +192,17 @@ assert_equal(false, prompt.include?('Do NOT use bullet points'),
 
 puts
 puts "payload handling, continued"
+
+# A truncated response is a failure, not a short one. The model can spend the
+# whole budget inside a thinking block and emit no text at all -- which is what
+# happened once the conventions above made the prompt longer -- and a run that
+# stops mid-sentence must not ship half a sentence to the store either.
+truncated_payload = {
+  'stop_reason' => 'max_tokens',
+  'content' => [{ 'type' => 'text', 'text' => 'Half a sentence that stops' }]
+}
+assert_equal(nil, AIHelper.send(:parse_prose_response, truncated_payload, 'de-DE'),
+             "a response cut off at the token limit is refused, not shipped")
 
 # The blocks a response actually carries, when none of them is text.
 assert_equal(nil,

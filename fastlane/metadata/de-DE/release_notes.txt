@@ -1,10 +1,10 @@
-Leaves of Blocks spricht jetzt Ihre Sprache!
+Leaves of Blocks spricht jetzt deine Sprache.
 
-• Neu: Spiel und App-Store-Eintrag sind jetzt auf Englisch, Spanisch, Deutsch, Japanisch, Französisch, Niederländisch, Koreanisch, brasilianischem Portugiesisch sowie Traditionell- und Vereinfachtem Chinesisch verfügbar
-• Whitman-Zitate erscheinen nun in jeder Sprache im englischen Original, ganz wie der Dichter es geschrieben hat
-• Die Punkteanzeige nennt jetzt korrekt 10 Punkte pro Feld statt pro Block
-• Der Beschreibungstext im App Store wurde überarbeitet: Formenanzahl, Namen der Schwierigkeitsstufen und Punkteangaben stimmen jetzt
-• Die Beschriftung „Normale Blöcke“ wird auf Englisch und Spanisch jetzt sauber in zwei Zeilen angezeigt, statt fehlerhafter Zeichen
-• Ein Absturz beim Spielen in spanischer Sprache wurde behoben
+• Neu verfügbar in mehr Sprachen: Spanisch, Deutsch, Japanisch, Französisch, Niederländisch, Koreanisch, brasilianisches Portugiesisch sowie Chinesisch (traditionell und vereinfacht).
+• Whitmans Verse werden in jeder Sprache im englischen Original zitiert, genau wie er sie geschrieben hat.
+• Ein Absturz beim Spielen auf Spanisch wurde behoben.
+• Die Beschriftung „Normal Blocks“ zeigt in der englischen und spanischen Version jetzt korrekt zwei Zeilen statt fehlerhafter Zeichen.
+• Ein Block bringt jetzt richtig 10 Punkte pro Quadrat statt 10 Punkte pro Block.
+• Die App-Store-Beschreibung nennt jetzt die richtige Anzahl an Formen und die korrekten Namen der Schwierigkeitsgrade.
 
-Vielen Dank, dass Sie Leaves of Blocks spielen – wir freuen uns, dass Sie dabei sind!
+Danke, dass du Leaves of Blocks spielst!
