@@ -22,6 +22,13 @@ on:
       - '*.md'
       - 'conventions/**'
       - 'LeavesOfBlocks.xcodeproj/**'
+      # check-locales.sh holds four registries to .locales, and two of them are
+      # app-side: the string catalog and every "key".localized lookup in Swift.
+      # Without these paths a PR could add a lookup with no catalog entry -- the
+      # defect that shipped three raw keys into previews -- and merge green.
+      - '.locales'
+      - 'LeavesOfBlocks/**/*.swift'
+      - 'LeavesOfBlocks/Resources/Localizable.xcstrings'
 
 permissions:
   contents: read
@@ -36,6 +43,13 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v7
+
+      # Ahead of the suites deliberately. This also runs inside
+      # test-check-locales.sh, but a registry disagreement is the failure most
+      # likely to arrive here, and it reads better as its own red step than as
+      # one assertion among dozens.
+      - name: Verify locale registries agree
+        run: ./scripts/check-locales.sh
 
       - name: Run script test suites
         run: ./scripts/run-script-tests.sh
