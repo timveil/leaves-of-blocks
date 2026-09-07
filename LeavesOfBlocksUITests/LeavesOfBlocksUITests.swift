@@ -22,7 +22,14 @@ final class LeavesOfBlocksUITests: XCTestCase {
     /// path past 10s as well, failing the same test in run 26004869474 —
     /// hence 20s. Later tests (warmed simulator) typically resolve waits in
     /// 1–2s, so the extra headroom only costs time on actual failures.
-    private let defaultTimeout: TimeInterval = 20
+    /// CI runners are the slow case, and they are where this fails. In run
+    /// 34166668826 `testDragAndDropBlock` -- the first test in its shard, so
+    /// the one paying for the cold simulator and the first app install --
+    /// spent 91 seconds reaching line 255 and failed there with 20s of
+    /// headroom left. The same test passes locally in 14.8s. That gap is the
+    /// machine, not the app, so the budget is larger where the machine is
+    /// slower rather than larger everywhere.
+    private var defaultTimeout: TimeInterval { isCI ? 45 : 20 }
 
     /// Check if running in CI environment
     private var isCI: Bool {
@@ -249,10 +256,12 @@ final class LeavesOfBlocksUITests: XCTestCase {
     @MainActor
     func testDragAndDropBlock() throws {
         let startButton = app.buttons["start_game_button"]
-        XCTAssertTrue(startButton.waitForExistence(timeout: defaultTimeout))
+        XCTAssertTrue(startButton.waitForExistence(timeout: defaultTimeout),
+                      "Start button should exist on the home screen")
         startButton.tap()
 
-        XCTAssertTrue(waitForGameGrid(timeout: defaultTimeout))
+        XCTAssertTrue(waitForGameGrid(timeout: defaultTimeout),
+                      "Neither the grid nor the holding area appeared after tapping Start")
 
         let gridElement = app.otherElements["spritekit_game_grid"]
 
