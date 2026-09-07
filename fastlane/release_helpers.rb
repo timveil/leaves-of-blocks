@@ -571,8 +571,17 @@ def update_changelog_from_commits(new_version:)
   end
 
   # === AI ENHANCEMENT ATTEMPT ===
+  #
+  # Three cases, three messages. Folding "nothing to derive" in with "no API
+  # key" printed "ANTHROPIC_API_KEY not set" on a machine where the key was set
+  # -- and the release log is the only post-mortem when a changelog comes out
+  # wrong, so a line that misreports why is worse than no line.
   ai_result = nil
-  if filtered_commits.any? && AIHelper.available?
+  if filtered_commits.empty?
+    FastlaneCore::UI.message("Nothing to derive from commits; the section stands as authored")
+  elsif !AIHelper.available?
+    FastlaneCore::UI.message("ANTHROPIC_API_KEY not set, using template-based generation")
+  else
     FastlaneCore::UI.message("Attempting AI-enhanced changelog generation...")
     ai_result = AIHelper.enhance_changelog(commits: filtered_commits, new_version: new_version)
 
@@ -581,8 +590,6 @@ def update_changelog_from_commits(new_version:)
     else
       FastlaneCore::UI.important("AI enhancement returned no results, using template fallback")
     end
-  else
-    FastlaneCore::UI.message("ANTHROPIC_API_KEY not set, using template-based generation")
   end
 
   if ai_result
