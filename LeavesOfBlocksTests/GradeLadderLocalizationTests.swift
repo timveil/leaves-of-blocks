@@ -73,10 +73,13 @@ struct GradeLadderLocalizationTests {
 
     // A parameterized test over an empty array runs no cases and reports
     // success, so the language list is itself worth asserting.
-    @Test("The app bundle carries the languages to check")
+    //
+    // Only that it is non-empty. Which languages ship is .locales' business,
+    // and scripts/check-locales.sh already holds the catalog to it — naming
+    // them here too would mean editing this file for every locale added, and
+    // failing the PR that adds one (conventions/invariants-not-counts.md).
+    @Test("The app bundle carries languages to check")
     func theBundleCarriesTranslations() {
         #expect(!languages.isEmpty, "no translations found in \(LocalizationBundles.app.bundlePath)")
-        #expect(languages.contains("de"), "expected German among \(languages)")
-        #expect(languages.contains("es"), "expected Spanish among \(languages)")
     }
 }

@@ -41,6 +41,12 @@
             "state" : "translated",
             "value" : "Info"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "情報"
+          }
         }
       }
     },
@@ -63,6 +69,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Acerca de"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "このゲームについて"
           }
         }
       }
@@ -87,6 +99,12 @@
             "state" : "translated",
             "value" : "Generación Inteligente de Bloques"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "スマートなブロック生成"
+          }
         }
       }
     },
@@ -109,6 +127,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "El juego analiza tu cuadrícula y ajusta los bloques que recibes para mantener el desafío mientras previene situaciones imposibles. Cuando estás en dificultades, proporciona formas más útiles automáticamente."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "盤面を分析して、手ごたえを保ちながら詰みを防ぐようにブロックを調整します。苦しい場面では、置きやすい形が自動的に増えます。"
           }
         }
       }
@@ -133,6 +157,12 @@
             "state" : "translated",
             "value" : "Funciones Avanzadas"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "高度な機能"
+          }
         }
       }
     },
@@ -155,6 +185,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Leaves of Blocks incluye sistemas sofisticados que se adaptan a tu estilo de juego y te ayudan a mejorar con el tiempo."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Leaves of Blocks には、プレイスタイルに合わせて上達を後押しする仕組みが備わっています。"
           }
         }
       }
@@ -179,6 +215,12 @@
             "state" : "translated",
             "value" : "Todos los datos del juego se han restablecido exitosamente."
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "すべてのゲームデータをリセットしました。"
+          }
         }
       }
     },
@@ -201,6 +243,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Respuesta."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Answer."
           }
         }
       }
@@ -225,6 +273,12 @@
             "state" : "translated",
             "value" : "Ayudas"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "アシスト"
+          }
         }
       }
     },
@@ -247,6 +301,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ayudas para cuando estás en un apuro. Deshacer y Pista se pueden usar una vez por partida cada una:"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "苦しいときのための機能です。取り消しとヒントは1ゲームにつき1回ずつ使えます:"
           }
         }
       }
@@ -271,6 +331,12 @@
             "state" : "translated",
             "value" : "Deshacer: recupera tu última colocación de bloque."
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "取り消し: 直前に置いたブロックを戻します。"
+          }
         }
       }
     },
@@ -293,6 +359,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pista: resalta una jugada sugerida en el tablero."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ヒント: 盤面におすすめの一手を表示します。"
           }
         }
       }
@@ -317,6 +389,12 @@
             "state" : "translated",
             "value" : "Ver tablero: cuando termina la partida, muestra el tablero final para ver cómo terminó."
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "盤面を見る: ゲーム終了後に、最後の盤面を表示します。"
+          }
         }
       }
     },
@@ -339,6 +417,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Puntuación Promedio"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "平均スコア"
           }
         }
       }
@@ -363,6 +447,12 @@
             "state" : "translated",
             "value" : "Potenciador de limpieza de área"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "エリア消去のパワーアップ"
+          }
         }
       }
     },
@@ -385,6 +475,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%d bloques disponibles"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ブロック%d個"
           }
         }
       }
@@ -409,6 +505,12 @@
             "state" : "translated",
             "value" : "Bloque %2$@ de %1$d celdas"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%dマスの%@ブロック"
+          }
         }
       }
     },
@@ -431,6 +533,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "azul"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "青"
           }
         }
       }
@@ -455,6 +563,12 @@
             "state" : "translated",
             "value" : "verde"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "緑"
+          }
         }
       }
     },
@@ -477,6 +591,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "naranja"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "オレンジ"
           }
         }
       }
@@ -501,6 +621,12 @@
             "state" : "translated",
             "value" : "rosa"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ピンク"
+          }
         }
       }
     },
@@ -523,6 +649,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "púrpura"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "紫"
           }
         }
       }
@@ -547,6 +679,12 @@
             "state" : "translated",
             "value" : "rojo"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "赤"
+          }
         }
       }
     },
@@ -569,6 +707,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "amarillo"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "黄"
           }
         }
       }
@@ -593,6 +737,12 @@
             "state" : "translated",
             "value" : "Potenciador de limpieza de columna"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "列消去のパワーアップ"
+          }
         }
       }
     },
@@ -615,6 +765,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%@, %d líneas limpiadas, %d puntos de bonificación"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%@、%d列消去、ボーナス%dポイント"
           }
         }
       }
@@ -639,6 +795,12 @@
             "state" : "translated",
             "value" : "Desliza hacia arriba o abajo para cambiar la dificultad"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "上下にスワイプすると難易度を変更できます"
+          }
         }
       }
     },
@@ -661,6 +823,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Dificultad"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "難易度"
           }
         }
       }
@@ -685,6 +853,12 @@
             "state" : "translated",
             "value" : "Cuadrícula de juego, 8 por 8"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "盤面、8×8"
+          }
         }
       }
     },
@@ -707,6 +881,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Pista, una disponible"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ヒント、残り1回"
           }
         }
       }
@@ -731,6 +911,12 @@
             "state" : "translated",
             "value" : "Pista, ya utilizada"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ヒント、使用済み"
+          }
         }
       }
     },
@@ -753,6 +939,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Potenciador de limpieza de fila"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "行消去のパワーアップ"
           }
         }
       }
@@ -777,6 +969,12 @@
             "state" : "translated",
             "value" : "Puntuación %@, %@ líneas limpiadas"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "スコア%@、%@行消去"
+          }
         }
       }
     },
@@ -799,6 +997,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Deshacer, uno disponible"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "取り消し、残り1回"
           }
         }
       }
@@ -823,6 +1027,12 @@
             "state" : "translated",
             "value" : "Deshacer, ya utilizado"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "取り消し、使用済み"
+          }
         }
       }
     },
@@ -845,6 +1055,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mejor de Todos"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "自己ベスト"
           }
         }
       }
@@ -869,6 +1085,12 @@
             "state" : "translated",
             "value" : "Mejor Puntuación"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最高スコア"
+          }
         }
       }
     },
@@ -891,6 +1113,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bloques Colocados"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "配置ブロック"
           }
         }
       }
@@ -915,6 +1143,12 @@
             "state" : "translated",
             "value" : "Cancelar"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "キャンセル"
+          }
         }
       }
     },
@@ -937,6 +1171,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Continuar Partida"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ゲームを再開"
           }
         }
       }
@@ -961,6 +1201,12 @@
             "state" : "translated",
             "value" : "Puntuación: %lld"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "スコア: %lld"
+          }
         }
       }
     },
@@ -983,6 +1229,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Descartar"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "破棄"
           }
         }
       }
@@ -1007,6 +1259,12 @@
             "state" : "translated",
             "value" : "Tu partida actual se descartará y no podrá recuperarse."
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "プレイ中のゲームは破棄され、元に戻せません。"
+          }
         }
       }
     },
@@ -1029,6 +1287,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "¿Empezar una nueva partida?"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新しいゲームを始めますか？"
           }
         }
       }
@@ -1053,6 +1317,12 @@
             "state" : "translated",
             "value" : "Historial"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ゲーム履歴"
+          }
         }
       }
     },
@@ -1075,6 +1345,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Jugar"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "プレイ"
           }
         }
       }
@@ -1099,6 +1375,12 @@
             "state" : "translated",
             "value" : "Aún no hay partidas — termina una para verla aquí."
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "まだ記録がありません。1ゲーム終えるとここに表示されます。"
+          }
         }
       }
     },
@@ -1121,6 +1403,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Estadísticas"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "統計"
           }
         }
       }
@@ -1145,6 +1433,12 @@
             "state" : "translated",
             "value" : "Reanudar"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ゲームを再開"
+          }
         }
       }
     },
@@ -1167,6 +1461,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Alto"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "高"
           }
         }
       }
@@ -1191,6 +1491,12 @@
             "state" : "translated",
             "value" : "Bajo"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "低"
+          }
         }
       }
     },
@@ -1213,6 +1519,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Medio"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "中"
           }
         }
       }
@@ -1237,6 +1549,12 @@
             "state" : "translated",
             "value" : "Borrar Todo el Historial"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "履歴をすべて削除"
+          }
         }
       }
     },
@@ -1259,6 +1577,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Borrar Historial"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "履歴を削除"
           }
         }
       }
@@ -1283,6 +1607,12 @@
             "state" : "translated",
             "value" : "Esto eliminará permanentemente todas tus partidas guardadas y estadísticas. Esta acción no se puede deshacer."
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "保存されたゲームと統計がすべて完全に削除されます。この操作は取り消せません。"
+          }
         }
       }
     },
@@ -1305,6 +1635,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Completar Líneas"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ラインを消す"
           }
         }
       }
@@ -1329,6 +1665,12 @@
             "state" : "translated",
             "value" : "Cuando completas una fila horizontal o columna vertical, ¡desaparece y ganas puntos! Elimina múltiples líneas a la vez para obtener puntos de bonificación. Cuantas más líneas elimines simultáneamente, mayor será tu bonificación de combo."
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "横の行または縦の列をすべて埋めると、そのラインが消えてスコアになります。複数のラインを同時に消すとボーナス点が入り、同時に消すほどコンボボーナスが大きくなります。"
+          }
         }
       }
     },
@@ -1351,6 +1693,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "COMBO"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "コンボ"
           }
         }
       }
@@ -1375,6 +1723,12 @@
             "state" : "translated",
             "value" : "COMBO!"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "コンボ！"
+          }
         }
       }
     },
@@ -1394,6 +1748,12 @@
           }
         },
         "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "leavesofblocks.com"
+          }
+        },
+        "ja" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "leavesofblocks.com"
@@ -1421,6 +1781,12 @@
             "state" : "translated",
             "value" : "Creador"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "開発者"
+          }
         }
       }
     },
@@ -1444,6 +1810,12 @@
             "state" : "translated",
             "value" : ", un ingeniero de software y padre que cree que los juegos deberían proporcionar un respiro, no rabia."
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "。ゲームは怒りではなく安らぎを与えるものだと考える、ソフトウェアエンジニアであり父親です。"
+          }
         }
       }
     },
@@ -1463,6 +1835,12 @@
           }
         },
         "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Tim Veil"
+          }
+        },
+        "ja" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tim Veil"
@@ -1490,6 +1868,12 @@
             "state" : "translated",
             "value" : "Dedicatoria"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "献辞"
+          }
         }
       }
     },
@@ -1512,6 +1896,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Para Emma, Annie y Grace. Que este juego sirva como una distracción momentánea de las luchas de la vida, grandes y pequeñas."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "エマ、アニー、グレースへ。このゲームが、大小さまざまな人生の苦労からのひとときの気晴らしになりますように。"
           }
         }
       }
@@ -1536,6 +1926,12 @@
             "state" : "translated",
             "value" : "Desarrollado por "
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "開発: "
+          }
         }
       }
     },
@@ -1558,6 +1954,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Dificultad"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "難易度"
           }
         }
       }
@@ -1582,6 +1984,12 @@
             "state" : "translated",
             "value" : "Audaz"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "大胆"
+          }
         }
       }
     },
@@ -1604,6 +2012,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "El modo Gentil es perfecto para principiantes — más bloques pequeños y manejables que son más fáciles de colocar"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "やさしいは初めての方に最適です。小さくて置きやすいブロックが多く出ます"
           }
         }
       }
@@ -1628,6 +2042,12 @@
             "state" : "translated",
             "value" : "Gentil"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "やさしい"
+          }
         }
       }
     },
@@ -1650,6 +2070,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "El modo Salvaje es para jugadores experimentados — espera más bloques grandes y complejos que requieren pensamiento estratégico"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ワイルドは経験者向けです。大きく複雑なブロックが増え、戦略的な判断が求められます"
           }
         }
       }
@@ -1674,6 +2100,12 @@
             "state" : "translated",
             "value" : "Dificultad"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "難易度"
+          }
         }
       }
     },
@@ -1696,6 +2128,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "El modo Audaz ofrece un desafío equilibrado con una buena mezcla de bloques pequeños y grandes"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "大胆は小さなブロックと大きなブロックがほどよく混ざった、バランスの取れた難易度です"
           }
         }
       }
@@ -1720,6 +2158,12 @@
             "state" : "translated",
             "value" : "Salvaje"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ワイルド"
+          }
         }
       }
     },
@@ -1742,6 +2186,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cómo Jugar"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "遊び方"
           }
         }
       }
@@ -1766,6 +2216,12 @@
             "state" : "translated",
             "value" : "Verás hasta 3 formas de bloques en la parte inferior de la pantalla. Simplemente arrastra cualquier forma a la cuadrícula donde quepa completamente. Los bloques no pueden superponerse a piezas existentes ni extenderse más allá de los bordes de la cuadrícula. Cuando uses los 3 bloques, recibirás 3 nuevos automáticamente."
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "画面下部に最大3つのブロックが表示されます。すべて収まる場所にドラッグして配置してください。ブロックは既存のマスと重ねたり、盤面の外にはみ出したりできません。3つすべてを使うと、自動的に新しい3つが配られます。"
+          }
         }
       }
     },
@@ -1788,6 +2244,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Eficiencia"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "効率"
           }
         }
       }
@@ -1812,6 +2274,12 @@
             "state" : "translated",
             "value" : "Seguimiento de Rendimiento"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "パフォーマンス記録"
+          }
         }
       }
     },
@@ -1834,6 +2302,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "El juego rastrea qué tan eficientemente usas el espacio de la cuadrícula y proporciona calificaciones de A+ a D. Mayor eficiencia proviene de mantener la cuadrícula organizada y minimizar el espacio desperdiciado."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "盤面のスペースをどれだけ効率よく使えているかを記録し、A+ から D までの評価を付けます。盤面を整理して無駄を減らすほど、効率は高くなります。"
           }
         }
       }
@@ -1858,6 +2332,12 @@
             "state" : "translated",
             "value" : "Puntuación Final"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最終スコア"
+          }
         }
       }
     },
@@ -1880,6 +2360,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Activar Game Center"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Game Center を有効にする"
           }
         }
       }
@@ -1904,6 +2390,12 @@
             "state" : "translated",
             "value" : "Cuando está activado, tu puntuación final y logros se envían a Game Center de Apple. Desactivado por defecto — tus datos permanecen en este dispositivo hasta que aceptes. Sin anuncios, sin rastreo de terceros, sin venta de datos."
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "オンにすると、最終スコアと獲得した実績が Apple の Game Center に送信されます。初期設定はオフで、オンにするまでデータはこの端末に留まります。広告なし、第三者による追跡なし、データの販売なし。"
+          }
         }
       }
     },
@@ -1926,6 +2418,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Fin del Juego"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ゲーム終了"
           }
         }
       }
@@ -1950,6 +2448,12 @@
             "state" : "translated",
             "value" : "El juego termina cuando ninguno de tus 3 bloques actuales puede caber en ningún lugar de la cuadrícula. No te preocupes - el juego incluye funciones inteligentes para ayudar a prevenir esto ajustando los tipos de bloques que recibes según la situación de tu cuadrícula."
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "手持ちの3つのブロックがどこにも置けなくなるとゲーム終了です。盤面の状況に応じて配られるブロックの種類が調整されるので、そう簡単には終わりません。"
+          }
         }
       }
     },
@@ -1972,6 +2476,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Que el poderoso juego ha terminado, y Tú no pudiste contribuir un bloque."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "力強きゲームは終わり、あなたはひとつのブロックも捧げられなかった。"
           }
         }
       }
@@ -1996,6 +2506,12 @@
             "state" : "translated",
             "value" : "Fin del Juego"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ゲーム終了"
+          }
         }
       }
     },
@@ -2019,6 +2535,12 @@
             "state" : "translated",
             "value" : "Partidas Jugadas"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "プレイ回数"
+          }
         }
       }
     },
@@ -2038,6 +2560,12 @@
           }
         },
         "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A"
+          }
+        },
+        "ja" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "A"
@@ -2065,6 +2593,12 @@
             "state" : "translated",
             "value" : "A+"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A+"
+          }
         }
       }
     },
@@ -2084,6 +2618,12 @@
           }
         },
         "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "B"
+          }
+        },
+        "ja" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "B"
@@ -2111,6 +2651,12 @@
             "state" : "translated",
             "value" : "B+"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "B+"
+          }
         }
       }
     },
@@ -2134,6 +2680,12 @@
             "state" : "translated",
             "value" : "Novato"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "初心者"
+          }
         }
       }
     },
@@ -2153,6 +2705,12 @@
           }
         },
         "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "C"
+          }
+        },
+        "ja" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "C"
@@ -2180,6 +2738,12 @@
             "state" : "translated",
             "value" : "C+"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "C+"
+          }
         }
       }
     },
@@ -2199,6 +2763,12 @@
           }
         },
         "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "D"
+          }
+        },
+        "ja" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "D"
@@ -2226,6 +2796,12 @@
             "state" : "translated",
             "value" : "Experto"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "熟練者"
+          }
         }
       }
     },
@@ -2248,6 +2824,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Aprendiz"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "練習中"
           }
         }
       }
@@ -2272,6 +2854,12 @@
             "state" : "translated",
             "value" : "Maestro"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "達人"
+          }
         }
       }
     },
@@ -2294,6 +2882,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Hábil"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "中級者"
           }
         }
       }
@@ -2318,6 +2912,12 @@
             "state" : "translated",
             "value" : "Puntuación Máxima"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最高スコア"
+          }
         }
       }
     },
@@ -2340,6 +2940,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "El historial de partidas se ha borrado exitosamente."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ゲーム履歴を削除しました。"
           }
         }
       }
@@ -2364,6 +2970,12 @@
             "state" : "translated",
             "value" : "Inicio"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ホーム"
+          }
         }
       }
     },
@@ -2386,6 +2998,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Cómo Jugar"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "遊び方"
           }
         }
       }
@@ -2410,6 +3028,12 @@
             "state" : "translated",
             "value" : "Ayuda"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "遊び方"
+          }
         }
       }
     },
@@ -2432,6 +3056,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Para mí cada hora de luz y oscuridad es un milagro, Cada pulgada cúbica de espacio es un milagro,"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "To me every hour of the light and dark is a miracle, Every cubic inch of space is a miracle,"
           }
         }
       }
@@ -2456,6 +3086,12 @@
             "state" : "translated",
             "value" : "Milagros"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Miracles"
+          }
         }
       }
     },
@@ -2475,6 +3111,12 @@
           }
         },
         "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1856"
+          }
+        },
+        "ja" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "1856"
@@ -2502,6 +3144,12 @@
             "state" : "translated",
             "value" : "Inspiración"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "着想"
+          }
         }
       }
     },
@@ -2524,6 +3172,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nacido del amor por los rompecabezas de bloques, la frustración con los anuncios y la inspiración de la poesía atemporal de Walt Whitman."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ブロックパズルへの愛情と、広告への苛立ち、そしてウォルト・ホイットマンの時を超えた詩から生まれました。"
           }
         }
       }
@@ -2548,6 +3202,12 @@
             "state" : "translated",
             "value" : "Última Puntuación: %@"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "前回のスコア: %@"
+          }
         }
       }
     },
@@ -2570,6 +3230,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Líneas"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ライン"
           }
         }
       }
@@ -2594,6 +3260,12 @@
             "state" : "translated",
             "value" : "Líneas Completadas"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "消したライン"
+          }
         }
       }
     },
@@ -2616,6 +3288,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Combo Más Largo"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最長コンボ"
           }
         }
       }
@@ -2640,6 +3318,12 @@
             "state" : "translated",
             "value" : "MEGA COMBO!"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "メガコンボ！"
+          }
         }
       }
     },
@@ -2662,6 +3346,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Menú"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "メニュー"
           }
         }
       }
@@ -2686,6 +3376,12 @@
             "state" : "translated",
             "value" : "Nueva Partida"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新しいゲーム"
+          }
         }
       }
     },
@@ -2708,6 +3404,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Nueva"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "新しいゲーム"
           }
         }
       }
@@ -2732,6 +3434,12 @@
             "state" : "translated",
             "value" : "Aceptar"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "OK"
+          }
         }
       }
     },
@@ -2754,6 +3462,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Puntos"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ポイント"
           }
         }
       }
@@ -2778,6 +3492,12 @@
             "state" : "translated",
             "value" : "Consejos Pro"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "上達のコツ"
+          }
         }
       }
     },
@@ -2800,6 +3520,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Restablecer Todos los Datos"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "すべてのデータをリセット"
           }
         }
       }
@@ -2824,6 +3550,12 @@
             "state" : "translated",
             "value" : "Restablecimiento Completo"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "リセット完了"
+          }
         }
       }
     },
@@ -2846,6 +3578,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Esto eliminará permanentemente TODOS los datos del juego incluyendo historial, puntuaciones máximas y preferencias. Esta acción no se puede deshacer."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "履歴、最高スコア、設定を含む「すべての」ゲームデータが完全に削除されます。この操作は取り消せません。"
           }
         }
       }
@@ -2870,6 +3608,12 @@
             "state" : "translated",
             "value" : "Restablecer Todo"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "すべてリセット"
+          }
         }
       }
     },
@@ -2892,6 +3636,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Puntuación"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "スコア"
           }
         }
       }
@@ -2916,6 +3666,12 @@
             "state" : "translated",
             "value" : "Puntos ganados por cada bloque colocado en la cuadrícula"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "盤面に置いたブロック1つごとに入るポイント"
+          }
         }
       }
     },
@@ -2938,6 +3694,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Puntos ganados por cada línea completa eliminada"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "消したライン1本ごとに入るポイント"
           }
         }
       }
@@ -2962,6 +3724,12 @@
             "state" : "translated",
             "value" : "Puntos extra por cada línea adicional eliminada simultáneamente"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "同時に消したライン1本ごとに加算されるボーナス"
+          }
         }
       }
     },
@@ -2984,6 +3752,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Puntuación"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "スコア"
           }
         }
       }
@@ -3008,6 +3782,12 @@
             "state" : "translated",
             "value" : "Configuración"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "設定"
+          }
         }
       }
     },
@@ -3030,6 +3810,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ajustes"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "設定"
           }
         }
       }
@@ -3054,6 +3840,12 @@
             "state" : "translated",
             "value" : "El día borrado, la lección terminada"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "The day erased, the lesson done"
+          }
         }
       }
     },
@@ -3077,6 +3869,12 @@
             "state" : "translated",
             "value" : "Una Medianoche Clara"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "A Clear Midnight"
+          }
         }
       }
     },
@@ -3096,6 +3894,12 @@
           }
         },
         "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1880"
+          }
+        },
+        "ja" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "1880"
@@ -3123,6 +3927,12 @@
             "state" : "translated",
             "value" : "Eliminar Área"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "エリア消去"
+          }
         }
       }
     },
@@ -3145,6 +3955,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Eliminar Área es el bloque de poder definitivo. Este bloque morado elimina un área de 3×3 alrededor de donde lo coloques. Úsalo sabiamente para máximo impacto."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "エリア消去は最強のブロックです。この紫のブロックは、置いた場所を中心に3×3の範囲を消します。ここぞという場面で使いましょう。"
           }
         }
       }
@@ -3169,6 +3985,12 @@
             "state" : "translated",
             "value" : "Eliminar Columna"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "列消去"
+          }
         }
       }
     },
@@ -3191,6 +4013,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Eliminar Fila es un poderoso bloque rojo que elimina instantáneamente toda una fila horizontal al colocarlo. Ideal para superar situaciones difíciles."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "行消去は、置くと横一行をまるごと消す強力な赤いブロックです。詰まった盤面を切り開くのに向いています。"
           }
         }
       }
@@ -3215,6 +4043,12 @@
             "state" : "translated",
             "value" : "Bloques\\nNormales"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "通常の\nブロック"
+          }
         }
       }
     },
@@ -3237,6 +4071,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Los bloques normales son tus piezas principales. Vienen en muchas formas y tamaños (1–9 cuadros cada uno). Llena filas y columnas para eliminarlas."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "通常ブロックは基本となる駒です。形も大きさもさまざまで、1〜9マスあります。行や列を埋めて消しましょう。"
           }
         }
       }
@@ -3261,6 +4101,12 @@
             "state" : "translated",
             "value" : "Eliminar Fila"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "行消去"
+          }
         }
       }
     },
@@ -3283,6 +4129,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Eliminar Columna es un poderoso bloque azul que elimina instantáneamente toda una columna vertical al colocarlo. Perfecto para crear espacio."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "列消去は、置くと縦一列をまるごと消す強力な青いブロックです。スペースを作るのに最適です。"
           }
         }
       }
@@ -3307,6 +4159,12 @@
             "state" : "translated",
             "value" : "Formas de Bloques"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ブロックの形"
+          }
         }
       }
     },
@@ -3329,6 +4187,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ver Resultados"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "結果を見る"
           }
         }
       }
@@ -3353,6 +4217,12 @@
             "state" : "translated",
             "value" : "Eficiencia Prom."
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "平均効率"
+          }
         }
       }
     },
@@ -3375,6 +4245,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mejor Combo"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最高コンボ"
           }
         }
       }
@@ -3399,6 +4275,12 @@
             "state" : "translated",
             "value" : "Días Jugados"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "プレイ日数"
+          }
         }
       }
     },
@@ -3418,6 +4300,12 @@
           }
         },
         "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld%%"
+          }
+        },
+        "ja" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lld%%"
@@ -3445,6 +4333,12 @@
             "state" : "translated",
             "value" : "Modo Favorito"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "よく遊ぶ難易度"
+          }
         }
       }
     },
@@ -3467,6 +4361,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lldh %lldm"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld時間%lld分"
           }
         }
       }
@@ -3491,6 +4391,12 @@
             "state" : "translated",
             "value" : "Partida Más Larga"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最長プレイ"
+          }
         }
       }
     },
@@ -3513,6 +4419,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "%lldm"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "%lld分"
           }
         }
       }
@@ -3537,6 +4449,12 @@
             "state" : "translated",
             "value" : "Más Líneas"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最多ライン"
+          }
         }
       }
     },
@@ -3559,6 +4477,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Actividad"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "アクティビティ"
           }
         }
       }
@@ -3583,6 +4507,12 @@
             "state" : "translated",
             "value" : "Récords"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "記録"
+          }
         }
       }
     },
@@ -3605,6 +4535,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Habilidad"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "スキル"
           }
         }
       }
@@ -3629,6 +4565,12 @@
             "state" : "translated",
             "value" : "Tiempo Total Jugado"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "総プレイ時間"
+          }
         }
       }
     },
@@ -3652,6 +4594,12 @@
             "state" : "translated",
             "value" : "Calificación Típica"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "平均評価"
+          }
         }
       }
     },
@@ -3671,6 +4619,12 @@
           }
         },
         "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "—"
+          }
+        },
+        "ja" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "—"
@@ -3698,6 +4652,12 @@
             "state" : "translated",
             "value" : "Juego Estratégico"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "戦略的なプレイ"
+          }
         }
       }
     },
@@ -3720,6 +4680,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tus habilidades estratégicas se califican de Principiante a Maestro según qué tan bien preparas las eliminaciones de líneas y planificas con anticipación. Busca oportunidades para eliminar múltiples líneas con una sola colocación de bloque."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ラインを消す準備や先読みの上手さに応じて、初心者から達人まで評価されます。1手で複数のラインを消せる場面を探しましょう。"
           }
         }
       }
@@ -3744,6 +4710,12 @@
             "state" : "translated",
             "value" : "Estrategia"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "戦略"
+          }
         }
       }
     },
@@ -3766,6 +4738,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Toca para Historial"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "タップで履歴へ"
           }
         }
       }
@@ -3790,6 +4768,12 @@
             "state" : "translated",
             "value" : "Construido con SwiftUI para iOS 18.0+. Sin anuncios. Sin rastreo de terceros. Sin venta de datos. Juega sin conexión por defecto — actívalo en Game Center para tablas de clasificación y logros."
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "SwiftUI で開発、iOS 18.0 以降に対応。広告なし。第三者による追跡なし。データの販売なし。標準ではオフラインでプレイでき、Apple Game Center のリーダーボードと実績は任意で利用できます。"
+          }
         }
       }
     },
@@ -3812,6 +4796,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Detalles Técnicos"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "技術情報"
           }
         }
       }
@@ -3836,6 +4826,12 @@
             "state" : "translated",
             "value" : "El Campo de Juego"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "盤面"
+          }
         }
       }
     },
@@ -3858,6 +4854,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Tu tablero de juego es una cuadrícula de 8×8 con 64 espacios. Tu objetivo es completar filas horizontales o columnas verticales para eliminarlas y ganar puntos. La cuadrícula comienza con algunos bloques aleatorios ya colocados para crear desafíos interesantes."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "盤面は64マスの8×8グリッドです。横の行や縦の列をすべて埋めると消えてポイントになります。最初からいくつかブロックが置かれていて、序盤から考えどころがあります。"
           }
         }
       }
@@ -3882,6 +4884,12 @@
             "state" : "translated",
             "value" : "Tiempo Jugado"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "プレイ時間"
+          }
         }
       }
     },
@@ -3904,6 +4912,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Usa las esquinas y bordes estratégicamente cuando la cuadrícula se llene"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "盤面が埋まってきたら、角と端をうまく使いましょう"
           }
         }
       }
@@ -3928,6 +4942,12 @@
             "state" : "translated",
             "value" : "Tu calificación de eficiencia mejora con juego organizado y estratégico"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "整理された戦略的なプレイほど、効率の評価は上がります"
+          }
         }
       }
     },
@@ -3950,6 +4970,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Mantén tu cuadrícula organizada - evita crear huecos dispersos"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "盤面は整理して、穴が散らばらないようにしましょう"
           }
         }
       }
@@ -3974,6 +5000,12 @@
             "state" : "translated",
             "value" : "Busca oportunidades para eliminar múltiples líneas con una colocación"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1手で複数のラインを消せる場面を探しましょう"
+          }
         }
       }
     },
@@ -3996,6 +5028,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Considera los tres bloques disponibles antes de colocar cualquiera"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1つ置く前に、3つのブロックすべてを見比べましょう"
           }
         }
       }
@@ -4020,6 +5058,12 @@
             "state" : "translated",
             "value" : "Guarda los bloques pequeños para espacios reducidos y movimientos finales"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "小さなブロックは狭い場所と詰めの一手のために取っておきましょう"
+          }
         }
       }
     },
@@ -4042,6 +5086,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Bloques Totales"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "総ブロック数"
           }
         }
       }
@@ -4066,6 +5116,12 @@
             "state" : "translated",
             "value" : "Deshacer"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "取り消し"
+          }
         }
       }
     },
@@ -4088,6 +5144,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Versión %@"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "バージョン %@"
           }
         }
       }
@@ -4112,6 +5174,12 @@
             "state" : "translated",
             "value" : "Ver Game Center"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Game Center を開く"
+          }
         }
       }
     },
@@ -4134,6 +5202,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Ver Tabla de Clasificación"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "リーダーボードを見る"
           }
         }
       }
@@ -4158,6 +5232,12 @@
             "state" : "translated",
             "value" : "Ver Tablero"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "盤面を見る"
+          }
         }
       }
     },
@@ -4180,6 +5260,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Muestra el tablero final para ver cómo terminó la partida"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "最後の盤面を表示して、どう終わったかを確認します"
           }
         }
       }
@@ -4204,6 +5290,12 @@
             "state" : "translated",
             "value" : "Ver Resumen"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "結果を見る"
+          }
         }
       }
     },
@@ -4226,6 +5318,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Sitio Web"
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "ウェブサイト"
           }
         }
       }
@@ -4250,6 +5348,12 @@
             "state" : "translated",
             "value" : "Que estás aquí—que existe la vida y la identidad,"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "That you are here—that life exists and identity,"
+          }
         }
       }
     },
@@ -4272,6 +5376,12 @@
           "stringUnit" : {
             "state" : "translated",
             "value" : "Que la poderosa obra continúa, y tú puedes contribuir un verso.."
+          }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "That the powerful play goes on, and you may contribute a verse.."
           }
         }
       }
@@ -4296,6 +5406,12 @@
             "state" : "translated",
             "value" : "Oh Yo! Oh Vida!"
           }
+        },
+        "ja" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "O Me! O Life!"
+          }
         }
       }
     },
@@ -4315,6 +5431,12 @@
           }
         },
         "es" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "1867"
+          }
+        },
+        "ja" : {
           "stringUnit" : {
             "state" : "translated",
             "value" : "1867"

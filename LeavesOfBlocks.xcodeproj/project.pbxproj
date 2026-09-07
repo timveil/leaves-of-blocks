@@ -213,6 +213,7 @@
 				de,
 				en,
 				es,
+				ja,
 				Base,
 			);
 			mainGroup = 3A692BF82E3460ED00451CB3;
