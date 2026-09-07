@@ -9,6 +9,10 @@
 #   app    Xcode language, a bare subtag: knownRegions in project.pbxproj and
 #          the localizations in Resources/Localizable.xcstrings
 #
+# The two columns coincide for Japanese -- App Store Connect and Xcode both
+# call it "ja" -- which is why they are separate columns rather than one
+# identifier with a rule for deriving the other.
+#
 # "-" means "not shipped on that side". A store locale with no app language is
 # a localized listing for an English build; an app language with no store
 # locale is a translated build whose product page is still English -- which is
@@ -23,3 +27,4 @@
 de-DE     de
 en-US     en
 es-MX     es
+ja        ja
