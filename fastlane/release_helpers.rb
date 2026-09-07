@@ -998,17 +998,27 @@ end
 # like "10 points per square" can only be checked against the app, and a
 # listing that reads badly still reads badly in grammatical sentences. This
 # catches the mechanical failures, which is what every defect so far has been.
-def verify_release_notes(root: project_root('CHANGELOG.md'), pairs: nil)
+def verify_release_notes(root: project_root('CHANGELOG.md'), locales: nil, pairs: nil)
   unless root
     FastlaneCore::UI.user_error!("Could not locate the project root starting from #{Dir.pwd}")
   end
 
+  # Every store locale is checked, not only the paired ones.
+  # generate_release_notes writes a file for each locale in this same list, and
+  # a row shipping store-side only -- a localized listing for an English build,
+  # which .locales allows and explains -- would otherwise be written and never
+  # looked at. The pairs answer a narrower question: which language a listing
+  # is written in, which only the register check needs and only paired rows
+  # have an answer for.
+  locales ||= shipped_store_locales(root: root)
   pairs ||= shipped_locale_pairs(root: root)
+  language_of = pairs.to_h
   registers = declared_registers(root: root)
   problems = []
   by_locale = {}
 
-  pairs.each do |store_locale, app_language|
+  locales.each do |store_locale|
+    app_language = language_of[store_locale]
     path = File.join(root, 'fastlane', 'metadata', store_locale, 'release_notes.txt')
 
     unless File.exist?(path)
@@ -1042,8 +1052,8 @@ def verify_release_notes(root: project_root('CHANGELOG.md'), pairs: nil)
       problems << "#{store_locale}: contains a literal escape sequence"
     end
 
-    marker = FORMAL_REGISTER_MARKERS[app_language]
-    declared = registers[app_language]
+    marker = app_language && FORMAL_REGISTER_MARKERS[app_language]
+    declared = app_language && registers[app_language]
     # Skipped when the convention itself declares the formal form: the file is
     # the authority on which register is wanted, and this only knows what the
     # other one looks like.
@@ -1052,7 +1062,10 @@ def verify_release_notes(root: project_root('CHANGELOG.md'), pairs: nil)
                   "declares #{declared.split(',').first.strip} for #{app_language}"
     end
 
-    next unless app_language.start_with?('en')
+    # A store-only listing carries the English build's copy, so the closing
+    # rule applies to it by its locale rather than by a language it has none of.
+    english = (app_language || store_locale).start_with?('en')
+    next unless english
 
     closings = text.lines.count { |line| line.match?(/thank(?:s|\syou)?\b/i) }
     if closings > 1
@@ -1078,7 +1091,7 @@ def verify_release_notes(root: project_root('CHANGELOG.md'), pairs: nil)
     )
   end
 
-  FastlaneCore::UI.message("Release notes verified for #{pairs.map(&:first).join(', ')}")
+  FastlaneCore::UI.message("Release notes verified for #{locales.join(', ')}")
   true
 end
 

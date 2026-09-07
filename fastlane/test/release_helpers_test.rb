@@ -837,6 +837,9 @@ GOOD_NOTES = {
 }.freeze
 
 PAIRS = [%w[en-US en], %w[de-DE de], %w[fr-FR fr], %w[ja ja]].freeze
+# Both come from .locales in a real release: the locales say what to check, the
+# pairs say what language each one is written in.
+LOCALES = PAIRS.map(&:first).freeze
 
 def notes_fixture(root, overrides = {})
   FileUtils.mkdir_p(File.join(root, 'conventions'))
@@ -851,7 +854,7 @@ end
 Dir.mktmpdir do |root|
   notes_fixture(root)
   ok_result = begin
-    verify_release_notes(root: root, pairs: PAIRS)
+    verify_release_notes(root: root, locales: LOCALES, pairs: PAIRS)
     true
   rescue StandardError => e
     "raised #{e.message}"
@@ -865,7 +868,7 @@ end
 Dir.mktmpdir do |root|
   notes_fixture(root, 'de-DE' => GOOD_NOTES['en-US'])
   assert_raises("identical notes in two locales are the template fallback") do
-    verify_release_notes(root: root, pairs: PAIRS)
+    verify_release_notes(root: root, locales: LOCALES, pairs: PAIRS)
   end
 end
 
@@ -874,14 +877,14 @@ end
 Dir.mktmpdir do |root|
   notes_fixture(root, 'de-DE' => "Leaves of Blocks spricht jetzt Ihre Sprache.\n\nDanke!")
   assert_raises("formal register against a convention declaring du") do
-    verify_release_notes(root: root, pairs: PAIRS)
+    verify_release_notes(root: root, locales: LOCALES, pairs: PAIRS)
   end
 end
 
 Dir.mktmpdir do |root|
   notes_fixture(root, 'fr-FR' => "Leaves of Blocks parle votre langue.\n\nMerci !")
   assert_raises("formal register against a convention declaring tu") do
-    verify_release_notes(root: root, pairs: PAIRS)
+    verify_release_notes(root: root, locales: LOCALES, pairs: PAIRS)
   end
 end
 
@@ -890,7 +893,7 @@ end
 Dir.mktmpdir do |root|
   notes_fixture(root, 'ja' => "《叶块消消乐》が日本語に対応しました。\n\nありがとうございます。")
   assert_raises("a listing that never names the product is a translated name") do
-    verify_release_notes(root: root, pairs: PAIRS)
+    verify_release_notes(root: root, locales: LOCALES, pairs: PAIRS)
   end
 end
 
@@ -898,7 +901,7 @@ end
 Dir.mktmpdir do |root|
   notes_fixture(root, 'fr-FR' => "Leaves of Blocks : l'étiquette affichait « \\n ».\n\nMerci !")
   assert_raises("a literal escape sequence in store copy") do
-    verify_release_notes(root: root, pairs: PAIRS)
+    verify_release_notes(root: root, locales: LOCALES, pairs: PAIRS)
   end
 end
 
@@ -907,29 +910,56 @@ Dir.mktmpdir do |root|
   notes_fixture(root,
                 'en-US' => "Leaves of Blocks news.\n\nThanks so much for playing Leaves of Blocks!\n\nThank you for playing Leaves of Blocks!")
   assert_raises("an English listing closing twice") do
-    verify_release_notes(root: root, pairs: PAIRS)
+    verify_release_notes(root: root, locales: LOCALES, pairs: PAIRS)
   end
 end
 
 Dir.mktmpdir do |root|
   notes_fixture(root, 'de-DE' => "Leaves of Blocks. #{'x' * 4100}")
   assert_raises("notes past the App Store character limit") do
-    verify_release_notes(root: root, pairs: PAIRS)
+    verify_release_notes(root: root, locales: LOCALES, pairs: PAIRS)
   end
 end
 
 Dir.mktmpdir do |root|
   notes_fixture(root, 'de-DE' => '   ')
   assert_raises("an empty listing") do
-    verify_release_notes(root: root, pairs: PAIRS)
+    verify_release_notes(root: root, locales: LOCALES, pairs: PAIRS)
   end
 end
 
 Dir.mktmpdir do |root|
   notes_fixture(root, 'de-DE' => nil)
   assert_raises("a declared locale with no notes file") do
-    verify_release_notes(root: root, pairs: PAIRS)
+    verify_release_notes(root: root, locales: LOCALES, pairs: PAIRS)
   end
+end
+
+# A store locale with no app language is a localized listing for an English
+# build -- .locales allows the row and explains it. generate_release_notes
+# writes notes for every store locale, so checking only the paired ones leaves
+# those listings written and unverified: missing, empty or 5000 characters
+# long, and nobody would know. The manifest has no such row today, which is
+# exactly why the gap would be silent when one is added.
+STORE_ONLY_PAIRS = (PAIRS + [['pt-PT', nil]]).freeze
+STORE_ONLY_LOCALES = %w[en-US de-DE fr-FR ja pt-PT].freeze
+
+Dir.mktmpdir do |root|
+  notes_fixture(root, 'pt-PT' => '   ')
+  assert_raises("a store-only listing is checked like any other") do
+    verify_release_notes(root: root, locales: STORE_ONLY_LOCALES, pairs: STORE_ONLY_PAIRS)
+  end
+end
+
+Dir.mktmpdir do |root|
+  notes_fixture(root, 'pt-PT' => "Leaves of Blocks fala a tua língua.\n\nObrigado!")
+  passed = begin
+    verify_release_notes(root: root, locales: STORE_ONLY_LOCALES, pairs: STORE_ONLY_PAIRS)
+    true
+  rescue StandardError => e
+    "raised #{e.message}"
+  end
+  assert_equal(true, passed, "a valid store-only listing passes, with no register to check")
 end
 
 # Japanese declares です/ます, not a pronoun, so the formal-marker patterns do
@@ -938,7 +968,7 @@ end
 Dir.mktmpdir do |root|
   notes_fixture(root, 'ja' => "Leaves of Blocks が10言語に対応しました。\n\nありがとうございます。")
   passed = begin
-    verify_release_notes(root: root, pairs: PAIRS)
+    verify_release_notes(root: root, locales: LOCALES, pairs: PAIRS)
     true
   rescue StandardError => e
     "raised #{e.message}"
