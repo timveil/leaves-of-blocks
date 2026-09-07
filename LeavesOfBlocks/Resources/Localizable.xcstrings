@@ -9003,13 +9003,13 @@
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Normal\\nBlocks"
+            "value" : "Normal\nBlocks"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Bloques\\nNormales"
+            "value" : "Bloques\nNormales"
           }
         },
         "fr" : {
