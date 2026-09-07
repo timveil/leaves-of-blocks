@@ -22,7 +22,17 @@ final class LeavesOfBlocksUITests: XCTestCase {
     /// path past 10s as well, failing the same test in run 26004869474 —
     /// hence 20s. Later tests (warmed simulator) typically resolve waits in
     /// 1–2s, so the extra headroom only costs time on actual failures.
-    private let defaultTimeout: TimeInterval = 20
+    /// CI is the slow case, and the first test in a shard is the slowest of
+    /// all: it pays for the cold simulator and the first app install before
+    /// reaching its own first assertion. A budget that fits a warm local
+    /// machine leaves that test waiting on the install with most of its
+    /// allowance already spent, which is how it fails there while passing
+    /// everywhere else (most recently run 34166668826).
+    ///
+    /// So the headroom goes where the slowness is. Raising it everywhere would
+    /// only make a genuine local failure take longer to see -- and the history
+    /// above is this number going 5 to 10 to 20 for that same reason.
+    private var defaultTimeout: TimeInterval { isCI ? 45 : 20 }
 
     /// Check if running in CI environment
     private var isCI: Bool {
@@ -249,12 +259,22 @@ final class LeavesOfBlocksUITests: XCTestCase {
     @MainActor
     func testDragAndDropBlock() throws {
         let startButton = app.buttons["start_game_button"]
-        XCTAssertTrue(startButton.waitForExistence(timeout: defaultTimeout))
+        XCTAssertTrue(startButton.waitForExistence(timeout: defaultTimeout),
+                      "Start button should exist on the home screen")
         startButton.tap()
 
-        XCTAssertTrue(waitForGameGrid(timeout: defaultTimeout))
+        XCTAssertTrue(waitForGameGrid(timeout: defaultTimeout),
+                      "Neither the grid nor the holding area appeared after tapping Start")
 
+        // waitForGameGrid accepts the holding area *instead of* the grid,
+        // because for "did the game start" either one answers it. This test
+        // needs the grid itself: it is the drag destination. Without this
+        // assertion a missing grid yielded a coordinate against an element
+        // that was not there, and the failure surfaced three assertions later
+        // as a score that never changed -- describing nothing that went wrong.
         let gridElement = app.otherElements["spritekit_game_grid"]
+        XCTAssertTrue(gridElement.waitForExistence(timeout: defaultTimeout),
+                      "The board must exist to be a drag destination")
 
         // The holding area mounts after the grid; wait for the container
         // before querying its descendants.

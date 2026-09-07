@@ -53,6 +53,13 @@ jobs:
   build:
     name: Build for testing
     runs-on: macos-latest
+    # Every job here is bounded. Run 34158232668 lost a runner after 48
+    # minutes -- a UI shard that normally finishes in 8 stalled, and GitHub
+    # reported "the hosted runner lost communication with the server", which
+    # says nothing about what hung. A job that stops at its bound leaves a log
+    # ending where the work stopped. The numbers are roughly triple the
+    # observed durations, so they catch a hang without failing a slow runner.
+    timeout-minutes: 20
 
     steps:
       - name: Checkout
@@ -100,6 +107,7 @@ jobs:
   unit-tests:
     name: Run unit tests
     runs-on: macos-latest
+    timeout-minutes: 20
     needs: build
 
     steps:
@@ -149,6 +157,7 @@ jobs:
     # nowhere. Raising the shard count needs only this list changed.
     name: Run UI tests (${{ matrix.shard }} of 2)
     runs-on: macos-latest
+    timeout-minutes: 25
     needs: build
 
     strategy:
