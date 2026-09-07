@@ -13,9 +13,18 @@ is resolved.
 
 That distinction is the one actually worth writing down, because "before merge"
 is a deadline and says nothing about when the author may stop — and in practice
-those get treated as the same moment. Copilot reviews arrive a minute or two
-*after* the pull request opens, so "no comments yet" at the moment of opening
-means nothing at all. Check back.
+those get treated as the same moment. Copilot reviews arrive *after* the pull
+request opens, so "no comments yet" at the moment of opening means nothing at
+all. Check back, and check that a review actually landed rather than that no
+comments are showing:
+
+```bash
+gh api repos/timveil/leaves-of-blocks/pulls/PR_NUMBER/reviews \
+  --jq '[.[] | .user.login] | unique'
+```
+
+An empty list means nobody has reviewed yet — which is not the same as a clean
+review, and is the state most likely to be mistaken for one.
 
 Reporting a pull request as finished while its findings are unread is a false
 completion signal: it looks exactly like finished work, and the difference is
