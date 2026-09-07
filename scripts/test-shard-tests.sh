@@ -69,7 +69,11 @@ if [ "$got" = "2" ]; then ok "blank lines are ignored"; else bad "blank lines ig
 echo
 echo "usage"
 
-for bad_arg in "0/2" "3/2" "1/0" "abc" "1/" "/2" ""; do
+# "1/2/3" is the subtle one: the glob accepts it and the ${spec%%/*} /
+# ${spec##*/} parsing discards the middle segment, so it silently ran as
+# shard 1 of 3 -- a split that quietly disagrees with the caller's intent
+# rather than refusing it.
+for bad_arg in "0/2" "3/2" "1/0" "abc" "1/" "/2" "" "1/2/3" "1//2" "1/2/" " 1/2"; do
   printf 'a\n' | "$SHARD" "$bad_arg" >/dev/null 2>&1; code=$?
   if [ "$code" -eq 2 ]; then ok "rejects '$bad_arg'"; else bad "rejects '$bad_arg'" "want exit 2, got $code"; fi
 done

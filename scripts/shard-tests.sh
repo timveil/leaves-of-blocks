@@ -33,6 +33,14 @@ usage() {
   exit 2
 }
 
+# More than one separator is rejected before anything is parsed out of it.
+# "%%/*" and "##*/" take the outermost fields, so "1/2/3" would otherwise be
+# read as shard 1 of 3 with the middle segment silently discarded -- a split
+# that disagrees with what the caller asked for rather than refusing it.
+case "$spec" in
+  */*/*) usage ;;
+esac
+
 case "$spec" in
   [1-9]*/[1-9]*) ;;
   *) usage ;;
