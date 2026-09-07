@@ -933,20 +933,114 @@ rescue StandardError => e
   FastlaneCore::UI.important("Could not verify screenshot counts (#{e.message}); check the listing by hand.")
 end
 
-# The version App Store Connect is holding for submission.
+# App Store version states in which the edit version can still take a release.
+#
+# App Store Connect keeps returning a version from get_edit_app_store_version
+# right through review, so "there is an edit version" says nothing about
+# whether anything can be written into it. These are the states where it
+# genuinely can be: waiting on the developer, or handed back to them.
+APP_STORE_EDITABLE_STATES = %w[
+  PREPARE_FOR_SUBMISSION
+  DEVELOPER_REJECTED
+  REJECTED
+  METADATA_REJECTED
+  INVALID_BINARY
+].freeze
+
+# Whether the App Store version slot can accept a release: :none, :editable or
+# :locked.
+#
+# Default-deny, because the two mistakes cost very different amounts. Reading
+# an unfamiliar state as locked costs a maintainer one glance at the state name
+# printed beside it. Reading it as editable costs a release that dies at
+# upload_to_app_store -- after update_changelog_from_commits has committed, the
+# marketing version has been bumped, and a build number has been spent. Apple
+# has added states to this enumeration before.
+def _app_store_slot_status(state)
+  return :none if state.nil? || state.to_s.strip.empty?
+
+  APP_STORE_EDITABLE_STATES.include?(state.to_s) ? :editable : :locked
+end
+
+# The preflight verdict on the release slot: [:ok | :fail, message].
+#
+# Pure, so the mapping is tested without App Store Connect. The locked message
+# names both remedies deliberately: waiting keeps the queued version's place in
+# review, removing it forfeits that, and a row that says only "blocked" leaves
+# the reader to discover the difference at the worst moment.
+def _release_slot_row(version:, state:)
+  case _app_store_slot_status(state)
+  when :none
+    [:ok, 'free — no version in progress']
+  when :editable
+    [:ok, "#{version} (#{state}) can take a release"]
+  else
+    [:fail, "#{version} is #{state}; the slot frees when it is approved and " \
+            "released, or when it is removed from review"]
+  end
+end
+
+# How the pending-submission row reads. Pure for the same reason.
+#
+# "#{version} (#{build}) ready to submit" was printed unconditionally, so a
+# version already sitting in review advertised itself as one waiting to be
+# sent -- and the obvious next move on reading that is to run `submit` against
+# a version Apple is already holding (#148).
+def _describe_pending_submission(version:, state:, build:)
+  return nil if version.nil? || version.to_s.strip.empty?
+
+  unless _app_store_slot_status(state) == :editable
+    return "#{version} is #{state}, not awaiting submission"
+  end
+
+  build ? "#{version} (#{build}) ready to submit" : "#{version} has no processed build yet"
+end
+
+# The version App Store Connect is holding, and the state it is in.
 #
 # Deliberately not read from the project file. After a release the project has
 # already moved to the next development version (#95), so on the day 2.0.7 is
 # awaiting review the project says 2.0.8 -- and submitting against that finds
 # no build at all. App Store Connect is the only thing that knows which version
 # is actually pending.
-def version_awaiting_submission
+#
+# Returns { version:, state:, status: }, or nil when there is no edit version.
+#
+# A failed read raises rather than returning nil, and the distinction is the
+# whole point: nil means "the slot is empty", which is a PASS. Rescuing to nil
+# would make an unreachable App Store Connect indistinguishable from a free
+# slot, so a network blip would report "Release slot: free" and wave through the
+# release this check exists to stop -- the same false green in a new place.
+#
+# Both callers are better off with the exception. _preflight rescues per row and
+# records the message, so the row reads as failed for the reason it failed; the
+# submit lane aborts saying App Store Connect could not be read, rather than
+# claiming nothing is awaiting submission.
+def app_store_edit_version
   app = Spaceship::ConnectAPI::App.find(APP_IDENTIFIER)
-  edit = app.get_edit_app_store_version
-  edit&.version_string
+
+  # Three accessors, because one is not enough to see the slot.
+  # get_edit_app_store_version filters on a fixed state list that stops at
+  # WAITING_FOR_REVIEW, so the moment Apple starts reviewing it returns nil --
+  # and nil means "free", which passes. Watched happen: 2.0.7 moved
+  # WAITING_FOR_REVIEW -> IN_REVIEW and this row flipped from correctly failing
+  # to "free — no version in progress" while Apple was reviewing it.
+  #
+  # A version in review or awaiting release holds the slot just as firmly as one
+  # being prepared. Spaceship's own filters define which states each accessor
+  # covers, so they are asked rather than re-listed here.
+  edit = app.get_edit_app_store_version ||
+         app.get_in_review_app_store_version ||
+         app.get_pending_release_app_store_version
+  return nil unless edit
+
+  {
+    version: edit.version_string,
+    state: edit.app_store_state,
+    status: _app_store_slot_status(edit.app_store_state)
+  }
 rescue StandardError => e
-  FastlaneCore::UI.important("Could not read the pending version from App Store Connect: #{e.message}")
-  nil
+  raise "Could not read the pending version from App Store Connect: #{e.message}"
 end
 
 # Build number of the most recent processed build for a marketing version.
@@ -1192,12 +1286,39 @@ def run_release_preflight(api_key:, bump_type:)
     "#{config.keys.count} answers, social-media questions included"
   end
 
+  # Read once and shared by the two rows below, rather than paying for the same
+  # round trip twice. A failed read is captured and re-raised inside each row,
+  # so _preflight records it as that row's failure rather than aborting the
+  # whole table on the way to building it.
+  pending = nil
+  pending_error = nil
+  begin
+    pending = app_store_edit_version
+  rescue StandardError => e
+    pending_error = e
+  end
+
+  # The row whose absence let a green preflight sit in front of a release that
+  # could not have worked (#149). Every other blocking condition here is a
+  # :fail, and this one guarantees failure at upload_to_app_store -- after the
+  # changelog is committed, the version bumped, and a build uploaded.
+  _preflight(rows, 'Release slot') do
+    raise pending_error if pending_error
+
+    status, message = _release_slot_row(version: pending&.fetch(:version), state: pending&.fetch(:state))
+    raise message if status == :fail
+
+    message
+  end
+
   _preflight(rows, 'Pending submission', severity: :warn) do
-    pending = version_awaiting_submission
+    raise pending_error if pending_error
     next nil unless pending
 
-    build = latest_processed_build_number(version: pending, timeout: 0)
-    build ? "#{pending} (#{build}) ready to submit" : "#{pending} has no processed build yet"
+    # Only a version genuinely waiting on the developer needs its build looked
+    # up; one in review is reported by state alone.
+    build = pending[:status] == :editable ? latest_processed_build_number(version: pending[:version], timeout: 0) : nil
+    _describe_pending_submission(version: pending[:version], state: pending[:state], build: build)
   end
 
   _preflight(rows, 'CHANGELOG section') do
