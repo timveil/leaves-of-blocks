@@ -28,6 +28,8 @@ Text("score_format".localized(with: score))
 
 This applies to `Text`, `Button`, `navigationTitle`, accessibility labels, and previews. Add new keys via Xcode's String Catalog editor.
 
+The locales the project ships are declared once in [`.locales`](.locales) — two columns, App Store locale (`en-US`) and in-app language (`en`), with `-` for "not shipped on that side". [`scripts/check-locales.sh`](scripts/check-locales.sh) holds `knownRegions`, the string catalog, `SCREENSHOT_LANGUAGES` and `fastlane/metadata/` to it, and fails any `"key".localized` lookup with no catalog entry behind it. Edit `.locales` first, then the registries. See [`conventions/localization.md`](conventions/localization.md).
+
 ## Commit Message Format (Strict)
 
 Every commit must follow Conventional Commits. The exact rules — regex, allowed types, max subject width — live in [`scripts/check-commit-subject.sh`](scripts/check-commit-subject.sh) (the single source of truth), enforced locally by [`.githooks/commit-msg`](.githooks/commit-msg) and on every PR by [`.github/workflows/commit-lint.yml`](.github/workflows/commit-lint.yml). The format also drives changelog generation; see [`CONTRIBUTING.md`](CONTRIBUTING.md#commit-message-format) for the type→changelog mapping.
@@ -192,6 +194,7 @@ scripts/                          # Build, CI and release logic, each with a tes
 ├── check-commit-subject.sh       # Commit format — source of truth
 ├── check-pr-title.sh             # The subject a squash merge will produce
 ├── check-docs-versions.sh        # Docs vs. IPHONEOS_DEPLOYMENT_TARGET
+├── check-locales.sh              # Locale registries vs. .locales
 ├── codeql-languages.sh           # Path -> CodeQL language mapping
 ├── lint-commit-range.sh          # Commit-range iteration for CI
 ├── simulator-runtime.sh          # Newest installed runtime >= deployment target

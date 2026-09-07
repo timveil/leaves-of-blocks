@@ -1,0 +1,19 @@
+# Locales this project ships. The single declaration; scripts/check-locales.sh
+# holds every other registry to it.
+#
+# Two columns, because the registries speak two different identifier spaces and
+# conflating them is how Spanish ended up half-shipped:
+#
+#   store  App Store Connect locale, region-qualified: fastlane/metadata/<store>/
+#          and SCREENSHOT_LANGUAGES in fastlane/Constants.rb
+#   app    Xcode language, a bare subtag: knownRegions in project.pbxproj and
+#          the localizations in Resources/Localizable.xcstrings
+#
+# "-" means "not shipped on that side". A store locale with no app language is
+# a localized listing for an English build; an app language with no store
+# locale is a translated build whose product page is still English -- which is
+# exactly where Spanish stands until the listing lands.
+#
+# store   app
+en-US     en
+-         es

@@ -185,8 +185,8 @@ enum ShapeType {
 #Preview("Scoring Table Row") {
     VStack(spacing: 0) {
         GameTableHeaderView(titleKey: "scoring_header")
-        ScoringTableRowView(points: "+10", description: "scoring_block_placement".localized, color: GameTheme.Colors.accent)
-        ScoringTableRowView(points: "+100", description: "scoring_line_clear".localized, color: GameTheme.Colors.success)
+        ScoringTableRowView(points: "+10", description: "scoring_blocks_placed".localized, color: GameTheme.Colors.accent)
+        ScoringTableRowView(points: "+100", description: "scoring_clear_lines".localized, color: GameTheme.Colors.success)
     }
     .clipShape(RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius))
     .overlay(RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius).stroke(Color.black, lineWidth: GameTheme.Layout.cardBorderWidth))
@@ -208,7 +208,7 @@ enum ShapeType {
     VStack(spacing: 0) {
         GameTableHeaderView(titleKey: "shapes_header")
         ShapesTableRowView(shapeType: .normalBlocks, description: "shape_normal_desc".localized)
-        ShapesTableRowView(shapeType: .horizontalClear, description: "shape_row_clear_desc".localized)
+        ShapesTableRowView(shapeType: .horizontalClear, description: "shape_horizontal_desc".localized)
     }
     .clipShape(RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius))
     .overlay(RoundedRectangle(cornerRadius: GameTheme.Layout.cardCornerRadius).stroke(Color.black, lineWidth: GameTheme.Layout.cardBorderWidth))
