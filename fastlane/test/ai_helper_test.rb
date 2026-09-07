@@ -30,8 +30,12 @@ def assert_equal(expected, actual, desc)
   expected == actual ? ok(desc) : bad(desc, "expected #{expected.inspect}, got #{actual.inspect}")
 end
 
+# Every block the API returns carries a "type". The fixtures here used to omit
+# it, which is how a parser that trusted index 0 passed a suite that never
+# built the payload the API actually sends.
 def parse(text, locale = nil)
-  AIHelper.send(:parse_prose_response, { 'content' => [{ 'text' => text }] }, locale)
+  AIHelper.send(:parse_prose_response,
+                { 'content' => [{ 'type' => 'text', 'text' => text }] }, locale)
 end
 
 CLOSING = 'Thank you for playing'.freeze
@@ -87,6 +91,37 @@ assert_equal(nil, AIHelper.send(:parse_prose_response, {}, nil),
              "a malformed payload yields nil")
 assert_equal(true, parse("**Bold opening.**").start_with?('Bold'),
              "stray markdown is stripped")
+
+# A response is a list of blocks, not a text block with extras after it. The
+# model may emit a thinking block first, and that block carries no "text" key
+# -- so reading index 0 returned nil while the prose sat in index 1. Every
+# fixture above builds a single text block, which is the shape that cannot
+# fail, so nothing here could see it. Ten App Store listings shipped the
+# English template because of it.
+thinking = {
+  'content' => [
+    { 'type' => 'thinking', 'thinking' => 'Considering the tone...' },
+    { 'type' => 'text', 'text' => 'Kurz und gut.' }
+  ]
+}
+assert_equal('Kurz und gut.', AIHelper.send(:parse_prose_response, thinking, 'de-DE'),
+             "prose is read from the text block, not from index 0")
+
+changelog_thinking = {
+  'content' => [
+    { 'type' => 'thinking', 'thinking' => 'Grouping the commits...' },
+    { 'type' => 'text', 'text' => '{"added":["A feature"],"changed":[],"fixed":[],"removed":[]}' }
+  ]
+}
+assert_equal(['A feature'],
+             AIHelper.send(:parse_changelog_response, changelog_thinking)&.fetch(:added, nil),
+             "the changelog parser reads the text block too")
+
+# The blocks a response actually carries, when none of them is text.
+assert_equal(nil,
+             AIHelper.send(:parse_prose_response,
+                           { 'content' => [{ 'type' => 'thinking', 'thinking' => 'only this' }] }, nil),
+             "a payload with no text block yields nil")
 
 puts
 if $fail.zero?

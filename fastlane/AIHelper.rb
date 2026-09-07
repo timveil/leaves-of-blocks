@@ -251,8 +251,31 @@ module AIHelper
       PROMPT
     end
 
+    # The text a response carries, wherever it sits.
+    #
+    # `content` is a list of blocks, not a text block with extras after it.
+    # The model may lead with a thinking block, which carries no "text" key,
+    # so reading index 0 returned nil and the caller recorded a failure while
+    # the answer sat in the next block. Non-deterministic, so it presented as
+    # a different set of locales failing on every run.
+    #
+    # Concatenated rather than first-match: a response split across several
+    # text blocks is one answer, and taking only its opening would truncate
+    # silently -- the same class of bug one block further along.
+    def response_text(response)
+      blocks = response['content']
+      return nil unless blocks.is_a?(Array)
+
+      text = blocks
+             .select { |block| block.is_a?(Hash) && block['type'] == 'text' && block['text'] }
+             .map { |block| block['text'] }
+             .join
+
+      text.empty? ? nil : text
+    end
+
     def parse_changelog_response(response)
-      content = response.dig('content', 0, 'text')
+      content = response_text(response)
       return nil unless content
 
       # Handle potential markdown code block wrapping
@@ -279,7 +302,7 @@ module AIHelper
     end
 
     def parse_prose_response(response, locale = nil)
-      content = response.dig('content', 0, 'text')
+      content = response_text(response)
       return nil unless content
 
       # Clean up the response
