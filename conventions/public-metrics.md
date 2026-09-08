@@ -9,11 +9,11 @@ tools nobody here controls. App Store Connect numbers are not: downloads, units,
 product page views, proceeds, active devices, rating counts. Those are private
 business data that happen to be convenient while writing an analysis.
 
-The test that matters is that they are almost never load-bearing. The
-localization analysis in #112 concluded that German was the largest non-English
-audience, that Japan converted worst of any territory with real traffic, and
-that the international share had crossed half. Every one of those conclusions
-rests on a percentage or a ratio. The totals underneath them were decoration.
+The test that matters is that they are almost never load-bearing. A territory
+analysis can conclude which locale is the largest non-English audience, which
+converts worst, and that the international share has crossed half — every one
+of those conclusions rests on a percentage or a ratio. The totals underneath
+them are decoration.
 
 ## Wrong
 
@@ -84,24 +84,44 @@ Also fine, and unrelated to this rule: product facts that define behavior — th
 measurements. See [invariants, not counts](invariants-not-counts.md), which is
 about a different failure of numbers in prose: drift rather than disclosure.
 
-## Editing does not unpublish
+## Nothing here can be undone
 
-GitHub retains prior revisions of edited issue bodies, comments and pull
-request bodies, and keeps them readable by anyone who can see the repository.
-Correcting a body does not withdraw what it said.
+Both ways of taking a figure back leave it published.
 
-Clearing a revision for real is manual, one at a time, and does not scale past
-a handful of items.
+**Editing an issue.** GitHub retains prior revisions of edited issue bodies,
+comments and pull request bodies, and keeps them readable by anyone who can see
+the repository. Correcting a body does not withdraw what it said. Clearing a
+revision for real is manual, one at a time, and does not scale past a handful
+of items.
+
+**Force-pushing a commit.** Amending or rebasing a commit away makes it
+unreachable from any ref. It does not delete it. The object is still stored and
+still served, deleting the branch does not remove it, and the pull request
+timeline records the superseded commit — so it stays discoverable rather than
+merely retained. Nothing available to the author fixes this. It takes a request
+to GitHub Support to garbage-collect the repository.
+
+The second is the worse of the two, and the more tempting to assume otherwise.
+An issue body can at least be corrected in place, and the correction is what
+readers see. A pushed commit cannot be unpushed by anyone who does not run
+GitHub.
 
 That is the whole reason this convention is worded as *do not publish* rather
-than *scrub it later*. The edit is a mitigation; the only control is the draft.
+than *scrub it later*. The edit and the force-push are both mitigations; the
+only control is the draft.
 
 ## Where this came from
 
-#112, #116, #117 and #118, and PR #146, published fifteen months of App Store
-Connect download and page-view figures — totals, per-territory counts and a
-monthly volume series — to a public tracker. Scrubbed in #170, with the relative
-figures kept, at which point every issue still made its case unchanged.
+An App Store territory analysis was written up in the public tracker with the
+raw export pasted in — totals, per-territory counts, a monthly volume series —
+none of which any of its conclusions rested on. Reducing it to shares and
+ratios left every argument intact. That is the whole case for the rule, and it
+is why the rule costs nothing to follow.
+
+The second half was learned straight afterwards and the harder way: these
+figures are easiest to publish while writing about not publishing them, because
+a concrete example feels like it needs concrete numbers. It does not — hence
+the placeholders above.
 
 ## Enforcement
 
