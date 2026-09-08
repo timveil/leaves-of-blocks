@@ -25,6 +25,7 @@ PR. Swift style is not here — that lives in
 | [Testing](testing.md) | New unit tests use Swift Testing, in Given-When-Then shape. |
 | [Review comments](review-comments.md) | Not done until the PR is open, CI is green, and every thread is resolved. |
 | [Invariants, not counts](invariants-not-counts.md) | Documentation states what is always true, not what was true when written. |
+| [Public metrics](public-metrics.md) | Business figures go public as shares and ratios, never as counts. |
 
 ## Adding one
 
