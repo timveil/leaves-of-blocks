@@ -187,4 +187,22 @@ struct CanAllBlocksBePlacedTests {
     func emptyArrayIsTriviallyPlaceable() {
         #expect(GameLogic.canAllBlocksBePlaced([], in: emptyGrid()))
     }
+
+    @Test("A special block doesn't count toward the empty-cell requirement")
+    func specialBlockDoesNotConsumeAnEmptyCellInTheFastCheck() {
+        // Exactly one empty cell. A horizontalClear special can go anywhere
+        // — it clears rather than occupies (canPlaceBlockInline only checks
+        // isValidGridPosition for specials, no occupancy check at all) — so
+        // pairing it with a single normal 1-cell block that fits the one
+        // empty cell should be jointly placeable. The special's `.positions`
+        // array is a one-entry placeholder, not a real occupancy
+        // requirement, so it must not count toward "cells needed."
+        var grid = filledGrid()
+        grid[0][0].isFilled = false
+
+        let singleCell = BlockShape(positions: [GridPosition(row: 0, col: 0)], color: .red)
+        let blocks = [BlockShape.horizontalClearShape, singleCell]
+
+        #expect(GameLogic.canAllBlocksBePlaced(blocks, in: grid))
+    }
 }

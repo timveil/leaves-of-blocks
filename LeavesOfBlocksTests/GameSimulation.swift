@@ -251,7 +251,7 @@ enum GameSimulator {
         var linesCleared = 0
 
         while batchesDealt < maxBatches {
-            var blocks = deal?(grid) ?? BlockGenerator.generateTieredBlocks(count: 3, difficulty: difficulty, grid: grid, using: &generator)
+            var blocks = deal?(grid) ?? BlockGenerator.generateTieredBlocks(count: 3, difficulty: difficulty, grid: grid, blocksPlaced: placements, using: &generator)
             batchesDealt += 1
 
             while !blocks.isEmpty {

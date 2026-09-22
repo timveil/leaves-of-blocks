@@ -172,10 +172,24 @@ struct GeneratorCalibrationReport {
         ProcessInfo.processInfo.environment["GENERATOR_SIM_SECONDS_PER_PLACEMENT"] ?? "5"
     ) ?? 5
 
-    @Test("The table has exactly one correctly-labeled row per difficulty/bot combination", .enabled(if: enabled))
+    // Default scale for a bare `GENERATOR_SIM=1` run: enough games to read
+    // medians sensibly, finishing in a few minutes rather than the ~1 hour a
+    // naive 100×400 default would take. Override both via env vars for a
+    // real tuning session — GreedyBot and LookaheadBot dominate the cost at
+    // scale (their own search, not BlockGenerator — see
+    // BlockGeneratorTests.generationIsFastEnoughForOneFramePerCall), so it
+    // doesn't scale down as gently as block count alone would suggest.
+    private static let defaultGames = 20
+    private static let defaultMaxBatches = 150
+
+    @Test(
+        "The table has exactly one correctly-labeled row per difficulty/bot combination",
+        .enabled(if: enabled),
+        .timeLimit(.minutes(20))
+    )
     func report() {
-        let games = Int(ProcessInfo.processInfo.environment["GENERATOR_SIM_GAMES"] ?? "100") ?? 100
-        let maxBatches = Int(ProcessInfo.processInfo.environment["GENERATOR_SIM_MAX_BATCHES"] ?? "400") ?? 400
+        let games = Int(ProcessInfo.processInfo.environment["GENERATOR_SIM_GAMES"] ?? "") ?? Self.defaultGames
+        let maxBatches = Int(ProcessInfo.processInfo.environment["GENERATOR_SIM_MAX_BATCHES"] ?? "") ?? Self.defaultMaxBatches
 
         let table = SimulationReport.render(
             games: games,

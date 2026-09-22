@@ -95,18 +95,27 @@ struct BlockGeneratorPropertyTests {
         }
     }
 
-    @Test("On grids too tight to ever solve (emptyCells < count), generator emits singles as best-effort")
+    @Test("On grids too tight to ever solve (0 empty cells), generator emits singles as best-effort")
     func degenerateGridsEmitSingles() {
         // Document & verify the generator's contract on degenerate inputs:
-        // when there are fewer empty cells than blocks requested, no
-        // solvable set exists, so the generator falls back to single-cell
-        // blocks (the smallest, individually-most-placeable shape). The
-        // game's placement loop is what actually triggers game-over.
+        // when there's no room at all, no solvable set exists, so the
+        // generator falls back to single-cell blocks (the smallest,
+        // individually-most-placeable shape). The game's placement loop is
+        // what actually triggers game-over.
+        //
+        // Fully filled rather than "2 empty cells, count 3": a set can
+        // contain at most one special block (.horizontalClear /
+        // .verticalClear / .areaClear — generateCandidateSet's
+        // hasSpecialShape guard), and a special is placeable anywhere
+        // regardless of empty-cell count, so a grid with *some* empty cells
+        // could legitimately pair one with normal blocks that happen to fit
+        // whatever's left — that's a real capability this generator has that
+        // the old one didn't, not a bug. Zero empty cells closes that gap:
+        // every set of 3 has at least 2 normal blocks (hasSpecialShape caps
+        // specials at 1), and a normal block always needs an empty cell that
+        // doesn't exist here.
         var grid = GameLogic.createEmptyGrid()
         for r in 0..<8 { for c in 0..<8 { grid[r][c].isFilled = true } }
-        // Punch out exactly 2 empty cells, request 3 blocks.
-        grid[0][0].isFilled = false
-        grid[7][7].isFilled = false
 
         let blocks = BlockGenerator.generateTieredBlocks(count: 3, grid: grid)
         #expect(blocks.count == 3)

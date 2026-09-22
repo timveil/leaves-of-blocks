@@ -316,7 +316,7 @@ final class GameState {
     /// - Note: This method is called automatically when all current blocks have been placed,
     ///   or when starting/resetting a game.
     func generateNewBlocks() {
-        currentBlocks = BlockGenerator.generateTieredBlocks(count: 3, difficulty: currentDifficulty, grid: grid, behaviorTracker: behaviorTracker)
+        currentBlocks = BlockGenerator.generateTieredBlocks(count: 3, difficulty: currentDifficulty, grid: grid, behaviorTracker: behaviorTracker, blocksPlaced: blocksPlaced)
         checkGameOver()
     }
     
