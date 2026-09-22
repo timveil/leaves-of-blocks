@@ -157,9 +157,14 @@ extension BlockGenerator {
     /// drawn before it (the grid is tight enough that this particular
     /// sequence of draws didn't pan out) — the caller just tries another
     /// candidate. Special blocks never fail this way (any position is valid
-    /// for them) and aren't reserved on the scratch grid, since they clear
-    /// cells rather than occupy them — omitting that only ever makes later
-    /// draws in the same candidate *more* conservative, never wrong.
+    /// for them), and — unlike normal blocks — their effect on `scratch` is
+    /// a clear, not a reservation: a drawn special is placed at a random
+    /// position and its clear is credited, so later draws in the same
+    /// candidate see the room it actually opens up (skipping that made a
+    /// special dealt on a full or near-full grid effectively useless: every
+    /// normal block dealt alongside it would find the board unchanged and
+    /// construction would always abort — see
+    /// `PressureBasedGenerationTests.specialBlockClearsRoomForLaterBlocksInTheSameBatch`).
     private static func generateCandidateSet(
         count: Int,
         difficulty: DifficultyMode,
@@ -187,6 +192,25 @@ extension BlockGenerator {
                 blocks.append(specialBlock)
                 hasSpecialShape = true
                 usedExactShapes.append(getShapeSignature(specialBlock))
+
+                // Credit the clear on `scratch`, so later blocks in this
+                // same candidate are drawn against the room this special
+                // actually opens up. Without this, every later draw would
+                // see the board as if the special had never been placed —
+                // on a full or near-full grid specifically, that means no
+                // normal block dealt alongside a special can ever find a
+                // spot, and construction always aborts right when the
+                // special was the one thing that could have made the rest
+                // of the batch work. A random position stands in for "the
+                // player placed this somewhere"; the exact position doesn't
+                // otherwise affect this candidate's construction, since
+                // `canPlaceBlockInline` accepts a special anywhere.
+                let size = AppConfiguration.GameRules.gridSize
+                let specialPosition = GridPosition(
+                    row: Int.random(in: 0..<size, using: &generator),
+                    col: Int.random(in: 0..<size, using: &generator)
+                )
+                GameLogic.placeBlock(specialBlock, at: specialPosition, in: &scratch)
             } else {
                 let preventionConfig = DuplicatePreventionConfig.standard(
                     excludeExactShapes: usedExactShapes,

@@ -95,34 +95,35 @@ struct BlockGeneratorPropertyTests {
         }
     }
 
-    @Test("On grids too tight to ever solve (0 empty cells), generator emits singles as best-effort")
+    @Test("On the tightest possible grid (0 empty cells), a normal-only set is unplaceable and the generator still returns well-formed blocks")
     func degenerateGridsEmitSingles() {
-        // Document & verify the generator's contract on degenerate inputs:
-        // when there's no room at all, no solvable set exists, so the
-        // generator falls back to single-cell blocks (the smallest,
-        // individually-most-placeable shape). The game's placement loop is
-        // what actually triggers game-over.
+        // Document & verify the generator's contract on the most degenerate
+        // input possible: a completely full grid.
         //
-        // Fully filled rather than "2 empty cells, count 3": a set can
-        // contain at most one special block (.horizontalClear /
-        // .verticalClear / .areaClear — generateCandidateSet's
-        // hasSpecialShape guard), and a special is placeable anywhere
-        // regardless of empty-cell count, so a grid with *some* empty cells
-        // could legitimately pair one with normal blocks that happen to fit
-        // whatever's left — that's a real capability this generator has that
-        // the old one didn't, not a bug. Zero empty cells closes that gap:
-        // every set of 3 has at least 2 normal blocks (hasSpecialShape caps
-        // specials at 1), and a normal block always needs an empty cell that
-        // doesn't exist here.
+        // This used to also assert the result is *always* unplaceable, but
+        // that's no longer a sound claim: a set can contain one special
+        // block (.horizontalClear / .verticalClear / .areaClear —
+        // generateCandidateSet's hasSpecialShape guard caps it at one), and
+        // a special genuinely clears cells wherever it's placed — even from
+        // a fully-filled grid — which the generator now credits when
+        // drawing the rest of the batch (see
+        // PressureBasedGenerationTests.specialBlockClearsRoomForLaterBlocksInTheSameBatch).
+        // A set built around one is a real, intentional rescue, not a bug.
+        // What's still guaranteed regardless: `count` well-formed blocks,
+        // and — since hasSpecialShape allows at most one special per set —
+        // a set with *no* special has at least 2 normal blocks, each of
+        // which needs an empty cell that simply doesn't exist here, so it's
+        // still definitely unplaceable.
         var grid = GameLogic.createEmptyGrid()
         for r in 0..<8 { for c in 0..<8 { grid[r][c].isFilled = true } }
 
         let blocks = BlockGenerator.generateTieredBlocks(count: 3, grid: grid)
         #expect(blocks.count == 3)
-        #expect(blocks.allSatisfy { $0.positions.count == 1 })
-        // Set is intentionally NOT placeable in this regime — verify that
-        // explicitly so behavior change here would be noticed.
-        #expect(!GameLogic.canAllBlocksBePlaced(blocks, in: grid))
+        #expect(blocks.allSatisfy { !$0.positions.isEmpty })
+
+        if !blocks.contains(where: { $0.type != .normal }) {
+            #expect(!GameLogic.canAllBlocksBePlaced(blocks, in: grid))
+        }
     }
 
     @Test("Every generated block carries a valid BlockColor")

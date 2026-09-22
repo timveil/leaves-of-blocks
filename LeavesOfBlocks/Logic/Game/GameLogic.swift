@@ -632,27 +632,43 @@ enum GameLogic {
     static func canAllBlocksBePlaced(_ blocks: [BlockShape], in grid: [[GridCell]]) -> Bool {
         guard !blocks.isEmpty else { return true }
 
+        let hasSpecialBlock = blocks.contains { $0.type != .normal }
+
         // Quick check: ensure we have enough empty cells for all blocks.
-        // Special blocks (.horizontalClear / .verticalClear / .areaClear)
-        // are excluded from this count: their `.positions` array is a
-        // one-entry placeholder, not a real occupancy requirement — they
-        // clear cells rather than fill them, and canPlaceBlockInline lets
-        // them go anywhere regardless of what's already there, even a fully
-        // filled grid. Counting that placeholder here used to make this
-        // fast-path reject sets that were actually placeable (a special
-        // plus normal blocks that together needed the exact remaining
-        // empty-cell count).
-        let totalBlockCells = blocks.reduce(0) { partial, block in
-            block.type == .normal ? partial + block.positions.count : partial
+        // Skipped entirely when a special block (.horizontalClear /
+        // .verticalClear / .areaClear) is present. A special clears filled
+        // cells into empty ones, so the grid's *current* empty-cell count
+        // isn't a reliable upper bound on what the normal blocks in the set
+        // can ultimately use — excluding just the special's own placeholder
+        // `.positions` entry from the total isn't enough: a normal block
+        // that needs more empty cells than currently exist can still be
+        // solvable once a special creates them. Falls through to the full
+        // search, which is authoritative.
+        if !hasSpecialBlock {
+            let totalBlockCells = blocks.reduce(0) { $0 + $1.positions.count }
+            let emptyCells = countEmptyCells(in: grid)
+
+            if totalBlockCells > emptyCells {
+                return false
+            }
         }
-        let emptyCells = countEmptyCells(in: grid)
-        
-        if totalBlockCells > emptyCells {
-            return false
+
+        // Sort blocks by constraint — specials first, then largest-first
+        // among normals. A special is always placeable and can only ever
+        // help (it clears rather than occupies), so trying it before a
+        // normal block gives the search a chance to explore the clearing
+        // effects that might unlock an otherwise-unplaceable normal, rather
+        // than failing on that normal before a special is ever considered.
+        // Sorting by `.positions.count` alone would put a special (whose
+        // placeholder always reports 1) after any 2+ cell normal.
+        let sortedBlocks = blocks.sorted { lhs, rhs in
+            let lhsSpecial = lhs.type != .normal
+            let rhsSpecial = rhs.type != .normal
+            if lhsSpecial != rhsSpecial {
+                return lhsSpecial
+            }
+            return lhs.positions.count > rhs.positions.count
         }
-        
-        // Sort blocks by constraint (largest first for better pruning)
-        let sortedBlocks = blocks.sorted { $0.positions.count > $1.positions.count }
         
         // Use optimized backtracking with depth limit; budget lives in
         // AppConfiguration.Gameplay.placementBacktrackLimit so tuning doesn't

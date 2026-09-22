@@ -267,12 +267,18 @@ struct GeneratorAcrossGridStatesTests {
         }
     }
 
-    @Test("Grid with only scattered single empty cells forces guaranteed-solvable singles")
+    @Test("Grid with only scattered single empty cells still yields a solvable, well-formed set")
     func ultimateFallbackPath() {
         // Fill everything except a few isolated single cells. No multi-cell
-        // shape can fit anywhere, so every sampled candidate set — even in
-        // the constrained fallback — fails `canAllBlocksBePlaced`, and
-        // generation bottoms out at the terminal single-cell guarantee.
+        // *normal* shape can fit anywhere, so a normal-only candidate set —
+        // even in the constrained fallback — always fails
+        // `canAllBlocksBePlaced`, and generation bottoms out at the terminal
+        // single-cell guarantee. A drawn special is a legitimate exception:
+        // it can clear real room from nothing (see
+        // PressureBasedGenerationTests.specialBlockClearsRoomForLaterBlocksInTheSameBatch),
+        // so the "must collapse to all 1-cell blocks" half of this test only
+        // holds when no special was dealt — the "must be solvable" half
+        // holds unconditionally either way.
         var grid = GameLogic.createEmptyGrid()
         for row in 0..<8 {
             for col in 0..<8 {
@@ -286,10 +292,13 @@ struct GeneratorAcrossGridStatesTests {
 
         let blocks = BlockGenerator.generateTieredBlocks(count: 3, grid: grid)
         #expect(blocks.count == 3)
-        // With only single isolated empty cells, every emitted block must
-        // collapse to a 1-cell shape to remain placeable.
-        #expect(blocks.allSatisfy { $0.positions.count == 1 })
         #expect(GameLogic.canAllBlocksBePlaced(blocks, in: grid))
+        if !blocks.contains(where: { $0.type != .normal }) {
+            // With only single isolated empty cells and no special in the
+            // set, every emitted block must collapse to a 1-cell shape to
+            // remain placeable.
+            #expect(blocks.allSatisfy { $0.positions.count == 1 })
+        }
     }
 
     @Test("One-row-empty grid: generator degrades to single-cell blocks rather than emitting an unsolvable set")
@@ -437,6 +446,38 @@ struct PressureBasedGenerationTests {
         let seed: UInt64 = 42
 
         #expect(totalMobility(grid: messy, seed: seed) < totalMobility(grid: clean, seed: seed))
+    }
+
+    @Test("A special block's clearing effect is reflected in what's drawn alongside it in the same batch")
+    func specialBlockClearsRoomForLaterBlocksInTheSameBatch() {
+        // Fully filled grid. If a drawn special's clear isn't credited on
+        // the scratch grid used to draw the *other* blocks in the same
+        // batch, no normal block dealt alongside it can ever find room —
+        // scratch would still read as 100% full — and every such draw
+        // degrades all the way to the guaranteed single-cell terminal
+        // fallback. If the clear *is* credited, drawing a normal block
+        // after a special should sometimes land somewhere genuinely
+        // larger than 1 cell, reflecting the room the special just opened.
+        var grid = GameLogic.createEmptyGrid()
+        for row in 0..<8 {
+            for col in 0..<8 {
+                grid[row][col].isFilled = true
+            }
+        }
+
+        var sawLargerNormalAlongsideASpecial = false
+        for seed: UInt64 in 1...300 {
+            var generator: any RandomNumberGenerator = SeededGenerator(seed: seed)
+            let blocks = BlockGenerator.generateTieredBlocks(count: 3, difficulty: .hard, grid: grid, using: &generator)
+            let hasSpecial = blocks.contains { $0.type != .normal }
+            let hasLargerNormal = blocks.contains { $0.type == .normal && $0.positions.count > 1 }
+            if hasSpecial && hasLargerNormal {
+                sawLargerNormalAlongsideASpecial = true
+                break
+            }
+        }
+
+        #expect(sawLargerNormalAlongsideASpecial, "no draw across 300 seeds paired a special with a >1-cell normal block on a full grid — the special's clear doesn't seem to reach the rest of the batch")
     }
 
     @Test("Generation stays well under a frame budget, even when every candidate falls back")
