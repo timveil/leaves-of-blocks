@@ -7,7 +7,7 @@ extension BuildConfiguration {
     static func logSolvability(_ message: String, level: LogLevel = .info, file: String = #file, function: String = #function, line: Int = #line) {
         // Early exit if logging level won't be displayed (performance optimization)
         guard level.rawValue >= currentLogLevel.rawValue else { return }
-        
+
         let prefix = "[SOLVABILITY]"
         log("\(prefix) \(message)", level: level, file: file, function: function, line: line)
     }
@@ -17,56 +17,56 @@ extension BuildConfiguration {
 
 extension BlockGenerator {
     /// Creates a single block with random color - reduces code duplication
-    private static func createSingleBlock() -> BlockShape {
-        let randomColor = BlockColor.allCases.randomElement() ?? .blue
+    private static func createSingleBlock(using generator: inout any RandomNumberGenerator) -> BlockShape {
+        let randomColor = BlockColor.allCases.randomElement(using: &generator) ?? .blue
         return BlockShape(positions: [GridPosition(row: 0, col: 0)], color: randomColor)
     }
-    
+
     /// Creates multiple single blocks efficiently
-    private static func createSingleBlocks(count: Int) -> [BlockShape] {
-        return (0..<count).map { _ in createSingleBlock() }
+    private static func createSingleBlocks(count: Int, using generator: inout any RandomNumberGenerator) -> [BlockShape] {
+        return (0..<count).map { _ in createSingleBlock(using: &generator) }
     }
 }
 
 // MARK: - Tiered Block Generation System
 
 extension BlockGenerator {
-    
+
     /// Configuration for tiered difficulty system
     struct TierConfiguration {
         let maxBlockSize: Int
         let varietyBonus: Double        // Multiplier for shape variety
         let complexityPreference: Double // 0.0 = simple, 1.0 = complex
         let specialShapeChance: Double   // Probability of special blocks
-        
+
         static let diverse = TierConfiguration(
             maxBlockSize: 9,
             varietyBonus: 1.3,
             complexityPreference: 0.9,
             specialShapeChance: 0.08
         )
-        
+
         static let constrained = TierConfiguration(
             maxBlockSize: 7,
             varietyBonus: 1.1,
             complexityPreference: 0.7,
             specialShapeChance: 0.05
         )
-        
+
         static let minimal = TierConfiguration(
             maxBlockSize: 5,
             varietyBonus: 0.9,
             complexityPreference: 0.4,
             specialShapeChance: 0.03
         )
-        
+
         static let emergency = TierConfiguration(
             maxBlockSize: 3,
             varietyBonus: 0.7,
             complexityPreference: 0.2,
             specialShapeChance: 0.01
         )
-        
+
         static func forTier(_ tier: GridAnalysis.DifficultyTier) -> TierConfiguration {
             switch tier {
             case .diverse: return .diverse
@@ -76,72 +76,95 @@ extension BlockGenerator {
             }
         }
     }
-    
-    /// Generates blocks using tiered system based on grid analysis
+
+    /// Generates blocks using tiered system based on grid analysis.
+    ///
+    /// Draws from the system's random source. Use
+    /// `generateTieredBlocks(count:difficulty:grid:behaviorTracker:using:)` to
+    /// inject a seeded generator instead — the seam `GameSimulator` uses so a
+    /// calibration run can be reproduced from a seed. See
+    /// `conventions/game-logic-boundary.md`: "a random source without a
+    /// passed-in generator is a parameter, not a lookup."
     static func generateTieredBlocks(
         count: Int = 3,
         difficulty: DifficultyMode = .easy,
         grid: [[GridCell]],
         behaviorTracker: PlayerBehaviorTracker? = nil
     ) -> [BlockShape] {
+        var generator: any RandomNumberGenerator = SystemRandomNumberGenerator()
+        return generateTieredBlocks(count: count, difficulty: difficulty, grid: grid, behaviorTracker: behaviorTracker, using: &generator)
+    }
+
+    /// Same as `generateTieredBlocks(count:difficulty:grid:behaviorTracker:)`,
+    /// but draws from `generator` instead of the system's random source.
+    static func generateTieredBlocks(
+        count: Int = 3,
+        difficulty: DifficultyMode = .easy,
+        grid: [[GridCell]],
+        behaviorTracker: PlayerBehaviorTracker? = nil,
+        using generator: inout any RandomNumberGenerator
+    ) -> [BlockShape] {
         let startTime = CFAbsoluteTimeGetCurrent()
-        
+
         // Analyze grid state to determine appropriate tier
         let tier = GridAnalysis.determineDifficultyTier(for: grid)
         let config = TierConfiguration.forTier(tier)
         let gridMetrics = GridAnalysis.analyzeGrid(grid)
-        
+
         BuildConfiguration.logSolvability("Grid analysis - Quality: \(String(format: "%.3f", gridMetrics.qualityScore)), Tier: \(tier.description), Efficiency: \(String(format: "%.3f", gridMetrics.efficiency))", level: .info)
-        
+
         // Generate blocks according to tier configuration
         let initialBlocks = generateBlocksForTier(
             count: count,
             difficulty: difficulty,
             config: config,
-            grid: grid
+            grid: grid,
+            using: &generator
         )
-        
+
         // Ensure solvability with tier-appropriate fallbacks
         let finalBlocks = ensureTieredSolvability(
             blocks: initialBlocks,
             tier: tier,
             difficulty: difficulty,
             grid: grid,
-            behaviorTracker: behaviorTracker
+            behaviorTracker: behaviorTracker,
+            using: &generator
         )
-        
+
         let elapsedTime = CFAbsoluteTimeGetCurrent() - startTime
         BuildConfiguration.logSolvability("Generated \(finalBlocks.count) blocks for tier \(tier.description) in \(String(format: "%.3f", elapsedTime))s", level: .debug)
-        
+
         return finalBlocks
     }
-    
+
     /// Generates blocks according to tier configuration with enhanced duplicate prevention
     private static func generateBlocksForTier(
         count: Int,
         difficulty: DifficultyMode,
         config: TierConfiguration,
-        grid: [[GridCell]]
+        grid: [[GridCell]],
+        using generator: inout any RandomNumberGenerator
     ) -> [BlockShape] {
         var blocks: [BlockShape] = []
         var usedShapeTypes: [String] = []
         var usedOrientations: [ShapeOrientation] = []
         var usedExactShapes: [String] = [] // Track exact shape signatures to prevent identical blocks
         var hasSpecialShape = false
-        
+
         for blockIndex in 0..<count {
             // Check for special shape generation
-            let shouldGenerateSpecial = Double.random(in: 0...1) < config.specialShapeChance && !hasSpecialShape
-            
+            let shouldGenerateSpecial = Double.random(in: 0...1, using: &generator) < config.specialShapeChance && !hasSpecialShape
+
             if shouldGenerateSpecial {
                 // Pick uniformly from the three special-block templates. Each
                 // `BlockShape.*ClearShape` access mints a fresh BlockShape
                 // (with its own UUID id), so two draws of the same type
                 // are still distinct instances.
-                let specialBlock = Self.specialBlockPool.randomElement() ?? BlockShape.horizontalClearShape
+                let specialBlock = Self.specialBlockPool.randomElement(using: &generator) ?? BlockShape.horizontalClearShape
                 blocks.append(specialBlock)
                 hasSpecialShape = true
-                
+
                 // Track special shape to prevent exact duplicates
                 let shapeSignature = getShapeSignature(specialBlock)
                 usedExactShapes.append(shapeSignature)
@@ -154,25 +177,26 @@ extension BlockGenerator {
                     excludeOrientations: usedOrientations,
                     excludeExactShapes: usedExactShapes,
                     grid: grid,
-                    attempt: blockIndex
+                    attempt: blockIndex,
+                    using: &generator
                 )
-                
+
                 blocks.append(newBlock)
-                
+
                 // Track variety for next blocks
                 let shapeType = getShapeType(newBlock)
                 let orientation = getShapeOrientation(newBlock)
                 let shapeSignature = getShapeSignature(newBlock)
-                
+
                 usedShapeTypes.append(shapeType)
                 usedOrientations.append(orientation)
                 usedExactShapes.append(shapeSignature)
             }
         }
-        
+
         return blocks
     }
-    
+
     /// Generates a block constrained by tier configuration with enhanced duplicate prevention
     private static func generateTierConstrainedBlockWithDuplicatePrevention(
         difficulty: DifficultyMode,
@@ -181,7 +205,8 @@ extension BlockGenerator {
         excludeOrientations: [ShapeOrientation],
         excludeExactShapes: [String],
         grid: [[GridCell]],
-        attempt: Int
+        attempt: Int,
+        using generator: inout any RandomNumberGenerator
     ) -> BlockShape {
         let preventionConfig = DuplicatePreventionConfig.tiered(
             config: config,
@@ -189,239 +214,263 @@ extension BlockGenerator {
             excludeShapeTypes: excludeShapeTypes,
             excludeOrientations: excludeOrientations
         )
-        
+
         return generateBlockWithDuplicatePrevention(
             difficulty: difficulty,
             preventionConfig: preventionConfig,
             grid: grid,
-            attempt: attempt
+            attempt: attempt,
+            using: &generator
         )
     }
-    
+
     /// Generates a block constrained by tier configuration (legacy method for fallbacks)
     private static func generateTierConstrainedBlock(
         difficulty: DifficultyMode,
         config: TierConfiguration,
         excludeShapeTypes: [String],
         excludeOrientations: [ShapeOrientation],
-        grid: [[GridCell]]
+        grid: [[GridCell]],
+        using generator: inout any RandomNumberGenerator
     ) -> BlockShape {
         let baseWeights = getBlockWeights(for: difficulty)
         var tierWeights: [BlockShape: Double] = [:]
-        
+
         // Filter blocks by tier constraints
         for (block, weight) in baseWeights {
             let blockSize = block.positions.count
-            
+
             // Skip blocks that exceed tier size limit
             guard blockSize <= config.maxBlockSize else { continue }
-            
+
             // Apply tier-specific weighting
             var adjustedWeight = weight
-            
+
             // Apply complexity preference
             let complexity = calculateBlockComplexity(block)
             let complexityMultiplier = 1.0 + (complexity - 0.5) * config.complexityPreference
             adjustedWeight *= complexityMultiplier
-            
+
             // Apply variety bonus
             let shapeType = getShapeType(block)
             let orientation = getShapeOrientation(block)
-            
+
             let typeCount = excludeShapeTypes.filter { $0 == shapeType }.count
             let orientationCount = excludeOrientations.filter { $0 == orientation }.count
-            
+
             if typeCount < 2 && orientationCount < 2 {
                 adjustedWeight *= config.varietyBonus
             } else {
                 adjustedWeight *= 0.3 // Reduce variety
             }
-            
+
             tierWeights[block] = max(0.1, adjustedWeight)
         }
-        
+
         // Fallback if no blocks meet criteria
         if tierWeights.isEmpty {
-            return createSingleBlock()
+            return createSingleBlock(using: &generator)
         }
-        
+
         // Select block using weighted random
-        return selectWeightedBlock(from: tierWeights)
+        return selectWeightedBlock(from: tierWeights, using: &generator)
     }
-    
+
     /// Calculates complexity score for a block shape
     private static func calculateBlockComplexity(_ block: BlockShape) -> Double {
         let positions = block.positions
         guard positions.count > 1 else { return 0.0 }
-        
+
         // Calculate bounding box
         let minRow = positions.map { $0.row }.min() ?? 0
         let maxRow = positions.map { $0.row }.max() ?? 0
         let minCol = positions.map { $0.col }.min() ?? 0
         let maxCol = positions.map { $0.col }.max() ?? 0
-        
+
         let boundingArea = (maxRow - minRow + 1) * (maxCol - minCol + 1)
         let actualCells = positions.count
-        
+
         // Complexity = how sparse the shape is within its bounding box
         return 1.0 - (Double(actualCells) / Double(boundingArea))
     }
-    
-    /// Selects a block using weighted random selection
-    private static func selectWeightedBlock(from weights: [BlockShape: Double]) -> BlockShape {
+
+    /// Selects a block using weighted random selection.
+    ///
+    /// Walks the entries sorted by shape signature rather than in dictionary
+    /// order: `Dictionary` randomizes its iteration order per process launch
+    /// (hash-flooding protection), so which entry a given `randomValue`
+    /// threshold lands on would otherwise change from run to run even with
+    /// the exact same `generator` seed and the exact same weights — silently
+    /// defeating the reproducibility `GameSimulator` relies on.
+    private static func selectWeightedBlock(from weights: [BlockShape: Double], using generator: inout any RandomNumberGenerator) -> BlockShape {
         let totalWeight = weights.values.reduce(0, +)
-        let randomValue = Double.random(in: 0...totalWeight)
-        
+        let randomValue = Double.random(in: 0...totalWeight, using: &generator)
+        let sortedEntries = weights.sorted { getShapeSignature($0.key) < getShapeSignature($1.key) }
+
         var currentWeight: Double = 0
-        for (block, weight) in weights {
+        for (block, weight) in sortedEntries {
             currentWeight += weight
             if randomValue <= currentWeight {
-                let randomColor = BlockColor.allCases.randomElement() ?? .blue
+                let randomColor = BlockColor.allCases.randomElement(using: &generator) ?? .blue
                 return BlockShape(positions: block.positions, color: randomColor)
             }
         }
-        
+
         // Fallback
-        return createSingleBlock()
+        return createSingleBlock(using: &generator)
     }
-    
+
     /// Ensures solvability while respecting tier constraints
     private static func ensureTieredSolvability(
         blocks: [BlockShape],
         tier: GridAnalysis.DifficultyTier,
         difficulty: DifficultyMode,
         grid: [[GridCell]],
-        behaviorTracker: PlayerBehaviorTracker? = nil
+        behaviorTracker: PlayerBehaviorTracker? = nil,
+        using generator: inout any RandomNumberGenerator
     ) -> [BlockShape] {
         // Check if blocks can be placed as-is
         if GameLogic.canAllBlocksBePlaced(blocks, in: grid) {
             BuildConfiguration.logSolvability("Tier \(tier.description) blocks solvable without adjustment", level: .debug)
             return blocks
         }
-        
+
         BuildConfiguration.logSolvability("Tier \(tier.description) blocks need adjustment for solvability", level: .info)
-        
+
         // Apply tier-appropriate fallback strategy
         return applyTieredFallback(
             originalBlocks: blocks,
             currentTier: tier,
             difficulty: difficulty,
             grid: grid,
-            behaviorTracker: behaviorTracker
+            behaviorTracker: behaviorTracker,
+            using: &generator
         )
     }
-    
+
     /// Applies tier-appropriate fallback strategy
     private static func applyTieredFallback(
         originalBlocks: [BlockShape],
         currentTier: GridAnalysis.DifficultyTier,
         difficulty: DifficultyMode,
         grid: [[GridCell]],
-        behaviorTracker: PlayerBehaviorTracker? = nil
+        behaviorTracker: PlayerBehaviorTracker? = nil,
+        using generator: inout any RandomNumberGenerator
     ) -> [BlockShape] {
         var modifiedBlocks = originalBlocks
         let maxRetries = 2
-        
+
         // Try current tier with modifications first
         for attempt in 0..<maxRetries {
             modifiedBlocks = adjustBlocksForTier(
                 blocks: modifiedBlocks,
                 tier: currentTier,
                 difficulty: difficulty,
-                grid: grid
+                grid: grid,
+                using: &generator
             )
-            
+
             if GameLogic.canAllBlocksBePlaced(modifiedBlocks, in: grid) {
                 BuildConfiguration.logSolvability("Tier \(currentTier.description) fallback successful after \(attempt + 1) attempts", level: .info)
                 return modifiedBlocks
             }
         }
-        
+
         // If current tier fails, degrade to next tier
         let nextTier = degradeTier(currentTier)
         if nextTier != currentTier {
             BuildConfiguration.logSolvability("Degrading from tier \(currentTier.description) to \(nextTier.description)", level: .warning)
-            
+
             // Record fallback activation for behavior tracking
             behaviorTracker?.recordFallbackActivation(from: currentTier, to: nextTier)
-            
+
             return generateTieredFallback(
                 count: originalBlocks.count,
                 tier: nextTier,
                 difficulty: difficulty,
-                grid: grid
+                grid: grid,
+                using: &generator
             )
         }
-        
+
         // Ultimate fallback - but still try to maintain some challenge
         BuildConfiguration.logSolvability("Using minimum viable challenge fallback", level: .warning)
-        return generateMinimumViableChallenge(count: originalBlocks.count, grid: grid)
+        return generateMinimumViableChallenge(count: originalBlocks.count, grid: grid, using: &generator)
     }
-    
+
     /// Adjusts blocks within the same tier to improve solvability
     private static func adjustBlocksForTier(
         blocks: [BlockShape],
         tier: GridAnalysis.DifficultyTier,
         difficulty: DifficultyMode,
-        grid: [[GridCell]]
+        grid: [[GridCell]],
+        using generator: inout any RandomNumberGenerator
     ) -> [BlockShape] {
         var adjustedBlocks = blocks
         _ = TierConfiguration.forTier(tier) // Config available if needed for future enhancements
-        
+
         // Find the most problematic block (largest that can't be placed)
         let sortedIndices = blocks.indices.sorted { blocks[$0].positions.count > blocks[$1].positions.count }
-        
+
         for index in sortedIndices {
             let block = blocks[index]
             let validPositions = GameLogic.findValidPositions(for: block, in: grid)
-            
+
             if validPositions.isEmpty {
                 // Replace with a smaller block that fits the tier
                 let replacement = generateSmallerBlockForTier(
                     originalSize: block.positions.count,
                     tier: tier,
                     difficulty: difficulty,
-                    grid: grid
+                    grid: grid,
+                    using: &generator
                 )
                 adjustedBlocks[index] = replacement
                 BuildConfiguration.logSolvability("Replaced size \(block.positions.count) block with size \(replacement.positions.count) within tier \(tier.description)", level: .debug)
                 break
             }
         }
-        
+
         return adjustedBlocks
     }
-    
+
     /// Generates a smaller block that fits within tier constraints
     private static func generateSmallerBlockForTier(
         originalSize: Int,
         tier: GridAnalysis.DifficultyTier,
         difficulty: DifficultyMode,
-        grid: [[GridCell]]
+        grid: [[GridCell]],
+        using generator: inout any RandomNumberGenerator
     ) -> BlockShape {
         let config = TierConfiguration.forTier(tier)
         let baseWeights = getBlockWeights(for: difficulty)
-        
+
         // Try progressively smaller sizes within tier limits
         let maxSize = min(originalSize - 1, config.maxBlockSize)
         let sizePreference = (1...maxSize).reversed()
-        
+
         for targetSize in sizePreference {
-            let candidates = baseWeights.keys.filter { 
-                $0.positions.count == targetSize &&
-                !GameLogic.findValidPositions(for: $0, in: grid).isEmpty
-            }
-            
-            if let selectedBlock = candidates.randomElement() {
-                let randomColor = BlockColor.allCases.randomElement() ?? .blue
+            // Sorted for the same reason as `selectWeightedBlock`: `.keys`
+            // iterates in a per-process-randomized order, so an unsorted
+            // `candidates` array would put a different block at whichever
+            // index `randomElement(using:)` draws, run to run.
+            let candidates = baseWeights.keys
+                .filter {
+                    $0.positions.count == targetSize &&
+                    !GameLogic.findValidPositions(for: $0, in: grid).isEmpty
+                }
+                .sorted { getShapeSignature($0) < getShapeSignature($1) }
+
+            if let selectedBlock = candidates.randomElement(using: &generator) {
+                let randomColor = BlockColor.allCases.randomElement(using: &generator) ?? .blue
                 return BlockShape(positions: selectedBlock.positions, color: randomColor)
             }
         }
-        
+
         // Final fallback within tier
-        return createSingleBlock()
+        return createSingleBlock(using: &generator)
     }
-    
+
     /// Degrades to next tier level
     private static func degradeTier(_ currentTier: GridAnalysis.DifficultyTier) -> GridAnalysis.DifficultyTier {
         switch currentTier {
@@ -431,54 +480,60 @@ extension BlockGenerator {
         case .emergency: return .emergency // Can't degrade further
         }
     }
-    
+
     /// Generates fallback blocks for a specific tier
     private static func generateTieredFallback(
         count: Int,
         tier: GridAnalysis.DifficultyTier,
         difficulty: DifficultyMode,
-        grid: [[GridCell]]
+        grid: [[GridCell]],
+        using generator: inout any RandomNumberGenerator
     ) -> [BlockShape] {
         let config = TierConfiguration.forTier(tier)
         var fallbackBlocks: [BlockShape] = []
-        
+
         for _ in 0..<count {
             let block = generateTierConstrainedBlock(
                 difficulty: difficulty,
                 config: config,
                 excludeShapeTypes: [],
                 excludeOrientations: [],
-                grid: grid
+                grid: grid,
+                using: &generator
             )
             fallbackBlocks.append(block)
         }
-        
+
         // Ensure this fallback is solvable
         if GameLogic.canAllBlocksBePlaced(fallbackBlocks, in: grid) {
             return fallbackBlocks
         }
-        
+
         // If even the degraded tier isn't solvable, go to minimum viable
-        return generateMinimumViableChallenge(count: count, grid: grid)
+        return generateMinimumViableChallenge(count: count, grid: grid, using: &generator)
     }
-    
+
     /// Generates minimum viable challenge - avoids pure single blocks when possible
-    private static func generateMinimumViableChallenge(count: Int, grid: [[GridCell]]) -> [BlockShape] {
+    private static func generateMinimumViableChallenge(count: Int, grid: [[GridCell]], using generator: inout any RandomNumberGenerator) -> [BlockShape] {
         var challengeBlocks: [BlockShape] = []
         let baseWeights = getBlockWeights(for: .easy)
 
         // Candidate small blocks that fit *individually* in the current grid.
-        let smallBlocks = baseWeights.keys.filter { block in
-            block.positions.count <= 3 && !GameLogic.findValidPositions(for: block, in: grid).isEmpty
-        }
+        // Sorted for the same reason as `selectWeightedBlock` — see its doc
+        // comment.
+        let smallBlocks = baseWeights.keys
+            .filter { block in
+                block.positions.count <= 3 && !GameLogic.findValidPositions(for: block, in: grid).isEmpty
+            }
+            .sorted { getShapeSignature($0) < getShapeSignature($1) }
 
         for _ in 0..<count {
-            if let selectedBlock = smallBlocks.randomElement() {
-                let randomColor = BlockColor.allCases.randomElement() ?? .blue
+            if let selectedBlock = smallBlocks.randomElement(using: &generator) {
+                let randomColor = BlockColor.allCases.randomElement(using: &generator) ?? .blue
                 challengeBlocks.append(BlockShape(positions: selectedBlock.positions, color: randomColor))
             } else {
                 // Only use single blocks as last resort
-                challengeBlocks.append(createSingleBlock())
+                challengeBlocks.append(createSingleBlock(using: &generator))
             }
         }
 
@@ -492,7 +547,7 @@ extension BlockGenerator {
         // here the only correct outcome is "no moves" / game over.
         if !GameLogic.canAllBlocksBePlaced(challengeBlocks, in: grid) {
             BuildConfiguration.logSolvability("Minimum viable challenge unsolvable as a set, degrading to single-cell blocks", level: .warning)
-            return createSingleBlocks(count: count)
+            return createSingleBlocks(count: count, using: &generator)
         }
 
         return challengeBlocks
@@ -502,16 +557,16 @@ extension BlockGenerator {
 // MARK: - Block Generator
 
 struct BlockGenerator {
-    
+
     // MARK: - Configuration Constants
-    
+
     /// Special shape generation probabilities by difficulty
     private static let specialShapeProbability: [DifficultyMode: Double] = [
         .easy: 0.10,      // 10% chance in easy mode (reduced from 15%)
         .moderate: 0.05,  // 5% chance in moderate mode (reduced from 10%)
         .hard: 0.02       // 2% chance in hard mode (reduced from 5%)
     ]
-    
+
     // MARK: - Special Block Pool
 
     /// The three special-block templates the generator draws from. Computed
@@ -530,14 +585,14 @@ struct BlockGenerator {
             BlockShape.areaClearShape
         ]
     }
-    
+
     // MARK: - Core Data Structures
-    
+
     /// Shape orientation categories for variety tracking
     enum ShapeOrientation: CaseIterable {
         case horizontal, vertical, square, lShape, tShape, irregular
     }
-    
+
     /// Cached block metadata for performance optimization
     private struct BlockMetadata {
         let block: BlockShape
@@ -546,16 +601,16 @@ struct BlockGenerator {
         let signature: String
         let complexity: Double
     }
-    
+
     /// Configuration for duplicate prevention behavior
     private struct DuplicatePreventionConfig {
         let excludeExactShapes: [String]
-        let excludeShapeTypes: [String] 
+        let excludeShapeTypes: [String]
         let excludeOrientations: [ShapeOrientation]
         let maxBlockSize: Int?
         let varietyBonus: Double
         let complexityPreference: Double
-        
+
         static func standard(
             excludeExactShapes: [String] = [],
             excludeShapeTypes: [String] = [],
@@ -570,7 +625,7 @@ struct BlockGenerator {
                 complexityPreference: 0.0
             )
         }
-        
+
         static func tiered(
             config: TierConfiguration,
             excludeExactShapes: [String] = [],
@@ -587,9 +642,9 @@ struct BlockGenerator {
             )
         }
     }
-    
+
     // MARK: - Block Analysis Helpers
-    
+
     private static func getShapeType(_ block: BlockShape) -> String {
         // Handle special shapes
         switch block.type {
@@ -601,27 +656,27 @@ struct BlockGenerator {
             return "area_clear"
         case .normal:
             let cellCount = block.positions.count
-            
+
             switch cellCount {
             case 1: return "single"
             case 2: return "double"
             case 3: return "triple"
             case 4: return "quad"
             case 5: return "penta"
-            case 6: return "hexa" 
+            case 6: return "hexa"
             case 7: return "hepta"
             case 9: return "nona"
             default: return "other"
             }
         }
     }
-    
+
     private static func getShapeOrientation(_ block: BlockShape) -> ShapeOrientation {
         let bounds = block.getBounds()
-        
+
         let width = bounds.width
         let height = bounds.height
-        
+
         if width == height {
             return .square
         } else if width > height {
@@ -630,7 +685,7 @@ struct BlockGenerator {
             return .vertical
         }
     }
-    
+
     /// Creates a unique signature for a block shape to prevent exact duplicates
     private static func getShapeSignature(_ block: BlockShape) -> String {
         let normalizedPositions = block.positions
@@ -639,7 +694,7 @@ struct BlockGenerator {
             .joined(separator: "|")
         return "\(normalizedPositions)_\(String(describing: block.color))"
     }
-    
+
     /// Creates block metadata with cached calculations for performance
     private static func createBlockMetadata(_ block: BlockShape) -> BlockMetadata {
         return BlockMetadata(
@@ -650,53 +705,54 @@ struct BlockGenerator {
             complexity: calculateBlockComplexity(block)
         )
     }
-    
+
     // MARK: - Core Block Generation Engine
-    
+
     /// Unified block generation with duplicate prevention
     /// This is the core engine that handles all block generation logic
     private static func generateBlockWithDuplicatePrevention(
         difficulty: DifficultyMode,
         preventionConfig: DuplicatePreventionConfig,
         grid: [[GridCell]] = [[GridCell]](),
-        attempt: Int = 0
+        attempt: Int = 0,
+        using generator: inout any RandomNumberGenerator
     ) -> BlockShape {
         let baseWeights = getBlockWeights(for: difficulty)
-        
+
         // Pre-compute block metadata for performance
         let blockMetadata = baseWeights.keys.map(createBlockMetadata)
-        
+
         // Create efficient lookup sets and counting dictionaries for O(1) performance
         let excludeExactSet = Set(preventionConfig.excludeExactShapes)
-        
+
         // Create counting dictionaries for efficient duplicate detection
         let typeCounts = Dictionary(preventionConfig.excludeShapeTypes.map { ($0, 1) }, uniquingKeysWith: +)
         let orientationCounts = Dictionary(preventionConfig.excludeOrientations.map { ($0, 1) }, uniquingKeysWith: +)
-        
+
         var filteredWeights: [BlockShape: Double] = [:]
-        
+
         for metadata in blockMetadata {
             let block = metadata.block
             let originalWeight = baseWeights[block] ?? 0.0
-            
+
             // Check size constraints
             if let maxSize = preventionConfig.maxBlockSize,
                block.positions.count > maxSize {
                 continue
             }
-            
+
             // Completely exclude exact duplicates
             if excludeExactSet.contains(metadata.signature) {
                 continue
             }
-            
+
             // Count duplicates efficiently using pre-computed dictionaries
             let typeCount = typeCounts[metadata.shapeType] ?? 0
             let orientationCount = orientationCounts[metadata.orientation] ?? 0
-            
+
             // Apply duplicate prevention rules
             var adjustedWeight = originalWeight
-            
+
             // Stronger duplicate prevention - completely exclude if we have 2+ of same type
             if typeCount >= 2 || orientationCount >= 2 {
                 continue // Don't allow 3rd of same type/orientation
@@ -707,99 +763,65 @@ struct BlockGenerator {
                 // Boost new varieties
                 adjustedWeight *= preventionConfig.varietyBonus
             }
-            
+
             // Apply complexity preference if specified
             if preventionConfig.complexityPreference != 0.0 {
                 let complexityMultiplier = 1.0 + (metadata.complexity - 0.5) * preventionConfig.complexityPreference
                 adjustedWeight *= complexityMultiplier
             }
-            
+
             filteredWeights[block] = max(0.1, adjustedWeight)
         }
-        
+
         // Handle empty filter results
         if filteredWeights.isEmpty {
             BuildConfiguration.logSolvability("All blocks excluded by duplicate prevention (attempt \(attempt)), using fallback", level: .info)
-            return generateFallbackBlock(difficulty: difficulty, grid: grid, excludeExactShapes: preventionConfig.excludeExactShapes)
+            return generateFallbackBlock(difficulty: difficulty, grid: grid, excludeExactShapes: preventionConfig.excludeExactShapes, using: &generator)
         }
-        
+
         // Select block using weighted random
-        return selectWeightedBlock(from: filteredWeights)
+        return selectWeightedBlock(from: filteredWeights, using: &generator)
     }
-    
+
     /// Generates a fallback block when duplicate prevention is too restrictive
     private static func generateFallbackBlock(
         difficulty: DifficultyMode,
         grid: [[GridCell]],
-        excludeExactShapes: [String]
+        excludeExactShapes: [String],
+        using generator: inout any RandomNumberGenerator
     ) -> BlockShape {
         let baseWeights = getBlockWeights(for: difficulty)
         let excludeSet = Set(excludeExactShapes)
-        
-        // Try to find any block that's not an exact duplicate and can be placed
-        let availableBlocks = baseWeights.keys.filter { block in
-            let shapeSignature = getShapeSignature(block)
-            return !excludeSet.contains(shapeSignature) &&
-                   !GameLogic.findValidPositions(for: block, in: grid).isEmpty
-        }
-        
-        if let selectedBlock = availableBlocks.randomElement() {
-            let randomColor = BlockColor.allCases.randomElement() ?? .blue
+
+        // Try to find any block that's not an exact duplicate and can be
+        // placed. Sorted for the same reason as `selectWeightedBlock` — see
+        // its doc comment.
+        let availableBlocks = baseWeights.keys
+            .filter { block in
+                let shapeSignature = getShapeSignature(block)
+                return !excludeSet.contains(shapeSignature) &&
+                       !GameLogic.findValidPositions(for: block, in: grid).isEmpty
+            }
+            .sorted { getShapeSignature($0) < getShapeSignature($1) }
+
+        if let selectedBlock = availableBlocks.randomElement(using: &generator) {
+            let randomColor = BlockColor.allCases.randomElement(using: &generator) ?? .blue
             return BlockShape(positions: selectedBlock.positions, color: randomColor)
         }
-        
+
         // Ultimate fallback: single block with different color
-        return createSingleBlock()
+        return createSingleBlock(using: &generator)
     }
-    
-    // MARK: - Wrapper Functions for Legacy Compatibility
-    
-    /// Enhanced varied block generation with stronger duplicate prevention
-    private static func generateVariedBlockWithDuplicatePrevention(
-        difficulty: DifficultyMode,
-        excludeShapeTypes: [String],
-        excludeOrientations: [ShapeOrientation],
-        excludeExactShapes: [String],
-        attempt: Int
-    ) -> BlockShape {
-        let preventionConfig = DuplicatePreventionConfig.standard(
-            excludeExactShapes: excludeExactShapes,
-            excludeShapeTypes: excludeShapeTypes,
-            excludeOrientations: excludeOrientations
-        )
-        
-        return generateBlockWithDuplicatePrevention(
-            difficulty: difficulty,
-            preventionConfig: preventionConfig,
-            grid: [[GridCell]](),
-            attempt: attempt
-        )
-    }
-    
-    /// Legacy varied block generation (kept for compatibility)
-    private static func generateVariedBlock(
-        difficulty: DifficultyMode,
-        excludeShapeTypes: [String],
-        excludeOrientations: [ShapeOrientation]
-    ) -> BlockShape {
-        return generateVariedBlockWithDuplicatePrevention(
-            difficulty: difficulty,
-            excludeShapeTypes: excludeShapeTypes,
-            excludeOrientations: excludeOrientations,
-            excludeExactShapes: [],
-            attempt: 0
-        )
-    }
-    
+
     // MARK: - Block Weight System
-    
+
     private static func getBlockWeights(for difficulty: DifficultyMode) -> [BlockShape: Double] {
         var weights: [BlockShape: Double] = [:]
-        
+
         // Ensure we have weights for all shapes (now 22 total)
         for (index, shape) in BlockShape.allShapes.enumerated() {
             let cellCount = shape.positions.count
-            
+
             switch difficulty {
             case .easy:
                 weights[shape] = getEasyWeight(for: cellCount, index: index)
@@ -809,10 +831,10 @@ struct BlockGenerator {
                 weights[shape] = getHardWeight(for: cellCount, index: index)
             }
         }
-        
+
         return weights
     }
-    
+
     private static func getEasyWeight(for cellCount: Int, index: Int) -> Double {
         switch cellCount {
         case 1: return 1.5  // Single blocks less common
@@ -826,7 +848,7 @@ struct BlockGenerator {
         default: return 1.5
         }
     }
-    
+
     private static func getModerateWeight(for cellCount: Int, index: Int) -> Double {
         switch cellCount {
         case 1: return 1.0  // Single blocks rare
@@ -840,7 +862,7 @@ struct BlockGenerator {
         default: return 2.5
         }
     }
-    
+
     private static func getHardWeight(for cellCount: Int, index: Int) -> Double {
         switch cellCount {
         case 1: return 0.5  // Single blocks very rare
@@ -854,13 +876,24 @@ struct BlockGenerator {
         default: return 3.0
         }
     }
-    
+
     // MARK: - Public API
-    
-    /// Main entry point for block generation - uses tiered system for optimal balance
+
+    /// Main entry point for block generation - uses tiered system for optimal balance.
+    ///
+    /// Draws from the system's random source. Use
+    /// `generateWeightedBlocks(count:difficulty:grid:using:)` to inject a
+    /// seeded generator instead.
     static func generateWeightedBlocks(count: Int = 3, difficulty: DifficultyMode = .easy, grid: [[GridCell]]) -> [BlockShape] {
-        // Use the new tiered generation system that balances challenge with solvability
-        return generateTieredBlocks(count: count, difficulty: difficulty, grid: grid)
+        var generator: any RandomNumberGenerator = SystemRandomNumberGenerator()
+        return generateWeightedBlocks(count: count, difficulty: difficulty, grid: grid, using: &generator)
     }
-    
+
+    /// Same as `generateWeightedBlocks(count:difficulty:grid:)`, but draws
+    /// from `generator` instead of the system's random source.
+    static func generateWeightedBlocks(count: Int = 3, difficulty: DifficultyMode = .easy, grid: [[GridCell]], using generator: inout any RandomNumberGenerator) -> [BlockShape] {
+        // Use the new tiered generation system that balances challenge with solvability
+        return generateTieredBlocks(count: count, difficulty: difficulty, grid: grid, using: &generator)
+    }
+
 }
