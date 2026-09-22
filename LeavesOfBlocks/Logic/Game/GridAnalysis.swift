@@ -69,6 +69,21 @@ struct GridAnalysis {
                 return .emergency
             }
         }
+
+        /// One step worse, bottoming out at `.emergency`. Used by
+        /// `PlayerBehaviorTracker.recordFallbackActivation` to describe a
+        /// generation fallback as a before/after tier pair — a concept that
+        /// outlived `BlockGenerator`'s old tier-capped generation, since it's
+        /// really just "the board classification got worse," independent of
+        /// how blocks are actually dealt.
+        var degraded: DifficultyTier {
+            switch self {
+            case .diverse: return .constrained
+            case .constrained: return .minimal
+            case .minimal: return .emergency
+            case .emergency: return .emergency
+            }
+        }
     }
     
     // MARK: - Grid Analysis Methods

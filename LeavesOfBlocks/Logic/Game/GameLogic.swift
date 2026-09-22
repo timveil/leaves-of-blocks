@@ -631,17 +631,44 @@ enum GameLogic {
     /// Uses optimized backtracking algorithm with performance limits
     static func canAllBlocksBePlaced(_ blocks: [BlockShape], in grid: [[GridCell]]) -> Bool {
         guard !blocks.isEmpty else { return true }
-        
-        // Quick check: ensure we have enough empty cells for all blocks
-        let totalBlockCells = blocks.reduce(0) { $0 + $1.positions.count }
-        let emptyCells = countEmptyCells(in: grid)
-        
-        if totalBlockCells > emptyCells {
-            return false
+
+        let hasSpecialBlock = blocks.contains { $0.type != .normal }
+
+        // Quick check: ensure we have enough empty cells for all blocks.
+        // Skipped entirely when a special block (.horizontalClear /
+        // .verticalClear / .areaClear) is present. A special clears filled
+        // cells into empty ones, so the grid's *current* empty-cell count
+        // isn't a reliable upper bound on what the normal blocks in the set
+        // can ultimately use — excluding just the special's own placeholder
+        // `.positions` entry from the total isn't enough: a normal block
+        // that needs more empty cells than currently exist can still be
+        // solvable once a special creates them. Falls through to the full
+        // search, which is authoritative.
+        if !hasSpecialBlock {
+            let totalBlockCells = blocks.reduce(0) { $0 + $1.positions.count }
+            let emptyCells = countEmptyCells(in: grid)
+
+            if totalBlockCells > emptyCells {
+                return false
+            }
         }
-        
-        // Sort blocks by constraint (largest first for better pruning)
-        let sortedBlocks = blocks.sorted { $0.positions.count > $1.positions.count }
+
+        // Sort blocks by constraint — specials first, then largest-first
+        // among normals. A special is always placeable and can only ever
+        // help (it clears rather than occupies), so trying it before a
+        // normal block gives the search a chance to explore the clearing
+        // effects that might unlock an otherwise-unplaceable normal, rather
+        // than failing on that normal before a special is ever considered.
+        // Sorting by `.positions.count` alone would put a special (whose
+        // placeholder always reports 1) after any 2+ cell normal.
+        let sortedBlocks = blocks.sorted { lhs, rhs in
+            let lhsSpecial = lhs.type != .normal
+            let rhsSpecial = rhs.type != .normal
+            if lhsSpecial != rhsSpecial {
+                return lhsSpecial
+            }
+            return lhs.positions.count > rhs.positions.count
+        }
         
         // Use optimized backtracking with depth limit; budget lives in
         // AppConfiguration.Gameplay.placementBacktrackLimit so tuning doesn't
@@ -697,7 +724,7 @@ enum GameLogic {
     /// Finds all valid positions where a block can be placed on the grid
     static func findValidPositions(for block: BlockShape, in grid: [[GridCell]]) -> [GridPosition] {
         var validPositions: [GridPosition] = []
-        
+
         for row in 0..<AppConfiguration.GameRules.gridSize {
             for col in 0..<AppConfiguration.GameRules.gridSize {
                 let position = GridPosition(row: row, col: col)
@@ -706,8 +733,26 @@ enum GameLogic {
                 }
             }
         }
-        
+
         return validPositions
+    }
+
+    /// Whether `block` has at least one valid placement on `grid`. Cheaper
+    /// than `!findValidPositions(for:in:).isEmpty` when only existence
+    /// matters: this stops at the first hit instead of enumerating every
+    /// valid position, which matters on a mostly-open grid where a shape
+    /// might have dozens of valid positions and the caller only needs to
+    /// know "any" — `BlockGenerator`'s candidate construction calls this
+    /// once per base shape (~22) for every block it draws.
+    static func canPlaceAnywhere(_ block: BlockShape, in grid: [[GridCell]]) -> Bool {
+        for row in 0..<AppConfiguration.GameRules.gridSize {
+            for col in 0..<AppConfiguration.GameRules.gridSize {
+                if canPlaceBlock(block, at: GridPosition(row: row, col: col), in: grid) {
+                    return true
+                }
+            }
+        }
+        return false
     }
     
     // MARK: - Optimized Helper Methods

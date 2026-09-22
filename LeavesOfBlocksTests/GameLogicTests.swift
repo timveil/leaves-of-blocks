@@ -281,6 +281,37 @@ struct FindValidPositionsTests {
     }
 }
 
+// MARK: - Can Place Anywhere
+
+/// `canPlaceAnywhere` exists purely as a faster existence check than
+/// `!findValidPositions(...).isEmpty` — `BlockGenerator`'s candidate
+/// construction calls it up to ~22 times per block drawn (once per base
+/// shape, to filter out shapes that don't fit before sampling), and
+/// `findValidPositions` scans the whole grid unconditionally even after
+/// finding a hit. These tests pin it agreeing with `findValidPositions` on
+/// every case that function is already tested against, so the two can never
+/// silently drift.
+@Suite("GameLogic.canPlaceAnywhere")
+struct CanPlaceAnywhereTests {
+    @Test("Agrees with findValidPositions across empty, partial, and full grids")
+    func agreesWithFindValidPositions() {
+        var partial = GameLogic.createEmptyGrid()
+        partial[0][0].isFilled = true
+
+        for grid in [GameLogic.createEmptyGrid(), partial, filledGrid()] {
+            for block in BlockShape.allShapes {
+                let expected = !GameLogic.findValidPositions(for: block, in: grid).isEmpty
+                #expect(GameLogic.canPlaceAnywhere(block, in: grid) == expected, "mismatch for a \(block.positions.count)-cell shape")
+            }
+        }
+    }
+
+    @Test("A special block can always be placed anywhere, even on a full grid")
+    func specialBlockAlwaysPlaceable() {
+        #expect(GameLogic.canPlaceAnywhere(BlockShape.horizontalClearShape, in: filledGrid()))
+    }
+}
+
 // MARK: - Highlighted Cells
 
 /// Direct coverage for the footprint resolver behind the hint highlight.

@@ -187,4 +187,47 @@ struct CanAllBlocksBePlacedTests {
     func emptyArrayIsTriviallyPlaceable() {
         #expect(GameLogic.canAllBlocksBePlaced([], in: emptyGrid()))
     }
+
+    @Test("A special block doesn't count toward the empty-cell requirement")
+    func specialBlockDoesNotConsumeAnEmptyCellInTheFastCheck() {
+        // Exactly one empty cell. A horizontalClear special can go anywhere
+        // — it clears rather than occupies (canPlaceBlockInline only checks
+        // isValidGridPosition for specials, no occupancy check at all) — so
+        // pairing it with a single normal 1-cell block that fits the one
+        // empty cell should be jointly placeable. The special's `.positions`
+        // array is a one-entry placeholder, not a real occupancy
+        // requirement, so it must not count toward "cells needed."
+        var grid = filledGrid()
+        grid[0][0].isFilled = false
+
+        let singleCell = BlockShape(positions: [GridPosition(row: 0, col: 0)], color: .red)
+        let blocks = [BlockShape.horizontalClearShape, singleCell]
+
+        #expect(GameLogic.canAllBlocksBePlaced(blocks, in: grid))
+    }
+
+    @Test("A special placed first can create room a normal block doesn't have on its own")
+    func specialClearingUnlocksAFollowingNormalBlock() {
+        // Only one empty cell (3, 3) exists anywhere — nowhere near row 0,
+        // which is fully filled. A 2-cell horizontal domino has zero valid
+        // positions on this grid as given (it needs two *adjacent* empty
+        // cells, and there's only one empty cell, period). But clearing row
+        // 0 with a horizontalClear opens up 8 contiguous empty cells,
+        // trivially fitting the domino afterward. The search has to
+        // actually try the special — and credit what it clears — before
+        // concluding the domino can't fit; sorting by block size alone
+        // (a special's `.positions` placeholder always reports 1, so it
+        // naturally sorts after a 2-cell block) would try the domino
+        // against the untouched board first and give up too early.
+        var grid = filledGrid()
+        grid[3][3].isFilled = false
+
+        let domino = BlockShape(
+            positions: [GridPosition(row: 0, col: 0), GridPosition(row: 0, col: 1)],
+            color: .red
+        )
+        let blocks = [domino, BlockShape.horizontalClearShape]
+
+        #expect(GameLogic.canAllBlocksBePlaced(blocks, in: grid))
+    }
 }

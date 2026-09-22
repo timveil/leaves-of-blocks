@@ -227,4 +227,12 @@ struct DifficultyTierTests {
             _ = GridAnalysis.determineDifficultyTier(for: grid)
         }
     }
+
+    @Test("degraded steps one tier down, bottoming out at .emergency")
+    func degradedSteps() {
+        #expect(GridAnalysis.DifficultyTier.diverse.degraded == .constrained)
+        #expect(GridAnalysis.DifficultyTier.constrained.degraded == .minimal)
+        #expect(GridAnalysis.DifficultyTier.minimal.degraded == .emergency)
+        #expect(GridAnalysis.DifficultyTier.emergency.degraded == .emergency)
+    }
 }
