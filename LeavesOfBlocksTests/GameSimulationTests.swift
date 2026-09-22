@@ -48,8 +48,12 @@ private let horizontalTriple = BlockShape(
 
 private let singleCell = BlockShape(positions: [GridPosition(row: 0, col: 0)], color: .blue)
 
-private func makeBots(seed: UInt64) -> [any SimulationBot] {
-    [RandomValidBot(seed: seed), GreedyBot(), LookaheadBot()]
+private func makeBots() -> [any SimulationBot] {
+    [RandomValidBot(), GreedyBot(), LookaheadBot()]
+}
+
+private func makeGenerator(seed: UInt64 = 3) -> any RandomNumberGenerator {
+    SeededGenerator(seed: seed)
 }
 
 // MARK: - Simulator Loop
@@ -85,9 +89,9 @@ struct GameSimulatorPlayTests {
 
     @Test("Placements never exceed three per batch dealt")
     func placementsBoundedByBatches() {
-        var bot = RandomValidBot(seed: 7)
+        var bot = RandomValidBot()
 
-        let outcome = GameSimulator.play(bot: &bot, difficulty: .hard, maxBatches: 50)
+        let outcome = GameSimulator.play(bot: &bot, difficulty: .hard, maxBatches: 50, seed: 7)
 
         #expect(outcome.placements <= outcome.batchesDealt * 3)
     }
@@ -99,12 +103,13 @@ struct GameSimulatorPlayTests {
 struct SimulationBotLegalityTests {
     @Test("Every bot returns a legal move for a block it was offered")
     func movesAreLegal() throws {
+        var generator = makeGenerator()
         var grid = GameLogic.createEmptyGrid()
-        GameLogic.randomlyFillGrid(&grid, difficulty: .moderate)
-        let blocks = BlockGenerator.generateTieredBlocks(count: 3, difficulty: .moderate, grid: grid)
+        GameLogic.randomlyFillGrid(&grid, difficulty: .moderate, using: &generator)
+        let blocks = BlockGenerator.generateTieredBlocks(count: 3, difficulty: .moderate, grid: grid, using: &generator)
 
-        for var bot in makeBots(seed: 3) {
-            let move = bot.chooseMove(blocks: blocks, grid: grid)
+        for var bot in makeBots() {
+            let move = bot.chooseMove(blocks: blocks, grid: grid, using: &generator)
             let chosen = try #require(move, "\(bot.name) returned no move on a playable board")
 
             #expect(blocks.contains { $0.id == chosen.block.id }, "\(bot.name) chose a block it was not offered")
@@ -114,17 +119,19 @@ struct SimulationBotLegalityTests {
 
     @Test("Every bot returns nil when nothing can be placed")
     func noMoveOnFullBoard() {
-        for var bot in makeBots(seed: 3) {
-            #expect(bot.chooseMove(blocks: [singleCell], grid: fullGrid()) == nil, "\(bot.name) invented a move on a full board")
+        var generator = makeGenerator()
+        for var bot in makeBots() {
+            #expect(bot.chooseMove(blocks: [singleCell], grid: fullGrid(), using: &generator) == nil, "\(bot.name) invented a move on a full board")
         }
     }
 
     @Test("Greedy and lookahead bots complete a line when one is on offer")
     func takesTheLineClear() {
+        var generator = makeGenerator()
         let grid = rowMissingThreeCells()
 
         for var bot in [GreedyBot() as any SimulationBot, LookaheadBot()] {
-            let move = bot.chooseMove(blocks: [horizontalTriple, singleCell], grid: grid)
+            let move = bot.chooseMove(blocks: [horizontalTriple, singleCell], grid: grid, using: &generator)
 
             #expect(move?.block.id == horizontalTriple.id, "\(bot.name) did not pick the line-completing block")
             #expect(move?.position == GridPosition(row: 0, col: 0), "\(bot.name) did not complete the row")
@@ -165,7 +172,7 @@ struct GeneratorCalibrationReport {
         ProcessInfo.processInfo.environment["GENERATOR_SIM_SECONDS_PER_PLACEMENT"] ?? "5"
     ) ?? 5
 
-    @Test("Prints how long each bot survives in each difficulty mode", .enabled(if: enabled))
+    @Test("The table has exactly one correctly-labeled row per difficulty/bot combination", .enabled(if: enabled))
     func report() {
         let games = Int(ProcessInfo.processInfo.environment["GENERATOR_SIM_GAMES"] ?? "100") ?? 100
         let maxBatches = Int(ProcessInfo.processInfo.environment["GENERATOR_SIM_MAX_BATCHES"] ?? "400") ?? 400
@@ -180,6 +187,30 @@ struct GeneratorCalibrationReport {
         if let path = ProcessInfo.processInfo.environment["GENERATOR_SIM_REPORT"] {
             try? table.write(toFile: path, atomically: true, encoding: .utf8)
         }
-        #expect(!table.isEmpty)
+
+        // `!table.isEmpty` alone would stay green even if the report loop
+        // silently dropped a row (a difficulty or a bot), since the header and
+        // footer text alone make the string non-empty. Parse each data row's
+        // first two columns instead and check the full set of (mode, bot)
+        // labels is exactly what's expected — this fails if any row goes
+        // missing, is duplicated, or is mislabeled.
+        let botNames = ["random", "greedy", "lookahead"]
+        let expectedRows = Set(
+            DifficultyMode.allCases.flatMap { difficulty in
+                botNames.map { "\(difficulty.rawValue.lowercased())|\($0)" }
+            }
+        )
+
+        let dataLines = table.split(separator: "\n").filter { line in
+            DifficultyMode.allCases.contains { line.hasPrefix($0.rawValue.lowercased()) }
+        }
+        let actualRows = Set(dataLines.compactMap { line -> String? in
+            let columns = line.split(separator: " ", omittingEmptySubsequences: true)
+            guard columns.count >= 2 else { return nil }
+            return "\(columns[0])|\(columns[1])"
+        })
+
+        #expect(dataLines.count == expectedRows.count, "expected \(expectedRows.count) data rows, found \(dataLines.count)")
+        #expect(actualRows == expectedRows, "row labels don't match: missing \(expectedRows.subtracting(actualRows)), unexpected \(actualRows.subtracting(expectedRows))")
     }
 }

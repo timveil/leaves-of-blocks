@@ -425,35 +425,68 @@ enum GameLogic {
     /// - **Hard**: Complex crosses, squares, zigzags, triangles
     ///
     /// - Note: Patterns avoid line completion and ensure solvability regardless of difficulty.
+    ///
+    /// Draws from the system's random source. Use
+    /// `randomlyFillGrid(_:difficulty:using:)` to inject a seeded generator
+    /// instead — the seam `GameSimulator` uses so a calibration run can be
+    /// reproduced from a seed. See `conventions/game-logic-boundary.md`: "a
+    /// random source without a passed-in generator is a parameter, not a
+    /// lookup."
     static func randomlyFillGrid(_ grid: inout [[GridCell]], difficulty: DifficultyMode = .easy) {
+        var generator: any RandomNumberGenerator = SystemRandomNumberGenerator()
+        randomlyFillGrid(&grid, difficulty: difficulty, using: &generator)
+    }
+
+    /// Same as `randomlyFillGrid(_:difficulty:)`, but draws from `generator`
+    /// instead of the system's random source.
+    static func randomlyFillGrid(_ grid: inout [[GridCell]], difficulty: DifficultyMode = .easy, using generator: inout any RandomNumberGenerator) {
         let difficultyConfig = DifficultyPatternConfig.forDifficulty(difficulty)
 
         fillGridWithGeometricPatterns(&grid,
                                     targetPercentage: difficultyConfig.targetFillPercentage,
                                     allowedPatterns: difficultyConfig.allowedPatterns,
-                                    patternWeights: difficultyConfig.patternWeights)
+                                    patternWeights: difficultyConfig.patternWeights,
+                                    using: &generator)
     }
-    
-    /// Fills grid with geometric patterns for a more structured initial state
+
+    /// Fills grid with geometric patterns for a more structured initial state.
+    ///
+    /// Draws from the system's random source. Use
+    /// `fillGridWithGeometricPatterns(_:targetPercentage:allowedPatterns:patternWeights:using:)`
+    /// to inject a seeded generator instead.
     static func fillGridWithGeometricPatterns(
-        _ grid: inout [[GridCell]], 
+        _ grid: inout [[GridCell]],
         targetPercentage: Double = 0.15,
         allowedPatterns: [GeometricPattern] = GeometricPattern.allCases,
         patternWeights: [GeometricPattern: Double] = [:]
     ) {
+        var generator: any RandomNumberGenerator = SystemRandomNumberGenerator()
+        fillGridWithGeometricPatterns(&grid, targetPercentage: targetPercentage, allowedPatterns: allowedPatterns, patternWeights: patternWeights, using: &generator)
+    }
+
+    /// Same as
+    /// `fillGridWithGeometricPatterns(_:targetPercentage:allowedPatterns:patternWeights:)`,
+    /// but draws from `generator` instead of the system's random source.
+    static func fillGridWithGeometricPatterns(
+        _ grid: inout [[GridCell]],
+        targetPercentage: Double = 0.15,
+        allowedPatterns: [GeometricPattern] = GeometricPattern.allCases,
+        patternWeights: [GeometricPattern: Double] = [:],
+        using generator: inout any RandomNumberGenerator
+    ) {
         let totalCells = AppConfiguration.GameRules.gridSize * AppConfiguration.GameRules.gridSize
         let targetCells = Int(Double(totalCells) * targetPercentage)
-        
+
         var cellsPlaced = 0
         var attemptCount = 0
         let maxAttempts = 25 // Increased attempts for more complex difficulty constraints
-        
+
         while cellsPlaced < targetCells && attemptCount < maxAttempts {
             // Select a pattern based on weights and allowed patterns
-            let pattern = selectWeightedPattern(from: allowedPatterns, weights: patternWeights)
-            
+            let pattern = selectWeightedPattern(from: allowedPatterns, weights: patternWeights, using: &generator)
+
             // Try to place the pattern at a random valid location
-            if let placementResult = tryPlacePattern(pattern, in: &grid) {
+            if let placementResult = tryPlacePattern(pattern, in: &grid, using: &generator) {
                 cellsPlaced += placementResult.cellsAdded
 
                 #if DEBUG
@@ -469,50 +502,56 @@ enum GameLogic {
         BuildConfiguration.log("Pattern placement complete: \(cellsPlaced) cells placed (\(String(format: "%.1f", fillPercentage))% fill)", level: .debug)
         #endif
     }
-    
+
     /// Selects a pattern based on weights, falling back to random selection
     private static func selectWeightedPattern(
-        from allowedPatterns: [GeometricPattern], 
-        weights: [GeometricPattern: Double]
+        from allowedPatterns: [GeometricPattern],
+        weights: [GeometricPattern: Double],
+        using generator: inout any RandomNumberGenerator
     ) -> GeometricPattern {
         // If no weights provided, use random selection
         guard !weights.isEmpty else {
-            return allowedPatterns.randomElement() ?? .line2
+            return allowedPatterns.randomElement(using: &generator) ?? .line2
         }
-        
+
         // Filter weights to only allowed patterns
         let filteredWeights = weights.filter { allowedPatterns.contains($0.key) }
-        
+
         // If no valid weights after filtering, fall back to random
         guard !filteredWeights.isEmpty else {
-            return allowedPatterns.randomElement() ?? .line2
+            return allowedPatterns.randomElement(using: &generator) ?? .line2
         }
-        
-        // Weighted random selection
+
+        // Weighted random selection. Walks the entries sorted by raw value
+        // rather than in dictionary order — see `BlockGenerator.selectWeightedBlock`'s
+        // doc comment for why: `Dictionary` iteration order is randomized per
+        // process, so an unsorted walk would land a given threshold on a
+        // different pattern from run to run despite an identical seed.
         let totalWeight = filteredWeights.values.reduce(0, +)
-        let randomValue = Double.random(in: 0...totalWeight)
-        
+        let randomValue = Double.random(in: 0...totalWeight, using: &generator)
+        let sortedEntries = filteredWeights.sorted { $0.key.rawValue < $1.key.rawValue }
+
         var currentWeight: Double = 0
-        for (pattern, weight) in filteredWeights {
+        for (pattern, weight) in sortedEntries {
             currentWeight += weight
             if randomValue <= currentWeight {
                 return pattern
             }
         }
-        
+
         // Fallback (shouldn't reach here)
-        return allowedPatterns.randomElement() ?? .line2
+        return allowedPatterns.randomElement(using: &generator) ?? .line2
     }
-    
+
     /// Attempts to place a geometric pattern at a random valid location
-    private static func tryPlacePattern(_ pattern: GeometricPattern, in grid: inout [[GridCell]]) -> (position: GridPosition, cellsAdded: Int)? {
+    private static func tryPlacePattern(_ pattern: GeometricPattern, in grid: inout [[GridCell]], using generator: inout any RandomNumberGenerator) -> (position: GridPosition, cellsAdded: Int)? {
         let patternPositions = pattern.positions
         let maxAttempts = 10
-        
+
         for _ in 0..<maxAttempts {
             // Generate random placement position
-            let baseRow = Int.random(in: 0..<AppConfiguration.GameRules.gridSize)
-            let baseCol = Int.random(in: 0..<AppConfiguration.GameRules.gridSize)
+            let baseRow = Int.random(in: 0..<AppConfiguration.GameRules.gridSize, using: &generator)
+            let baseCol = Int.random(in: 0..<AppConfiguration.GameRules.gridSize, using: &generator)
             let basePosition = GridPosition(row: baseRow, col: baseCol)
             
             // Check if pattern can be placed without going out of bounds or overlapping
@@ -544,7 +583,7 @@ enum GameLogic {
             if canPlace {
                 // Test if placing this pattern would create complete lines
                 var tempGrid = grid
-                let patternColor = BlockColor.allCases.randomElement() ?? .blue
+                let patternColor = BlockColor.allCases.randomElement(using: &generator) ?? .blue
                 
                 for position in testPositions {
                     tempGrid[position.row][position.col].isFilled = true

@@ -16,8 +16,9 @@ import Foundation
 
 // MARK: - Seeded Randomness
 
-/// SplitMix64. Small, fast and fully determined by its seed, so a bot's choices
-/// can be reproduced from a number in a bug report.
+/// SplitMix64. Small, fast and fully determined by its seed, so an entire game
+/// — grid pre-fill, every dealt batch, and a random bot's choices — can be
+/// reproduced from a single number in a bug report.
 struct SeededGenerator: RandomNumberGenerator {
     private var state: UInt64
 
@@ -42,10 +43,12 @@ struct SimulationMove {
 }
 
 /// Something that can play a turn. `chooseMove` returns `nil` only when none of
-/// the offered blocks fits anywhere.
+/// the offered blocks fits anywhere. `generator` is threaded through so a bot
+/// that needs randomness (`RandomValidBot`) draws from the same seeded stream
+/// as the rest of the game; deterministic bots simply ignore it.
 protocol SimulationBot {
     var name: String { get }
-    mutating func chooseMove(blocks: [BlockShape], grid: [[GridCell]]) -> SimulationMove?
+    mutating func chooseMove(blocks: [BlockShape], grid: [[GridCell]], using generator: inout any RandomNumberGenerator) -> SimulationMove?
 }
 
 // MARK: - Board Helpers
@@ -117,13 +120,8 @@ enum SimulationBoard {
 /// Plays any legal move. Stands in for careless play.
 struct RandomValidBot: SimulationBot {
     let name = "random"
-    private var generator: SeededGenerator
 
-    init(seed: UInt64) {
-        generator = SeededGenerator(seed: seed)
-    }
-
-    mutating func chooseMove(blocks: [BlockShape], grid: [[GridCell]]) -> SimulationMove? {
+    mutating func chooseMove(blocks: [BlockShape], grid: [[GridCell]], using generator: inout any RandomNumberGenerator) -> SimulationMove? {
         SimulationBoard.legalMoves(for: blocks, in: grid).randomElement(using: &generator)
     }
 }
@@ -133,7 +131,7 @@ struct RandomValidBot: SimulationBot {
 struct GreedyBot: SimulationBot {
     let name = "greedy"
 
-    mutating func chooseMove(blocks: [BlockShape], grid: [[GridCell]]) -> SimulationMove? {
+    mutating func chooseMove(blocks: [BlockShape], grid: [[GridCell]], using generator: inout any RandomNumberGenerator) -> SimulationMove? {
         var best: (move: SimulationMove, score: Double)?
         for move in SimulationBoard.legalMoves(for: blocks, in: grid) {
             let result = SimulationBoard.apply(move, to: grid)
@@ -157,7 +155,7 @@ struct LookaheadBot: SimulationBot {
     /// loses to any plan that does not.
     private static let strandedPenalty = 100.0
 
-    mutating func chooseMove(blocks: [BlockShape], grid: [[GridCell]]) -> SimulationMove? {
+    mutating func chooseMove(blocks: [BlockShape], grid: [[GridCell]], using generator: inout any RandomNumberGenerator) -> SimulationMove? {
         var best: (move: SimulationMove, score: Double)?
         for first in candidates(for: blocks, in: grid) {
             let result = SimulationBoard.apply(first, to: grid)
@@ -220,20 +218,31 @@ struct SimulationOutcome {
 enum GameSimulator {
     /// Plays one game to its end or to `maxBatches`.
     ///
+    /// Everything random in the game — the starting grid's pattern fill, each
+    /// dealt batch, and a random bot's move choice — draws from one
+    /// `SeededGenerator(seed: seed)`, so the whole game is reproducible from
+    /// `seed` alone (addresses the review finding that the calibration report
+    /// claimed reproducibility it didn't have: only the bot's own draws were
+    /// seeded, while dealing and the starting grid still used the system RNG).
+    ///
     /// - Parameters:
     ///   - deal: Produces the next batch for a grid. `nil` uses
-    ///     `BlockGenerator.generateTieredBlocks` for `difficulty`; tests inject a
-    ///     stub to reach states the generator itself never produces.
+    ///     `BlockGenerator.generateTieredBlocks` for `difficulty`, seeded; tests
+    ///     inject a stub to reach states the generator itself never produces,
+    ///     and don't need `seed` for that.
     static func play<Bot: SimulationBot>(
         bot: inout Bot,
         difficulty: DifficultyMode,
         maxBatches: Int = 500,
+        seed: UInt64 = 0,
         startingGrid: [[GridCell]]? = nil,
         deal: (([[GridCell]]) -> [BlockShape])? = nil
     ) -> SimulationOutcome {
+        var generator: any RandomNumberGenerator = SeededGenerator(seed: seed)
+
         var grid = startingGrid ?? {
             var fresh = GameLogic.createEmptyGrid()
-            GameLogic.randomlyFillGrid(&fresh, difficulty: difficulty)
+            GameLogic.randomlyFillGrid(&fresh, difficulty: difficulty, using: &generator)
             return fresh
         }()
 
@@ -242,14 +251,14 @@ enum GameSimulator {
         var linesCleared = 0
 
         while batchesDealt < maxBatches {
-            var blocks = deal?(grid) ?? BlockGenerator.generateTieredBlocks(count: 3, difficulty: difficulty, grid: grid)
+            var blocks = deal?(grid) ?? BlockGenerator.generateTieredBlocks(count: 3, difficulty: difficulty, grid: grid, using: &generator)
             batchesDealt += 1
 
             while !blocks.isEmpty {
                 if GameLogic.isGameOver(currentBlocks: blocks, grid: grid) {
                     return SimulationOutcome(batchesDealt: batchesDealt, placements: placements, linesCleared: linesCleared, endedByCap: false)
                 }
-                guard let move = bot.chooseMove(blocks: blocks, grid: grid) else {
+                guard let move = bot.chooseMove(blocks: blocks, grid: grid, using: &generator) else {
                     return SimulationOutcome(batchesDealt: batchesDealt, placements: placements, linesCleared: linesCleared, endedByCap: false)
                 }
 
@@ -279,7 +288,10 @@ enum SimulationStatistics {
 
 enum SimulationReport {
     /// Plays `games` games per bot per difficulty and renders a survival table.
-    /// Each game gets its own seed, so a row can be re-run.
+    /// Each game index gets its own seed (reused across the three bots at that
+    /// index, so they start from the same pre-filled grid), and every random
+    /// draw in that game — grid fill, dealing, bot choice — comes from the
+    /// resulting `SeededGenerator`, so any row can be re-run from its seed.
     static func render(games: Int, maxBatches: Int, secondsPerPlacement: Double) -> String {
         var lines: [String] = [
             "Generator calibration: \(games) games per row, cap \(maxBatches) batches, \(secondsPerPlacement)s per placement",
@@ -294,17 +306,18 @@ enum SimulationReport {
                 var capped = 0
 
                 for game in 0..<games {
+                    let seed = UInt64(game) &+ 1
                     let outcome: SimulationOutcome
                     switch botIndex {
                     case 0:
-                        var bot = RandomValidBot(seed: UInt64(game) &+ 1)
-                        outcome = GameSimulator.play(bot: &bot, difficulty: difficulty, maxBatches: maxBatches)
+                        var bot = RandomValidBot()
+                        outcome = GameSimulator.play(bot: &bot, difficulty: difficulty, maxBatches: maxBatches, seed: seed)
                     case 1:
                         var bot = GreedyBot()
-                        outcome = GameSimulator.play(bot: &bot, difficulty: difficulty, maxBatches: maxBatches)
+                        outcome = GameSimulator.play(bot: &bot, difficulty: difficulty, maxBatches: maxBatches, seed: seed)
                     default:
                         var bot = LookaheadBot()
-                        outcome = GameSimulator.play(bot: &bot, difficulty: difficulty, maxBatches: maxBatches)
+                        outcome = GameSimulator.play(bot: &bot, difficulty: difficulty, maxBatches: maxBatches, seed: seed)
                     }
                     placements.append(outcome.placements)
                     if outcome.endedByCap { capped += 1 }
