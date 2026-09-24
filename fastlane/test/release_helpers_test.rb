@@ -1030,6 +1030,24 @@ assert_equal(['iPhone 17 Pro'],
              "every device is missing on a runtime that is not installed")
 
 puts
+puts "simulator_create_command"
+
+# The preflight row's remedy has to run as printed. `xcrun simctl create` needs
+# a name, a device type and a runtime identifier; the runtime is the one
+# simulator_runtime_version resolved, looked up by its point version.
+assert_equal("xcrun simctl create 'iPhone 18 Pro Max' 'iPhone 18 Pro Max' com.apple.CoreSimulator.SimRuntime.iOS-27-0",
+             simulator_create_command(name: 'iPhone 18 Pro Max', runtime_version: '27.0', runtimes: SIMCTL_RUNTIMES),
+             "names the device, its type and the resolved runtime's identifier")
+
+assert_equal(nil, simulator_create_command(name: 'iPhone 18 Pro Max', runtime_version: '25.0', runtimes: SIMCTL_RUNTIMES),
+             "offers no command for a runtime that is not installed")
+
+require 'shellwords'
+assert_equal(%w[xcrun simctl create] + ["Tim's iPhone", "Tim's iPhone", 'com.apple.CoreSimulator.SimRuntime.iOS-27-0'],
+             Shellwords.split(simulator_create_command(name: "Tim's iPhone", runtime_version: '27.0', runtimes: SIMCTL_RUNTIMES)),
+             "a name with an apostrophe survives the shell intact")
+
+puts
 if $fail.zero?
   puts "All #{$pass} checks passed."
   exit 0

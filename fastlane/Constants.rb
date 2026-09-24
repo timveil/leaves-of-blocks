@@ -70,7 +70,7 @@ end
 # SCREENSHOT_DEVICES is a product decision, not an incidental one: App Store
 # screenshots are submitted at specific display sizes, so the device is chosen
 # rather than discovered. IOS_SIMULATOR is closer to incidental -- it only
-# names a destination for the `test` and `build_for_testing` lanes -- but
+# names a destination for the `test` lane, which no release path runs -- but
 # scripts/build.sh already does discovery for the everyday path, and having
 # fastlane silently pick a different device than the one a failure was reported
 # on is worse than being told the pinned one is missing.

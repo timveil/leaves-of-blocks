@@ -1426,6 +1426,19 @@ def missing_simulator_devices(devices:, runtime_version:, runtimes:, simulators:
   devices.reject { |name| available.include?(name) }
 end
 
+# The command that creates `name` on the runtime `runtime_version` resolves
+# to, or nil when that runtime is not installed. The device type is given by
+# name, which simctl accepts in place of its identifier.
+def simulator_create_command(name:, runtime_version:, runtimes:)
+  runtime = runtimes.fetch('runtimes', []).find { |r| r['version'] == runtime_version && r['isAvailable'] }
+  return nil unless runtime
+
+  # Single quotes rather than Shellwords' backslashes: the command is printed
+  # in the preflight table to be read and pasted.
+  quoted = "'#{name.gsub("'") { %q('\\'') }}'"
+  "xcrun simctl create #{quoted} #{quoted} #{runtime['identifier']}"
+end
+
 def _simctl_json(kind)
   require 'json'
   require 'open3'
@@ -1471,12 +1484,14 @@ def run_release_preflight(api_key:, bump_type:)
   _preflight(rows, 'Screenshot devices') do
     raise 'simulator runtime unresolved' unless runtime_version
 
+    runtimes = _simctl_json('runtimes')
     missing = missing_simulator_devices(
       devices: SCREENSHOT_DEVICES, runtime_version: runtime_version,
-      runtimes: _simctl_json('runtimes'), simulators: _simctl_json('devices')
+      runtimes: runtimes, simulators: _simctl_json('devices')
     )
     unless missing.empty?
-      raise "#{missing.join(', ')} not on iOS #{runtime_version}; update SCREENSHOT_DEVICES or create it with xcrun simctl create"
+      create = simulator_create_command(name: missing.first, runtime_version: runtime_version, runtimes: runtimes)
+      raise "#{missing.join(', ')} not on iOS #{runtime_version}; update SCREENSHOT_DEVICES, or: #{create}"
     end
 
     "#{SCREENSHOT_DEVICES.join(', ')} on iOS #{runtime_version}"
