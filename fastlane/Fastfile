@@ -45,10 +45,13 @@ platform :ios do
 
   desc "Build for testing"
   lane :build_for_testing do
+    # A generic destination: building needs no particular simulator, and deploy
+    # runs this lane, so pinning one here made a release depend on a device
+    # preflight does not check. scripts/build.sh builds the same way.
     build_app(
       project: XCODE_PROJECT,
       scheme: MAIN_SCHEME,
-      destination: "platform=iOS Simulator,name=#{IOS_SIMULATOR}",
+      destination: "generic/platform=iOS Simulator",
       skip_archive: true,
       skip_codesigning: true
     )

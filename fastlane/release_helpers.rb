@@ -1409,6 +1409,45 @@ rescue StandardError => e
   rows << [name, severity, e.message.to_s.lines.first.to_s.strip]
 end
 
+# The subset of `devices` with no available simulator on the runtime whose
+# point version is `runtime_version`. `runtimes` and `simulators` are the parsed
+# output of `xcrun simctl list -j runtimes` and `... devices`.
+#
+# A runtime existing is not enough: installing iOS 27 creates iPhone 18 models
+# and no 17 Pro, though it still supports that device type. preflight checked
+# only the runtime, passed, and deploy then failed at screenshots (#180).
+def missing_simulator_devices(devices:, runtime_version:, runtimes:, simulators:)
+  runtime = runtimes.fetch('runtimes', []).find { |r| r['version'] == runtime_version && r['isAvailable'] }
+  return devices.dup unless runtime
+
+  available = simulators.fetch('devices', {}).fetch(runtime['identifier'], [])
+                        .select { |d| d['isAvailable'] }
+                        .map { |d| d['name'] }
+  devices.reject { |name| available.include?(name) }
+end
+
+# The command that creates `name` on the runtime `runtime_version` resolves
+# to, or nil when that runtime is not installed. The device type is given by
+# name, which simctl accepts in place of its identifier.
+def simulator_create_command(name:, runtime_version:, runtimes:)
+  runtime = runtimes.fetch('runtimes', []).find { |r| r['version'] == runtime_version && r['isAvailable'] }
+  return nil unless runtime
+
+  # Single quotes rather than Shellwords' backslashes: the command is printed
+  # in the preflight table to be read and pasted.
+  quoted = "'#{name.gsub("'") { %q('\\'') }}'"
+  "xcrun simctl create #{quoted} #{quoted} #{runtime['identifier']}"
+end
+
+def _simctl_json(kind)
+  require 'json'
+  require 'open3'
+  out, status = Open3.capture2('xcrun', 'simctl', 'list', '-j', kind)
+  raise "xcrun simctl list #{kind} failed" unless status.success?
+
+  JSON.parse(out)
+end
+
 def run_release_preflight(api_key:, bump_type:)
   rows = []
 
@@ -1436,8 +1475,26 @@ def run_release_preflight(api_key:, bump_type:)
     branch == 'main' ? branch : (raise "on '#{branch}', release requires main")
   end
 
+  runtime_version = nil
   _preflight(rows, 'Simulator runtime') do
-    simulator_runtime_version
+    runtime_version = simulator_runtime_version
+  end
+
+  # deploy captures screenshots on these devices, on the runtime above.
+  _preflight(rows, 'Screenshot devices') do
+    raise 'simulator runtime unresolved' unless runtime_version
+
+    runtimes = _simctl_json('runtimes')
+    missing = missing_simulator_devices(
+      devices: SCREENSHOT_DEVICES, runtime_version: runtime_version,
+      runtimes: runtimes, simulators: _simctl_json('devices')
+    )
+    unless missing.empty?
+      create = simulator_create_command(name: missing.first, runtime_version: runtime_version, runtimes: runtimes)
+      raise "#{missing.join(', ')} not on iOS #{runtime_version}; update SCREENSHOT_DEVICES, or: #{create}"
+    end
+
+    "#{SCREENSHOT_DEVICES.join(', ')} on iOS #{runtime_version}"
   end
 
   _preflight(rows, 'App Store Connect auth') do

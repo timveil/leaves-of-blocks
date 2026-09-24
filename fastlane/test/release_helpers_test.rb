@@ -977,6 +977,77 @@ Dir.mktmpdir do |root|
 end
 
 puts
+puts "missing_simulator_devices"
+
+# Shaped like `xcrun simctl list -j runtimes` and `... devices`, trimmed to the
+# keys the check reads. The iOS 27 runtime still supports the iPhone 17 Pro
+# device types but no longer creates them, so a name can be valid for a runtime
+# and still have no simulator to run on -- which is what the check looks for.
+SIMCTL_RUNTIMES = {
+  'runtimes' => [
+    { 'identifier' => 'com.apple.CoreSimulator.SimRuntime.iOS-26-4', 'version' => '26.4.1', 'isAvailable' => true },
+    { 'identifier' => 'com.apple.CoreSimulator.SimRuntime.iOS-27-0', 'version' => '27.0', 'isAvailable' => true }
+  ]
+}.freeze
+
+SIMCTL_DEVICES = {
+  'devices' => {
+    'com.apple.CoreSimulator.SimRuntime.iOS-26-4' => [
+      { 'name' => 'iPhone 17 Pro Max', 'isAvailable' => true },
+      { 'name' => 'iPhone 17 Pro', 'isAvailable' => true }
+    ],
+    'com.apple.CoreSimulator.SimRuntime.iOS-27-0' => [
+      { 'name' => 'iPhone 18 Pro Max', 'isAvailable' => true },
+      { 'name' => 'iPhone 18 Pro', 'isAvailable' => false }
+    ]
+  }
+}.freeze
+
+assert_equal([], missing_simulator_devices(devices: ['iPhone 18 Pro Max'], runtime_version: '27.0',
+                                           runtimes: SIMCTL_RUNTIMES, simulators: SIMCTL_DEVICES),
+             "a device created on the runtime is not missing")
+
+# The case #180 is about: preflight passed, then deploy failed at screenshots.
+assert_equal(['iPhone 17 Pro Max'],
+             missing_simulator_devices(devices: ['iPhone 17 Pro Max'], runtime_version: '27.0',
+                                       runtimes: SIMCTL_RUNTIMES, simulators: SIMCTL_DEVICES),
+             "a device that exists only on an older runtime is missing on the newer one")
+
+assert_equal(['iPhone 18 Pro'],
+             missing_simulator_devices(devices: ['iPhone 18 Pro Max', 'iPhone 18 Pro'], runtime_version: '27.0',
+                                       runtimes: SIMCTL_RUNTIMES, simulators: SIMCTL_DEVICES),
+             "an unavailable device counts as missing, and only the missing ones are named")
+
+# simulator_runtime_version returns the point version, which is what the
+# runtimes list is keyed by -- not the "26.4" label in simctl's text output.
+assert_equal([], missing_simulator_devices(devices: ['iPhone 17 Pro'], runtime_version: '26.4.1',
+                                           runtimes: SIMCTL_RUNTIMES, simulators: SIMCTL_DEVICES),
+             "the runtime is matched by its point version")
+
+assert_equal(['iPhone 17 Pro'],
+             missing_simulator_devices(devices: ['iPhone 17 Pro'], runtime_version: '25.0',
+                                       runtimes: SIMCTL_RUNTIMES, simulators: SIMCTL_DEVICES),
+             "every device is missing on a runtime that is not installed")
+
+puts
+puts "simulator_create_command"
+
+# The preflight row's remedy has to run as printed. `xcrun simctl create` needs
+# a name, a device type and a runtime identifier; the runtime is the one
+# simulator_runtime_version resolved, looked up by its point version.
+assert_equal("xcrun simctl create 'iPhone 18 Pro Max' 'iPhone 18 Pro Max' com.apple.CoreSimulator.SimRuntime.iOS-27-0",
+             simulator_create_command(name: 'iPhone 18 Pro Max', runtime_version: '27.0', runtimes: SIMCTL_RUNTIMES),
+             "names the device, its type and the resolved runtime's identifier")
+
+assert_equal(nil, simulator_create_command(name: 'iPhone 18 Pro Max', runtime_version: '25.0', runtimes: SIMCTL_RUNTIMES),
+             "offers no command for a runtime that is not installed")
+
+require 'shellwords'
+assert_equal(%w[xcrun simctl create] + ["Tim's iPhone", "Tim's iPhone", 'com.apple.CoreSimulator.SimRuntime.iOS-27-0'],
+             Shellwords.split(simulator_create_command(name: "Tim's iPhone", runtime_version: '27.0', runtimes: SIMCTL_RUNTIMES)),
+             "a name with an apostrophe survives the shell intact")
+
+puts
 if $fail.zero?
   puts "All #{$pass} checks passed."
   exit 0

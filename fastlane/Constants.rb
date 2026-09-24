@@ -70,11 +70,11 @@ end
 # SCREENSHOT_DEVICES is a product decision, not an incidental one: App Store
 # screenshots are submitted at specific display sizes, so the device is chosen
 # rather than discovered. IOS_SIMULATOR is closer to incidental -- it only
-# names a destination for the `test` and `build_for_testing` lanes -- but
+# names a destination for the `test` lane, which no release path runs -- but
 # scripts/build.sh already does discovery for the everyday path, and having
 # fastlane silently pick a different device than the one a failure was reported
 # on is worse than being told the pinned one is missing.
-IOS_SIMULATOR = "iPhone 17 Pro"
+IOS_SIMULATOR = "iPhone 18 Pro"
 
 # The simulator runtime is derived, not pinned. It used to be a constant here
 # whose comment read "Update when the runtime changes" -- a maintenance task
@@ -140,8 +140,11 @@ def app_store_signing_options(api_key:)
 end
 
 # Screenshot Configuration
+# The iPhone 18 Pro Max shares the 17 Pro Max's 1320x2868 @3x display, so this
+# is the same App Store screenshot size. Preflight checks each name exists on
+# the runtime simulator_runtime_version resolves to.
 SCREENSHOT_DEVICES = [
-  "iPhone 17 Pro Max"
+  "iPhone 18 Pro Max"
 ]
 # Kept in step with .locales by scripts/check-locales.sh, which fails CI if
 # this list and the manifest disagree.
@@ -303,12 +306,14 @@ FastlaneCore::DeviceManager.singleton_class.prepend(FastlaneCoreDevicePointVersi
 
 # fastlane snapshot's HTML report (`screenshots.html`) maps screenshot filenames
 # to device sections via a hardcoded list that stops at iPhone 15. Screenshots
-# from newer devices (iPhone 16/17/Air etc.) get filtered out and the report
+# from newer devices (iPhone 16/17/18/Air etc.) get filtered out and the report
 # renders empty. Extend the mapping with the modern iPhone lineup.
 begin
   require 'snapshot/reports_generator'
   module SnapshotReportsModernDevices
     EXTRA_DEVICES = {
+      'iPhone 18 Pro Max' => 'iPhone 18 Pro Max',
+      'iPhone 18 Pro' => 'iPhone 18 Pro',
       'iPhone Air' => 'iPhone Air',
       'iPhone 17 Pro Max' => 'iPhone 17 Pro Max',
       'iPhone 17 Pro' => 'iPhone 17 Pro',

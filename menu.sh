@@ -194,8 +194,15 @@ show_env_status() {
     fi
     echo ""
 
-    echo -e "${CYAN}iOS Simulators (iPhone 17 variants):${NC}"
-    xcrun simctl list devices available 2>/dev/null | grep "iPhone 17" || echo "No iPhone 17 simulators found"
+    echo -e "${CYAN}iOS Simulators (iPhone):${NC}"
+    # Runtime headers print for every runtime, so decide on the device lines.
+    local simulators
+    simulators=$(xcrun simctl list devices available 2>/dev/null | grep -E "^--|iPhone")
+    if grep -q "iPhone" <<< "$simulators"; then
+        echo "$simulators"
+    else
+        echo "No iPhone simulators found"
+    fi
     echo ""
 
     echo -e "${CYAN}AI Release Notes:${NC}"
