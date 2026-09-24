@@ -194,8 +194,8 @@ show_env_status() {
     fi
     echo ""
 
-    echo -e "${CYAN}iOS Simulators (iPhone 17 variants):${NC}"
-    xcrun simctl list devices available 2>/dev/null | grep "iPhone 17" || echo "No iPhone 17 simulators found"
+    echo -e "${CYAN}iOS Simulators (iPhone):${NC}"
+    xcrun simctl list devices available 2>/dev/null | grep -E "^--|iPhone" || echo "No iPhone simulators found"
     echo ""
 
     echo -e "${CYAN}AI Release Notes:${NC}"

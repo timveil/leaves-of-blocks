@@ -6,7 +6,7 @@ Thank you for your interest in contributing! This document explains how to get t
 
 ### Prerequisites
 - macOS with Xcode 26 or later
-- iOS 18.0+ Simulator (an iPhone 17 family simulator is recommended)
+- iOS 18.0+ Simulator (an iPhone 18 family simulator on iOS 27 is recommended)
 - Ruby (managed by `.ruby-version`) and Bundler — only needed for Fastlane workflows
 - Optional: `bundle install` if you plan to run Fastlane lanes
 
