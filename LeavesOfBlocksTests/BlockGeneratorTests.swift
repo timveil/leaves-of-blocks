@@ -510,16 +510,26 @@ struct PressureBasedGenerationTests {
         // costs; a single mean averaged in every stall and failed at
         // 111-155ms/call on a loaded iOS 27 simulator (#181). A real
         // slowdown still trips it, because it makes every batch slow.
+        //
+        // Every batch restarts the same seeded generator, so each one draws
+        // the same candidates and does the same work; with the system random
+        // source the minimum also picked out the cheapest draw (#184).
         let batches = 10
         let callsPerBatch = 2
         var perCall = Double.infinity
+        var drawsPerBatch: [[[BlockShape]]] = []
         for _ in 0..<batches {
+            var generator: any RandomNumberGenerator = SeededGenerator(seed: 181)
+            var draws: [[BlockShape]] = []
             let start = CFAbsoluteTimeGetCurrent()
             for _ in 0..<callsPerBatch {
-                _ = BlockGenerator.generateTieredBlocks(count: 3, difficulty: .hard, grid: grid)
+                draws.append(BlockGenerator.generateTieredBlocks(count: 3, difficulty: .hard, grid: grid, using: &generator))
             }
             perCall = min(perCall, (CFAbsoluteTimeGetCurrent() - start) / Double(callsPerBatch))
+            drawsPerBatch.append(draws)
         }
+
+        #expect(Set(drawsPerBatch).count == 1, "batches drew different blocks, so they did different work and the fastest one reads the cheapest draw rather than the least contention")
 
         // Measured ~10ms/call on both this grid and a 6-rows-filled "typical
         // mid-game" grid on development hardware — comfortably under the
