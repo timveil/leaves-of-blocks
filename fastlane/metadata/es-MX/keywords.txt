@@ -1,1 +1,1 @@
-rompecabezas,bloques,puzzle,block blast,tetris,estrategia,sin anuncios,sin internet,juego de bloques
+rompecabezas,puzzle,block blast,tetris,estrategia,sin anuncios,sin internet,juego,wifi,offline,datos
