@@ -1,1 +1,1 @@
-quebra-cabeça,blocos,block blast,tetris,estratégia,sem anúncios,offline,jogo de blocos,raciocínio
+quebra-cabeça,block blast,tetris,estratégia,sem anúncios,offline,jogo,raciocínio,internet,wifi,avião
