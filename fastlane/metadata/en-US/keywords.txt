@@ -1,1 +1,1 @@
-puzzle,blocks,block blast,walt whitman,tetris,strategy,brain,no ads,offline,puzzle game,block puzzle
+puzzle,block blast,walt whitman,tetris,strategy,brain,no ads,offline,game,block puzzle,wifi,airplane
