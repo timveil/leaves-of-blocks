@@ -169,3 +169,30 @@ struct GameServicePersistenceTests {
         #expect(store.fetchGameHistory().isEmpty)
     }
 }
+
+// MARK: - Games Played
+
+@Suite("GameService.gamesPlayed")
+struct GameServiceGamesPlayedTests {
+    @Test("Counts every saved game") @MainActor
+    func countsEverySavedGame() throws {
+        let service = GameService(
+            coreDataManager: CoreDataManager.makeInMemoryForTests(),
+            gameCenterService: MockGameCenterService()
+        )
+        #expect(service.gamesPlayed() == 0)
+
+        for score in [120, 80, 300] {
+            try service.saveGameRecord(
+                score: score,
+                linesCleared: 1,
+                blocksPlaced: 10,
+                gameTime: 60,
+                difficulty: .easy,
+                longestCombo: 1
+            )
+        }
+
+        #expect(service.gamesPlayed() == 3)
+    }
+}

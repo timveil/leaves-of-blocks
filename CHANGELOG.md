@@ -8,6 +8,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
+- After a new personal best, the game may ask you to rate it on the App Store; it asks at most once per version, never during play, and only once you have a few games behind you
 
 ### Changed
 
