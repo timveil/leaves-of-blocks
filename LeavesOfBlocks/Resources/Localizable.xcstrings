@@ -2627,61 +2627,61 @@
         "de" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Punkte: %lld"
+            "value" : "Punkte: %@"
           }
         },
         "en" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Score: %lld"
+            "value" : "Score: %@"
           }
         },
         "es" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Puntuación: %lld"
+            "value" : "Puntuación: %@"
           }
         },
         "fr" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Score : %lld"
+            "value" : "Score : %@"
           }
         },
         "ja" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "スコア: %lld"
+            "value" : "スコア: %@"
           }
         },
         "ko" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "점수: %lld"
+            "value" : "점수: %@"
           }
         },
         "nl" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Score: %lld"
+            "value" : "Score: %@"
           }
         },
         "pt-BR" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "Pontuação: %lld"
+            "value" : "Pontuação: %@"
           }
         },
         "zh-Hans" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "分数：%lld"
+            "value" : "分数：%@"
           }
         },
         "zh-Hant" : {
           "stringUnit" : {
             "state" : "translated",
-            "value" : "分數：%lld"
+            "value" : "分數：%@"
           }
         }
       }
