@@ -1,10 +1,8 @@
-Leaves of Blocks now speaks your language.
+A fairer deal when your board gets messy
 
-• Play in English, Spanish, German, Japanese, French, Dutch, Korean, Brazilian Portuguese, or Chinese (Traditional and Simplified)
-• Fixed a crash that could happen when playing in Spanish
-• Fixed the "Normal Blocks" label so it breaks onto two lines instead of showing stray characters
-• Corrected the scoring info: a block now correctly says it scores 10 points per square, not per block
-• Updated the App Store description's shape count, difficulty mode names, and scoring details for accuracy
-• Whitman's verse is now quoted in English in every language, exactly as he wrote it
+• The game now reads how much room is actually left before dealing your next blocks, so letting the grid get cluttered has real consequences again
+• After a new personal best, Leaves of Blocks may ask for a rating — at most once per version, never mid-game, and only once you've played a few rounds
+• The Continue Game score on the home screen now shows a thousands separator, matching every other score in the game
+• Shortened scores like 12.5K now follow your region's number format, so players in Germany or France see 12,5K like everywhere else
 
-Thanks so much for playing Leaves of Blocks — we hope these fixes make your game even better.
+Thanks so much for playing Leaves of Blocks!

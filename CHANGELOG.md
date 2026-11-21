@@ -8,9 +8,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ## [Unreleased]
 
 ### Added
-- After a new personal best, the game may ask you to rate it on the App Store; it asks at most once per version, never during play, and only once you have a few games behind you
 
 ### Changed
+
+### Fixed
+
+## [2.1.1] - 2026-11-21
+
+### Added
+- After a new personal best, the game may ask you to rate it on the App Store; it asks at most once per version, never during play, and only once you have a few games behind you
 
 ### Fixed
 - The score on the home screen's Continue Game card now uses a thousands separator, like every other score in the game
@@ -288,7 +294,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - COPPA compliant with no data collection
 - iPhone-optimized experience with portrait orientation
 
-[Unreleased]: https://github.com/timveil/leaves-of-blocks/compare/v2.1.0...HEAD
+[Unreleased]: https://github.com/timveil/leaves-of-blocks/compare/v2.1.1...HEAD
+[2.1.1]: https://github.com/timveil/leaves-of-blocks/compare/v2.1.0...v2.1.1
 [2.1.0]: https://github.com/timveil/leaves-of-blocks/compare/v2.0.7...v2.1.0
 [2.0.7]: https://github.com/timveil/leaves-of-blocks/compare/v2.0.6...v2.0.7
 [2.0.6]: https://github.com/timveil/leaves-of-blocks/compare/v2.0.5...v2.0.6
