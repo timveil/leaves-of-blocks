@@ -1,10 +1,8 @@
-Leaves of Blocks agora fala português do Brasil!
+Peças mais justas quando o tabuleiro aperta.
 
-• Jogo e página da App Store disponíveis em português do Brasil, inglês, espanhol, alemão, japonês, francês, holandês, coreano e chinês (tradicional e simplificado)
-• Os versos de Whitman continuam sempre no inglês original, como uma citação ao poeta, e não uma tradução
-• Corrigimos uma queda do aplicativo ao jogar em espanhol
-• Ajustamos o rótulo "Blocos Normais", que exibia caracteres estranhos em vez de quebrar em duas linhas
-• Corrigimos a pontuação: cada bloco vale 10 pontos por quadrado, não 10 pontos por bloco
-• Atualizamos a descrição da loja com o número certo de formatos de peça, os nomes dos níveis de dificuldade e a regra de pontuação
+• Um tabuleiro bagunçado não garante mais peças fáceis — o jogo agora avalia o espaço real disponível antes de sortear as próximas peças, então deixar a bagunça crescer tem consequência de novo
+• A pontuação do card "Continuar Jogo" na tela inicial agora usa separador de milhar, como todas as outras pontuações do jogo
+• Pontuações abreviadas, como 12,5K, agora usam a vírgula decimal da sua região, assim como os outros números na tela
+• Depois de uma nova pontuação máxima, o jogo pode perguntar se você quer avaliá-lo na App Store — no máximo uma vez por versão, nunca durante a partida, e só depois de algumas rodadas
 
-Obrigado por jogar Leaves of Blocks!
+Obrigado por jogar Leaves of Blocks.

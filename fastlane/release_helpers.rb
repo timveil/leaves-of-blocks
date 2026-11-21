@@ -768,14 +768,24 @@ def ensure_version_available_on_app_store!(version:)
   )
 end
 
+# What the release commit carries, relative to fastlane/ (where lanes run).
+# The notes for every shipped locale, not just en-US: generate_release_notes
+# writes them all and deliver uploads them all, so leaving any out records the
+# wrong text for that listing and fails the next deploy's clean-tree check.
+def release_commit_paths(locales: shipped_store_locales)
+  ['../CHANGELOG.md'] +
+    locales.map { |locale| "metadata/#{locale}/release_notes.txt" } +
+    ['../LeavesOfBlocks.xcodeproj/project.pbxproj']
+end
+
 # Stage changelog/metadata/project edits and create the local release commit.
 # Does NOT tag or push — see finalize_release for that. Splitting these lets
 # the deploy lane gate the public-facing actions (tag + push) on a successful
 # binary upload, so a failed `deliver` doesn't leave an orphan tag on origin.
 def commit_release_local(version:)
-  sh("git add ../CHANGELOG.md")
-  sh("git add metadata/en-US/release_notes.txt")
-  sh("git add ../LeavesOfBlocks.xcodeproj/project.pbxproj")
+  require 'shellwords'
+
+  release_commit_paths.each { |path| sh("git add #{path.shellescape}") }
 
   # Bail out if there's nothing staged. Without this guard `git commit` would
   # exit non-zero, but `sh` would still raise — and the caller might mistake a

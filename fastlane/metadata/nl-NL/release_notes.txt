@@ -1,10 +1,8 @@
-Speel Leaves of Blocks nu in je eigen taal.
+Een eerlijkere uitdaging voor rommelige borden.
 
-• De game en de App Store-pagina zijn nu beschikbaar in het Engels, Spaans, Duits, Japans, Frans, Nederlands, Koreaans, Braziliaans Portugees en Chinees (Traditioneel en Vereenvoudigd)
-• Een blok scoort voortaan zichtbaar 10 punten per vakje, niet per blok
-• De beschrijving in de App Store noemt nu het juiste aantal vormen, de juiste namen van de moeilijkheidsgraden en de juiste puntentelling
-• Het label "Normale blokken" wordt weer netjes over twee regels getoond, in plaats van met vreemde tekens ertussen
-• Het bord crasht niet meer wanneer je in het Spaans speelt
-• Citaten van Whitman blijven in het Engels staan, precies zoals de dichter ze schreef
+• Een vol, rommelig bord levert niet langer de makkelijkste blokken op — het spel kijkt nu naar hoeveel ruimte er écht nog over is en deelt de blokken daarop af, dus laat je het bord uit de hand lopen, dan voel je dat ook weer
+• Op het startscherm toont de kaart om je spel te hervatten de score nu met een duizendtalscheidingsteken, net als alle andere scores in het spel
+• Afgeronde scores zoals 12,5K gebruiken nu het decimaalteken van je regio, zodat spelers in bijvoorbeeld Duitsland of Frankrijk consistente getallen zien
+• Na een nieuw persoonlijk record kan het spel je vragen een beoordeling achter te laten in de App Store — dat gebeurt hoogstens één keer per versie, nooit tijdens het spelen, en pas nadat je al een paar potjes hebt gespeeld
 
-Bedankt dat je Leaves of Blocks speelt - we vinden het fijn dat je erbij bent.
+Bedankt dat je Leaves of Blocks speelt!
