@@ -34,6 +34,10 @@ struct IntFormattedScoreTests {
 
 @Suite("Int.abbreviatedScore")
 struct IntAbbreviatedScoreTests {
+    private static let english = Locale(identifier: "en_US")
+    private static let german = Locale(identifier: "de_DE")
+    private static let french = Locale(identifier: "fr_FR")
+
     @Test("Values under 10K use the standard formatter")
     func underTenThousand() {
         #expect(9_999.abbreviatedScore == 9_999.formattedScore)
@@ -41,22 +45,52 @@ struct IntAbbreviatedScoreTests {
 
     @Test("Round 10K boundary renders as '10K'")
     func roundTenThousand() {
-        #expect(10_000.abbreviatedScore == "10K")
+        #expect(10_000.abbreviatedScore(locale: Self.english) == "10K")
     }
 
     @Test("Non-round 10K values render with one decimal")
     func nonRoundTenThousand() {
-        #expect(12_500.abbreviatedScore == "12.5K")
+        #expect(12_500.abbreviatedScore(locale: Self.english) == "12.5K")
     }
 
     @Test("Round million boundary renders as '1M'")
     func roundMillion() {
-        #expect(1_000_000.abbreviatedScore == "1M")
+        #expect(1_000_000.abbreviatedScore(locale: Self.english) == "1M")
     }
 
     @Test("Non-round million values render with one decimal")
     func nonRoundMillion() {
-        #expect(2_500_000.abbreviatedScore == "2.5M")
+        #expect(2_500_000.abbreviatedScore(locale: Self.english) == "2.5M")
+    }
+
+    @Test("A comma-decimal locale abbreviates thousands with its own decimal mark")
+    func commaDecimalThousands() {
+        #expect(12_500.abbreviatedScore(locale: Self.german) == "12,5K")
+        #expect(12_500.abbreviatedScore(locale: Self.french) == "12,5K")
+    }
+
+    @Test("A comma-decimal locale abbreviates millions with its own decimal mark")
+    func commaDecimalMillions() {
+        #expect(2_500_000.abbreviatedScore(locale: Self.german) == "2,5M")
+    }
+
+    @Test("Round values carry no decimal mark in any locale")
+    func roundValuesInCommaDecimalLocale() {
+        #expect(10_000.abbreviatedScore(locale: Self.german) == "10K")
+        #expect(1_000_000.abbreviatedScore(locale: Self.german) == "1M")
+    }
+
+    @Test("Values under 10K group for the locale passed")
+    func underTenThousandGroupsForLocale() {
+        #expect(9_876.abbreviatedScore(locale: Self.german) == "9.876")
+        #expect(9_876.abbreviatedScore(locale: Self.english) == "9,876")
+    }
+
+    @Test("Large abbreviated values are not grouped")
+    func abbreviationIsNotGrouped() {
+        // 999,950 rounds to one decimal as 1000.0 thousands; a grouping
+        // separator there would read as a second number.
+        #expect(999_950.abbreviatedScore(locale: Self.english) == "1000.0K")
     }
 }
 
