@@ -63,7 +63,7 @@ private struct ContinueGameCard: View {
                     Text("continue_game".localized)
                         .font(GameTheme.Typography.headline)
                         .foregroundColor(GameTheme.Colors.primaryText)
-                    Text("continue_game_format".localized(with: score))
+                    Text("continue_game_format".localized(with: score.formattedScore))
                         .font(GameTheme.Typography.body)
                         .foregroundColor(GameTheme.Colors.secondaryText)
                 }
