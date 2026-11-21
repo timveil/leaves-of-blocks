@@ -114,6 +114,11 @@ final class GameService {
         let statistics = coreDataManager.calculateStatistics()
         return statistics.highScore
     }
+
+    /// Number of finished games saved to Core Data
+    func gamesPlayed() -> Int {
+        coreDataManager.calculateStatistics().totalGames
+    }
     
     // MARK: - Game Record Management
     

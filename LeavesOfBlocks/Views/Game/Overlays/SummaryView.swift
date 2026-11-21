@@ -1,3 +1,4 @@
+import StoreKit
 import SwiftUI
 
 // MARK: - Game Summary View
@@ -6,6 +7,8 @@ struct SummaryView: View {
     var gameState: GameState
     let historicalSession: GameSession?
     var gameCenterService: GameCenterService = .shared
+
+    @Environment(\.requestReview) private var requestReview
 
     private var score: Int {
         historicalSession?.score ?? gameState.score
@@ -121,6 +124,29 @@ struct SummaryView: View {
             }
             .scrollIndicators(.hidden)
         }
+        .task { await requestReviewIfEarned() }
+    }
+
+    /// Asks for a rating after a game that just ended in a new personal best.
+    /// A game reopened from History never asks.
+    private func requestReviewIfEarned() async {
+        guard historicalSession == nil, gameState.isGameOver else { return }
+
+        let version = Bundle.main.appVersion
+        guard ReviewPrompt.shouldRequest(
+            isNewHighScore: gameState.isNewHighScore,
+            gamesPlayed: gameState.gamesPlayed,
+            currentVersion: version,
+            lastRequestedVersion: ReviewPrompt.lastRequestedVersion
+        ) else { return }
+
+        // Let the score land before the sheet covers it. Task.sleep throws only
+        // on cancellation, which is leaving the screen, and that cancels the ask.
+        try? await Task.sleep(for: .seconds(1.5))
+        guard !Task.isCancelled else { return }
+
+        ReviewPrompt.lastRequestedVersion = version
+        requestReview()
     }
 }
 

@@ -83,6 +83,10 @@ final class GameState {
     var highScore: Int {
         return gameService.getHighScore()
     }
+
+    var gamesPlayed: Int {
+        return gameService.gamesPlayed()
+    }
     
     var statistics: GameSessionStatistics {
         return GameSessionStatistics.withEfficiencyMetrics(
