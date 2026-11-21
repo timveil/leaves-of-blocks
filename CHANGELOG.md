@@ -14,6 +14,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Stop rewarding a messy board with an easy hand — a cluttered, fragmented grid used to get dealt the smallest, simplest blocks; the game now judges how much room is actually left and deals accordingly, so letting the board get away from you has real consequences again
+- Shortened scores such as 12.5K now use your region's decimal mark, so a player in Germany or France sees 12,5K, matching the other numbers on screen
 
 ## [2.1.0] - 2026-09-07
 

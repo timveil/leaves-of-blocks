@@ -15,19 +15,31 @@ extension Int {
 
     /// Returns an abbreviated score string (e.g., 87.2K, 1.2M) for compact display
     var abbreviatedScore: String {
+        abbreviatedScore(locale: .current)
+    }
+
+    /// `abbreviatedScore` in a given locale. The K and M suffixes stay as they
+    /// are in every language; only the number follows the locale, so German
+    /// reads "12,5K" and "9.876" rather than "12.5K" beside "9.876".
+    func abbreviatedScore(locale: Locale) -> String {
         if self >= 1_000_000 {
-            let value = Double(self) / 1_000_000
-            return value.truncatingRemainder(dividingBy: 1) == 0
-                ? "\(Int(value))M"
-                : String(format: "%.1fM", value)
+            return Self.abbreviate(Double(self) / 1_000_000, suffix: "M", locale: locale)
         } else if self >= 10_000 {
-            let value = Double(self) / 1_000
-            return value.truncatingRemainder(dividingBy: 1) == 0
-                ? "\(Int(value))K"
-                : String(format: "%.1fK", value)
+            return Self.abbreviate(Double(self) / 1_000, suffix: "K", locale: locale)
         } else {
-            return formattedScore
+            return formatted(.number.locale(locale))
         }
+    }
+
+    private static func abbreviate(_ value: Double, suffix: String, locale: Locale) -> String {
+        let fractionDigits = value.truncatingRemainder(dividingBy: 1) == 0 ? 0 : 1
+        let number = value.formatted(
+            .number
+                .locale(locale)
+                .grouping(.never)
+                .precision(.fractionLength(fractionDigits))
+        )
+        return number + suffix
     }
     
     /// Returns `true` if the value is within `[0, gridSize)` — a valid grid axis index.
