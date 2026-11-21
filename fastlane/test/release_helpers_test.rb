@@ -1048,6 +1048,20 @@ assert_equal(%w[xcrun simctl create] + ["Tim's iPhone", "Tim's iPhone", 'com.app
              "a name with an apostrophe survives the shell intact")
 
 puts
+puts "release_commit_paths"
+
+# generate_release_notes writes a file per shipped locale and deliver uploads
+# them all, so the release commit has to carry them all. Staging en-US alone
+# left v2.1.1's nine translations uncommitted, which the next deploy's
+# clean-tree check then refused.
+paths = release_commit_paths(locales: %w[en-US de-DE ja])
+assert_equal(true, paths.include?('metadata/en-US/release_notes.txt'), "stages the English notes")
+assert_equal(true, paths.include?('metadata/de-DE/release_notes.txt'), "stages a translated listing's notes")
+assert_equal(true, paths.include?('metadata/ja/release_notes.txt'), "stages every locale it is given")
+assert_equal(true, paths.include?('../CHANGELOG.md'), "stages the changelog")
+assert_equal(true, paths.include?('../LeavesOfBlocks.xcodeproj/project.pbxproj'), "stages the project file")
+
+puts
 if $fail.zero?
   puts "All #{$pass} checks passed."
   exit 0
