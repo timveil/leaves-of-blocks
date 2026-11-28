@@ -278,10 +278,11 @@ struct BoardLayoutFindOptimalPlacementTests {
 @Suite("BoardLayout.boardScale")
 struct BoardLayoutBoardScaleTests {
 
-    /// The scalable part of the board column at scale 1: the grid's width,
-    /// and the grid plus the block tray stacked.
-    static let scalableSize = CGSize(width: 340, height: 406)
-    /// Score row, assist bar and stack spacing — chrome that does not grow.
+    /// The scalable part of the board column at scale 1, as `BoardView`
+    /// passes it: the 340pt grid, and the grid plus the 50pt tray slots.
+    static let scalableSize = CGSize(width: 340, height: 390)
+    /// Score row, assist bar, spacing and tray padding — chrome that does not
+    /// grow.
     static let fixedHeight: CGFloat = 240
     static let maxScale: CGFloat = 2
 
@@ -306,7 +307,7 @@ struct BoardLayoutBoardScaleTests {
 
     @Test("A regular-width space exactly the board's size keeps native size")
     func exactFitKeepsNativeSize() {
-        #expect(scale(width: 340, height: 646) == 1)
+        #expect(scale(width: 340, height: 630) == 1)
     }
 
     @Test("A space smaller than the board never shrinks it below native size")
@@ -316,10 +317,12 @@ struct BoardLayoutBoardScaleTests {
 
     @Test("A wide, short space is limited by its height")
     func landscapeIsHeightLimited() {
-        // Given an iPad landscape window: plenty of width, limited height
-        let result = scale(width: 1328, height: 1032)
-        // Then the scale is whatever lets the column fill the height
-        #expect(result == (1032 - Self.fixedHeight) / Self.scalableSize.height)
+        // Given an 11-inch iPad in landscape (1210x834, less side padding):
+        // plenty of width, limited height
+        let result = scale(width: 1162, height: 834)
+        // Then the scale is whatever lets the column fill the height, below the cap
+        #expect(result == (834 - Self.fixedHeight) / Self.scalableSize.height)
+        #expect(result < Self.maxScale)
     }
 
     @Test("A narrow, tall space is limited by its width")
