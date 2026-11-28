@@ -121,6 +121,7 @@ struct SummaryView: View {
                 }
                 .padding(.horizontal, GameTheme.Layout.largePadding)
                 .padding(.vertical, GameTheme.Layout.mediumPadding)
+                .readableContentWidth()
             }
             .scrollIndicators(.hidden)
         }

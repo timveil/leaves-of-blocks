@@ -8,6 +8,10 @@ extension GameTheme {
         static let gridPadding: CGFloat = 12
         static let sectionSpacing: CGFloat = 24
 
+        /// Widest a menu screen's content grows, padding included; wider than
+        /// any iPhone, so it only applies on iPad.
+        static let readableContentWidth: CGFloat = 600
+
         // Padding
         static let smallPadding: CGFloat = 8
         static let mediumPadding: CGFloat = 16

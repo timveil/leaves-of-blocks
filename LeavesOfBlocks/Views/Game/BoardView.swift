@@ -9,6 +9,8 @@ struct BoardView: View {
     @State private var gridFrame: CGRect = .zero
     @State private var blockSlotsFrame: CGRect = .zero
     @State private var viewBounds: CGRect = .zero
+    @State private var scoreRowHeight: CGFloat = 0
+    @Environment(\.horizontalSizeClass) private var horizontalSizeClass
     /// When true at game-over, the results overlay is hidden so the player can
     /// inspect the final board (grid + unplaceable blocks). See issue #36.
     @State private var isPeekingBoard: Bool = false
@@ -51,6 +53,28 @@ struct BoardView: View {
             return cellSize + cellSpacing
         }
     }
+
+    /// Vertical metrics of the board column, mirroring the spacing and
+    /// padding in `body`, so `boardScale` knows how much height the
+    /// non-scaling chrome takes.
+    private struct ColumnMetrics {
+        static let stackSpacing: CGFloat = 20
+        static let assistBarHeight: CGFloat = 48
+        static let bottomMinimum: CGFloat = 20
+        /// Tray slot height plus its padding at scale 1.
+        static let trayHeight: CGFloat = 50 + 2 * GameTheme.Layout.smallPadding
+        /// Beyond about 2x the board outgrows a comfortable drag; on a 13" iPad
+        /// in portrait it would otherwise reach ~2.8x.
+        static let maxScale: CGFloat = 2
+
+        static var fixedHeight: CGFloat {
+            GameTheme.Layout.mediumPadding      // top padding
+                + 3 * stackSpacing              // score, assist bar, grid, tray
+                + assistBarHeight
+                + GameTheme.Layout.largePadding // extra gap above the tray
+                + bottomMinimum
+        }
+    }
     
     // MARK: - Drag State
     private struct DragState {
@@ -75,11 +99,31 @@ struct BoardView: View {
     let onViewSummary: () -> Void
     let onNewGame: () -> Void
 
-    // Computed property - simple calculation, no need for lazy loading in SwiftUI
-    private var gameWidth: CGFloat {
+    /// Width of the board column at scale 1, matching `GameScene.sceneSize`.
+    private var baseGameWidth: CGFloat {
         let gridSize = CGFloat(AppConfiguration.GameRules.gridSize)
         return (gridSize * cellSize) + ((gridSize - 1) * GridConstants.cellSpacing) + (2 * GridConstants.gridPadding)
     }
+
+    /// How much the board column is enlarged for the space it has; 1 on iPhone.
+    private var boardScale: CGFloat {
+        BoardLayout.boardScale(
+            available: CGSize(
+                width: viewBounds.width - 2 * GameTheme.Layout.largePadding,
+                height: viewBounds.height
+            ),
+            fixedHeight: scoreRowHeight + ColumnMetrics.fixedHeight,
+            scalableSize: CGSize(width: baseGameWidth, height: baseGameWidth + ColumnMetrics.trayHeight),
+            maxScale: ColumnMetrics.maxScale,
+            isWidthRegular: horizontalSizeClass == .regular
+        )
+    }
+
+    private var gameWidth: CGFloat { baseGameWidth * boardScale }
+
+    /// On-screen cell size for the tray and the dragged block. Placement math
+    /// stays in logical `cellSize` units; see `globalToGridCoordinates`.
+    private var scaledCellSize: CGFloat { cellSize * boardScale }
     
     var body: some View {
         BaseScreenView(showsStatusBar: false) {
@@ -95,6 +139,11 @@ struct BoardView: View {
                         SimpleScoreView(gameState: gameState)
                             .frame(width: gameWidth)
                         Spacer()
+                    }
+                    .onGeometryChange(for: CGFloat.self) { proxy in
+                        proxy.size.height
+                    } action: { newValue in
+                        scoreRowHeight = newValue
                     }
 
                     // Assist Bar Row (Undo + Hint)
@@ -123,7 +172,7 @@ struct BoardView: View {
                         Spacer()
                         CurrentBlocksView(
                         gameState: gameState,
-                        cellSize: cellSize,
+                        cellSize: scaledCellSize,
                         draggedBlock: dragState.draggedBlock,
                         isDragging: dragState.isDragging,
                         draggedBlockIndex: dragState.draggedBlockIndex,
@@ -297,7 +346,7 @@ struct BoardView: View {
     @ViewBuilder
     private var draggedBlockOverlay: some View {
         if let draggedBlock = dragState.draggedBlock, dragState.isDragging {
-            BlockView(block: draggedBlock, cellSize: cellSize)
+            BlockView(block: draggedBlock, cellSize: scaledCellSize)
                 .position(getDraggedBlockVisualCenter())
                 .allowsHitTesting(false)
                 .zIndex(1000)
@@ -312,7 +361,7 @@ struct BoardView: View {
         dragState.draggedBlockIndex = index
         dragState.isDragging = true
         dragState.dragLocation = fingerLocation
-        dragState.dragOffset = CGSize(width: 0, height: -DragConfiguration.offsetAboveFinger)
+        dragState.dragOffset = CGSize(width: 0, height: -DragConfiguration.offsetAboveFinger * boardScale)
         // Any pulsing hint overlay would visually fight the drag preview.
         sceneBridge.clearHint()
     }
@@ -409,7 +458,7 @@ struct BoardView: View {
     private func isBlockOverHoldingArea(visualCenter: CGPoint) -> Bool {
         guard blockSlotsFrame.width > 0 && blockSlotsFrame.height > 0 else { return false }
         
-        let tolerance = DragConfiguration.hoverTolerance
+        let tolerance = DragConfiguration.hoverTolerance * boardScale
         let expandedFrame = blockSlotsFrame.insetBy(dx: -tolerance, dy: -tolerance)
         
         return expandedFrame.contains(visualCenter)
@@ -438,10 +487,12 @@ struct BoardView: View {
     
     private func globalToGridCoordinates(_ globalLocation: CGPoint) -> CGPoint? {
         guard gridFrame.width > 0 && gridFrame.height > 0 else { return nil }
-        
+
+        // The grid is drawn `boardScale` times larger than its logical size,
+        // so divide back down: placement is computed in logical cell units.
         return CGPoint(
-            x: globalLocation.x - gridFrame.minX,
-            y: globalLocation.y - gridFrame.minY
+            x: (globalLocation.x - gridFrame.minX) / boardScale,
+            y: (globalLocation.y - gridFrame.minY) / boardScale
         )
     }
     

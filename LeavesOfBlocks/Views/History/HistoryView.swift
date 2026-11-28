@@ -53,6 +53,7 @@ struct HistoryView: View {
                 .padding(.horizontal, GameTheme.Layout.largePadding)
                 .padding(.vertical, GameTheme.Layout.mediumPadding)
                 .padding(.bottom, 120)
+                .readableContentWidth()
             }
             .scrollIndicators(.hidden)
             .scrollFadeMask()
