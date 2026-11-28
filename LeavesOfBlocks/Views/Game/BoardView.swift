@@ -61,8 +61,9 @@ struct BoardView: View {
         static let stackSpacing: CGFloat = 20
         static let assistBarHeight: CGFloat = 48
         static let bottomMinimum: CGFloat = 20
-        /// Tray slot height plus its padding at scale 1.
-        static let trayHeight: CGFloat = 50 + 2 * GameTheme.Layout.smallPadding
+        /// Tray slot height at scale 1. Its padding does not scale, so it is
+        /// counted in `fixedHeight` instead.
+        static let trayHeight: CGFloat = 50
         /// Beyond about 2x the board outgrows a comfortable drag; on a 13" iPad
         /// in portrait it would otherwise reach ~2.8x.
         static let maxScale: CGFloat = 2
@@ -72,6 +73,7 @@ struct BoardView: View {
                 + 3 * stackSpacing              // score, assist bar, grid, tray
                 + assistBarHeight
                 + GameTheme.Layout.largePadding // extra gap above the tray
+                + 2 * GameTheme.Layout.smallPadding // tray padding
                 + bottomMinimum
         }
     }
