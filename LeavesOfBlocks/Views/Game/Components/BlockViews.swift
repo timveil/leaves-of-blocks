@@ -13,8 +13,9 @@ struct CurrentBlocksView: View {
     let onDragMove: (CGPoint) -> Void
     let onDragEnd: () -> Void
     
-    // Fixed dimensions to prevent layout shifts
-    private let containerHeight: CGFloat = 50 // Reduced height for more compact layout
+    // Fixed for a given cell size to prevent layout shifts; grows with the
+    // board on larger screens (50pt at the native 40pt cell).
+    private var containerHeight: CGFloat { 50 * cellSize / GameTheme.Layout.cellSize }
     private var gridWidth: CGFloat {
         let gridSize = CGFloat(AppConfiguration.GameRules.gridSize)
         return (gridSize * cellSize) + ((gridSize - 1) * GameTheme.Layout.gridLineWidth)

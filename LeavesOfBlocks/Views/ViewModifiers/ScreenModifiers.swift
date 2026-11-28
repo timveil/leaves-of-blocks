@@ -28,6 +28,17 @@ extension View {
             .folkArtCard()
     }
 
+    // MARK: - Layout Modifiers
+
+    /// Caps a screen's content at `readableContentWidth` and centers it, so
+    /// cards keep their iPhone proportions instead of stretching across an
+    /// iPad. No effect on screens narrower than the cap.
+    func readableContentWidth() -> some View {
+        self
+            .frame(maxWidth: GameTheme.Layout.readableContentWidth)
+            .frame(maxWidth: .infinity)
+    }
+
     // MARK: - Typography Modifiers
 
     /// Applies section header text styling

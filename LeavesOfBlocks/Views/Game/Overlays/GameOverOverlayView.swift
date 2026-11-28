@@ -69,6 +69,7 @@ struct GameOverOverlayView: View {
             }
         }
         .padding(.horizontal, GameTheme.Layout.extraLargePadding)
+        .readableContentWidth()
         .transition(.scale.combined(with: .opacity))
     }
 }

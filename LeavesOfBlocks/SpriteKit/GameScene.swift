@@ -77,7 +77,10 @@ class GameScene: SKScene {
         self.cellSize = cellSize
         self.gridNode = GridNode(cellSize: cellSize, spacing: gridSpacing, gridSize: AppConfiguration.GameRules.gridSize)
         super.init(size: size)
-        self.scaleMode = .resizeFill
+        // The scene keeps its logical size and is scaled to the view, so a
+        // board enlarged for a larger screen draws the same 40pt-cell scene
+        // at a higher resolution rather than re-laying it out.
+        self.scaleMode = .aspectFit
         self.backgroundColor = SpriteKitColors.sceneBackground
     }
 

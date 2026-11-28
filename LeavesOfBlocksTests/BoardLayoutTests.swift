@@ -274,3 +274,72 @@ struct BoardLayoutFindOptimalPlacementTests {
         #expect(result == nil)
     }
 }
+
+@Suite("BoardLayout.boardScale")
+struct BoardLayoutBoardScaleTests {
+
+    /// The scalable part of the board column at scale 1, as `BoardView`
+    /// passes it: the 340pt grid, and the grid plus the 50pt tray slots.
+    static let scalableSize = CGSize(width: 340, height: 390)
+    /// Score row, assist bar, spacing and tray padding — chrome that does not
+    /// grow.
+    static let fixedHeight: CGFloat = 240
+    static let maxScale: CGFloat = 2
+
+    private func scale(width: CGFloat, height: CGFloat, isWidthRegular: Bool = true) -> CGFloat {
+        BoardLayout.boardScale(
+            available: CGSize(width: width, height: height),
+            fixedHeight: Self.fixedHeight,
+            scalableSize: Self.scalableSize,
+            maxScale: Self.maxScale,
+            isWidthRegular: isWidthRegular
+        )
+    }
+
+    @Test("A compact-width space keeps the board at its native size")
+    func compactWidthKeepsNativeSize() {
+        // Given an iPhone 17 Pro Max, less the 24pt side padding — room for a
+        // slightly larger board, but every iPhone is compact width
+        // When the scale is computed
+        // Then the board is not enlarged, so iPhones render as they always have
+        #expect(scale(width: 392, height: 956, isWidthRegular: false) == 1)
+    }
+
+    @Test("A regular-width space exactly the board's size keeps native size")
+    func exactFitKeepsNativeSize() {
+        #expect(scale(width: 340, height: 630) == 1)
+    }
+
+    @Test("A space smaller than the board never shrinks it below native size")
+    func smallSpaceDoesNotShrink() {
+        #expect(scale(width: 300, height: 500) == 1)
+    }
+
+    @Test("A wide, short space is limited by its height")
+    func landscapeIsHeightLimited() {
+        // Given an 11-inch iPad in landscape (1210x834, less side padding):
+        // plenty of width, limited height
+        let result = scale(width: 1162, height: 834)
+        // Then the scale is whatever lets the column fill the height, below the cap
+        #expect(result == (834 - Self.fixedHeight) / Self.scalableSize.height)
+        #expect(result < Self.maxScale)
+    }
+
+    @Test("A narrow, tall space is limited by its width")
+    func narrowTallIsWidthLimited() {
+        #expect(scale(width: 510, height: 2000) == 1.5)
+    }
+
+    @Test("A very large space is capped at the maximum scale")
+    func largeSpaceIsCapped() {
+        // Given a 13-inch iPad in portrait, which would fit a ~2.8x board
+        // Then the board stops growing at the cap so drags stay comfortable
+        #expect(scale(width: 984, height: 1376) == Self.maxScale)
+    }
+
+    @Test("An unmeasured space returns the native scale")
+    func unmeasuredSpaceReturnsNative() {
+        // Before the first geometry pass the measured size is zero.
+        #expect(scale(width: 0, height: 0) == 1)
+    }
+}

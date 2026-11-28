@@ -58,6 +58,42 @@ enum BoardLayout {
         return min(baseOffset, max(0, fingerGridY))
     }
 
+    /// Returns how much to enlarge the board column so it fills a larger
+    /// screen or window, such as an iPad's.
+    ///
+    /// The board is designed at a fixed logical size (40pt cells). On larger
+    /// spaces the grid, the block tray and the dragged block grow together by
+    /// this factor; the score row and assist bar only widen, so their height
+    /// is passed as `fixedHeight` and is subtracted before fitting.
+    ///
+    /// A compact-width space always gets 1, even when it has a little room to
+    /// spare: a Pro Max iPhone would otherwise grow the board by ~15%, and the
+    /// iPhone layout is the tuned one. The result also never drops below 1,
+    /// matching the layout from before scaling existed. It is capped at
+    /// `maxScale` because past a point a bigger board only makes each drag
+    /// longer.
+    ///
+    /// - Parameters:
+    ///   - available: the space the board column may occupy, already less
+    ///     horizontal padding.
+    ///   - fixedHeight: height of the column's non-scaling chrome.
+    ///   - scalableSize: the scaling part of the column at scale 1 — the grid
+    ///     width, and the grid and tray heights combined.
+    ///   - maxScale: the largest factor allowed.
+    ///   - isWidthRegular: whether the horizontal size class is `.regular`.
+    static func boardScale(
+        available: CGSize,
+        fixedHeight: CGFloat,
+        scalableSize: CGSize,
+        maxScale: CGFloat,
+        isWidthRegular: Bool
+    ) -> CGFloat {
+        guard isWidthRegular, scalableSize.width > 0, scalableSize.height > 0 else { return 1 }
+        let widthFit = available.width / scalableSize.width
+        let heightFit = (available.height - fixedHeight) / scalableSize.height
+        return min(maxScale, max(1, min(widthFit, heightFit)))
+    }
+
     /// Returns the cell-center coordinate (in grid-local space) for placing
     /// `block` at `position`. Used by `findOptimalPlacement` to score each
     /// candidate against the drag's `nearPoint`.
